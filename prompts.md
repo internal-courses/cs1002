@@ -519,3 +519,81 @@ For the above analyses
 
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Error Taxonomy"
+
+## Step 4: The Syntax Bottleneck — Quantified (Dual-Track)
+
+This assembles the findings from Steps 1–3 into a single defensible decomposition of why students fail.
+
+**4a. Parseability baseline (full population, enriched by tree-sitter).**
+
+| Metric                                                          | Track A Submissions | Track A Non-Submitters | Track B Best Snapshot |
+| --------------------------------------------------------------- | ------------------- | ---------------------- | --------------------- |
+| Parseable (ast.parse)                                           | ?                   | ?                      | ?                     |
+| Non-parseable, structure evident (tree-sitter: few ERROR nodes) | ?                   | ?                      | ?                     |
+| Non-parseable, fundamentally broken                             | ?                   | ?                      | ?                     |
+| Unmodified skeleton / empty                                     | ?                   | ?                      | ?                     |
+
+The tree-sitter split within "non-parseable" is the key addition: it separates "almost there mechanically" from "can't construct a program."
+
+**4b. Regression analysis.**
+
+From Step 3g:
+
+- Fraction of students whose final code is non-parseable but who had parseable code earlier.
+- Fraction with peak-to-final test-pass regression (passed more tests earlier than at the end).
+- Fraction with structural regression (tree-sitter shows simpler structure at the end than at peak complexity).
+
+**4c. Auto-correct syntax and re-score (Track A).**
+
+For Track A submissions that fail to parse:
+
+1. LLM syntax correction (logic-preserving only).
+2. Re-run against private test cases.
+3. Record new scores.
+
+For "partially broken" code (tree-sitter shows mostly correct structure with localised ERROR nodes), also attempt a simpler approach: rule-based fixes guided by tree-sitter error locations (add missing colons at ERROR nodes in loop/conditional headers, close unmatched brackets). Compare rule-based vs. LLM correction rates to assess how mechanical the remaining syntax errors are.
+
+**4d. Auto-correct and re-evaluate (Track B).**
+
+Same as 4c but against public test cases only (the only ones available for Track B).
+
+**4e. Formatting tax (Track A).**
+
+For submissions that parse and run but fail due to output differences:
+
+- Normalise output and re-compare.
+- Compute additional passes.
+
+**4f. Build the gating waterfall (full population).**
+
+| Gate                                                                        | Track A | Track B | Combined |
+| --------------------------------------------------------------------------- | ------- | ------- | -------- |
+| Unmodified skeleton / didn't attempt                                        | ?       | ?       | ?        |
+| Syntax gated — mechanical (tree-sitter: structure evident, few ERROR nodes) | ?       | ?       | ?        |
+| Syntax gated — fundamental (tree-sitter: no recoverable structure)          | ?       | ?       | ?        |
+| Formatting gated                                                            | ?       | ?       | ?        |
+| Edge-case gated (passes core tests, fails edge cases)                       | ?       | ?       | ?        |
+| Genuine logic failure                                                       | ?       | ?       | ?        |
+| Partial pass                                                                | ?       | ?       | ?        |
+| Full pass                                                                   | ?       | ?       | ?        |
+
+The tree-sitter split within the syntax gate is a major refinement: "mechanical syntax" errors are fixable with better tooling or a linter; "fundamental syntax" errors indicate the student can't construct a program at all.
+
+**4g. Skeleton effectiveness analysis.**
+
+Since 96.81% of questions provide skeletons:
+
+- Where in the code are syntax errors occurring — in the skeleton portion (student broke provided code) or in their additions?
+- Tree-sitter makes this precise: compare ERROR node locations against the skeleton's parse tree to determine whether errors are in student-added subtrees or in skeleton-provided regions.
+- Relationship between modification extent (structural distance from skeleton) and error rate.
+
+**What This Tells You**: The waterfall with tree-sitter-informed syntax splitting produces a cleaner decomposition than the original plan. "Syntax gated — mechanical" vs "syntax gated — fundamental" is the difference between "needs a linter" and "needs more instruction." The regression finding adds: some students can write valid Python but can't maintain it while editing, which is a specific process skill.
+
+**Action point**: Present the waterfall to stakeholders. The mechanical/fundamental syntax split directly informs whether the intervention should be tooling (linter, better error messages) or curriculum (more foundational instruction).
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"

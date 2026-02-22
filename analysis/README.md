@@ -935,3 +935,255 @@ Cheap term-split check for pooled non-submission behaviour (requested follow-up)
 - Separate analyses for submission-positive non-submitters (genuinely stuck population) and zero-submission namespaces (instrumentation/capture problem).
 - Treat structural inventory metrics as useful after scaffolding stripping, but still partly template-influenced for constructs commonly provided by skeletons.
 - Promote `regression_rows.csv` and `selected_snapshot_taxonomy_rows.csv` to the next step (e.g., targeted feedback design / remediation experiments), especially rows flagged by `parseability_regression_flag`, `skeleton_modification_status = Modified, partially broken`, and `best_public_runtime_error_type IN (TypeError, NameError, ValueError)`.
+
+# The Syntax Bottleneck — Quantified
+
+This step assembles Steps 1–3 into a single, defensible decomposition of failure modes, with a dual-track design:
+
+- Track A: namespaces with submission capture
+- Track B: zero-submission namespaces (best observed `test_run` snapshot only)
+
+As in earlier sections, cross-term (`t1`/`t2`/`t3`) comparisons are descriptive only because later terms are progressively filtered (weaker-by-construction) populations. The Step 4 waterfall is primarily a **within-track decomposition**, not a causal comparison across terms.
+
+## Process / Rebuild
+
+Script:
+
+- `analysis/generate_syntax_bottleneck_quantified.py`
+
+Rebuild command:
+
+```bash
+uv run analysis/generate_syntax_bottleneck_quantified.py
+```
+
+Generated outputs (ignored by git):
+
+- `analysis/syntax_bottleneck_quantified/`
+
+What the script does:
+
+- Reuses Step 3 row-level outputs (tree-sitter structural status, regression flags, selected snapshots) and Step 1/Step 3 outcome summaries
+- Builds a dual-track parseability baseline (AST + tree-sitter split)
+- Quantifies regression:
+- parseability regression (earlier parseable, final non-parseable)
+- peak-to-final public test-pass regression
+- structural regression (tree-sitter complexity decrease)
+- Implements a conservative **rule-based syntax repair** baseline and re-scores:
+- Track A submitters on private tests
+- Track B best snapshots on public tests
+- Computes a formatting-tax estimate (whitespace normalization baseline) for Track A parseable wrong-answer submissions
+- Builds a gating waterfall for Track A, Track B, and Combined
+- Quantifies skeleton effectiveness proxies (syntax ERROR-node location and error rates vs modification extent)
+
+Important Step 4 semantics:
+
+- Track A in the waterfall combines:
+- submitters scored on **private final submission outcomes**
+- non-submitters (submission-positive namespaces) scored on **best public `test_run` outcomes**
+- Track B uses **best public `test_run` outcomes** (because submission/private outcomes are unavailable)
+- Therefore, Track A vs Track B percentages are useful for decomposition and guardrail comparisons, but not a pure apples-to-apples performance comparison.
+
+Important Step 4 implementation note:
+
+- The initial Step 4 run exposed duplicate Track A private-final rows in `track_a_private_final_rows.csv` (multiple records per student-question after timeline joins).
+- The script now deduplicates by `(namespace, problem_id, student_id)`, preferring rows with more private-case coverage / passes, and was re-run.
+- After the fix, `gating_waterfall_rows.csv` matches the Step 0 population exactly: `151,778` rows.
+
+LLM correction status:
+
+- The LLM syntax-correction pipeline is wired into the script but was **not run** in this environment because no non-empty API key was configured (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY` all absent).
+- `syntax_repair_llm_summary.csv` and `syntax_repair_comparison_summary.csv` explicitly record this skipped state.
+
+## Findings
+
+### 4a) Parseability Baseline (Dual-Track, Tree-Sitter-Enriched)
+
+The tree-sitter split within AST-nonparseable code is the key upgrade: it separates "mechanically close" code from fundamentally broken code.
+
+From `parseability_baseline_dual_track_prompt_table_pct.csv`:
+
+- Parseable (`ast.parse`):
+- Track A submitters: `91.20%`
+- Track A non-submitters (submission-positive NS): `71.01%`
+- Track B best snapshot: `87.32%`
+- Non-parseable, structure evident (tree-sitter few/local errors):
+- Track A submitters: `4.48%`
+- Track A non-submitters (submission-positive NS): `16.68%`
+- Track B best snapshot: `7.22%`
+- Non-parseable, fundamentally broken:
+- Track A submitters: `1.97%`
+- Track A non-submitters (submission-positive NS): `4.70%`
+- Track B best snapshot: `2.27%`
+- Unmodified skeleton / empty:
+- Track A submitters: `5.66%`
+- Track A non-submitters (submission-positive NS): `9.37%`
+- Track B best snapshot: `5.98%`
+
+Interpretation:
+
+- The syntax bottleneck is real, but the dominant syntax-gated population is **mechanical / structure-evident**, not fundamentally broken.
+- This is most pronounced in Track A non-submitters in submission-positive namespaces (`16.68%`), which is the most policy-relevant "genuinely stuck" group.
+
+### 4b) Regression Analysis
+
+From `regression_summary_dual_track.csv`:
+
+- Track A (combined):
+- rows: `54,030`
+- Python rows ending non-parseable: `7,136`
+- earlier parseable among those: `3,260` (`45.68%`)
+- peak-to-final public test-pass regression: `1,621` (`3.00%`)
+- structural regression vs best public snapshot: `424` (`0.78%` of Python rows)
+- structural regression vs last parseable snapshot: `1,850` (`3.42%`)
+- Track B:
+- rows: `97,748` (`97,730` Python)
+- Python rows ending non-parseable: `13,022`
+- earlier parseable among those: `5,910` (`45.38%`)
+- peak-to-final public test-pass regression: `2,815` (`2.88%`)
+- structural regression vs best public snapshot: `732` (`0.75%`)
+- structural regression vs last parseable snapshot: `3,996` (`4.09%`)
+
+Interpretation:
+
+- About **45%** of students who end non-parseable had a parseable snapshot earlier, consistent across Track A and Track B.
+- This is strong evidence that a meaningful share of syntax failure is an **editing/maintenance process failure**, not purely an inability to construct Python at all.
+
+### 4c / 4d) Auto-Correct Syntax and Re-score (Rule-Based Baseline; LLM Skipped)
+
+Rule-based syntax repair is implemented as a conservative baseline (tabs/indent normalization, missing colons in obvious headers, bracket balancing, minimal empty-block `pass` insertion, etc.), then re-evaluated against:
+
+- Track A submitters: private tests
+- Track B best snapshots: public tests
+
+From `syntax_repair_rule_based_summary.csv`:
+
+- Track A submissions (private), parse-fail Python rows targeted: `3,775`
+- parse rescued: `181` (`4.79%`)
+- any test-pass gain: `8` (`0.21%`)
+- full pass after rule fix: `3` (`0.08%`)
+- mean score gain: `2.67`
+- Track B best snapshot (public), parse-fail Python rows targeted: `12,379`
+- parse rescued: `514` (`4.15%`)
+- any test-pass gain: `35` (`0.28%`)
+- full pass after rule fix: `10` (`0.08%`)
+- mean score gain: `3.735`
+
+Structural-status split (from `syntax_repair_rule_based_effect_by_structural_status.csv`) matters:
+
+- `Modified, partially broken` rows have materially better parse rescue rates than `Modified, fundamentally broken`
+- Example:
+- Track A submitters, partially broken: `4.42%` parse rescue vs fundamental `0.71%`
+- Track B, partially broken: `4.20%` parse rescue vs fundamental `1.08%`
+
+Interpretation:
+
+- A simple rule-based repair recovers only a small fraction of rows and very rarely changes outcomes.
+- This suggests many syntax failures are not just one-token fixes, even in the "mechanical" bucket.
+- The LLM-assisted step remains the main unresolved test for how much additional recoverable score is locked behind localized syntax problems.
+
+### 4e) Formatting Tax (Track A)
+
+From `formatting_tax_track_a_summary.csv`:
+
+- Parseable wrong-answer private submission rows: `11,540`
+- Rows fully rescued by simple whitespace normalization: `0` (`0.00%`)
+- Wrong-answer fail cases rescued by formatting normalization: `0 / 33,226` (`0.00%`)
+
+Interpretation:
+
+- In this snapshot, the formatting tax appears negligible under a simple whitespace-normalization baseline.
+- Either the evaluator already normalizes common formatting differences, or most wrong-answer failures are substantive (logic/edge/runtime), not presentation mismatches.
+
+### 4f) Gating Waterfall (Full Population, Dual-Track)
+
+From `gating_waterfall_pct.csv` (counts in `gating_waterfall_counts.csv`):
+
+Combined (`151,778` rows):
+
+- Unmodified skeleton / didn't attempt: `6.14%`
+- Syntax gated — mechanical: `7.14%`
+- Syntax gated — fundamental: `2.36%`
+- Formatting gated: `0.25%`
+- Edge-case gated: `7.35%`
+- Genuine logic failure: `26.72%`
+- Partial pass: `3.21%`
+- Full pass: `46.83%`
+
+Track A (mixed private/public semantics as noted above):
+
+- Syntax gated — mechanical: `6.99%`
+- Syntax gated — fundamental: `2.53%`
+- Formatting gated: `0.16%`
+- Genuine logic failure: `30.68%`
+- Partial pass: `9.01%`
+- Full pass: `43.40%`
+
+Track B (best-public snapshot):
+
+- Syntax gated — mechanical: `7.22%`
+- Syntax gated — fundamental: `2.27%`
+- Formatting gated: `0.30%`
+- Edge-case gated: `10.97%`
+- Genuine logic failure: `24.53%`
+- Full pass: `48.72%`
+
+Key decomposition insight:
+
+- The syntax bottleneck is substantial (`~9.5%` combined when mechanical + fundamental syntax gates are combined), but **genuine logic failure** is the single largest failure bucket (`26.72%`).
+- The tree-sitter split is important operationally:
+- `7.14%` combined are **mechanical syntax-gated** (structure evident; tooling/help likely to matter)
+- `2.36%` combined are **fundamental syntax-gated** (more foundational instruction likely needed)
+
+### 4g) Skeleton Effectiveness Analysis
+
+Two complementary views were computed:
+
+- ERROR-node location proxy (where syntax problems occur relative to skeleton lines)
+- Error rate vs modification extent (how far students move beyond the skeleton)
+
+Error-node location proxy (from `skeleton_effectiveness_error_location_summary_track_only.csv`):
+
+- Track A non-submitters (submission-positive NS): most ERROR nodes are in `beyond_skeleton_line_range` (`3,410`) or `skeleton_line_modified` (`3,355`), with fewer on `skeleton_unchanged_line` (`964`)
+- Track A submitters: `skeleton_line_modified` (`4,796`) and `beyond_skeleton_line_range` (`4,034`) dominate over `skeleton_unchanged_line` (`1,413`)
+- Track B: same pattern (`14,304`, `11,370`, `3,604`)
+
+Interpretation:
+
+- Most syntax errors occur in **student-added or student-modified regions**, not untouched skeleton code.
+- This suggests the skeleton is generally not the primary source of syntax breakage.
+
+Modification extent vs error rate (from `skeleton_effectiveness_error_rate_by_modification_extent.csv`):
+
+- Error rates are highest when `new_constructs_added = 0`:
+- Track A non-submitters: `46.59%` AST-nonparseable, `41.64%` tree-sitter broken
+- Track A submitters: `30.53%`, `27.69%`
+- Track B: `34.31%`, `31.33%`
+- Error rates generally decrease once students add more structure (`4-6` or `7+` new constructs)
+
+Interpretation:
+
+- The riskiest state is not "complex code"; it is **shallow modification of the skeleton without successful structural extension**.
+- This is consistent with students getting stuck early while editing within the template.
+
+## What Step 4 Adds Beyond Steps 1–3
+
+- A single waterfall that separates:
+- no-attempt / minimal attempt
+- mechanical syntax gating
+- fundamental syntax gating
+- formatting (negligible here)
+- edge-case vs logic failure
+- The tree-sitter-informed syntax split gives stakeholders a clear intervention fork:
+- tooling / parser feedback / linting for the mechanical bucket
+- curriculum / foundational programming support for the fundamental bucket
+- Regression analysis shows that many syntax failures are **not purely initial incompetence**: students often had a parseable state earlier and lost it during iteration.
+
+## Practical Next Steps (Step 4 Driven)
+
+- Run the LLM correction arm (Track A private, Track B public) in an environment with an API key to quantify the recoverable portion of the mechanical syntax gate.
+- Use the Step 4 row-level outputs to target intervention design:
+- `syntax_repair_rule_based_rows.csv`
+- `gating_waterfall_rows.csv`
+- `skeleton_effectiveness_error_location_summary*.csv`
+- For stakeholder communication, present the waterfall with the explicit caveat that Track B "full pass" is public-best-snapshot and Track A mixes private-final (submitters) with public-best (non-submitters).
