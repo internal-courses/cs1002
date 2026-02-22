@@ -1360,36 +1360,55 @@ Interpretation:
 
 ### 5c / 5d) Behavioural Archetypes and Outcomes
 
-From `archetype_outcomes_flags_summary.csv`:
+The initial rule set left a large residual `Other` bucket, so the final Step 5 classifier uses a stricter **primary archetype** assignment plus additional rule-based trajectory signatures (derived from the same structural/error trajectory patterns used in 5b).
 
-- `Steady builder`: `24,439` attempts (`16.10%`), success (`State 4/5`) `88.73%`
-- `Incremental debugger`: `11,721` attempts (`7.72%`), success `77.28%`
-- `One-shot`: `13,152` attempts (`8.67%`), success `5.49%`
-- `Regression`: `15,280` attempts (`10.07%`), success `5.88%`
-- `Skeleton-only`: `9,315` attempts (`6.14%`), success `0.48%`
-- `Stuck and abandoned`: `5,274` attempts (`3.47%`), success `3.43%`
-- `Thrasher`: `2,758` attempts (`1.82%`), success `43.47%`
+This resolves the archetype story without switching to opaque clustering:
+
+- `Other` falls from `52.64%` to `6.40%` of attempts (primary archetype)
+- the remaining residual `Other` is mostly mixed flat/declining trajectories rather than a single dominant pattern
+- "late regression" does not emerge as a separate residual archetype: in the final classifier, late-regression-like attempts are already absorbed by `Regression` (`0%` of residual `Other` have `peak_to_final_public_regression > 0`)
 
 Primary archetype distribution (from `archetype_outcomes_primary_summary.csv`):
 
-- `Other`: `52.64%`
-- `Steady builder`: `15.95%`
-- `Incremental debugger`: `7.66%`
-- `Regression`: `7.66%`
-- `Skeleton-only`: `6.14%`
-- `One-shot`: `5.02%`
+- `Minimal-change solver`: `28,140` attempts (`18.54%`), success (`State 4/5`) `77.27%`
+- `Volatile reworker`: `26,937` attempts (`17.75%`), success `35.95%`
+- `Steady builder`: `24,203` attempts (`15.95%`), success `89.04%`
+- `Builder with setbacks`: `12,576` attempts (`8.29%`), success `41.76%`
+- `Incremental debugger`: `11,626` attempts (`7.66%`), success `77.65%`
+- `Regression`: `11,625` attempts (`7.66%`), success `5.65%`
+- `Other` (residual): `9,713` attempts (`6.40%`), success `35.48%`
+- `Skeleton-only`: `9,315` attempts (`6.14%`), success `0.48%`
+- `One-shot`: `7,625` attempts (`5.02%`), success `9.44%`
+- `Stuck and abandoned`: `4,209` attempts (`2.77%`), success `4.11%`
+- `Thrasher`: `2,746` attempts (`1.81%`), success `43.59%`
+- `Flat stuck`: `2,533` attempts (`1.67%`), success `0.12%`
+- `Late starter`: `530` attempts (`0.35%`), success `25.66%`
 
-The process-teaching signal (requested action point) is strong:
+How to read the new archetypes:
 
-- Within **Track A submitters** (from `attempt_archetypes.csv`):
-- `Incremental debugger`: median active time `2,170s`, median public runs `13`, success `76.44%`
-- `Thrasher`: median active time `4,717s`, median public runs `37`, success `47.23%`
-- `Steady builder`: median active time `679s`, median public runs `6`, success `89.21%`
+- `Minimal-change solver`: little structural churn, low observed error churn, few runs (`median public runs = 3`) and very short active time (`37s`) with high success; this is the largest "quietly successful" group that was previously hidden inside `Other`
+- `Volatile reworker`: repeated restructuring with fluctuating/decreasing/no-low error trajectories and many runs (`median public runs = 18`, `median active time = 3,223s`); this is a broad unstable-process group distinct from the stricter `Thrasher`
+- `Builder with setbacks`: monotonic structural build-up with some dips/error fluctuations; a relaxed near-steady-builder category capturing attempts that improve but do not meet the strict `Steady builder` thresholds
+- `Flat stuck`: minimal structural change with persistent/increasing syntax-error burden; near-zero success and short/low-progress timelines
+
+Flag-summary prevalence remains useful for overlapping process signatures (from `archetype_outcomes_flags_summary.csv`):
+
+- `Minimal-change solver` signature appears in `32.53%` of attempts
+- `Volatile reworker` signature appears in `33.17%`
+- `Builder with setbacks` signature appears in `16.69%`
+- `Flat stuck` signature appears in `4.29%`
+
+The process-teaching signal remains strong:
+
+- Within **Track A submitters** (from `attempt_archetypes.csv`, primary archetypes):
+- `Incremental debugger`: median active time `2,153s`, median public runs `13`, success `76.81%`
+- `Thrasher`: median active time `4,706s`, median public runs `37`, success `47.44%`
+- `Steady builder`: median active time `667s`, median public runs `6`, success `89.49%`
 
 Interpretation:
 
-- Better process beats more effort: the thrasher group spends roughly **2.2x** the time of incremental debuggers (and ~6.9x steady builders) but has much worse outcomes.
-- This directly supports teaching debugging process, not just content.
+- Better process beats more effort: the thrasher group spends roughly **2.2x** the time of incremental debuggers (and ~7x steady builders) but has much worse outcomes.
+- The new archetypes make this story more complete by separating high-success minimal-change solvers from unstable reworkers instead of collapsing both into `Other`.
 
 Track-specific archetype mix (from `archetype_flags_by_term.csv` and `attempt_archetypes.csv`):
 
@@ -1773,7 +1792,7 @@ Key outputs:
 - `step7_key_metrics.csv`: one-row-per-metric summary of the headline numbers used in this section (gating, submission capture, S2 self-loop, redundancy, IRT threshold gaps, low-ability information, linking gaps, runtime feedback quality, and recovery signals)
 - `submission_capture_*.csv`: namespace-level and term/wave-level audits for the zero-submission instrumentation issue
 - `s2_*.csv` and `public_state_distribution_combined.csv`: S2 prevalence and transition dynamics for debugging intervention targeting
-- `archetype_redesign_summary.csv` plus `archetype_other_*`: archetype intervention metrics and diagnostics for the unclassified `Other` bucket
+- `archetype_redesign_summary.csv` plus `archetype_other_*`: archetype intervention metrics and diagnostics for the residual `Other` bucket
 - `question_redesign_features.csv` and `question_redesign_targets_high_priority.csv`: joined test-design/process/IRT target list for question redesign
 - `problem_statement_clarity_review_targets.csv`: question review shortlist combining wrong-output-logic rates and thrasher rates
 - `layered_scoring_readiness_*.csv`: question-level and summary diagnostics for whether layered scoring is likely to add information before test redesign
@@ -2041,24 +2060,42 @@ Files:
 - `analysis/longitudinal_analysis/within_term_category_change_summary.csv`
 - `analysis/longitudinal_analysis/within_term_wave_pairs_substantive.csv`
 
-### Archetype shifts: process changes are visible, but dominant-thrasher is rare
+### Archetype shifts: dominant student-wave patterns are now interpretable (and `Thrasher` remains rare)
 
-At the student-wave dominant-archetype level, `Thrasher` is effectively absent from the transition matrices. This is an important caveat:
+At the student-wave dominant-archetype level, `Thrasher` is still effectively absent from the transition matrices. This remains an important caveat:
 
 - thrasher is a strong question-level pattern (Step 5), but it rarely dominates an entire student-wave
 
-What does show up consistently:
+With the Step 5a archetype split, the dominant student-wave transition picture becomes much clearer. The largest within-term source groups are now:
 
-- `Incremental debugger` is fairly stable within-term: `56.54%` (`25t1`), `52.01%` (`25t2`), `50.36%` (`25t3`) remain incremental debuggers in Wave 2
-- `One-shot -> Incremental debugger` is common within-term: `29.01%` (`25t1`), `35.70%` (`25t2`), `31.50%` (`25t3`)
-- small but real improvements appear for targeted struggling archetypes:
-  - `Regression -> Incremental debugger`: `14.29%` (`25t1`), `14.29%` (`25t2`), `29.41%` (`25t3`)
-  - `Skeleton-only -> Incremental debugger`: `18.18%` (`25t1`), `5.26%` (`25t2`), `22.22%` (`25t3`)
+- `Builder with setbacks` (Wave 1 dominant): `1,692` (`25t1`), `1,153` (`25t2`), `1,062` (`25t3`)
+- `Minimal-change solver`: `881`, `622`, `557`
+- `Incremental debugger`: `720`, `484`, `584`
+
+For targeted intervention tracking, the Step 8 outputs now group destinations into a broader **productive process** set:
+
+- core productive: `Steady builder`, `Incremental debugger`
+- productive intermediate: `Builder with setbacks`, `Minimal-change solver`
+
+This avoids over-relying on tiny-sample `Thrasher` rows and better matches the final Step 5a taxonomy.
+
+What shows up consistently:
+
+- `Builder with setbacks` is moderately stable within-term: `37.71%` (`25t1`), `36.60%` (`25t2`), `37.01%` (`25t3`) remain `Builder with setbacks` in Wave 2
+- `Minimal-change solver` often shifts to `Builder with setbacks`: `33.94%` (`25t1`), `36.66%` (`25t2`), `35.37%` (`25t3`)
+- `Incremental debugger` often splits between staying incremental and shifting to `Builder with setbacks`:
+  - stay `Incremental debugger`: `37.92%`, `33.68%`, `34.93%`
+  - shift to `Builder with setbacks`: `33.19%`, `40.08%`, `33.56%`
+- targeted struggling archetypes frequently move into more productive mid-process patterns:
+  - `Regression -> Builder with setbacks`: `29.69%` (`25t1`), `35.00%` (`25t2`), `32.14%` (`25t3`)
+  - `Skeleton-only -> Builder with setbacks` or `Incremental debugger` combined: `51.11%` (`25t1`), `38.30%` (`25t2`), `66.67%` (`25t3`)
+- in the broader productive-destination summary (`core + productive intermediate`), dominant-source archetypes such as `Regression`, `Skeleton-only`, `Flat stuck`, and `One-shot` move to productive destinations at high rates (roughly `68%` to `85%` within-term, depending on term and source label)
 
 Files:
 
 - `analysis/longitudinal_analysis/within_term_archetype_shift_matrix.csv`
 - `analysis/longitudinal_analysis/within_term_archetype_targeted_shifts.csv`
+- `analysis/longitudinal_analysis/within_term_archetype_targeted_productive_summary.csv`
 
 ### Dominant state shifts: improvement exists, but dominant-S2 escape is zero under a strict definition
 
@@ -2138,22 +2175,31 @@ Files:
 - `analysis/longitudinal_analysis/cross_term_runtime_type_persistence.csv`
 - `analysis/longitudinal_analysis/student_question_error_rows_step8.csv`
 
-### Archetype stability across terms: incremental debugging is the most stable positive process pattern
+### Archetype stability across terms: `Builder with setbacks` is the dominant repeater pattern
 
 Examples from the dominant-archetype cross-term matrices:
 
-- `Incremental debugger -> Incremental debugger`
-  - `25t1->25t2`: `231/441` (`52.38%`)
-  - `25t2->25t3`: `153/305` (`50.16%`)
-- `One-shot -> Incremental debugger`
-  - `25t1->25t2`: `238/694` (`34.29%`)
-  - `25t2->25t3`: `124/365` (`33.97%`)
+- `Builder with setbacks -> Builder with setbacks`
+  - `25t1->25t2`: `504/916` (`55.02%`)
+  - `25t2->25t3`: `295/620` (`47.58%`)
+- `Minimal-change solver -> Builder with setbacks`
+  - `25t1->25t2`: `153/335` (`45.67%`)
+  - `25t2->25t3`: `105/226` (`46.46%`)
+- `Incremental debugger -> Builder with setbacks`
+  - `25t1->25t2`: `90/190` (`47.37%`)
+  - `25t2->25t3`: `68/138` (`49.28%`)
 
-Again, `Thrasher` is essentially absent at the dominant-archetype term level, so Step 5 thrasher findings should be treated as question-attempt behavior rather than a stable student-level identity.
+Interpretation:
+
+- the dominant repeater trajectory is not "stable thrashing"; it is a persistent middle process regime (`Builder with setbacks`) with some movement to/from `Minimal-change solver` and `Incremental debugger`
+- `Thrasher` remains essentially absent at the dominant-archetype term level, so Step 5 thrasher findings should still be treated as question-attempt behavior rather than a stable student-level identity
+- the cross-term targeted productive summary shows the same pattern for non-productive dominant sources (`Regression`, `Flat stuck`, `One-shot`): most movement is into productive intermediate destinations (`Builder with setbacks` / `Minimal-change solver`) rather than directly into core productive labels
 
 Files:
 
 - `analysis/longitudinal_analysis/cross_term_archetype_shift_matrix.csv`
+- `analysis/longitudinal_analysis/cross_term_archetype_targeted_shifts.csv`
+- `analysis/longitudinal_analysis/cross_term_archetype_targeted_productive_summary.csv`
 - `analysis/longitudinal_analysis/student_term_primary_archetype.csv`
 
 ### Tree-sitter structural progression: more loop/branch usage, less print-heavy behavior
@@ -2218,19 +2264,22 @@ Files:
 - `analysis/longitudinal_analysis/all_three_term_state_trajectory_summary.csv`
 - `analysis/longitudinal_analysis/all_three_term_trajectories.csv`
 
-### Three-term archetype trajectories: no persistent all-three thrasher or all-three skeleton-only pattern in dominant archetypes
+### Three-term archetype trajectories: persistent middle-process patterns dominate the all-three cohort
 
-The dominant-archetype trajectories are mostly combinations of `Other`, `One-shot`, and `Incremental debugger`:
+The dominant-archetype trajectories are now led by the newly resolved mid-process categories rather than `Other`:
 
-- top sequence: `One-shot -> Other -> Other` (`46`)
-- `Incremental debugger` appears somewhere in the trajectory for `269/497` students
+- top sequence: `Builder with setbacks -> Builder with setbacks -> Builder with setbacks` (`56`)
+- next most common sequences are still centered on `Builder with setbacks` and `Minimal-change solver` (for example, `Builder with setbacks -> Builder with setbacks -> Incremental debugger` and `Builder with setbacks -> Builder with setbacks -> Minimal-change solver`, both `20`)
+- `Builder with setbacks` appears somewhere in the trajectory for `404/497` students
+- `Minimal-change solver` appears somewhere in the trajectory for `210/497`
+- `Incremental debugger` appears somewhere in the trajectory for `151/497`
 
 Notably absent in this dominant-archetype summary:
 
-- no `Thrasher -> Thrasher -> Thrasher`
+- no `Thrasher` appears in any three-term dominant-archetype trajectory
 - no `Skeleton-only -> Skeleton-only -> Skeleton-only`
 
-This reinforces the same caveat as above: these labels are very informative at question-attempt level, but dominant per-wave/per-term archetypes compress behavior heavily.
+This reinforces the same caveat as above: these labels are highly informative at question-attempt level, but dominant per-wave/per-term archetypes compress behavior heavily.
 
 Files:
 
@@ -2284,8 +2333,8 @@ On substantive paired-wave students from `25t1` and `25t2`:
 
 - rows: `7108`
 - observed exit-positive rate: `0.7690`
-- 5-fold CV ROC AUC: `0.9189`
-- 5-fold CV Brier score: `0.0954`
+- 5-fold CV ROC AUC: `0.9193`
+- 5-fold CV Brier score: `0.0952`
 
 The model is useful for ranking risk of persistence, but it should not be reported as a pure pass-probability model.
 

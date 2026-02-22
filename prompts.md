@@ -1095,3 +1095,30 @@ Apply these changes the scripts, re-run where required, and update the documenta
 When updating the documentation, don't mention these are updates. Instead, write it as if you're writing for the first time with the benefit of hindsight and the improved analysis.
 
 Add to .gitignore the minimal patterns required to ignore generated files. Stage changes.
+
+# Step 5a: Resolve the other archetypes
+
+Step 5 classified 52.64% of attempts into no named archetype. Before presenting archetype-based findings to stakeholders, this needs resolution.
+
+**Option A: Refine archetype rules.** The current rules are strict. Examine the feature distributions of "Other" attempts:
+
+- What fraction are "near-steady-builder" (mostly monotonic improvement, but with one or two dips)?
+- What fraction are "moderate effort, moderate outcome" (median test\_run count, some test passes, no strong pattern)?
+- What fraction are "late regression" (good progress until the last few runs, then a decline)?
+
+Relax the thresholds or add 2–3 new named archetypes to cover the most common "Other" patterns.
+
+**Option B: Clustering.** Run k-means or DBSCAN on the process features for "Other" attempts. Name emerging clusters based on their feature profiles.
+
+Goal: reduce "Other" below 10% so the archetype distribution tells a complete story.
+
+Rewrite Section 5 to present the final archetype set and their characteristics,.
+When updating the documentation, don't mention these are updates. Instead, write it as if you're writing for the first time with the benefit of hindsight and the improved analysis.
+
+## Recheck
+
+Go through all the analysis so far - especially the corrections due to Step 5a - and check for any errors, inconsistencies, gaps, and obvious improvements - aligning with my intent.
+Apply these changes the scripts, re-run where required, and update the documentation.
+When updating the documentation, don't mention these are updates. Instead, write it as if you're writing for the first time with the benefit of hindsight and the improved analysis.
+
+Add to .gitignore the minimal patterns required to ignore generated files. Stage changes.

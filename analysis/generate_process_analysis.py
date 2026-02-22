@@ -1264,6 +1264,62 @@ def classify_archetypes(attempts: pd.DataFrame) -> pd.DataFrame:
     )
     df["regression_flag"] = reg_flags
 
+    # Reuse the same trajectory signatures written later in 5b so the 5c archetype
+    # split can resolve the dominant "Other" bucket with interpretable rule labels.
+    complexity_pattern = pd.Series(
+        np.select(
+            [
+                df["structural_complexity_monotonic_non_decreasing"].fillna(False).astype(bool)
+                & (df["structural_complexity_rise_events"] > 0)
+                & (df["structural_complexity_drop_events"] == 0),
+                (df["structural_complexity_drop_events"] > 0) & (df["structural_complexity_rise_events"] > 0),
+                (df["structural_complexity_drop_events"] > 0) & (df["structural_complexity_rise_events"] == 0),
+                (df["structural_complexity_rise_events"] == 0) & (df["structural_complexity_drop_events"] == 0),
+            ],
+            [
+                "Monotonic build-up",
+                "Oscillating / restructuring",
+                "Declining / deleting work",
+                "Flat / minimal structural change",
+            ],
+            default="Mixed",
+        ),
+        index=df.index,
+    )
+    error_pattern = pd.Series(
+        np.select(
+            [
+                (df["ts_error_decrease_event_count"] > df["ts_error_increase_event_count"])
+                & (to_num(df["error_nodes_final"]) < to_num(df["error_nodes_first"])),
+                (df["ts_error_increase_event_count"] > df["ts_error_decrease_event_count"])
+                & (to_num(df["error_nodes_final"]) > to_num(df["error_nodes_first"])),
+                (df["error_nodes_nonzero_fraction"].fillna(0) > 0.75) & (df["ts_error_decrease_event_count"] == 0),
+                (df["ts_error_increase_event_count"] > 0) & (df["ts_error_decrease_event_count"] > 0),
+            ],
+            [
+                "Decreasing errors",
+                "Increasing errors",
+                "Persistent errors",
+                "Fluctuating errors",
+            ],
+            default="No/low errors",
+        ),
+        index=df.index,
+    )
+
+    df["minimal_change_solver_flag"] = (complexity_pattern == "Flat / minimal structural change") & (
+        error_pattern == "No/low errors"
+    )
+    df["volatile_reworker_flag"] = (complexity_pattern == "Oscillating / restructuring") & error_pattern.isin(
+        ["Fluctuating errors", "Decreasing errors", "No/low errors"]
+    )
+    df["builder_with_setbacks_flag"] = (complexity_pattern == "Monotonic build-up") & error_pattern.isin(
+        ["No/low errors", "Decreasing errors", "Fluctuating errors"]
+    )
+    df["flat_stuck_flag"] = (complexity_pattern == "Flat / minimal structural change") & error_pattern.isin(
+        ["Persistent errors", "Increasing errors"]
+    )
+
     # Convenience/no-activity bucket (rare after Step 0 filtering, but keep explicit).
     df["no_activity_flag"] = df["event_count"].fillna(0).astype(int).eq(0)
 
@@ -1278,6 +1334,10 @@ def classify_archetypes(attempts: pd.DataFrame) -> pd.DataFrame:
         ("Incremental debugger", df["incremental_debugger_flag"]),
         ("Steady builder", df["steady_builder_flag"]),
         ("Regression", df["regression_flag"]),
+        ("Minimal-change solver", df["minimal_change_solver_flag"]),
+        ("Volatile reworker", df["volatile_reworker_flag"]),
+        ("Builder with setbacks", df["builder_with_setbacks_flag"]),
+        ("Flat stuck", df["flat_stuck_flag"]),
     ]
     assigned = np.zeros(len(df), dtype=bool)
     for label, mask in order:
@@ -1296,6 +1356,10 @@ def classify_archetypes(attempts: pd.DataFrame) -> pd.DataFrame:
         "incremental_debugger_flag",
         "steady_builder_flag",
         "regression_flag",
+        "minimal_change_solver_flag",
+        "volatile_reworker_flag",
+        "builder_with_setbacks_flag",
+        "flat_stuck_flag",
     ]
     for c in flag_cols:
         df[c] = df[c].fillna(False).astype(bool)
@@ -1312,10 +1376,14 @@ def build_archetype_outputs(df: pd.DataFrame) -> None:
     flag_rows: list[dict[str, Any]] = []
     archetype_flags = [
         ("Steady builder", "steady_builder_flag"),
+        ("Builder with setbacks", "builder_with_setbacks_flag"),
+        ("Minimal-change solver", "minimal_change_solver_flag"),
         ("Late starter", "late_starter_flag"),
         ("Thrasher", "thrasher_flag"),
+        ("Volatile reworker", "volatile_reworker_flag"),
         ("One-shot", "one_shot_flag"),
         ("Stuck and abandoned", "stuck_and_abandoned_flag"),
+        ("Flat stuck", "flat_stuck_flag"),
         ("Skeleton-only", "skeleton_only_flag"),
         ("Regression", "regression_flag"),
         ("Incremental debugger", "incremental_debugger_flag"),

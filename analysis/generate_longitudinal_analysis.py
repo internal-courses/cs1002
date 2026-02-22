@@ -86,6 +86,10 @@ KEY_CONSTRUCTS = [
     "print_call",
 ]
 
+CORE_PRODUCTIVE_ARCHETYPES = ("Steady builder", "Incremental debugger")
+MID_PRODUCTIVE_ARCHETYPES = ("Builder with setbacks", "Minimal-change solver")
+PRODUCTIVE_ARCHETYPES = CORE_PRODUCTIVE_ARCHETYPES + MID_PRODUCTIVE_ARCHETYPES
+
 
 @dataclass(frozen=True)
 class Inputs:
@@ -1028,12 +1032,53 @@ def build_within_term_outputs(
             ["term", "wave1_primary_archetype", "students"], ascending=[True, True, False]
         )
 
-        targeted = arch_matrix[
-            arch_matrix["wave1_primary_archetype"].isin(["Thrasher", "Skeleton-only", "Regression"])
+        targeted = arch_matrix.copy()
+        targeted["source_is_productive"] = targeted["wave1_primary_archetype"].isin(PRODUCTIVE_ARCHETYPES)
+        targeted["destination_is_core_productive"] = targeted["wave2_primary_archetype"].isin(CORE_PRODUCTIVE_ARCHETYPES)
+        targeted["destination_is_mid_productive"] = targeted["wave2_primary_archetype"].isin(MID_PRODUCTIVE_ARCHETYPES)
+        targeted["destination_is_productive"] = targeted["wave2_primary_archetype"].isin(PRODUCTIVE_ARCHETYPES)
+        targeted["same_archetype_transition"] = targeted["wave1_primary_archetype"] == targeted["wave2_primary_archetype"]
+        targeted = targeted[
+            targeted["wave1_primary_archetype"].ne("Unknown") & (~targeted["source_is_productive"])
         ].copy()
         out["within_term_archetype_targeted_shifts.csv"] = targeted.sort_values(
             ["term", "wave1_primary_archetype", "students"], ascending=[True, True, False]
         )
+        if not targeted.empty:
+            t = targeted.copy()
+            t["students_to_productive"] = np.where(t["destination_is_productive"], t["students"], 0)
+            t["students_to_core_productive"] = np.where(t["destination_is_core_productive"], t["students"], 0)
+            t["students_to_mid_productive"] = np.where(t["destination_is_mid_productive"], t["students"], 0)
+            t["students_same_archetype"] = np.where(t["same_archetype_transition"], t["students"], 0)
+            t["students_to_other_nonproductive"] = np.where(
+                (~t["destination_is_productive"]) & (~t["same_archetype_transition"]),
+                t["students"],
+                0,
+            )
+            tsum = (
+                t.groupby(["term", "wave1_primary_archetype"], dropna=False)
+                .agg(
+                    source_students=("source_students", "max"),
+                    students_to_productive=("students_to_productive", "sum"),
+                    students_to_core_productive=("students_to_core_productive", "sum"),
+                    students_to_mid_productive=("students_to_mid_productive", "sum"),
+                    students_same_archetype=("students_same_archetype", "sum"),
+                    students_to_other_nonproductive=("students_to_other_nonproductive", "sum"),
+                )
+                .reset_index()
+            )
+            for c in [
+                "students_to_productive",
+                "students_to_core_productive",
+                "students_to_mid_productive",
+                "students_same_archetype",
+                "students_to_other_nonproductive",
+            ]:
+                pct_col = c.replace("students_", "pct_")
+                tsum[pct_col] = np.where(tsum["source_students"] > 0, 100.0 * tsum[c] / tsum["source_students"], np.nan)
+            out["within_term_archetype_targeted_productive_summary.csv"] = tsum.sort_values(
+                ["term", "source_students", "wave1_primary_archetype"], ascending=[True, False, True]
+            )
 
     # Dominant-state shifts
     if not student_wave_state.empty:
@@ -1243,6 +1288,53 @@ def build_cross_term_pairs(
         outputs["cross_term_archetype_shift_matrix.csv"] = amatrix.sort_values(
             ["term_pair", "dominant_primary_archetype_from", "students"], ascending=[True, True, False]
         )
+        atarget = amatrix.copy()
+        atarget["source_is_productive"] = atarget["dominant_primary_archetype_from"].isin(PRODUCTIVE_ARCHETYPES)
+        atarget["destination_is_core_productive"] = atarget["dominant_primary_archetype_to"].isin(CORE_PRODUCTIVE_ARCHETYPES)
+        atarget["destination_is_mid_productive"] = atarget["dominant_primary_archetype_to"].isin(MID_PRODUCTIVE_ARCHETYPES)
+        atarget["destination_is_productive"] = atarget["dominant_primary_archetype_to"].isin(PRODUCTIVE_ARCHETYPES)
+        atarget["same_archetype_transition"] = atarget["dominant_primary_archetype_from"] == atarget["dominant_primary_archetype_to"]
+        atarget = atarget[
+            atarget["dominant_primary_archetype_from"].ne("Unknown") & (~atarget["source_is_productive"])
+        ].copy()
+        outputs["cross_term_archetype_targeted_shifts.csv"] = atarget.sort_values(
+            ["term_pair", "dominant_primary_archetype_from", "students"], ascending=[True, True, False]
+        )
+        if not atarget.empty:
+            t = atarget.copy()
+            t["students_to_productive"] = np.where(t["destination_is_productive"], t["students"], 0)
+            t["students_to_core_productive"] = np.where(t["destination_is_core_productive"], t["students"], 0)
+            t["students_to_mid_productive"] = np.where(t["destination_is_mid_productive"], t["students"], 0)
+            t["students_same_archetype"] = np.where(t["same_archetype_transition"], t["students"], 0)
+            t["students_to_other_nonproductive"] = np.where(
+                (~t["destination_is_productive"]) & (~t["same_archetype_transition"]),
+                t["students"],
+                0,
+            )
+            tsum = (
+                t.groupby(["term_pair", "dominant_primary_archetype_from"], dropna=False)
+                .agg(
+                    source_students=("source_students", "max"),
+                    students_to_productive=("students_to_productive", "sum"),
+                    students_to_core_productive=("students_to_core_productive", "sum"),
+                    students_to_mid_productive=("students_to_mid_productive", "sum"),
+                    students_same_archetype=("students_same_archetype", "sum"),
+                    students_to_other_nonproductive=("students_to_other_nonproductive", "sum"),
+                )
+                .reset_index()
+            )
+            for c in [
+                "students_to_productive",
+                "students_to_core_productive",
+                "students_to_mid_productive",
+                "students_same_archetype",
+                "students_to_other_nonproductive",
+            ]:
+                pct_col = c.replace("students_", "pct_")
+                tsum[pct_col] = np.where(tsum["source_students"] > 0, 100.0 * tsum[c] / tsum["source_students"], np.nan)
+            outputs["cross_term_archetype_targeted_productive_summary.csv"] = tsum.sort_values(
+                ["term_pair", "source_students", "dominant_primary_archetype_from"], ascending=[True, False, True]
+            )
 
     if not term_pairs.empty and not student_term_state.empty:
         st = student_term_state[["term", "student_id", "dominant_process_state", "dominant_process_state_order", "dominant_process_state_label"]].copy()
@@ -2166,18 +2258,69 @@ def build_step8_key_metrics(
             })
 
     if within_term_archetype_targeted is not None and not within_term_archetype_targeted.empty:
-        targets = within_term_archetype_targeted[
-            (within_term_archetype_targeted["wave1_primary_archetype"] == "Thrasher")
-            & (within_term_archetype_targeted["wave2_primary_archetype"].isin(["Steady builder", "Incremental debugger"]))
-        ]
-        for _, r in targets.iterrows():
-            rows.append({
-                "metric_group": "Within-term archetype shift",
-                "metric_name": f"{r['term']}_thrasher_to_{str(r['wave2_primary_archetype']).replace(' ', '_').lower()}_pct",
-                "value": float(r["pct_of_source"]),
-                "unit": "pct",
-                "note": "Row-normalized among Wave1 thrashers",
-            })
+        if "destination_is_productive" in within_term_archetype_targeted.columns:
+            t = within_term_archetype_targeted.copy()
+            t = t[t["wave1_primary_archetype"].ne("Unknown")].copy()
+            if not t.empty:
+                t["students_to_productive"] = np.where(t["destination_is_productive"].fillna(False), t["students"], 0)
+                t["students_to_core_productive"] = np.where(
+                    t.get("destination_is_core_productive", False), t["students"], 0
+                )
+                tsum = (
+                    t.groupby(["term", "wave1_primary_archetype"], dropna=False)
+                    .agg(
+                        source_students=("source_students", "max"),
+                        students_to_productive=("students_to_productive", "sum"),
+                        students_to_core_productive=("students_to_core_productive", "sum"),
+                    )
+                    .reset_index()
+                )
+                tsum["pct_to_productive"] = np.where(
+                    tsum["source_students"] > 0, 100.0 * tsum["students_to_productive"] / tsum["source_students"], np.nan
+                )
+                tsum["pct_to_core_productive"] = np.where(
+                    tsum["source_students"] > 0, 100.0 * tsum["students_to_core_productive"] / tsum["source_students"], np.nan
+                )
+                stable_sources = ["Regression", "Skeleton-only", "Flat stuck", "One-shot"]
+                for _, r in tsum[tsum["wave1_primary_archetype"].isin(stable_sources)].iterrows():
+                    src_slug = str(r["wave1_primary_archetype"]).replace(" ", "_").replace("-", "_").lower()
+                    rows.append({
+                        "metric_group": "Within-term archetype shift",
+                        "metric_name": f"{r['term']}_{src_slug}_to_productive_pct",
+                        "value": float(r["pct_to_productive"]),
+                        "unit": "pct",
+                        "note": "Row-normalized among Wave1 dominant archetype; productive destinations = steady/incremental/builder_with_setbacks/minimal_change_solver",
+                    })
+                    rows.append({
+                        "metric_group": "Within-term archetype shift",
+                        "metric_name": f"{r['term']}_{src_slug}_source_students",
+                        "value": float(r["source_students"]),
+                        "unit": "students",
+                        "note": "Wave1 dominant source-archetype count in substantive paired cohort",
+                    })
+                # Keep thrasher metrics only when source counts are large enough to avoid over-reading tiny cells.
+                thr = tsum[(tsum["wave1_primary_archetype"] == "Thrasher") & (tsum["source_students"] >= 10)]
+                for _, r in thr.iterrows():
+                    rows.append({
+                        "metric_group": "Within-term archetype shift",
+                        "metric_name": f"{r['term']}_thrasher_to_productive_pct",
+                        "value": float(r["pct_to_productive"]),
+                        "unit": "pct",
+                        "note": "Row-normalized among Wave1 dominant thrashers; only emitted when source n >= 10",
+                    })
+        else:
+            targets = within_term_archetype_targeted[
+                (within_term_archetype_targeted["wave1_primary_archetype"] == "Thrasher")
+                & (within_term_archetype_targeted["wave2_primary_archetype"].isin(["Steady builder", "Incremental debugger"]))
+            ]
+            for _, r in targets.iterrows():
+                rows.append({
+                    "metric_group": "Within-term archetype shift",
+                    "metric_name": f"{r['term']}_thrasher_to_{str(r['wave2_primary_archetype']).replace(' ', '_').lower()}_pct",
+                    "value": float(r["pct_of_source"]),
+                    "unit": "pct",
+                    "note": "Row-normalized among Wave1 thrashers (legacy targeted table schema)",
+                })
 
     if within_term_s2_escape is not None and not within_term_s2_escape.empty:
         for _, r in within_term_s2_escape.iterrows():

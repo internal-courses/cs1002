@@ -383,13 +383,17 @@ def build_archetype_tables(conn: duckdb.DuckDBPyConnection) -> dict[str, pd.Data
         {
             "Steady builder": 1,
             "Incremental debugger": 2,
-            "Regression": 3,
-            "One-shot": 4,
-            "Skeleton-only": 5,
-            "Stuck and abandoned": 6,
-            "Thrasher": 7,
-            "Late starter": 8,
-            "Other": 9,
+            "Builder with setbacks": 3,
+            "Minimal-change solver": 4,
+            "Volatile reworker": 5,
+            "Regression": 6,
+            "One-shot": 7,
+            "Skeleton-only": 8,
+            "Flat stuck": 9,
+            "Stuck and abandoned": 10,
+            "Thrasher": 11,
+            "Late starter": 12,
+            "Other": 13,
         }
     ).fillna(99)
     archetype_summary = archetype_summary.sort_values(["archetype_order", "classification_basis"]).drop(columns=["archetype_order"])
