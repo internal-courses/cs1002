@@ -1122,3 +1122,220 @@ Apply these changes the scripts, re-run where required, and update the documenta
 When updating the documentation, don't mention these are updates. Instead, write it as if you're writing for the first time with the benefit of hindsight and the improved analysis.
 
 Add to .gitignore the minimal patterns required to ignore generated files. Stage changes.
+
+# Step 10: The Stakeholder Report
+
+**What Steps 5–9 Added That Reshapes the Synthesis**
+
+The archetype story is now complete and more nuanced
+
+"Other" dropped from 52.64% to 6.40%. The two largest new archetypes fundamentally change the narrative:
+
+| Archetype             | % of Attempts | Success Rate | What It Means                                                                                                                                                      |
+| --------------------- | ------------: | -----------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Minimal-change solver |        18.54% |       77.27% | Quietly successful; few runs, short time, little visible process. Previously invisible inside "Other."                                                             |
+| Volatile reworker     |        17.75% |       35.95% | Repeatedly restructures code with fluctuating errors. High effort (median 3,223s, 18 public runs), mediocre outcomes. Distinct from and much larger than Thrasher. |
+| Steady builder        |        15.95% |       89.04% | The ideal process archetype.                                                                                                                                       |
+| Builder with setbacks |         8.29% |       41.76% | Near-steady-builder but with dips. The dominant "middle ground" archetype for repeaters.                                                                           |
+| Incremental debugger  |         7.66% |       77.65% | Small targeted changes, good debugging.                                                                                                                            |
+| Regression            |         7.66% |        5.65% | Had working code, broke it.                                                                                                                                        |
+| Skeleton-only         |         6.14% |        0.48% | Didn't meaningfully attempt.                                                                                                                                       |
+| One-shot              |         5.02% |        9.44% | ≤3 runs.                                                                                                                                                           |
+| Stuck and abandoned   |         2.77% |        4.11% | Gave up after idle gap.                                                                                                                                            |
+| Thrasher              |         1.81% |       43.59% | High-run-count oscillation.                                                                                                                                        |
+| Flat stuck            |         1.67% |        0.12% | Minimal change, persistent syntax errors. Near-zero success.                                                                                                       |
+| Late starter          |         0.35% |       25.66% | Delayed start.                                                                                                                                                     |
+
+**Critical nuance for the report**: Thrasher is a _question-level_ phenomenon (some questions induce 7–13% thrashing rates), not a stable student-level identity. At the student-wave and student-term level, Thrasher essentially never appears as a dominant archetype. Present thrashing as a question-design signal, not a student-type label.
+
+**The longitudinal picture is more positive than expected — with one stark exception**
+
+**Good news**: Substantial learning is happening.
+
+- 58–69% of students improve Wave 1 → Wave 2 (category-based).
+- 81% of t1→t2 repeaters improve; 77% of t2→t3 repeaters improve.
+- 53% of syntax-gated repeaters move to pass-like error profiles by the next term.
+- 67% of repeaters master at least one new concept between terms.
+- Structural progression is visible: more loops and conditionals, less print-heavy trial code.
+
+**Stark exception**: Dominant-S2 escape is **zero**. Students whose entire wave or term is dominated by S2 (parseable code, zero tests passing) never shift to dominant S3/S4 — not within terms, not across terms. This is a small group (50–110 per term pairing), but it has a 0% conversion rate. Current remediation does not reach them.
+
+**The 497 all-three-term students are NOT an S2 problem**
+
+This is the most important reframing. The persistent cohort's dominant-state trajectories are overwhelmingly **syntax/no-code**, not S2:
+
+- Top trajectory: S1 → S1 → S1 (fundamental syntax, all three terms): 181 students
+- S0 → S1 → S1: 69 students
+- Only 3 students have trajectories starting with dominant S2
+
+This means the intervention for the hardest-to-help students is different from the S2 intervention. The 497 need foundational Python instruction (syntax, program structure), not debugging support.
+
+**Concept findings add actionable specificity**
+
+Hardest concepts (persistently, across terms):
+
+- Data analysis / aggregation: 21% pass rate, acquisition rate among repeaters only 3–9%
+- Pattern printing: 30% pass rate, acquisition rate <8%
+- Input parsing / output formatting: 30% pass rate
+
+The S2 concept decomposition shows that for most concepts, S2 failures already include the relevant construct (an application/debugging gap), except for dictionaries and file operations where construct proxies are weak. This means S2 students mostly know _what_ to use but can't make it _work_ — reinforcing the debugging-support intervention.
+
+---
+
+**What to Produce**
+
+**10a. The Stakeholder Report**
+
+Structure the report in six parts. Each part leads with findings, ends with specific actions, and cites the step that produced the evidence. The report should be readable by someone who has not seen the analytical steps — it tells the story, not the methodology.
+
+**Part A: How Students Are Performing**
+
+Lead with the gating waterfall. This is the centrepiece visual and the single most important output of the entire analysis.
+
+| Gate                                          | % of All Student-Question Attempts |
+| --------------------------------------------- | ---------------------------------: |
+| Full pass                                     |                             46.83% |
+| Genuine logic failure                         |                             26.72% |
+| Edge-case gated (passes core, fails edge)     |                              7.35% |
+| Syntax gated — mechanical (structure evident) |                              7.14% |
+| Unmodified skeleton / didn't attempt          |                              6.14% |
+| Partial pass                                  |                              3.21% |
+| Syntax gated — fundamental (no structure)     |                              2.36% |
+| Formatting gated                              |                              0.25% |
+
+Key messages:
+
+- Nearly half of all attempts succeed. The exam is passable.
+- **Logic failure, not syntax, is the dominant failure mode.** This directly addresses the original hypothesis ("too focused on syntax vs. conceptual understanding"). The data says: syntax gates \~9.5%, but logic failure is 26.72%. The bigger problem is students who can write valid Python but can't solve the problem.
+- 7.35% fail only on edge cases — these students understand the core problem and are "almost there."
+- Regression is common: 45% of students who end with broken code had working code earlier. This is a process failure (can't maintain code while editing), not a knowledge failure.
+- The formatting tax is negligible (0.25%). The evaluation handles output format differences well.
+
+Include the non-submission context: 71.72% non-submission overall, but 89.79% of this is a data capture issue (23/35 namespaces have no submission events). In namespaces where submissions work, genuine non-submission is small and these students are stuck (62% runtime errors on best run).
+
+**Part B: How Students Work**
+
+Lead with the archetype distribution (now complete, only 6.4% unclassified).
+
+Key messages:
+
+- **The largest group is "minimal-change solvers" (18.54%)** — students who succeed quickly and quietly with few runs. Combined with steady builders (16%) and incremental debuggers (8%), roughly 42% of attempts show efficient, successful process.
+- **"Volatile reworkers" (17.75%)** are the second-largest group and have mediocre outcomes (36% success). They restructure repeatedly with fluctuating errors. This is different from thrashing — it's a broader instability pattern affecting nearly 1 in 5 attempts.
+- **Better process beats more effort.** Thrashers spend 2.2× the time of incremental debuggers for worse outcomes (43% vs 77% success). Volatile reworkers spend even more time (median 3,223s vs 2,153s for incremental debuggers) for even worse outcomes (36%).
+- **Thrashing is a question-level signal, not a student identity.** Certain questions induce high thrashing rates ("Centered Triangle Of Zeroes" at 13%, "Pangram Check" at 7%). At the student level, Thrasher essentially never appears as a dominant archetype. This means thrashing is a question-design problem that can be fixed by redesigning specific questions.
+- **The genuinely stuck population fails early and quietly.** Non-submitters in submission-positive namespaces show high regression (\~20%), almost no incremental debugging (\~0.3%), and are dominated by abandonment. They don't thrash — they give up.
+
+The death spiral:
+
+- S2 (parseable, zero tests) has a 79% self-loop probability. This is the dominant stuck state.
+- S2 accounts for 47.1% of all public test-run states.
+- Recovery from syntax errors with structural intent is materially faster (50% within 1 run) than without (44%).
+- Wrong Answer errors persist to the final run 39% of the time — the hardest error type to recover from.
+
+**Part C: How Well the Evaluation Works**
+
+Key messages:
+
+- **Test cases are heavily redundant.** 34.46% of within-question item pairs are near-identical (phi > 0.90). Cronbach's alpha exceeds 0.97\. The exam is internally consistent but wastes much of its test-case capacity measuring the same thing.
+- **Nearly half the questions have ineffective partial credit.** 47.35% of questions have GRM thresholds (b2 - b1) below 0.35, meaning the "some tests" and "all tests" categories represent nearly the same difficulty. Partial credit adds almost no information for these questions.
+- **The exam can't distinguish among weak students.** 33/35 namespaces provide \~6× less measurement information in the low-ability region than in the middle. Given that later terms contain progressively weaker students, the exam is least precise where diagnosis is most needed.
+- **15 cliff-like questions** create threshold effects without meaningful gradation.
+- **Some variant pairs are inequivalent.** Linked-θ differences reach 0.653 between \_1 and \_2 variants. These pairs should not be treated as interchangeable.
+- **No public-test overfitting** (0.02%) and **negligible formatting tax** (0.25%). These are non-issues.
+- **Public-best categories overstate mastery for \~14% of submitters** (public category higher than private). The GRM uses public-best for calibration consistency, but absolute mastery claims should carry this caveat.
+
+**Part D: What Students Don't Understand**
+
+Key messages:
+
+- **The hardest concept cluster is data analysis/aggregation** (21% pass rate), followed by input parsing/output formatting (30%), pattern printing (30%), and file operations (31%). These are persistently difficult across terms.
+- **Core concepts show reasonable mastery**: arithmetic/conditionals (60%), list/tuple operations (52%), string manipulation (52%).
+- **The "usage vs. mastery" distinction matters for teaching**:
+  - Loops: high usage (49%), low mastery (46% pass among users) → students know _when_ to use loops but struggle with execution. **Intervention: more practice and worked examples.**
+  - List/dict comprehensions, try/except: low usage (<5%), low mastery → students haven't absorbed these constructs. **Intervention: more exposure and pattern recognition (when to use it, not just how).**
+- **Most S2 failures already include the relevant construct.** For loops (65%), pattern printing (94%), and data analysis (67%), students in the S2 bottleneck are using the right tool but can't make it produce correct output. This is an application/debugging gap, not a concept-selection gap. The exception is dictionaries and file operations, where construct proxies are weak so the signal is less clear.
+- **Repeat students do learn new concepts**: 67% master at least one new concept between terms. But acquisition rates for data analysis (<10%) and pattern printing (<8%) are very low — these concepts resist current remediation.
+- **The empirical prerequisite graph suggests curriculum review**, but the current proxy ordering is too coarse for direct sequencing changes. A comparison against the actual syllabus sequence is needed.
+
+**Part E: The Longitudinal Picture**
+
+Key messages:
+
+- **Strong within-term learning.** 58–69% of students improve from Wave 1 to Wave 2 across terms. Mean category improvement is +0.21 to +0.38\. This is the clearest evidence that the course produces learning within a term.
+- **Strong cross-term learning for repeaters.** 81% of t1→t2 repeaters and 77% of t2→t3 repeaters improve. 53% of syntax-gated students move to pass-like error profiles by the next term. Structural progression is visible: more loops and conditionals, less print-heavy trial code.
+- **"Builder with setbacks" is the dominant repeater archetype.** It appears somewhere in the trajectory for 404/497 all-three-term students. This is not a failure archetype — it's a "making progress with difficulty" pattern. The repeater population is working hard and mostly improving, even if they haven't passed yet.
+- **But dominant-S2 students never escape — 0% conversion rate.** Students whose entire wave is dominated by parseable-but-failing code never shift to passing states. This is the one population that current instruction completely fails to move. It's small (50–110 per term pairing) but absolute.
+- **The 497 all-three-term students are a syntax/no-code problem, not an S2 problem.** 181 of them show S1→S1→S1 (fundamental syntax failure, all three terms). Only 3 start with dominant S2\. These students need foundational Python instruction, not debugging support.
+- **But even persistent students show progress in error profiles.** Many trajectories end in pass-like categories: "Syntax gated → Submitted zero → Public full pass" (23 students), "Runtime error → Submitted zero → Full pass" (17 students). Some are getting there — slowly.
+- **The pass-through model identifies who will persist** (AUC 0.92). Risk segmentation is well-calibrated and can target pre-term interventions at students most likely to remain in the system.
+
+**Part F: Recommended Actions**
+
+Present as a prioritised table. Each action traces to specific evidence.
+
+| Priority | Action                                                                                                  | Evidence                                                                                                                                        | Impact                             | Effort       |
+| -------: | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | ------------ |
+|        1 | **Fix submission capture pipeline**                                                                     | Step 1: 23/35 namespaces have zero submission events; 48.76% of Track B students passed all public tests                                        | Critical (operational)             | Low–Moderate |
+|        2 | **Address the S2 bottleneck: structured test feedback + progressive problem design**                    | Steps 4, 5: 26.72% logic failure; 79% S2 self-loop; 0% dominant-S2 escape; S2 failures mostly have relevant constructs but can't make them work | Very High                          | Moderate     |
+|        3 | **Redesign test cases for difficulty spread** (reduce redundancy + widen b2-b1 thresholds)              | Steps 2, 6: 34.46% near-redundant pairs; 47.35% narrow thresholds; 15 cliff-like questions                                                      | Very High                          | Moderate     |
+|        4 | **Add easy warm-up questions** for low-ability measurement and early success experience                 | Step 6: 33/35 namespaces low-ability blind (6× less information at low ability)                                                                 | High                               | Low          |
+|        5 | **Pilot layered scoring** (effective after test-case redesign for \~half the questions)                 | Steps 3, 4, 6: waterfall decomposition; narrow thresholds limit current effectiveness                                                           | High                               | Moderate     |
+|        6 | **Teach debugging process explicitly** using incremental-debugger exemplar trajectories                 | Step 5: thrashers 2.2× time for worse outcomes; volatile reworkers 17.75% of attempts at 36% success                                            | High                               | Moderate     |
+|        7 | **Redesign high-thrash questions** ("Centered Triangle Of Zeroes," "Pangram Check," "Reversed Squares") | Step 5: thrashing is question-level, not student-level; specific questions induce 7–13% thrashing                                               | High                               | Low          |
+|        8 | **Improve runtime error specificity in platform**                                                       | Step 3: 50% of runtime errors are "unspecified"; limits both student learning and analytical precision                                          | High                               | Low          |
+|        9 | **Target "data analysis/aggregation" and "pattern printing" for curriculum improvement**                | Step 9: 21% and 30% pass rates; <10% acquisition among repeaters; persistently hardest concepts                                                 | High                               | Moderate     |
+|       10 | **Investigate and fix variant inequivalence** (starting with 25t2 py21 and 25t1 py22 pairs)             | Step 6: up to 0.653 linked-θ difference between variants                                                                                        | Moderate                           | Low          |
+|       11 | **Add syntax linter / feedback for mechanical syntax errors**                                           | Step 4: 7.14% mechanical syntax gate; Step 5: S1b more recoverable than S1                                                                      | Moderate                           | Low–Moderate |
+|       12 | **Audit problem statement clarity** for high-thrash + high wrong-output-logic questions                 | Steps 3, 5, 7: named question targets                                                                                                           | Moderate                           | Low          |
+|       13 | **Include 2–3 anchor questions across waves** for future IRT growth measurement                         | Steps 6, 8: no wave-pair linking currently possible; 46 candidate anchors identified                                                            | Moderate (enables future analysis) | Low          |
+|       14 | **Design foundational Python intervention for the 497 persistent cohort**                               | Step 8: dominant trajectories are syntax/no-code (S1→S1→S1), not S2; current remediation doesn't reach them                                     | High                               | High         |
+|       15 | **Deploy pass-through risk model** to identify students likely to persist, pre-term                     | Step 8: AUC 0.92, well-calibrated risk deciles                                                                                                  | High                               | Moderate     |
+|       16 | **Realign curriculum to empirical prerequisite graph** (after syllabus comparison)                      | Step 9: 24 candidate edges, 20 misaligned with proxy order; needs real syllabus validation                                                      | High                               | High         |
+|       17 | **Build per-student diagnostic dashboard** (θ + concept profiles + archetype + risk score)              | Steps 5, 6, 8, 9                                                                                                                                | High                               | High         |
+
+**10b. Visualisations to Produce**
+
+The report needs specific visuals. These are the ones that carry the most information per pixel:
+
+1. **The gating waterfall** (Step 4). Stacked bar or waterfall chart. This is the centrepiece. Show Track A and Track B side by side, plus combined. Include the tree-sitter mechanical/fundamental syntax split.
+2. **Archetype distribution and outcomes** (Step 5). Two-panel chart: left panel shows archetype prevalence (horizontal bar), right panel shows success rate per archetype. Annotate with median active time to make the "effort vs. outcome" point visible.
+3. **The S2 self-loop and state-transition diagram** (Step 5). Sankey or state-transition diagram showing self-loop probabilities and escape rates. Highlight the S2→S2 (79%) and S2→S3 (7%) transitions. Annotate S0 as the absorbing state (<5% success).
+4. **Test information function overlay** (Step 6). Show TIF curves for a few representative namespaces on the same θ axis. Shade the low-ability region to make the "blind spot" visually obvious. Mark where later-term student θ distributions cluster.
+5. **Concept mastery heatmap** (Step 9). Rows = concepts, columns = terms. Colour by pass rate. This makes the "data analysis/aggregation is persistently hardest" finding immediately visible.
+6. **Within-term improvement distribution** (Step 8). Histogram of per-student category deltas (Wave 1 → Wave 2) for each term. Show that the distribution is clearly right-shifted (most students improve).
+7. **Cross-term error profile shift** (Step 8). Alluvial/Sankey diagram showing how students' dominant error profiles change from one term to the next. The "syntax → pass-like" flow should be visually prominent.
+8. **The 497 persistent cohort trajectory** (Step 8). Small-multiples or heatmap showing the top 10–15 three-term dominant-state trajectories. The dominance of S1→S1→S1 should be visually unmissable.
+9. **Concept usage vs. mastery scatter** (Step 9). Plot each concept-construct pair with usage rate on x-axis, mastery rate on y-axis. Quadrant labels: "Don't know when" (low usage, high mastery), "Don't know how" (high usage, low mastery), "Not absorbed" (low both), "Mastered" (high both).
+10. **Redundancy and threshold scatter** (Steps 2, 6). Plot each question with mean pairwise phi on x-axis and b2-b1 threshold gap on y-axis. Quadrant labels identify which questions need test-case redesign (high redundancy, narrow threshold) vs. which are already well-designed.
+
+**10c. Data Tables to Produce for Operational Follow-Up**
+
+Beyond the narrative report, produce actionable tables that exam designers can use directly:
+
+1. **Question redesign priority list**: Join Step 2 redundancy data, Step 5 thrasher rates, Step 6 cliff-like flags, and Step 7 redesign targets into a single ranked table. One row per question, columns for each signal, sorted by combined priority score. This is the "to-do list" for question authors.
+2. **Anchor question candidates for future waves**: The 46 candidates from Step 8, with their GRM parameters and discrimination values. Ready for exam designers to select from.
+3. **Per-student risk scores for the next cohort**: If student IDs from the current term are available, export the pass-through model's predicted persistence probability per student. This enables pre-term outreach.
+4. **Concept-question cross-reference**: The full 251-question concept map with mastery rates, so curriculum designers can see which questions instantiate which concepts and how well students handle each.
+5. **Namespace submission-capture audit**: The Step 7 submission-capture tables, formatted for the engineering/platform team to diagnose the instrumentation issue.
+
+**10d. Caveats Section**
+
+The report must include an explicit caveats section covering:
+
+1. **Track A/B asymmetry**: Track A uses private test results; Track B uses public test_run outcomes only. 14.27% of Track A submitters have public categories higher than private. Absolute mastery levels from public-best data should be interpreted as upper bounds.
+2. **Progressive-filter confound**: Cross-term comparisons reflect both learning and population selection. Later terms contain weaker students by construction. Only within-term wave comparisons and individual-level paired analyses are clean.
+3. **Timeline sampling**: The timeline contains only test_run and submission events, not saved-code checkpoints. Process metrics are run-sampled, not edit-sampled. "Time to first parseable code" and construct appearance times are measured at run checkpoints, not at the moment of typing.
+4. **Construct proxy limitations**: Tree-sitter construct tracking does not cover dictionary literals/indexing, `open()` calls, or string methods. The "selection gap" for dictionaries and file operations is likely overstated by the narrow `dict_comp` and `import_*` proxies.
+5. **Concept tagging is heuristic**: Tags are derived from question cues via keyword rules, not expert hand-labelling. Coverage is complete but precision is approximate. The prerequisite graph uses a proxy concept order, not the actual syllabus.
+6. **No wave-pair IRT linking**: Growth analysis uses category-based and rank-based methods, not θ-linked curves. This is robust but less precise.
+7. **LLM analyses not yet run**: The LLM syntax correction and wrong-output classification steps were deferred (no API key). The "genuine logic failure" bucket (26.72%) could be further decomposed with LLM classification; the syntax recovery estimate is a lower bound (rule-based only).
+
+---
+
+Generate this report in analysis/REPORT.md.
+
+GUIDELINES:
+
+Link extensively to specific steps and data outputs in the analysis directory for transparency and reproducibility.
+Always include individual examples (specific students, specific questions, specific code snippets, etc.) to illustrate key points and avoid abstraction.
+IMPORTANT: Write in simple language (ELI15) to be accessible to non-technical stakeholders, even students, and laymen unfamiliar with this exam system.
