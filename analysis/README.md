@@ -1537,3 +1537,218 @@ Interpretation:
 - failed `Thrasher` traces
 - `S2` self-loop traces that never convert to `S3`
 - If raw per-run exception traces become available in the timeline (not just best-public snapshots), re-run 5e with typed runtime recovery (`TypeError`, `NameError`, etc.) instead of the current generic `Runtime Error` bucket.
+
+# Psychometric Modelling with IRT
+
+This step reframes the exam as a measurement instrument rather than only a score report.
+Given Step 2's heavy within-question test-case redundancy, the model is fit at the **question** level (not test-case level) using a 3-category ordinal score per question.
+
+## Process / Rebuild
+
+Script:
+
+- `analysis/generate_psychometric_irt.py`
+
+Rebuild command:
+
+```bash
+uv run analysis/generate_psychometric_irt.py
+```
+
+Generated outputs (ignored by git):
+
+- `analysis/psychometric_irt/`
+
+Key outputs:
+
+- `question_level_grm_rows.csv` (row-level 0/1/2 category inputs by track)
+- `namespace_grm_fit_summary.csv` and `namespace_grm_fit_summary_by_term_wave.csv`
+- `namespace_question_grm_parameters.csv`, `question_parameter_flags.csv`, `question_parameter_summary.csv`
+- `namespace_test_information_grid.csv`, `namespace_test_information_summary.csv`, `tif_low_ability_flags.csv`
+- `namespace_linking_feasibility.csv`, `namespace_pair_linking_summary.csv`, `namespace_pair_anchor_parameter_drift.csv`
+- `theta_linked_variant_pair_comparisons.csv`, `theta_linked_wave_pair_comparisons.csv`
+- `dif_screen_pair_summary.csv` (anchor-drift screen, not a formal DIF test)
+- `submitter_public_vs_private_category_agreement.csv` and `submitter_public_vs_private_category_crosstab.csv`
+- `plots/tif/*.png` and parameter scatter plots
+
+What the script does:
+
+- Builds a question-level ordinal category per student-question:
+- `0`: no tests passed
+- `1`: some but not all tests passed
+- `2`: all tests passed
+- Uses `girth` (`grm_mml_eap`) to fit a question-level Graded Response Model (GRM) per namespace
+- Exports per-question GRM parameters (`a`, `b1`, `b2`) and per-student `theta`
+- Computes test information functions (TIFs) on a common `theta` grid
+- Builds shared-question anchor maps and pairwise threshold-based linking screens
+- Exports linked-`theta` comparisons for variant pairs where anchors are sufficient
+
+### Important Step 6 Modelling Decisions and Caveats
+
+- **Primary GRM basis is public-best for all rows**:
+- The prompt proposed private-final scoring for Track A and public-best for Track B.
+- This script deliberately uses **public-best categories for everyone** (`grm_basis = public_best_all`) so each question item has a single coherent definition within a namespace calibration.
+- Track-aware (`hybrid`) and Track A private-final categories are still exported for sensitivity checks.
+
+- **Question-level GRM is the right granularity for this data**:
+- Step 2 found substantial test-case dependence/redundancy within questions.
+- Modelling test cases as independent IRT items would overstate information and violate local independence assumptions.
+
+- **Linking outputs are a screen, not a full equating study**:
+- Pairwise links are built from shared question titles and threshold alignment.
+- `dif_screen_pair_summary.csv` is useful for triage, but it is not a formal DIF test with person-level covariate controls.
+
+- **Cross-term comparisons remain confounded by progressive filtering**:
+- `t2` students are those who did not clear `t1`; `t3` students are weaker-by-construction again.
+- Cross-term linked differences therefore reflect both instrument differences and population selection.
+
+- **Single-anchor links can look "perfect" but are weak**:
+- A pair with only one shared anchor question supplies exactly two thresholds (`b1`, `b2`), which can produce trivial near-perfect threshold fit statistics.
+- Treat those links as exploratory only.
+
+## Findings
+
+### 6a / 6b) GRM Setup and Fit Coverage
+
+From `question_level_grm_rows.csv` and `question_level_category_coverage_by_track.csv`:
+
+- Total student-question rows for Step 6 input: `151,778`
+- Track mix:
+- Track A submitters: `42,918` (`28.28%`)
+- Track A non-submitters (submission-positive namespaces): `11,112` (`7.32%`)
+- Track B zero-submission namespaces: `97,748` (`64.40%`)
+- Public-best GRM category coverage is effectively complete:
+- missing `grm_category` rows: `2 / 151,778` (both in Track B)
+- Track A submitters have both public and private categories on `42,918 / 42,918` rows
+
+From `irt_summary_overall.csv` and `namespace_grm_fit_summary.csv`:
+
+- GRM fit succeeded for `35 / 35` namespaces
+- Questions fitted: `245` total
+- Low-discrimination questions (`a < 0.5`): `0`
+- Median fitted students per namespace: `787`
+- All `35` fitted namespaces ended with `7` question items in the GRM matrix
+- One special namespace (`ns_25t1_py_15_exe`) had `13` item IDs present, with `6` dropped for low coverage/low category variation before fitting
+
+Important matrix-coverage note (from `namespace_grm_fit_summary.csv` and `namespace_item_matrix_coverage.csv`):
+
+- The question-response matrices are **sparse** and are fit with missing responses (`INVALID_RESPONSE`) in `girth`.
+- Median namespace matrix missingness: `23.04%` of student x item cells
+- Median per-item observation coverage: `79.93%`
+- This is handled by the fitter, but it matters when interpreting TIF precision and parameter stability.
+
+### 6c) Question Parameter Patterns (Difficulty / Discrimination)
+
+From `question_parameter_summary.csv` and `question_parameter_flags.csv`:
+
+- Median discrimination `a`: `2.94` (very high)
+- `p95` discrimination `a`: `4.24`
+- "Very high discrimination" questions (script flag: `a >= 2.5` or in the top 5%): `163 / 245` (`66.53%`)
+- "Partial-credit low information" questions (threshold gap `b2 - b1 < 0.35`): `116 / 245` (`47.35%`)
+- "Cliff-like" questions (high discrimination + Step 1 shape warning): `15 / 245`
+- Extreme `0 -> 1` threshold ("too hard to even get partial credit") is rare: `1 / 245`
+
+Interpretation:
+
+- Step 6 agrees with Step 2's story: the problem is not low discrimination; it is **too much discrimination / cliffiness**, consistent with redundancy and threshold effects.
+- Nearly half the questions have very narrow `0->1` vs `1->2` thresholds, meaning partial credit adds limited measurement information.
+
+Illustrative rare extreme-threshold item (from `question_parameter_flags.csv`):
+
+- `ns_25t3_py21` Q13 `Format Pairs of Integers as Product of Fractions`
+- `b1 = 2.05`, `b2 = 2.81`, with category counts `0/1/2 = 161 / 8 / 4`
+- This is a classic "almost no one gets off zero" measurement pattern.
+
+### 6d) Test Information Function (TIF): Where the Exam Measures Well
+
+From `namespace_test_information_summary.csv`, `tif_low_ability_flags.csv`, and `irt_summary_overall.csv`:
+
+- Median TIF peak location: `theta = -0.25`
+- Median low-to-mid information ratio (`mean info(theta<=-1)` / `mean info(|theta|<=0.5)`): `0.1555`
+- Namespaces flagged as low-ability blind (`ratio < 0.5`): `33 / 35`
+- Namespaces with TIF peak near the middle (`|peak theta| <= 0.75`): `28 / 35`
+- Namespaces peaking only at high ability (`peak theta > 1`): `0`
+
+The two namespaces not flagged low-ability blind are still exceptions, not the norm:
+
+- `ns_25t2_py22_1`: low/mid ratio `0.8588`, peak `theta = -1.35`
+- `ns_25t3_py23`: low/mid ratio `0.5147`, peak `theta = -1.20`
+
+Interpretation:
+
+- The exams usually measure best around the middle and are much less informative in the low-ability region.
+- Given the progressive-filter structure (later terms contain weaker students), this is a real measurement-design mismatch: the instrument is least precise where diagnostic resolution is most needed.
+
+### 6e) Linking Feasibility and DIF Screening (Anchor-Based)
+
+From `namespace_linking_feasibility.csv`, `namespace_pair_linking_summary.csv`, `namespace_pair_anchor_parameter_drift.csv`, and `dif_screen_pair_summary.csv`:
+
+- `27 / 35` namespaces sit in a shared-item connected component (`18` components total)
+- `23 / 35` namespaces have at least `3` reusable anchor items somewhere in their component
+- Pairwise links generated: `27` total
+- `10` variant pairs (`_1` vs `_2`, same slot)
+- `17` generic shared-item pairs (mostly cross-term/cross-context reuse)
+- No wave-pair or same-day timeslot-pair links were available under the shared-item criteria (`0` rows in `theta_linked_wave_pair_comparisons.csv`)
+
+Variant-pair linking is the most credible result:
+
+- All `10 / 10` variant pairs have `7` shared anchors
+- Median threshold-link RMSE: `0.0712`
+- Median linked discrimination drift (`|Δa|`): `0.2379`
+- `1 / 10` variant pairs has a large anchor-threshold drift flag:
+- `ns_25t2_py21_1` vs `ns_25t2_py21_2`
+- strongest threshold-drift anchor: `File Content Zig-Zag Shift` (`|Δb1| = 0.806` after linking)
+
+Generic shared-item links are mostly weakly anchored:
+
+- Median shared anchors per pair: `1`
+- Their "perfect" threshold fit (median RMSE ~ `0`, `R² ~ 1` in many cases) is largely an **artifact of single-anchor exact identification**, not evidence of strong equating quality.
+- Use these links to find candidates for further study, not for high-stakes comparisons.
+
+### 6f) Using `theta` for Fairer Comparisons (What Is and Is Not Supported Here)
+
+From `theta_linked_variant_pair_comparisons.csv`:
+
+- Linked `theta` comparisons are available for `10` same-slot variant pairs
+- Linked mean `theta` differences (`variant_b - variant_a`, on `a` scale) range from about `-0.089` to `+0.653`
+- Largest linked mean difference:
+- `ns_25t1_py22_1` vs `ns_25t1_py22_2`: `+0.653`
+- Small differences (near parity) include:
+- `25t1 py14`, `25t2 py23`, `25t3 py13` variant pairs
+
+Interpretation:
+
+- Some `_1` vs `_2` pairs look materially different on the linked scale and should be reviewed for variant equivalence.
+- However, these are still **screening comparisons**; without explicit random assignment evidence, variant differences can reflect both instrument and subgroup composition.
+
+What is **not** supported in this snapshot:
+
+- `theta_linked_wave_pair_comparisons.csv` is empty, so Step 6 cannot yet provide anchor-linked Wave 1 vs Wave 2 growth estimates.
+- Cross-term linked comparisons are additionally confounded by progressive filtering, so they remain descriptive only.
+
+### Public vs Private Category Sensitivity (Track A Submitters)
+
+From `submitter_public_vs_private_category_agreement.csv` and `submitter_public_vs_private_category_crosstab.csv`:
+
+- Public-best vs private-final question category agreement (submitters): `85.22%`
+- Public category higher than private: `14.27%`
+- Private category higher than public: `0.51%`
+
+Largest disagreement cells:
+
+- Public partial / Private zero: `3,600` rows (`8.39%`)
+- Public full / Private partial: `1,834` rows (`4.27%`)
+- Public full / Private zero: `690` rows (`1.61%`)
+
+Interpretation:
+
+- Public-best categories systematically overstate mastery relative to private-final outcomes for a non-trivial minority of submitters.
+- This is consistent with the Step 2 same-code public/private gap signal.
+- The public-best-only GRM basis is still the right choice for a coherent full-population calibration, but private-vs-public sensitivity should be carried forward when interpreting absolute mastery levels.
+
+## Practical Next Steps (Step 6 Driven)
+
+- Prioritize exam redesign toward **low-ability information** (easier discriminating items, not just more items), because TIFs are weak where later-term students cluster.
+- Review the `15` cliff-like questions first; they are the most likely to create threshold effects without adding much partial-credit information.
+- Investigate variant-equivalence outliers (starting with `25t2 py21 _1/_2` and `25t1 py22 _1/_2`) using item text + test-case structure + process traces from Steps 2 and 5.
+- If a future exam cycle includes intentionally reused anchors across waves, re-run Step 6 to produce defensible wave-linked growth estimates on a common `theta` scale.

@@ -520,7 +520,7 @@ For the above analyses
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Error Taxonomy"
 
-## Step 4: The Syntax Bottleneck — Quantified (Dual-Track)
+# Step 4: The Syntax Bottleneck — Quantified (Dual-Track)
 
 This assembles the findings from Steps 1–3 into a single defensible decomposition of why students fail.
 
@@ -598,7 +598,7 @@ For the above analyses
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"
 
-## Step 5: Process Analysis — What the Snapshots Reveal
+# Step 5: Process Analysis — What the Snapshots Reveal
 
 Process analysis is the step _least affected_ by the two-track split — every student has a full timeline regardless of submission status. Tree-sitter makes the AST-level analysis affordable for the full population.
 
@@ -697,6 +697,79 @@ The tree-sitter structural tracking adds a new dimension: you can now distinguis
 **Action point**: If the "incremental debugger" archetype has dramatically better outcomes than "thrasher" despite similar time investment, that's direct evidence that teaching debugging _process_ (not just content) would improve results. Use the incremental debugger trajectories as exemplars in teaching materials.
 
 **Action point**: The death-spiral analysis with the tree-sitter-enriched state space identifies optimal intervention points with more precision. State 1b (correct structure, broken syntax) is likely much more recoverable than State 1 (no structure) — confirming with data tells you which students a hint system could actually help.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"
+
+# Step 6: Psychometric Modelling with IRT
+
+Steps 1–5 give a rich descriptive and diagnostic picture. Step 6 provides a principled measurement framework for cross-variant and cross-wave comparisons.
+
+**6a. Model choice: Question-level Graded Response Model.**
+
+Step 2 showed extreme item-level redundancy (34.46% of pairs at phi > 0.90) and very high alpha (>0.97). Fitting test-case-level IRT would violate local independence. Instead:
+
+**Default approach**: Fit a **Graded Response Model (GRM)** at the question level.
+
+Score each question as a polytomous item:
+
+- 0 = passed no test cases
+- 1 = passed some but not all test cases
+- 2 = passed all test cases
+
+This gives \~7 polytomous items per exam (one per question), which respects the within-question dependency structure while still modelling difficulty and discrimination.
+
+For Track B (no private test results), use the same grading on public test cases from the best test_run.
+
+**6b. Fit the GRM.**
+
+Per namespace (since students in different namespaces face different questions):
+
+- Fit a GRM using `mirt` (R, via `rpy2`) or `girth` (Python).
+- Extract per-question: difficulty thresholds (b parameters for each grade boundary) and discrimination (a).
+- Extract per-student: latent ability estimate (θ).
+
+For cross-namespace comparison, linking requires shared items. Check whether any questions appear in multiple namespaces (your guide noted some reuse). If linking items exist, fit a concurrent calibration across namespaces. If not, θ estimates are namespace-local and not directly comparable across namespaces.
+
+**6c. Analyse question parameters.**
+
+Plot discrimination vs. difficulty for all questions. Identify:
+
+- **Low-discrimination questions** (a < 0.5): Don't separate students well despite having multiple test cases. These questions need redesign.
+- **Very high discrimination questions**: These create cliff effects — a small ability difference flips the outcome. Check whether these correspond to the questions with high bimodal rates from Step 1.
+- **Questions with extreme difficulty thresholds**: The GRM gives you separate thresholds for "0 → 1" (any partial credit) and "1 → 2" (full credit). If the "0 → 1" threshold is very high, the question is too hard to even get started on. If the "1 → 2" threshold is very close to the "0 → 1" threshold, partial credit adds little information.
+
+**6d. Test information function.**
+
+Compute the test information function per exam namespace. Plot where the exam provides the most measurement precision:
+
+- If information peaks sharply in the middle, the exam can't distinguish "slightly below average" from "completely lost."
+- Given the progressive-filter term structure (later terms have weaker populations), the low-ability region is where you _most_ need information. Check whether the exam provides it.
+
+**6e. Differential Item Functioning (DIF).**
+
+Applicable grouping variables:
+
+- Variant (`_1` vs `_2`) where both exist in the same namespace
+- Time slot within a day (morning vs. afternoon) for same-namespace questions
+- Wave (1 vs 2) — though this is the same students 35 days apart, so DIF here measures something different (practice effect, curriculum effect)
+
+**6f. Use θ for fairer comparisons.**
+
+If cross-namespace linking is feasible:
+
+- Compare θ distributions across variants to check whether `_1` and `_2` are equally difficult instruments.
+- Compare θ distributions across waves to measure within-term growth on a common scale (this feeds Step 8).
+
+**What This Tells You**
+
+The GRM gives you calibrated ability estimates that account for question difficulty and discrimination, which raw scores do not. The test information function tells you where your exam is "blind." Given that later terms contain the weakest students, if the exam's information function drops off at low ability, you're measuring the students who need diagnosis the least and failing to diagnose the ones who need it most.
+
+**Action point**: If the information function is flat at low ability, add easier "warm-up" questions that can discriminate among weak students. This is more actionable than the v2 recommendation of "replace low-discrimination items" (which turned out not to exist).
 
 ---
 

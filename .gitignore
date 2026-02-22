@@ -8,4 +8,5 @@ analysis/classical_item_quality/
 analysis/error_taxonomy/
 analysis/syntax_bottleneck_quantified/
 analysis/process_analysis/
+analysis/psychometric_irt/
 analysis/__pycache__/
