@@ -1187,3 +1187,353 @@ Interpretation:
 - `gating_waterfall_rows.csv`
 - `skeleton_effectiveness_error_location_summary*.csv`
 - For stakeholder communication, present the waterfall with the explicit caveat that Track B "full pass" is public-best-snapshot and Track A mixes private-final (submitters) with public-best (non-submitters).
+
+# Process Analysis — What the Snapshots Reveal
+
+This step analyses **how** students work through a question over time (not just the final outcome), using the full event timeline and tree-sitter structural tracking.
+
+This step is less affected by the Track A / Track B split than score-based steps because both tracks have timeline events. However, interpretation is still shaped by:
+
+- submission capture coverage differences (Track B zero-submission namespaces),
+- progressive filtering across terms (`t2` and `t3` are weaker-by-construction populations),
+- and an important timeline sampling limitation described below.
+
+## Process / Rebuild
+
+Script:
+
+- `analysis/generate_process_analysis.py`
+
+Rebuild command:
+
+```bash
+uv run analysis/generate_process_analysis.py
+```
+
+Generated outputs (ignored by git):
+
+- `analysis/process_analysis/`
+
+Key outputs:
+
+- `attempt_process_features.csv` (5a + 5b per-attempt summaries)
+- `attempt_construct_first_appearance.csv` (5b construct timelines)
+- `attempt_archetypes.csv` (5c archetype flags + primary archetype)
+- `archetype_outcomes_*.csv` and `archetype_*_by_{question,term}.csv` (5d)
+- `error_recovery_episodes_public.csv`, `error_recovery_by_type.csv`, `error_recovery_syntax_intent_split.csv` (5e)
+- `public_test_run_state_rows.parquet`, `death_spiral_*.csv` (5f)
+- `timeline_event_features_enriched.parquet` (event-level trajectory source)
+
+What the script does:
+
+- Reuses Step 3 row-level metadata (`selected_snapshot_taxonomy_rows.csv`, `regression_rows.csv`) for track, term, wave, and outcome fields
+- Parses all unique `(namespace, problem_id, code_sha256)` snapshots seen in the timeline with tree-sitter (question-aware scaffold stripping)
+- Joins structural features back onto the full event timeline (`2,057,658` events)
+- Builds per-attempt process features and structural evolution summaries
+- Classifies behavioural archetypes (multi-label + primary)
+- Computes recovery analysis on public `test_run` sequences
+- Builds a tree-sitter-enriched death-spiral state analysis (public test-run state space + Track A synthetic State 5 terminal transitions)
+
+### Important Step 5 Caveats (Read Before Interpreting Timing Metrics)
+
+- **Timeline sampling is sparse**:
+- `submission_timeline.parquet` in this snapshot contains only `test_run` and `submission` events (no `saved_code` rows).
+- Therefore "time to first parseable code", "first construct appearance", and structural trajectories are measured at **run/submission checkpoints**, not at continuous edit/save granularity.
+- This is why many constructs have `median_first_event_idx = 1` and `median_first_seconds = 0`: students often write code before the first recorded `test_run`.
+
+- **Runtime subtype detail is limited in the timeline**:
+- `summary` is present (`Runtime Error`, `Wrong Answer`, etc.), but `reason` is usually blank in timeline rows.
+- Step 5 recovery therefore uses a robust process-level taxonomy (`SyntaxError`, `Runtime Error`, `Wrong Answer`, `Timeout`, etc.) and a tree-sitter syntax split, but not a reliable per-run `TypeError`/`NameError` split.
+
+- **Death-spiral "success" is a mixed endpoint**:
+- State analysis is built on public `test_run` states for everyone.
+- `eventual_success_state4_or_5` means:
+- reached `State 4` (all public tests passed), or
+- for Track A submitters, reached `State 5` (final full private pass).
+- This is useful for process/decision-state analysis, but Track A vs Track B success rates are still not apples-to-apples.
+
+- **Cross-term comparisons remain descriptive only**:
+- `t2` and `t3` cohorts are progressively filtered.
+- Within-track/within-term process comparisons are the safer lens.
+
+## Findings
+
+### Coverage and Event Structure (Step 5 Foundation)
+
+From `timeline_event_features_coverage.csv` and `timeline_event_features_enriched.parquet`:
+
+- Attempts covered: `151,778 / 151,778`
+- Timeline event rows: `2,057,658`
+- `test_run` rows: `2,002,516`
+- Public `test_run` rows: `1,724,016`
+- Private `test_run` rows: `278,500`
+- Submission rows: `55,142`
+
+From `qhash_tree_sitter_parse_summary.csv`:
+
+- Unique question-hash snapshots parsed with tree-sitter: `1,386,166`
+- Tree-sitter parseable (no `ERROR`/missing-token nodes): `1,116,160` (`80.52%`)
+- Tree-sitter error-bearing snapshots: `270,006`
+- "Structure evident" among all qhash snapshots: `204,685`
+
+From `qhash_structural_features_summary.csv`:
+
+- Scaffold stripping coverage is high and consistent:
+- `partial_prefix_suffix`: `75.49%`
+- `no_scaffolding_config`: `21.08%`
+- `exact_prefix_suffix`: `3.09%`
+- `prefix_suffix_not_found`: `0.33%`
+
+Interpretation:
+
+- Step 5 has full-population coverage at the attempt level and broad structural coverage at the snapshot level.
+- The snapshot-level tree-sitter pass is feasible and robust enough to support trajectory/state analysis at scale.
+
+### 5a) Per-Attempt Timeline Features
+
+From `process_feature_summary_global.csv`:
+
+- Median active time: `997s` (~16.6 min)
+- `p90` active time: `5,545s` (~92.4 min)
+- Median test runs: `8`
+- `p90` test runs: `30`
+- Median public test runs: `7`
+- Attempts with any public test pass: `61.90%`
+- Attempts with any public all-pass: `48.41%`
+- Parseability regression flag (Step 3 regression rows): `6.04%` of all attempts
+- Peak-to-last-public regression flag: `2.92%` of all attempts
+
+By track (from `process_feature_summary_by_track.csv` and `attempt_archetypes.csv`):
+
+- Track A non-submitters (submission-positive NS):
+- median test runs `6`, `p90 = 24`
+- median active time `604s`
+- median parseable fraction `0.7727`
+- any large deletion event `4.70%`
+- any structural regression event `20.71%`
+- Track A submitters:
+- median test runs `9`, `p90 = 34`
+- median active time `1,210s`
+- median parseable fraction `0.9688`
+- any structural regression event `17.82%`
+- Track B:
+- median test runs `8`, `p90 = 29`
+- median active time `976s`
+- median parseable fraction `0.9444`
+- any structural regression event `17.57%`
+
+Important metric caveat (useful for future analysis):
+
+- `pct_public_monotonic` is high across tracks (`~70–81%`), but this includes **flat** trajectories (e.g., repeatedly passing 0 tests).
+- Monotonicity alone is therefore a weak proxy for "good debugging"; pair it with improvement events or state transitions.
+
+### 5b) Structural Evolution Tracking (Tree-Sitter, Full Population)
+
+From `structural_evolution_patterns_by_track.csv`:
+
+- Track A non-submitters (submission-positive NS) are concentrated in:
+- `Flat / minimal structural change` + `No/low errors` (`24.25%`)
+- `Oscillating / restructuring` + `Fluctuating errors` (`16.38%`)
+- `Flat / minimal structural change` + `Persistent errors` (`7.08%`)
+
+Interpretation:
+
+- The non-submitter process picture is not one thing:
+- a large group stays structurally flat (often not progressing beyond an initial approach),
+- another large group repeatedly restructures while error counts fluctuate (process instability).
+
+Construct timeline / "what appears at all?" (from `construct_first_appearance_summary_global.csv`):
+
+- Ever observed in an attempt:
+- `for_loop`: `46.71%`
+- `while_loop`: `5.13%`
+- `list_comp`: `4.53%`
+- `dict_comp`: `0.41%`
+- `try_stmt`: `1.45%`
+- `class_def`: `0.02%`
+
+Interpretation:
+
+- Low use of list/dict comprehensions persists even when measured over the full process (not just final snapshots).
+- Many constructs appear at event index `1` because the timeline is sampled at runs/submissions only (not continuous saves), so the construct timing columns are best read as "first observed checkpoint", not "first typed character."
+
+### 5c / 5d) Behavioural Archetypes and Outcomes
+
+From `archetype_outcomes_flags_summary.csv`:
+
+- `Steady builder`: `24,439` attempts (`16.10%`), success (`State 4/5`) `88.73%`
+- `Incremental debugger`: `11,721` attempts (`7.72%`), success `77.28%`
+- `One-shot`: `13,152` attempts (`8.67%`), success `5.49%`
+- `Regression`: `15,280` attempts (`10.07%`), success `5.88%`
+- `Skeleton-only`: `9,315` attempts (`6.14%`), success `0.48%`
+- `Stuck and abandoned`: `5,274` attempts (`3.47%`), success `3.43%`
+- `Thrasher`: `2,758` attempts (`1.82%`), success `43.47%`
+
+Primary archetype distribution (from `archetype_outcomes_primary_summary.csv`):
+
+- `Other`: `52.64%`
+- `Steady builder`: `15.95%`
+- `Incremental debugger`: `7.66%`
+- `Regression`: `7.66%`
+- `Skeleton-only`: `6.14%`
+- `One-shot`: `5.02%`
+
+The process-teaching signal (requested action point) is strong:
+
+- Within **Track A submitters** (from `attempt_archetypes.csv`):
+- `Incremental debugger`: median active time `2,170s`, median public runs `13`, success `76.44%`
+- `Thrasher`: median active time `4,717s`, median public runs `37`, success `47.23%`
+- `Steady builder`: median active time `679s`, median public runs `6`, success `89.21%`
+
+Interpretation:
+
+- Better process beats more effort: the thrasher group spends roughly **2.2x** the time of incremental debuggers (and ~6.9x steady builders) but has much worse outcomes.
+- This directly supports teaching debugging process, not just content.
+
+Track-specific archetype mix (from `archetype_flags_by_term.csv` and `attempt_archetypes.csv`):
+
+- Track A non-submitters (submission-positive NS) have very high:
+- `Regression` (~`19.6–19.9%` in `25t2`/`25t3`)
+- `Stuck and abandoned` (~`12.0–12.7%`)
+- and almost no `Incremental debugger` (`~0.3%`) or `Thrasher` (`~0.2–0.4%`)
+
+Interpretation:
+
+- The genuinely stuck non-submitter population often fails **early and quietly** (regression/abandonment), not necessarily via high-run-count thrashing.
+
+Questions that induce disproportionate thrashing (primary archetype, `>=200` attempts; from `archetype_primary_by_question.csv`):
+
+- `Pattern printing - Centered Triangle Of Zeroes`:
+- `25t1_py12_2`: `12.59%` thrasher primary
+- `25t1_py12_1`: `10.11%`
+- Also elevated:
+- `Reversed Squares of List Elements` (`7.08%`)
+- `Pangram Check` (`6.96%`)
+- `File Content Zig-Zag Shift` (`6.91%` in one namespace variant)
+
+### 5e) Recovery Analysis by Error Type (Public `test_run` Sequences)
+
+From `error_recovery_by_type.csv`:
+
+- `SyntaxError (structure evident)`:
+- episodes `111,833`
+- resolved within attempt `87.61%`
+- median resolution time `42s`
+- persists to final public run in `20.94%` of attempts that ever had this error
+- `SyntaxError (no structure)`:
+- episodes `69,425`
+- resolved within attempt `79.58%`
+- median resolution time `47s`
+- persists to final public run in `30.27%` of attempts
+- `Runtime Error` (generic timeline-level bucket):
+- episodes `177,879`
+- resolved within attempt `87.60%`
+- persists to final public run in `26.29%` of attempts
+- `Wrong Answer`:
+- episodes `208,952`
+- resolved within attempt `82.63%`
+- persists to final public run in `39.03%` of attempts (highest among major buckets)
+
+Syntax structural-intent split (from `error_recovery_syntax_intent_split.csv`) confirms the Step 3 hypothesis:
+
+- `SyntaxError (structure evident)` is more recoverable than `SyntaxError (no structure)`:
+- resolved within 1 public run: `50.33%` vs `43.70%`
+- resolved within 5 public runs: `81.62%` vs `71.94%`
+- persists to final public run: `20.94%` vs `30.27%`
+
+Interpretation:
+
+- Tree-sitter’s structural-intent split is not cosmetic; it corresponds to materially different recovery trajectories.
+- This is exactly the distinction between a mechanical syntax problem and a deeper structural problem.
+
+### 5f) Death Spiral / Absorbing-State Analysis (Tree-Sitter-Enriched State Space)
+
+State space used in public `test_run` sequences:
+
+- `S0` no code beyond skeleton
+- `S1` syntax broken, no recoverable structure
+- `S1b` syntax broken, structure evident
+- `S2` parseable, passes 0 public tests
+- `S3` passes some (not all) public tests
+- `S4` passes all public tests
+- `S5` (synthetic terminal for Track A full private pass; transitions appended from last public state)
+
+Public state distribution by track (from `public_state_distribution_by_track.csv`):
+
+- Track A non-submitters (submission-positive NS) public runs are dominated by:
+- `S2_parseable_zero`: `64.79%`
+- `S1b_syntax_structure`: `18.29%`
+- `S1_syntax_fundamental`: `13.80%`
+- `S4_public_all`: only `0.08%`
+
+Combined eventual success from state occurrence (from `death_spiral_state_eventual_success_by_state.csv`):
+
+- `S0`: `6.16%`
+- `S1`: `21.77%`
+- `S1b`: `27.72%`
+- `S2`: `35.50%`
+- `S3`: `44.12%`
+- `S4`: `100.00%`
+
+Interpretation:
+
+- `S1b` is meaningfully more recoverable than `S1` in the aggregate, which supports the intended mechanical-vs-fundamental syntax split.
+
+Time-conditional absorption (`death_spiral_time_conditional_absorption.csv`) sharpens that result:
+
+- Track A submitters:
+- at `0–25%` elapsed, `S1b` vs `S1`: `40.57%` vs `32.90%` eventual success
+- at `75–100%` elapsed: `28.64%` vs `21.70%`
+- Track B:
+- at `0–25%`: `31.89%` vs `26.16%`
+- at `75–100%`: `20.08%` vs `14.38%`
+- Track A non-submitters (submission-positive NS):
+- both `S1` and `S1b` are near-zero (`<1.1%`) at all elapsed bins
+
+Interpretation:
+
+- `S1b` is consistently more recoverable than `S1` in the broader population.
+- But in the genuinely stuck non-submitter group (submission-positive namespaces), being in either syntax-broken state is already a near-terminal condition on observed public-run trajectories.
+
+Transition structure (from `death_spiral_transition_matrix_combined.csv` and `death_spiral_transition_difficulty.csv`):
+
+- Strong self-loops (students staying in the same state next run):
+- `S2 -> S2`: `78.93%`
+- `S3 -> S3`: `72.40%`
+- `S1 -> S1`: `56.72%`
+- `S1b -> S1b`: `52.37%`
+- Upward movement is possible but limited:
+- `S1 -> S2`: `24.75%`
+- `S1b -> S2`: `27.96%`
+- direct `S1 -> S4`: `1.96%`
+- direct `S1b -> S4`: `2.79%`
+
+Absorbing-state candidate (using `<5%` eventual success threshold, from `death_spiral_absorbing_candidates.csv`):
+
+- `S0_no_code` (`4.48%` combined eventual success by occurrence)
+
+Interpretation:
+
+- The main "death spiral" in this dataset is not only syntax-broken states; it is also the huge `S2` self-loop (parseable, but 0 public tests passed) where students often churn without crossing into partial correctness.
+- This suggests interventions should target the `S2 -> S3` transition (logic/debugging progression), not just syntax repair.
+
+## Additional Insights Useful for Future Analysis
+
+- The timeline’s lack of `saved_code` events means process metrics are **run-sampled**, not edit-sampled.
+- If the platform can expose save/autosave events, Step 5 becomes much more precise (true first-parseable time, true construct introduction time, finer-grained regression detection).
+
+- The public-run state model surfaces a strong intervention triage rule:
+- `S1b` (structure evident syntax break) is often recoverable in the broader population and is a good target for syntax assistance.
+- `S0` and persistent `S2` are lower-leverage states for syntax-only interventions.
+
+- For question design review, "thrash-prone" questions are now directly identifiable from process traces, not just score distributions.
+- This enables a practical review queue: high-thrasher-rate questions + low discrimination/redundant test cases (from Step 2) are strong candidates for redesign.
+
+## Practical Next Steps (Step 5 Driven)
+
+- Build a targeted intervention simulation around `S1b` and early `S2` states (e.g., syntax hints vs debugging prompts) and estimate reachable gains before the 50% elapsed mark.
+- Use `attempt_archetypes.csv` and `public_test_run_state_rows.parquet` to extract exemplar trajectories for teaching:
+- successful `Incremental debugger` traces
+- failed `Thrasher` traces
+- `S2` self-loop traces that never convert to `S3`
+- If raw per-run exception traces become available in the timeline (not just best-public snapshots), re-run 5e with typed runtime recovery (`TypeError`, `NameError`, etc.) instead of the current generic `Runtime Error` bucket.

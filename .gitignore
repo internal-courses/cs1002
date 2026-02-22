@@ -7,4 +7,5 @@ analysis/score_failure_profiles/
 analysis/classical_item_quality/
 analysis/error_taxonomy/
 analysis/syntax_bottleneck_quantified/
+analysis/process_analysis/
 analysis/__pycache__/

@@ -597,3 +597,110 @@ For the above analyses
 
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"
+
+## Step 5: Process Analysis — What the Snapshots Reveal
+
+Process analysis is the step _least affected_ by the two-track split — every student has a full timeline regardless of submission status. Tree-sitter makes the AST-level analysis affordable for the full population.
+
+**5a. Build per-attempt timeline features.**
+
+For all 151,778 student-question rows, compute from `submission_timeline.parquet`:
+
+| Feature                        | Computation                                               |
+| ------------------------------ | --------------------------------------------------------- |
+| Total active time (seconds)    | last_event - first_event                                  |
+| Test_run count                 | Count of event_type = 'test_run'                          |
+| Time to first parseable code   | First is_parseable = True timestamp minus first event     |
+| Time to first public test pass | First test_run with num_test_passed > 0 minus first event |
+| Parseable fraction             | Fraction of snapshots with is_parseable = True            |
+| Code length trajectory         | Sequence of code_length over time                         |
+| Large deletion events          | Snapshots where code_length drops >30%                    |
+| Idle gaps (>120s)              | Count and total duration                                  |
+| Run-to-run improvement         | Does num_test_passed increase monotonically?              |
+| Peak test pass count           | Maximum num_test_passed across all runs                   |
+| Final vs. peak regression      | Peak minus final num_test_passed                          |
+
+**5b. Structural evolution tracking (tree-sitter, full population).**
+
+This was previously marked as "selective/advanced" (Step 5f in v2) but tree-sitter makes it a core analysis. For each student-question attempt, parse every snapshot with tree-sitter and track:
+
+| Structural Feature                  | What It Captures                                                                                                                                                                  |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Construct timeline**              | When did each construct type first appear? (First for-loop at snapshot 5, first function at snapshot 12, first try/except at snapshot 20.)                                        |
+| **Structural complexity over time** | Count of non-trivial AST nodes (loops, conditionals, functions) at each snapshot. Monotonically increasing = building up. Oscillating = restructuring. Declining = deleting work. |
+| **ERROR node trajectory**           | Count of ERROR nodes over time. Decreasing = fixing problems. Increasing = introducing problems. Persistent = stuck on the same issue.                                            |
+| **Structural regression events**    | Snapshots where structural complexity drops significantly (>30% of nodes removed). More granular than code-length-based deletion detection.                                       |
+
+This is computationally heavier than the basic timeline features but tree-sitter parsing is fast (sub-millisecond per snapshot). Across 2M events, expect minutes of processing, not hours.
+
+**5c. Classify behavioural archetypes.**
+
+Using features from 5a and 5b, classify each student-question attempt:
+
+| Archetype                | Identifying Features                                                                                                                                                    |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Steady builder**       | num_test_passed increases over runs; structural complexity increases monotonically; few large deletions; parseable fraction > 0.80                                      |
+| **Late starter**         | \>30% of total time before first code change beyond skeleton                                                                                                            |
+| **Thrasher**             | High test_run count (>15); num_test_passed oscillates; many structural regression events; ERROR node count fluctuates                                                   |
+| **One-shot**             | ≤3 test_runs total; code appears in one or two large increments                                                                                                         |
+| **Stuck and abandoned**  | Idle gap >5 min before final event; no improvement in latter half                                                                                                       |
+| **Skeleton-only**        | Final code ≈ skeleton; minimal structural additions                                                                                                                     |
+| **Regression**           | Had parseable, partially-passing code at some point; final state is worse (fewer tests passing or non-parseable or lower structural complexity)                         |
+| **Incremental debugger** | Many test_runs; small changes between runs (low structural diff); ERROR nodes decrease over time; test passes increase. This is the "good debugging process" archetype. |
+
+The "incremental debugger" archetype is new — tree-sitter makes it detectable by tracking small, targeted structural changes. This is the behaviour you want to teach, so identifying students who already do it (and their outcomes) provides a model.
+
+**5d. Compute per-archetype outcomes.**
+
+For each archetype:
+
+- Proportion of all student-question attempts
+- Median final outcome (score for Track A submitters; best public test pass count for others)
+- Median time spent
+- Distribution across questions (do certain questions induce more thrashing?)
+- Distribution across terms (remembering that later terms have weaker populations)
+
+**5e. Recovery analysis by error type.**
+
+For each error type from Step 3 (SyntaxError, IndexError, TypeError, etc.):
+
+- **Recovery probability**: P(error resolved within N test_runs) for N = 1, 2, 5, 10
+- **Recovery time**: Median time from error introduction to resolution
+- **Non-recovery rate**: Fraction of attempts where the error persists through the final event
+
+With tree-sitter: for syntax errors specifically, track whether the student's _structural intent_ was correct even when the syntax was broken. A student who has the right loop structure with a missing colon (tree-sitter shows the loop, ERROR node at the header) is in a very different state than one whose code has no recognisable structure. Separate recovery rates for "syntax error with correct structural intent" vs. "syntax error with no discernible structure."
+
+**5f. "Death spiral" / absorbing state analysis.**
+
+Define states:
+
+- **State 0**: No code beyond skeleton
+- **State 1**: Non-parseable, no recoverable structure (tree-sitter: many ERROR nodes)
+- **State 1b**: Non-parseable, structure evident (tree-sitter: localised ERROR nodes)
+- **State 2**: Parseable, passes 0 tests
+- **State 3**: Passes some (not all) public tests
+- **State 4**: Passes all public tests (for Track B this is "success"; for Track A, may still fail private tests)
+- **State 5**: Passes all tests (Track A only)
+
+Compute transition probabilities between states at each test_run. Look for:
+
+- **Absorbing states**: States from which P(reaching State 4/5) < 5%.
+- **Critical transitions**: Which transitions are hardest? State 1 → 1b (gaining structure)? State 1b → 2 (fixing syntax)? State 3 → 4 (handling edge cases)?
+- **Time-conditional absorption**: If a student is in State 1 after X% of the exam has elapsed, what's P(reaching State 4)? This identifies the optimal intervention point.
+
+**What This Tells You**
+
+Process analysis answers questions outcome data cannot: whether students fail because they can't start, can't debug, or run out of time; what fraction experience regression; which errors are recoverable; at what point a student's trajectory becomes predetermined.
+
+The tree-sitter structural tracking adds a new dimension: you can now distinguish between students who have the right _conceptual structure_ (correct loop, correct function decomposition) but fail on syntax vs. students who lack the structural thinking entirely. This is the gap between a mechanical problem (fixable with tools) and a conceptual problem (needs teaching).
+
+**Action point**: If the "incremental debugger" archetype has dramatically better outcomes than "thrasher" despite similar time investment, that's direct evidence that teaching debugging _process_ (not just content) would improve results. Use the incremental debugger trajectories as exemplars in teaching materials.
+
+**Action point**: The death-spiral analysis with the tree-sitter-enriched state space identifies optimal intervention points with more precision. State 1b (correct structure, broken syntax) is likely much more recoverable than State 1 (no structure) — confirming with data tells you which students a hint system could actually help.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"
