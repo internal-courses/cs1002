@@ -339,3 +339,57 @@ Also, one clarification. Students who write Term 1 need not write Term 2. I mean
 **Term-wave summary in 1d** — the framing currently reads as a term-over-term comparison (submission rates, effective means across terms). Any language that implies comparison across terms should note that t1, t2, t3 populations are not comparable cohorts. Within-term Wave 1 vs Wave 2 comparisons remain valid since those are the same students ~35 days apart.
 
 **Non-submission behavioural profiles** — currently pooled across all terms. This is fine as a global baseline, but worth flagging that Term 3 non-submitters in submission-positive namespaces are twice-failing students, which may give them different behavioural signatures than Term 1 non-submitters encountering the exam for the first time. If you want to check this cheaply, break the `non_submission_subtype_summary.csv` by term and see whether the thrashing/stuck proportions shift.
+
+# Step 2: Classical Item Quality Analysis
+
+Step 1 told you _what happened_. Step 2 asks: _is the exam measuring well?_ This is the first step toward answering your question about evaluation quality.
+
+**2a. Per-test-case difficulty and discrimination.**
+
+For each test case within each question (using submission-level results from the scored submissions in `final_scores.csv` or `submission_timeline.parquet`):
+
+- **Difficulty index (p)**: Proportion of submitting students who pass this test case.
+- **Point-biserial discrimination**: Correlation between passing this test case (0/1) and the student's total score across all questions in the same namespace. Use `scipy.stats.pointbiserialr`. A good test case has r > 0.30.
+
+Important scoping decision: compute discrimination against _submitters only_ (since non-submitters don't have test case results). Note this creates a selection effect — submitters are likely stronger on average — so discrimination indices may underestimate true population discrimination.
+
+**2b. Inter-test-case redundancy within each question.**
+
+For each question, compute pairwise Pearson correlations (or phi coefficients, since these are binary) between its \~7 test cases. With 3.6 public + 3.5 private = \~7 test cases per question, this is a 7×7 correlation matrix — small and inspectable. Flag pairs with correlation > 0.90 as near-redundant.
+
+**2c. Test case dependency structure.**
+
+For each pair of test cases (A, B) within a question:
+
+- P(pass B | pass A)
+- P(pass B | fail A)
+
+If P(pass B | fail A) < 0.05, then A is effectively a prerequisite for B. Build a directed dependency graph per question. This reveals whether your \~7 test cases form a hierarchy (easy → hard) or are genuinely independent checks.
+
+Note: with only \~3.5 private test cases per question, you may find that the private tests form a near-linear chain (pass test 1 → test 2 → test 3 in order, rarely skipping). If so, only the _last_ test in the chain is truly testing something new; the earlier ones are just prerequisites.
+
+**2d. Exam-level reliability.**
+
+Compute Cronbach's alpha across all test cases in a single namespace. With \~7 questions × \~7 test cases = \~49 binary items per exam, you have enough for a meaningful reliability estimate.
+
+**2e. Public vs. private test case analysis.**
+
+Since you have both public and private test results, a critical question: are students "overfitting" to public tests? Compute:
+
+- Fraction of students who pass all public tests but fail one or more private tests (per question)
+- Fraction of students who pass all private tests but fail one or more public tests (should be rare — private tests are typically harder/broader)
+
+If public-pass/private-fail is common, students may be tuning their code to the specific public test cases rather than solving the general problem. This is a specific form of evaluation gaming.
+
+**What This Tells You**
+
+You'll know which of your \~1,750 test cases are doing useful evaluative work and which are noise or redundancy. You'll know whether your exams have adequate reliability. And the public-vs-private analysis tells you whether students are gaming the visible test cases — an important input for evaluation design.
+
+**Action point**: Test cases with discrimination < 0.15 and those with >0.90 redundancy are candidates for replacement. The public/private gap analysis informs whether to change the ratio of visible vs. hidden test cases.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Classical Item Quality Analysis"

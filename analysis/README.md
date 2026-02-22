@@ -432,3 +432,196 @@ Implications:
 - `analysis/score_failure_profiles/plots/question_distribution_shape_counts.png`
 - `analysis/score_failure_profiles/plots/test_case_pass_rate_distributions.png`
 - `analysis/score_failure_profiles/plots/slot_order_trends_multi_slot_days.png`
+
+# Classical Item Quality Analysis
+
+This section is a manual write-up of Step 2 ("is the exam measuring well?"), backed by generated outputs in `analysis/classical_item_quality/`.
+
+## New Script and Outputs
+
+- Script: `analysis/generate_classical_item_quality.py`
+- Output folder: `analysis/classical_item_quality/`
+- Graphs: `analysis/classical_item_quality/dependency_graphs/*.dot` (directed dependency graphs per question)
+
+Key generated outputs:
+
+- `item_response_rows.csv` (selected item responses for submitter-question rows)
+- `item_difficulty_discrimination.csv`
+- `item_difficulty_discrimination_summary.csv`
+- `item_low_discrimination_candidates.csv`
+- `question_item_redundancy_pairs.csv`
+- `question_item_redundancy_summary_by_namespace.csv`
+- `question_dependency_pairs.csv`
+- `question_dependency_edges.csv`
+- `question_dependency_graph_summary.csv`
+- `namespace_reliability_cronbach_alpha.csv`
+- `namespace_reliability_summary.csv`
+- `public_private_gap_by_question.csv`
+- `public_private_gap_summary.csv`
+- `submitter_question_snapshots.csv`
+- `submitter_question_public_private_summary.csv`
+
+## Rebuild This Analysis
+
+```bash
+# ~1-5 minutes on local machine; scans raw submissions JSON to extract selected test-case results
+uv run analysis/generate_classical_item_quality.py
+```
+
+## Method and Scope (Important)
+
+- Unit of analysis for item responses (submitter-only):
+  - private test cases: the **final scored submission** per student-question (from `analysis/final_scores.csv`)
+  - public test cases: the **latest public `test_run` at or before that final submission**
+- This creates a submitter-only selection effect:
+  - non-submitters have no scored private test-case outcomes and are excluded from item-level discrimination/redundancy analyses
+  - discrimination values therefore reflect the stronger selected submitter population and may underestimate (or otherwise distort) full-population discrimination
+- Discrimination (2a):
+  - computed with `scipy.stats.pointbiserialr`
+  - reported against namespace total score across all questions in the same namespace (with non-submitted questions contributing zero to the namespace total)
+  - exported both as raw item-total (`point_biserial_r`) and a less part-whole-inflated variant excluding the focal question score (`point_biserial_r_excl_question`)
+- Redundancy (2b):
+  - within each question, pairwise phi/Pearson correlations are computed on binary item pass/fail values across submitters to that question
+  - pairs with phi `> 0.90` are flagged as near-redundant
+- Dependency structure (2c):
+  - for each ordered pair `(A, B)` in a question: `P(pass B | pass A)` and `P(pass B | fail A)`
+  - edge flag uses the requested criterion `P(pass B | fail A) < 0.05`
+  - graph export uses an additional support filter (`n_A_fail >= 5` and `n_A_pass >= 5`) to reduce one-off edges
+- Reliability (2d):
+  - Cronbach's alpha is computed per namespace on a student × item binary matrix
+  - rows: students with at least one submission in that namespace
+  - columns: all observed public+private test-case items in that namespace
+  - missing responses from unsubmitted questions are filled with `0` (`*_fill0` in output columns)
+- Public/private gap (2e):
+  - overfitting proxy compares "all public passed" vs "all private passed" using the selected public snapshot above and the final private submission
+  - caveat: this is **not guaranteed to be the exact same code snapshot** (students may edit code after the last public test run and before final submission)
+
+## Findings
+
+### Coverage and Interpretability
+
+- Item-level analysis covers **607 test-case items** across the **84** namespace-question rows that have any submissions.
+- These 84 questions are in **12 submission-positive namespaces**; the remaining **23 / 35 namespaces** have no submissions, so item quality metrics and Cronbach alpha are undefined there.
+- All **42,918** submitter-question rows had a public `test_run` before the final submission, so Step 2 public/private pairing coverage is **100%** for submitters.
+
+Important public-item caveat (data/versioning):
+
+- Public test-case indices are **not stable** within a question in this snapshot:
+  - `84 / 84` public question-scope groups show item coverage drift (`MIN(n_observed) != MAX(n_observed)` across public test-case indices)
+  - `0 / 84` private question-scope groups show this drift
+- Interpretation: public test sets (or at least public test-case counts/index positions) changed over time within namespace-question rows.
+- Consequence: public item-by-index statistics (difficulty/discrimination/redundancy/dependency) are still useful as diagnostics, but they are not as cleanly comparable as private test cases.
+
+### 2a) Per-Test-Case Difficulty and Discrimination
+
+Summary (`analysis/classical_item_quality/item_difficulty_discrimination_summary.csv`):
+
+- Private items: **292**
+  - average difficulty (pass %) = **51.73%**
+  - median difficulty = **53.03%**
+  - average point-biserial `r` = **0.6797** (raw item-total)
+  - median point-biserial `r` = **0.6897**
+- Public items: **315**
+  - average difficulty (pass %) = **55.53%**
+  - median difficulty = **58.12%**
+  - average point-biserial `r` = **0.6240** (raw item-total)
+  - median point-biserial `r` = **0.6351**
+
+`r > 0.30` threshold (using exported corrected variant `point_biserial_r_excl_question` as a stricter screen):
+
+- **591 / 607** items are `> 0.30`
+- **13 / 607** items fall in `0.15-0.30` (marginal)
+- **0 / 607** items are `< 0.15`
+- **3** public items have `NaN` discrimination (all were one-off public indices with `n_observed = 1`)
+
+Interpretation:
+
+- Under this submitter-only, final-snapshot design, discrimination is uniformly high.
+- This likely reflects a combination of:
+  - strong prerequisite structure (items move together)
+  - part-whole overlap (even with the corrected variant, the namespace score still correlates strongly with overall competence)
+  - selection into submitting
+- Practical implication: the `< 0.15` replacement rule does **not** identify candidates in this snapshot; redundancy/dependency signals are more informative.
+
+### 2b) Inter-Test-Case Redundancy (Within Question)
+
+- Pairwise within-question item pairs analyzed: **2,043**
+- Near-redundant pairs (phi `> 0.90`): **704** (**34.46%**)
+- Questions with at least one near-redundant pair: **84 / 84**
+- Questions with `>=10` near-redundant pairs: **26**
+
+By scope pairing (near-redundant pairs):
+
+- private-public: **382**
+- private-private: **176**
+- public-public: **146**
+
+Interpretation:
+
+- Redundancy is not just within private tests; many public/private pairs are effectively measuring the same success state on the selected snapshots.
+- This is the strongest "candidate for replacement/pruning" signal in Step 2.
+
+### 2c) Test-Case Dependency Structure
+
+- Directed dependency edges (support-filtered graph export): **2,213** across **84** questions
+- Median dependency edge density per question (edges / possible ordered pairs): **0.536**
+- Average edge density: **0.543**
+- Questions with edge density `> 0.75`: **9**
+
+Representative result (matches the anticipated pattern of strong chaining / near-equivalence):
+
+- `ns_25t2_py21_2` Q22 (`Rotate Matrix Clockwise 90 degree`)
+  - **8** items
+  - **56 / 56** possible ordered edges flagged (edge density = **1.0**)
+  - many pairwise phi correlations are `> 0.95`, including private-private and public-private pairs
+
+Interpretation:
+
+- The dependency graphs are often dense, not sparse.
+- This means many test cases behave like prerequisites or near-duplicates rather than independent checks.
+- For design action, these graphs should be viewed with **transitive reduction** (next step) to isolate the small set of items that add genuinely new information.
+
+### 2d) Exam-Level Reliability (Cronbach's Alpha)
+
+Computed per namespace (`analysis/classical_item_quality/namespace_reliability_cronbach_alpha.csv`):
+
+- Namespaces with defined alpha (submission-positive): **12**
+- Namespaces with no alpha (zero submissions): **23**
+
+For `cronbach_alpha_all_public_private_fill0`:
+
+- median = **0.9716**
+- min = **0.9578**
+- max = **0.9806**
+
+Interpretation:
+
+- Reliability is extremely high on this binary item set.
+- In this context, that does **not** necessarily mean the exams are optimally designed; it is also consistent with high redundancy and strong hierarchical gating.
+- The combination of **very high alpha + heavy >0.90 redundancy** suggests many items are reinforcing the same latent trait/state.
+
+### 2e) Public vs Private Test Case Analysis (Overfitting Proxy)
+
+Overall (`analysis/classical_item_quality/public_private_gap_summary.csv`), among **42,918** submitter-question rows with both public and private snapshots:
+
+- pass all public, fail >=1 private: **10 rows** (**0.02%**)
+- pass all private, fail >=1 public: **169 rows** (**0.39%**)
+
+Per-question pattern:
+
+- Questions with any `public-all / private-not-all`: **10 / 84**
+- Questions with any `private-all / public-not-all`: **30 / 84**
+- Questions with `public-all / private-not-all >= 20%`: **0**
+
+Interpretation:
+
+- Under this proxy, there is **no evidence of widespread public-test overfitting**.
+- The opposite mismatch (`private-all / public-not-all`) is more common, which is counter to the usual "public tests are easier" expectation.
+- Most likely explanation: the selected public snapshot is the **last public run before submission**, which may not be the same code as the final submitted code; public test-set drift also adds noise.
+- So this is a useful screening result ("no obvious large overfit signal"), but not a definitive same-code overfitting test.
+
+## Action-Oriented Takeaways for Evaluation Design
+
+- Highest-priority candidates for review are **redundant** and **dependency-dense** test-case sets, not low-discrimination items (none were `< 0.15` in this snapshot).
+- Public test cases need versioning stability (or version-aware item IDs) if you want clean item-level analytics across time within a namespace-question.
+- For stronger overfitting analysis, the next iteration should compare public/private outcomes on the **same code snapshot** (e.g., via `code_sha256` pairing between timeline events and raw test-case results).
