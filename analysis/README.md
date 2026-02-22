@@ -1,3 +1,4 @@
+
 # Analysis README
 
 This AI-edited manually maintained document describes the OPPE analysis outputs and how to reproduce the key datasets and analyses.
@@ -200,7 +201,7 @@ For most analytics work, use this stack:
 
 Use other CSVs as reporting conveniences, not as independent sources of truth.
 
-# Score Distributions, Failure Profiles, and the Non-Submission Problem
+# Step 1. Score Distributions, Failure Profiles, and the Non-Submission Problem
 
 This is a Step 1 baseline write-up (supported by generated tables/plots in `analysis/score_failure_profiles/`), with explicit treatment of the large `active, never submitted` population.
 
@@ -433,7 +434,7 @@ Implications:
 - `analysis/score_failure_profiles/plots/test_case_pass_rate_distributions.png`
 - `analysis/score_failure_profiles/plots/slot_order_trends_multi_slot_days.png`
 
-# Classical Item Quality Analysis
+# Step 2. Classical Item Quality Analysis
 
 This section is a manual write-up of Step 2 ("is the exam measuring well?"), backed by generated outputs in `analysis/classical_item_quality/`.
 
@@ -667,7 +668,7 @@ Interpretation:
 - Use the **same-code `code_sha256` public/private gap** (not the last-public-before-submission proxy) as the primary overfitting screen in future iterations.
 - Use the **transitive-reduced SCC graphs** to identify the minimal set of test cases that contribute new information; large SCCs and high redundancy pairs are the first candidates for pruning/replacement.
 
-# Error Taxonomy
+# Step 3. Error Taxonomy
 
 Manual note:
 
@@ -936,7 +937,7 @@ Cheap term-split check for pooled non-submission behaviour (requested follow-up)
 - Treat structural inventory metrics as useful after scaffolding stripping, but still partly template-influenced for constructs commonly provided by skeletons.
 - Promote `regression_rows.csv` and `selected_snapshot_taxonomy_rows.csv` to the next step (e.g., targeted feedback design / remediation experiments), especially rows flagged by `parseability_regression_flag`, `skeleton_modification_status = Modified, partially broken`, and `best_public_runtime_error_type IN (TypeError, NameError, ValueError)`.
 
-# The Syntax Bottleneck — Quantified
+# Step 4. The Syntax Bottleneck — Quantified
 
 This step assembles Steps 1–3 into a single, defensible decomposition of failure modes, with a dual-track design:
 
@@ -1188,7 +1189,7 @@ Interpretation:
 - `skeleton_effectiveness_error_location_summary*.csv`
 - For stakeholder communication, present the waterfall with the explicit caveat that Track B "full pass" is public-best-snapshot and Track A mixes private-final (submitters) with public-best (non-submitters).
 
-# Process Analysis — What the Snapshots Reveal
+# Step 5. Process Analysis — What the Snapshots Reveal
 
 This step analyses **how** students work through a question over time (not just the final outcome), using the full event timeline and tree-sitter structural tracking.
 
@@ -1538,7 +1539,7 @@ Interpretation:
 - `S2` self-loop traces that never convert to `S3`
 - If raw per-run exception traces become available in the timeline (not just best-public snapshots), re-run 5e with typed runtime recovery (`TypeError`, `NameError`, etc.) instead of the current generic `Runtime Error` bucket.
 
-# Psychometric Modelling with IRT
+# Step 6. Psychometric Modelling with IRT
 
 This step reframes the exam as a measurement instrument rather than only a score report.
 Given Step 2's heavy within-question test-case redundancy, the model is fit at the **question** level (not test-case level) using a 3-category ordinal score per question.
@@ -1752,3 +1753,961 @@ Interpretation:
 - Review the `15` cliff-like questions first; they are the most likely to create threshold effects without adding much partial-credit information.
 - Investigate variant-equivalence outliers (starting with `25t2 py21 _1/_2` and `25t1 py22 _1/_2`) using item text + test-case structure + process traces from Steps 2 and 5.
 - If a future exam cycle includes intentionally reused anchors across waves, re-run Step 6 to produce defensible wave-linked growth estimates on a common `theta` scale.
+
+# Step 7: Evaluation Redesign
+
+Step 7 is a **synthesis layer** over Steps 2, 3, 5, and 6. It does not reprocess raw event logs. Instead, it reads the previously generated analysis outputs and produces a compact set of CSVs for operational prioritization (instrumentation fixes, debugging interventions, test-case redesign targets, scoring-readiness diagnostics, and variant-equivalence review).
+
+## Step 7 Script and Outputs
+
+Script:
+
+- `analysis/generate_evaluation_redesign.py`
+
+Output folder:
+
+- `analysis/evaluation_redesign/`
+
+Key outputs:
+
+- `step7_key_metrics.csv`: one-row-per-metric summary of the headline numbers used in this section (gating, submission capture, S2 self-loop, redundancy, IRT threshold gaps, low-ability information, linking gaps, runtime feedback quality, and recovery signals)
+- `submission_capture_*.csv`: namespace-level and term/wave-level audits for the zero-submission instrumentation issue
+- `s2_*.csv` and `public_state_distribution_combined.csv`: S2 prevalence and transition dynamics for debugging intervention targeting
+- `archetype_redesign_summary.csv` plus `archetype_other_*`: archetype intervention metrics and diagnostics for the unclassified `Other` bucket
+- `question_redesign_features.csv` and `question_redesign_targets_high_priority.csv`: joined test-design/process/IRT target list for question redesign
+- `problem_statement_clarity_review_targets.csv`: question review shortlist combining wrong-output-logic rates and thrasher rates
+- `layered_scoring_readiness_*.csv`: question-level and summary diagnostics for whether layered scoring is likely to add information before test redesign
+- `low_ability_measurement_*.csv` and `warmup_question_target_namespaces.csv`: TIF-based low-ability measurement targeting tables
+- `variant_equivalence_review_targets.csv` and `variant_anchor_drift_details.csv`: linked-`theta` variant-gap screen + anchor-parameter drift details
+- `runtime_feedback_quality_*.csv` and `debugging_recovery_signal_summary.csv`: feedback quality and recovery evidence for platform changes
+- `output_manifest.csv`: manifest of all Step 7 outputs
+
+## Rebuild (Step 7 Only)
+
+Prerequisite: Steps 2, 3, 5, and 6 outputs must already exist (the script reads their CSV exports directly).
+
+Rebuild command:
+
+```bash
+uv run analysis/generate_evaluation_redesign.py
+```
+
+Verify outputs:
+
+- Check `analysis/evaluation_redesign/output_manifest.csv`
+- Spot-check `analysis/evaluation_redesign/step7_key_metrics.csv`
+
+## Findings and Redesign Recommendations (Manual Synthesis)
+
+This section is written manually from the earlier step results and validated against the Step 7 support tables (especially `step7_key_metrics.csv`, the submission-capture audits, and the question/variant target lists).
+
+### 7a) Fix the Submission Capture Pipeline (Highest Operational Priority)
+
+The dominant operational issue is **missing submission capture**:
+
+- `23 / 35` namespaces have zero submission events (see `submission_capture_overall_summary.csv`)
+- This removes private-test outcomes/formal scores for `97,748` student-question rows (`Track B`)
+- Track B is not "inactive" data: `48.76%` of Track B rows passed all public tests at least once (see `submission_capture_track_row_summary.csv`)
+
+Namespace clustering confirms this is a platform/instrumentation pattern, not student behavior:
+
+- `25t1`: effectively all exam namespaces are zero-submission (`wave1`, `wave2`, and one `other` namespace)
+- `25t2 wave2`: `40%` zero-submission namespaces
+- `25t3 wave1`: `50%` zero-submission namespaces
+- `25t3 wave2`: `75%` zero-submission namespaces
+
+Use `submission_capture_zero_submission_namespaces.csv` and `submission_capture_term_wave_namespace_summary.csv` to coordinate a platform audit with engineering / ops.
+
+### 7b) Address the S2 Bottleneck (Largest Intervention Opportunity)
+
+S2 (`parseable code, zero public tests passing`) is the central debugging bottleneck:
+
+- S2 accounts for `47.1%` of all public test-run states (`public_state_distribution_combined.csv`)
+- S2 self-loop probability is `78.93%` (`s2_bottleneck_summary.csv`)
+- The main escape route is only to partial public correctness (`S2 -> S3` = `7.18%`)
+
+Interpretation: this is primarily a **debugging + problem decomposition** gap, not a syntax gap.
+
+Recommended interventions:
+
+1. Show structured first-failing-test feedback (input / expected / actual), not just generic pass/fail.
+2. Redesign prompts into explicit sub-tasks so students get real intermediate checkpoints.
+3. Teach incremental debugging explicitly using Step 5 trajectories (incremental debuggers vs thrashers).
+
+Note on timing metrics: Step 5's narrative already shows the key process point (thrashers spend roughly `2.2x` the time of incremental debuggers for worse outcomes). The Step 7 bundle exports reproducible archetype-flag medians and ratios in `archetype_incremental_vs_thrasher_comparison.csv`.
+
+### 7c) Redesign Test Cases for Difficulty Spread and Reduced Redundancy
+
+The evidence from Steps 2 and 6 converges on the same diagnosis:
+
+- `34.46%` of within-question item pairs are near-redundant (`phi > 0.90`)
+- Median reliability is extremely high on the submitter namespaces (Cronbach alpha summary median `0.9716`)
+- `47.35%` of fitted questions have narrow partial-credit thresholds (`b2 - b1 < 0.35`)
+- `15` questions are flagged as cliff-like
+
+This means many question test-case sets cluster at a single difficulty level and provide limited additional information through partial credit.
+
+Use `question_redesign_targets_high_priority.csv` and `question_redesign_features.csv` to prioritize:
+
+- cliff-like questions (`flag_cliff_like`)
+- all-equivalent dependency graphs (`flag_dependency_edge_density_raw_eq_1`)
+- high-thrasher questions (e.g., "Pattern printing - Centered Triangle Of Zeroes", "Reversed Squares of List Elements", "Pangram Check")
+- narrow-threshold questions where layered scoring will collapse back toward binary
+
+The Step 7 target tables also explicitly surface the raw dependency density criterion (`dependency_edge_density_raw`) so the "edge density = 1.0" cases are easy to filter.
+
+### 7d) Add Easy Warm-Up Questions for Low-Ability Measurement
+
+The exam remains low-ability blind in most namespaces:
+
+- `33 / 35` namespaces are flagged for low-ability blindness
+- median low-to-mid information ratio is `0.1555`
+
+Given the progressive-filter term structure (later terms contain weaker surviving students), this is a measurement-design mismatch: the instrument is least precise where diagnostic resolution is most needed.
+
+Use `warmup_question_target_namespaces.csv` and `low_ability_measurement_term_wave_summary.csv` to target namespaces most in need of easier discriminating items.
+
+### 7e) Layered Scoring Is Useful, But Only After Test-Case Redesign in Many Questions
+
+Layered scoring (attempt / runnability / core correctness / edge robustness) is directionally correct, but the Step 6 threshold evidence means it will not add much information on many current questions.
+
+The new Step 7 outputs provide a readiness proxy:
+
+- `layered_scoring_readiness_by_question.csv`
+- `layered_scoring_readiness_summary.csv`
+
+Important caveat from the current data:
+
+- many questions are still classified as `low` or `unknown_missing_step2_dependency_metrics`
+- the latter reflects both dependency-metric coverage limits (Step 2 coverage is only available for a subset of questions) and the submission-capture gap
+
+Recommendation:
+
+1. Simulate layered scoring on the existing data.
+2. Report results separately for wide-threshold (`b2 - b1 > 0.5`) vs narrow-threshold questions.
+3. Treat "narrow threshold + high redundancy" questions as test-redesign-first.
+
+### 7f) Audit Problem Statement Clarity for High Wrong-Logic + High-Thrasher Questions
+
+Step 3 and Step 5 together suggest a prompt-clarity review lane:
+
+- some questions show very high wrong-output-logic rates
+- some questions attract high thrasher rates (large effort, weak outcomes)
+
+Use `problem_statement_clarity_review_targets.csv` to review questions where these signals co-occur. The Step 7 list intentionally includes the named high-thrash examples and ranks them alongside high wrong-output-logic items.
+
+Practical review question:
+
+- How many distinct incorrect interpretations could a careful student reasonably make?
+
+If the answer is more than one, rewrite the prompt.
+
+### 7g) Investigate Variant Equivalence (Linked-Theta Gaps + Anchor Drift)
+
+Variant screening should continue before using variants as interchangeable forms:
+
+- maximum linked mean `theta` gap across variant pairs is `0.653` (see `variant_equivalence_review_targets.csv`)
+- the Step 7 table surfaces both the linked-`theta` gap and anchor drift summaries
+- one notable anchor-drift warning remains in `25t2 py21 _1/_2` ("File Content Zig-Zag Shift", `|Δb1| > 0.75`)
+- usable wave-pair linked comparisons are still unavailable (`theta_linked_wave_pair_comparisons.csv` has `0` rows); `linking_gap_summary.csv` shows only a thin incidental same-term `wave1`/`wave2` overlap (max `1` shared anchor), which is not enough for defensible within-term growth linking
+
+Use together:
+
+- `variant_equivalence_review_targets.csv` for pair-level prioritization
+- `variant_anchor_drift_details.csv` for item-level inspection
+
+### 7h) Improve Runtime Error Feedback (Pedagogy + Data Quality)
+
+Runtime error logging remains too generic for both teaching and analysis:
+
+- `Runtime Error (unspecified)` is `52.81%` of runtime-error rows in the current export (`runtime_feedback_quality_overall.csv`)
+
+This limits:
+
+- student debugging (they do not see the actual exception class / traceback)
+- future analytics (runtime error subtypes are collapsed)
+
+Platform change recommendation:
+
+- expose the Python exception type and traceback to students
+- log the same details in structured form for downstream analysis
+
+## Additional Cross-Step Signals Worth Carrying Forward
+
+The Step 7 bundle also consolidates recovery diagnostics that matter for intervention design:
+
+- `45.49%` of rows ending with non-parseable Python had earlier parseable code (`parseability_regression_recovery_summary.csv`)
+- syntax errors with structural intent resolve faster than those without (`50.33%` vs `43.7%` within one public run)
+- wrong-answer states persist to the final public run `39.03%` of the time (`debugging_recovery_signal_summary.csv`)
+
+These reinforce the Step 7 priority ordering:
+
+1. Fix submission instrumentation first.
+2. Improve debugging feedback and decomposition support (especially for S2).
+3. Redesign test-case sets to create a genuine difficulty spread before expanding layered scoring.
+
+# Step 8: Longitudinal Analysis
+
+This step implements longitudinal analysis using paired, non-IRT-linked methods because Step 6 found no usable shared anchor items between Wave 1 and Wave 2 within any term.
+
+## Process and Rebuild
+
+### What was added
+
+- `analysis/generate_longitudinal_analysis.py`
+- Generated outputs under `analysis/longitudinal_analysis/`
+- A file manifest at `analysis/longitudinal_analysis/output_manifest.csv`
+
+### Rebuild command
+
+Run:
+
+```bash
+uv run analysis/generate_longitudinal_analysis.py
+```
+
+The script reads outputs from earlier steps (not raw platform exports directly), including:
+
+- Step 3 error taxonomy outputs
+- Step 5 process / state / archetype outputs
+- Step 6 psychometric outputs (GRM rows, question flags, linking drift summaries)
+- Step 2 dependency graph summary outputs
+
+### Cohort definition used for primary summaries
+
+The script exports both raw paired counts and a stricter substantive paired cohort. Primary Step 8 findings below use the substantive cohort:
+
+- substantive paired student = at least `3` question rows in each compared wave/term
+
+This makes the paired comparisons more stable and explains small count differences versus approximate headline counts from earlier steps (for example, the all-three-term cohort is `497` here rather than the earlier approximate `503`).
+
+## Coverage and Pairing Checks
+
+The Wave 1 to Wave 2 gap is the expected ~35 days and is the cleanest same-population comparison window:
+
+- `25t1`: `38.64` days
+- `25t2`: `35.97` days
+- `25t3`: `34.85` days
+
+Substantive paired cohorts:
+
+- within-term paired students: `25t1 = 4190`, `25t2 = 2918`, `25t3 = 2659`
+- cross-term repeaters: `25t1->25t2 = 1989`, `25t2->25t3 = 1359`
+- all-three-term students (substantive): `497`
+
+Files:
+
+- `analysis/longitudinal_analysis/step8_key_metrics.csv`
+- `analysis/longitudinal_analysis/term_wave_gap_summary.csv`
+- `analysis/longitudinal_analysis/within_term_wave_pair_coverage.csv`
+- `analysis/longitudinal_analysis/cross_term_repeat_coverage.csv`
+
+## 8a) Within-Term Growth (Wave 1 -> Wave 2) Without IRT Linking
+
+### Rank-based comparison: relative rank is mostly stable
+
+Wave-level rank changes are centered close to zero (as expected for a relative measure):
+
+- median rank delta (`Wave2 - Wave1`) is `-0.0091` in `25t1`, `+0.0025` in `25t2`, and `-0.0017` in `25t3`
+- mean rank delta is slightly positive in all three terms (`+0.0046`, `+0.0168`, `+0.0155`)
+
+Interpretation:
+
+- students improve in absolute performance, but relative ordering changes only modestly because rank is zero-sum within each wave
+
+Files:
+
+- `analysis/longitudinal_analysis/within_term_rank_change_summary.csv`
+- `analysis/longitudinal_analysis/within_term_rank_change_distribution.csv`
+
+### Category-based comparison: strong absolute improvement
+
+Using GRM categories (`0/1/2`) and weighting by paired question counts, the majority of students improve from Wave 1 to Wave 2:
+
+- `25t1`: `57.68%` improve, `14.31%` same, `28.02%` decline
+- `25t2`: `68.92%` improve, `10.10%` same, `20.98%` decline
+- `25t3`: `59.14%` improve, `12.84%` same, `28.01%` decline
+
+Mean per-student category delta is positive in all terms:
+
+- `25t1`: `+0.2063`
+- `25t2`: `+0.3830`
+- `25t3`: `+0.2259`
+
+This is the main within-term learning signal in Step 8.
+
+Files:
+
+- `analysis/longitudinal_analysis/within_term_category_change_summary.csv`
+- `analysis/longitudinal_analysis/within_term_wave_pairs_substantive.csv`
+
+### Archetype shifts: process changes are visible, but dominant-thrasher is rare
+
+At the student-wave dominant-archetype level, `Thrasher` is effectively absent from the transition matrices. This is an important caveat:
+
+- thrasher is a strong question-level pattern (Step 5), but it rarely dominates an entire student-wave
+
+What does show up consistently:
+
+- `Incremental debugger` is fairly stable within-term: `56.54%` (`25t1`), `52.01%` (`25t2`), `50.36%` (`25t3`) remain incremental debuggers in Wave 2
+- `One-shot -> Incremental debugger` is common within-term: `29.01%` (`25t1`), `35.70%` (`25t2`), `31.50%` (`25t3`)
+- small but real improvements appear for targeted struggling archetypes:
+  - `Regression -> Incremental debugger`: `14.29%` (`25t1`), `14.29%` (`25t2`), `29.41%` (`25t3`)
+  - `Skeleton-only -> Incremental debugger`: `18.18%` (`25t1`), `5.26%` (`25t2`), `22.22%` (`25t3`)
+
+Files:
+
+- `analysis/longitudinal_analysis/within_term_archetype_shift_matrix.csv`
+- `analysis/longitudinal_analysis/within_term_archetype_targeted_shifts.csv`
+
+### Dominant state shifts: improvement exists, but dominant-S2 escape is zero under a strict definition
+
+Using each student's dominant public-test-run process state per wave:
+
+- most students stay in the same dominant-state bucket (`58.42%` to `64.66%` weighted by wave1 run rows)
+- weighted dominant-state improvement is modest but non-zero (`19.74%` to `23.49%`)
+
+Important caveat and result:
+
+- under the strict dominant-state criterion, `S2_parseable_zero -> S3/S4` escape is `0%` in all three terms
+- source counts are non-trivial (`109`, `52`, `59`), so this is not a rounding artifact
+- dominant-S2 students mostly shift to syntax/no-code dominant states (`S1`, `S1b`, `S0`) rather than to public-pass states
+
+This does not contradict Step 4's large S2 bottleneck. It shows that the subset whose entire wave is dominated by S2 is especially hard to move.
+
+Files:
+
+- `analysis/longitudinal_analysis/within_term_dominant_state_shift_matrix.csv`
+- `analysis/longitudinal_analysis/within_term_dominant_state_shift_summary.csv`
+- `analysis/longitudinal_analysis/within_term_s2_dominant_escape_summary.csv`
+
+## 8b) Cross-Term Repeat Students (Paired Comparisons)
+
+Cross-term comparisons are only interpretable as paired analyses because later terms are filtered populations (students who did not pass earlier terms).
+
+### Overall cross-term performance change is strongly positive
+
+Among substantive repeaters:
+
+- `25t1->25t2`: mean term-level category delta `+0.4924`, median `+0.5000`
+- `25t2->25t3`: mean term-level category delta `+0.4555`, median `+0.4444`
+
+Category-change labels (student-level term summaries):
+
+- `25t1->25t2`: `80.95%` improve, `4.93%` same, `14.13%` decline
+- `25t2->25t3`: `76.53%` improve, `7.21%` same, `16.26%` decline
+
+This indicates substantial learning among repeaters even though they remain in the system.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_term_pairs.csv`
+- `analysis/longitudinal_analysis/cross_term_repeat_coverage.csv`
+
+### Error profile matching: many syntax-gated repeaters move to stronger profiles
+
+Among students with a syntax-gated dominant error profile in the source term:
+
+- `25t1->25t2`: `53.30%` move to pass-like dominant error profiles
+- `25t2->25t3`: `47.67%` move to pass-like dominant error profiles
+
+Progress short of passing is also visible:
+
+- syntax-gated -> runtime/wrong-output shifts:
+  - `25t1->25t2`: `9.07%`
+  - `25t2->25t3`: `25.58%`
+
+This supports the Step 8 framing that moving from syntax failure to logic/runtime failure is pedagogical progress, not merely a different failure.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_error_shift_matrix.csv`
+- `analysis/longitudinal_analysis/cross_term_syntax_progression_summary.csv`
+
+### Runtime subtype persistence exists, but is partial and limited by generic logging
+
+Weighted same-runtime-subtype persistence is:
+
+- `25t1->25t2`: `38.10%`
+- `25t2->25t3`: `21.43%`
+
+The runtime subtype table is small-n and still dominated by `Runtime Error (unspecified)`, which limits interpretability.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_runtime_type_persistence.csv`
+- `analysis/longitudinal_analysis/student_question_error_rows_step8.csv`
+
+### Archetype stability across terms: incremental debugging is the most stable positive process pattern
+
+Examples from the dominant-archetype cross-term matrices:
+
+- `Incremental debugger -> Incremental debugger`
+  - `25t1->25t2`: `231/441` (`52.38%`)
+  - `25t2->25t3`: `153/305` (`50.16%`)
+- `One-shot -> Incremental debugger`
+  - `25t1->25t2`: `238/694` (`34.29%`)
+  - `25t2->25t3`: `124/365` (`33.97%`)
+
+Again, `Thrasher` is essentially absent at the dominant-archetype term level, so Step 5 thrasher findings should be treated as question-attempt behavior rather than a stable student-level identity.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_archetype_shift_matrix.csv`
+- `analysis/longitudinal_analysis/student_term_primary_archetype.csv`
+
+### Tree-sitter structural progression: more loop/branch usage, less print-heavy behavior
+
+Cross-term construct summaries show consistent increases in problem-structure constructs:
+
+- `for_loop` mean consistency delta:
+  - `25t1->25t2`: `+0.1117`
+  - `25t2->25t3`: `+0.0600`
+- `if_stmt` mean consistency delta:
+  - `25t1->25t2`: `+0.0557`
+  - `25t2->25t3`: `+0.0606`
+
+Common "newly appears" patterns include `list_comp` and `try_stmt` (especially `25t1->25t2`), while `print_call` consistency decreases:
+
+- `print_call` mean consistency delta:
+  - `25t1->25t2`: `-0.0485`
+  - `25t2->25t3`: `-0.0289`
+
+This is consistent with students moving from output-driven trial code toward more structured solutions.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_construct_progression_summary.csv`
+- `analysis/longitudinal_analysis/student_term_construct_profile.csv`
+
+### Cross-term dominant-S2 escape: also zero under the strict dominant-state definition
+
+Among repeat students who are dominant `S2_parseable_zero` in the source term:
+
+- `25t1->25t2`: `0/13` escape to dominant `S3/S4`
+- `25t2->25t3`: `0/12` escape to dominant `S3/S4`
+
+Most instead shift to dominant syntax/no-code states. This is a strong signal that students whose term-level process is dominated by S2 are not being moved to a productive debugging regime by current remediation.
+
+Files:
+
+- `analysis/longitudinal_analysis/cross_term_s2_escape_summary.csv`
+- `analysis/longitudinal_analysis/cross_term_dominant_state_shift_matrix.csv`
+
+## 8c) The 497 All-Three-Term Students (Persistently Struggling Cohort)
+
+This is the highest-value cohort for intervention design because they persist across all three terms of the progressive filter.
+
+### Three-term dominant-state trajectories are mostly syntax/no-code, not S2
+
+Top dominant-state trajectories are overwhelmingly syntax/no-code:
+
+- `S1_syntax_fundamental -> S1_syntax_fundamental -> S1_syntax_fundamental`: `181`
+- `S0_no_code -> S1_syntax_fundamental -> S1_syntax_fundamental`: `69`
+- `S0_no_code -> S0_no_code -> S1_syntax_fundamental`: `36`
+
+Only `3` students have trajectories that start with dominant `S2_parseable_zero`.
+
+This is an important nuance relative to Step 4:
+
+- S2 is the largest aggregate bottleneck overall
+- but the persistently struggling all-three-term cohort is dominated by syntax/no-code states under the strict dominant-state summary
+
+Files:
+
+- `analysis/longitudinal_analysis/all_three_term_state_trajectory_summary.csv`
+- `analysis/longitudinal_analysis/all_three_term_trajectories.csv`
+
+### Three-term archetype trajectories: no persistent all-three thrasher or all-three skeleton-only pattern in dominant archetypes
+
+The dominant-archetype trajectories are mostly combinations of `Other`, `One-shot`, and `Incremental debugger`:
+
+- top sequence: `One-shot -> Other -> Other` (`46`)
+- `Incremental debugger` appears somewhere in the trajectory for `269/497` students
+
+Notably absent in this dominant-archetype summary:
+
+- no `Thrasher -> Thrasher -> Thrasher`
+- no `Skeleton-only -> Skeleton-only -> Skeleton-only`
+
+This reinforces the same caveat as above: these labels are very informative at question-attempt level, but dominant per-wave/per-term archetypes compress behavior heavily.
+
+Files:
+
+- `analysis/longitudinal_analysis/all_three_term_archetype_trajectory_summary.csv`
+- `analysis/longitudinal_analysis/student_term_primary_archetype.csv`
+
+### Three-term error trajectories show meaningful progress even without observed exit
+
+The dominant-error trajectory table includes many sequences that end in pass-like profiles (`Full pass` or `Public full pass, no submit`) by later terms, for example:
+
+- `Syntax gated -> Submitted, zero -> Public full pass, no submit` (`23`)
+- `Runtime error -> Submitted, zero -> Public full pass, no submit` (`20`)
+- `Syntax gated -> Submitted, zero -> Full pass` (`17`)
+
+This supports the Step 8 interpretation that process and error-profile changes can be pedagogically meaningful even when the student remains in the repeat cohort.
+
+Files:
+
+- `analysis/longitudinal_analysis/all_three_term_error_trajectory_summary.csv`
+- `analysis/longitudinal_analysis/student_term_primary_error_profile.csv`
+
+### "Eventual passers in t3" is not directly observable (no t4), so Step 8 uses proxies
+
+The dataset ends at `25t3`, so true post-t3 exit cannot be observed directly. Step 8 therefore uses explicit success proxies and labels them as proxies:
+
+- term-level t3 success proxy (full `497` all-three cohort):
+  - `340` flagged `t3_term_high_success_proxy`
+  - `157` not flagged
+- wave2-only t3 proxy is available for a smaller subset (`273` students):
+  - `67` high-success proxy
+  - `206` not high-success proxy
+
+These proxies are useful for profiling, but they are not the same as observed exit.
+
+Files:
+
+- `analysis/longitudinal_analysis/all_three_term_t3_term_level_success_proxy_summary.csv`
+- `analysis/longitudinal_analysis/all_three_term_t3_success_proxy_summary.csv`
+- `analysis/longitudinal_analysis/all_three_term_t3_success_proxy_feature_comparison.csv`
+
+## 8d) "Pass-Through" Analysis (Observed Exit Proxy Model)
+
+This step models observed exit after a term using features available at the start/end of the term pair, but with an explicit caveat:
+
+- outcome = `exit_after_term_observed` = not present in the next term (substantive participation)
+- this proxy mixes passing with attrition/non-participation
+
+### Model performance (predicting observed exit proxy)
+
+On substantive paired-wave students from `25t1` and `25t2`:
+
+- rows: `7108`
+- observed exit-positive rate: `0.7690`
+- 5-fold CV ROC AUC: `0.9189`
+- 5-fold CV Brier score: `0.0954`
+
+The model is useful for ranking risk of persistence, but it should not be reported as a pure pass-probability model.
+
+Files:
+
+- `analysis/longitudinal_analysis/pass_through_model_performance.csv`
+- `analysis/longitudinal_analysis/pass_through_model_dataset.csv`
+- `analysis/longitudinal_analysis/pass_through_model_scored_rows.csv`
+
+### Calibration and interpretation guidance
+
+The risk-decile table shows strong monotonic calibration in observed exit rates:
+
+- lowest-risk decile for exit: observed exit rate `0.2194`
+- middle decile (~0.777 predicted): observed exit rate `0.7718`
+- highest-risk deciles for exit: observed exit rates ~`0.994`
+
+Because features are correlated (scores, deltas, pass counts, archetypes, error profiles), the grouped-rate tables are more interpretable than raw logistic coefficients for intervention planning.
+
+Files:
+
+- `analysis/longitudinal_analysis/pass_through_risk_segments.csv`
+- `analysis/longitudinal_analysis/pass_through_grouped_rates.csv`
+- `analysis/longitudinal_analysis/pass_through_logistic_coefficients.csv`
+
+## 8e) Future Anchor Design Recommendation (to Restore IRT Growth Linking)
+
+Step 8 confirms the practical consequence of Step 6's wave-linking gap:
+
+- within-term growth can be analyzed through paired non-IRT methods now
+- but proper IRT-linked growth curves remain unavailable without deliberate wave anchors
+
+Recommendation for future terms:
+
+1. Include `2-3` identical anchor questions shared between Wave 1 and Wave 2 of the same term.
+2. Keep content and test cases identical across waves.
+3. Prefer moderate-difficulty, good-discrimination questions with real partial-credit spread.
+4. Avoid cliff-like items and items with equivalent/redundant test sets.
+
+Step 8 exports a candidate pool to support this design change:
+
+- `46` recommended title-level anchor candidates (`future_wave_anchor_candidate_titles.csv`)
+
+Examples appearing in the recommended pool include:
+
+- `Sales Records Analysis`
+- `Check if a String Starts and Ends with the Same Vowel (Case Insensitive)`
+- `Pattern Printing Centered Triangle Of Zeroes`
+- `Analyze Sentences`
+- `Book Reading List Data Analysis`
+
+Files:
+
+- `analysis/longitudinal_analysis/future_wave_anchor_candidate_questions.csv`
+- `analysis/longitudinal_analysis/future_wave_anchor_candidate_titles.csv`
+
+## Step 8 Summary (What Changed vs What Is Measurable)
+
+Even without IRT-linked wave growth, the longitudinal picture is informative:
+
+- within-term absolute performance improves strongly, while relative rank changes little
+- repeat students often improve their error profiles and structural coding behavior
+- dominant-S2 students almost never become dominant public-pass students under the strict dominant-state lens
+- the all-three-term persistent cohort is dominated by syntax/no-code trajectories, not S2, under dominant-state summaries
+- observed-exit modeling is feasible and well-calibrated as a triage tool, but it is an exit proxy (pass + attrition), not a pure pass model
+
+Operational implication:
+
+- if the same dominant syntax/no-code and non-productive archetype patterns remain stable for the all-three-term cohort in future runs, inter-term remediation is not changing how the highest-need students work
+
+Measurement-design implication:
+
+- adding `2-3` deliberate within-term wave anchors is a low-cost change that restores proper IRT growth analysis in future terms
+
+# Step 9: Concept Dependency and Knowledge Modelling
+
+This step adds a reproducible concept-tagging and concept-level analysis layer on top of the Step 3/5/6/8 outputs.
+
+It addresses:
+
+- concept-question mapping (all `251` questions)
+- concept-level mastery summaries (public-best outcomes)
+- construct-usage-vs-mastery signals ("don't know when" vs "don't know how")
+- empirical concept prerequisite signals
+- paired concept profiles for repeat students
+- concept-level decomposition of final-S2 failures
+
+## Process and Rebuild
+
+### What was added
+
+- `analysis/generate_concept_knowledge_modeling.py`
+- outputs under `analysis/concept_knowledge_modeling/`
+- `analysis/concept_knowledge_modeling/output_manifest.csv`
+
+### Rebuild command
+
+```bash
+uv run analysis/generate_concept_knowledge_modeling.py
+```
+
+### Inputs used
+
+The Step 9 script reads existing analysis outputs (no raw platform export reprocessing), primarily:
+
+- `analysis/question_metadata.csv`
+- `analysis/guide.md` (OPPE concise question cues by namespace/problem)
+- `analysis/psychometric_irt/question_level_grm_rows.csv`
+- `analysis/process_analysis/attempt_construct_first_appearance.csv`
+- `analysis/process_analysis/construct_first_appearance_summary_global.csv`
+- `analysis/process_analysis/public_test_run_state_rows.parquet`
+- `analysis/error_taxonomy/selected_snapshot_taxonomy_rows.csv`
+
+### Method notes (important)
+
+1. **Concept tagging is cue-driven and heuristic, not SME hand-labelled.**
+   - The script parses concise cues from `analysis/guide.md` by exact `namespace + problem_id`, joins them to `analysis/question_metadata.csv`, then applies rule-based keyword tagging.
+   - Coverage is complete (`251/251` questions got guide cues and `251/251` were tagged).
+
+2. **Public-best basis is consistent with Step 6.**
+   - `question_level_grm_rows.csv` is `grm_basis = public_best_all` for all rows, so Step 9 mastery summaries use the same public-best categorical basis (`grm_category` in `{0,1,2}`).
+
+3. **Student-level concept mastery (for prerequisite graph / repeat profiles) uses a threshold.**
+   - `concept_mastered_flag := mean_grm_category >= 1.5` within the scope (wave or term) for that concept.
+
+4. **Repeat-student concept profiles use the Step 8-style substantive threshold.**
+   - substantive term participation = at least `3` question rows in standard `wave1/wave2` rows.
+
+5. **Construct proxies are limited by the available Step 5 tree-sitter feature set.**
+   - There are no direct AST flags for dictionary literals/indexing, `open()` calls, or string methods.
+   - `dict_comp`, `import_*`, `try_stmt`, and loop/print constructs are proxies (sometimes weak/narrow).
+
+## 9a) Concept-Question Map (251 Questions)
+
+The concept map covers all `251` questions and all questions have parsed OPPE guide cues:
+
+- question rows tagged: `251`
+- guide cue coverage: `251/251`
+- untagged questions: `0`
+- average tags per question: `1.5936`
+- max tags on a question: `4`
+
+Concept tag counts (question-tag rows; multi-label):
+
+- `String manipulation`: `74`
+- `Arithmetic / conditionals`: `72`
+- `Loops and iteration`: `59`
+- `Input parsing / output formatting`: `48`
+- `List / tuple operations`: `38`
+- `Data analysis / aggregation`: `35`
+- `Dictionary operations`: `26`
+- `Mathematical / algorithmic`: `21`
+- `Pattern printing`: `18`
+- `File operations`: `9`
+
+Spot checks are directionally correct:
+
+- `Pattern printing - Centered Triangle Of Zeroes` -> pattern + loops + formatting (+ math/triangle cue)
+- `Column Totals in a Markdown Table (Numeric Columns Only)` -> input/output formatting + file operations
+- `Merge two dictionaries and sum on conflicts` -> dictionary operations + loops/iteration
+
+Files:
+
+- `analysis/concept_knowledge_modeling/concept_question_map.csv`
+- `analysis/concept_knowledge_modeling/concept_question_tag_rows.csv`
+- `analysis/concept_knowledge_modeling/guide_question_cues_extracted.csv`
+- `analysis/concept_knowledge_modeling/concept_tagging_coverage_summary.csv`
+
+## 9b) Concept-Level Mastery Rates (Public-Best Basis)
+
+### Overall concept mastery (student-question rows, public-best all-pass rate)
+
+Highest overall all-public-pass rates:
+
+- `Arithmetic / conditionals`: `60.23%`
+- `List / tuple operations`: `52.02%`
+- `String manipulation`: `51.83%`
+
+Lowest overall all-public-pass rates:
+
+- `Data analysis / aggregation`: `21.14%`
+- `Input parsing / output formatting`: `29.52%`
+- `Pattern printing`: `30.49%`
+- `File operations`: `30.52%`
+
+This matches the broader difficulty picture from earlier steps: data-analysis style questions and formatting/file-heavy tasks are a major difficulty cluster.
+
+### Term-level breakdown (caveat: progressive filter + question mix)
+
+Cross-term aggregate comparisons remain confounded by the progressive filter and by changing question sets, but they still help locate consistently weak concept areas.
+
+Using the student-concept mastery profile rate (`mean_grm >= 1.5`):
+
+- `Data analysis / aggregation` is persistently low across terms:
+  - `25t1`: `19.36%`
+  - `25t2`: `19.24%`
+  - `25t3`: `17.29%`
+- `Pattern printing` declines across terms (consistent with weaker later cohorts and/or harder pattern sets):
+  - `25t1`: `27.82%`
+  - `25t2`: `23.52%`
+  - `25t3`: `16.70%`
+- `Arithmetic / conditionals` remains one of the strongest:
+  - `25t1`: `47.30%`
+  - `25t2`: `55.18%`
+  - `25t3`: `55.18%`
+
+### Within-term Wave 1 -> Wave 2 concept comparisons (cleaner population comparison)
+
+These are same-population paired comparisons, so they are cleaner than cross-term aggregates. However, they still compare different wave question sets within a concept (not linked anchors).
+
+Strongest positive paired concept shifts (mean student-level concept `GRM` delta):
+
+- `25t2`: `Loops and iteration` (`+0.725`, `+38.59` pp all-pass among paired concept profiles, `n=656`)
+- `25t3`: `Loops and iteration` (`+0.766`, `+38.60` pp, `n=1805`)
+- `25t1`: `List / tuple operations` (`+0.368`, `+26.01` pp, `n=2547`)
+
+Notable within-term declines (wave content mismatch warning):
+
+- `25t1`: `Mathematical / algorithmic` (`-0.716`, `-44.49` pp, `n=816`)
+- `25t1`: `Dictionary operations` (`-0.388`, `-21.08` pp, `n=223`)
+
+These declines do **not** imply students "unlearned" the concept. They indicate concept-level wave comparisons are still sensitive to which specific questions instantiate a concept in each wave.
+
+Files:
+
+- `analysis/concept_knowledge_modeling/concept_mastery_overall.csv`
+- `analysis/concept_knowledge_modeling/concept_mastery_by_term.csv`
+- `analysis/concept_knowledge_modeling/concept_mastery_by_term_wave.csv`
+- `analysis/concept_knowledge_modeling/concept_mastery_student_profiles_by_term.csv`
+- `analysis/concept_knowledge_modeling/within_term_paired_student_concept_wave_change_summary.csv`
+- `analysis/concept_knowledge_modeling/concept_mastery_within_term_wave_unpaired_change.csv`
+
+## 9c) Tree-Sitter Construct Usage vs Mastery
+
+### Construct-focus table (directly aligned with the Step 9 prompt examples)
+
+From `construct_focus_usage_mastery.csv`:
+
+- `Loops` (`for_loop` or `while_loop`):
+  - usage rate (ever used in attempt): `48.67%`
+  - all-public-pass rate among users: `45.73%`
+  - gap type: `High usage, low mastery`
+- `List comprehensions` (`list_comp`):
+  - usage: `4.53%`
+  - all-public-pass among users: `52.57%`
+  - gap type: `Low usage, low mastery`
+- `Dictionaries` (`dict_comp` proxy only; narrow proxy):
+  - usage: `0.41%`
+  - all-public-pass among users: `52.88%`
+  - gap type: `Low usage, low mastery`
+- `Error handling` (`try_stmt`):
+  - usage: `1.45%`
+  - all-public-pass among users: `41.22%`
+  - gap type: `Low usage, low mastery`
+
+Interpretation:
+
+- The **loops** signal is the clearest "know when, struggle with execution" pattern (`high usage, low mastery`).
+- The **list-comp / dict-comp / try** signals are mostly "low usage, low mastery" under the tracked constructs, which suggests limited absorption and/or weak deployment.
+- For dictionaries specifically, this is a **narrow proxy** because dict literals/indexing are not tracked in Step 5's construct set.
+
+### Concept-proxy usage vs mastery (one row per concept)
+
+The concept-level proxy table (`concept_construct_proxy_usage_mastery.csv`) extends this idea to the 10 concept categories. Most concepts are classified as `High usage, low mastery` under their configured proxy constructs, especially:
+
+- `Data analysis / aggregation` (proxy usage `75.42%`, all-pass among proxy-users `27.97%`)
+- `Pattern printing` (proxy usage `78.35%`, all-pass among proxy-users `27.27%`)
+- `Loops and iteration` (proxy usage `65.67%`, all-pass among proxy-users `43.83%`)
+
+This supports a "practice and feedback" intervention framing for these concepts, not just exposure.
+
+Files:
+
+- `analysis/concept_knowledge_modeling/construct_focus_usage_mastery.csv`
+- `analysis/concept_knowledge_modeling/construct_focus_usage_mastery_by_term.csv`
+- `analysis/concept_knowledge_modeling/concept_construct_proxy_usage_mastery.csv`
+- `analysis/concept_knowledge_modeling/construct_first_appearance_summary_global_step5_copy.csv`
+
+## 9d) Empirical Concept Prerequisite Graph (Screening Tool, Not Final Curriculum Order)
+
+The prerequisite graph is computed from student-term concept mastery profiles using:
+
+- `P(masters B | masters A)`
+- `P(masters B | fails A)`
+- edge strength = difference (`Δ`)
+
+To avoid an over-dense graph, the Step 9 script keeps only the stronger direction for each unordered concept pair and applies support/strength thresholds.
+
+Result:
+
+- `24` candidate directional prerequisite edges
+- `20` reverse the **proxy** concept order used in this step
+
+Important caveat:
+
+- The "curriculum order" comparison here uses the **Step 9 concept-list order as a proxy**, not an authoritative syllabus sequence.
+- Many concepts are broad and cross-cutting (especially loops, formatting, and data analysis), so these edges should be used as a **screening signal** for curriculum review, not as proof of causal prerequisites.
+
+Examples of strong candidate edges:
+
+- `Input parsing / output formatting -> File operations` (`Δ master prob = 78.52 pp`, aligned with proxy order)
+- `Data analysis / aggregation -> Dictionary operations` (`58.34 pp`, reverse vs proxy order)
+- `Data analysis / aggregation -> Loops and iteration` (`52.97 pp`, reverse vs proxy order)
+- `Loops and iteration -> String manipulation` (`49.85 pp`, reverse vs proxy order)
+
+The reverse-edge pattern is still informative: it suggests the concept definitions are strongly interdependent and the proxy order likely does not reflect the true dependency structure well enough for direct curriculum conclusions.
+
+Files:
+
+- `analysis/concept_knowledge_modeling/concept_prerequisite_pair_matrix.csv`
+- `analysis/concept_knowledge_modeling/concept_prerequisite_edge_candidates.csv`
+- `analysis/concept_knowledge_modeling/concept_prerequisite_order_misalignment_proxy.csv`
+
+## 9e) Paired Concept Profiles for Repeat Students
+
+Using the substantive repeat-student cohorts (same threshold as Step 8 style: `>=3` question rows per term, standard waves only):
+
+- `25t1->25t2`: `1989` repeat students
+- `25t2->25t3`: `1359` repeat students
+
+At the student level (concepts assessed in both terms):
+
+- share with **at least one newly mastered concept**
+  - `25t1->25t2`: `66.52%`
+  - `25t2->25t3`: `61.37%`
+- share with **at least one regressed concept**
+  - `25t1->25t2`: `24.53%`
+  - `25t2->25t3`: `20.09%`
+
+This is strong evidence that many repeat students are learning new concepts between terms, even when they remain in the system.
+
+### Concept-specific retention / acquisition highlights
+
+`25t1->25t2`:
+
+- `Arithmetic / conditionals`: retention `72.26%`, acquisition `52.75%`
+- `String manipulation`: retention `61.75%`, acquisition `42.44%`
+- `List / tuple operations`: acquisition `27.98%`
+- `Data analysis / aggregation`: acquisition only `9.42%`
+- `Pattern printing`: acquisition only `7.57%`, retention `13.89%`
+
+`25t2->25t3`:
+
+- `Arithmetic / conditionals`: retention `58.87%`, acquisition `45.82%`
+- `String manipulation`: retention `51.36%`, acquisition `29.22%`
+- `List / tuple operations`: acquisition `32.40%`
+- `Data analysis / aggregation`: acquisition only `3.53%`
+- `Pattern printing`: acquisition `0.76%` (small overlap, `n=48` assessed in both)
+
+Interpretation:
+
+- Core concepts (`Arithmetic`, `String`, `List/Tuple`) show meaningful acquisition and moderate retention.
+- `Data analysis / aggregation` and `Pattern printing` remain difficult to acquire and retain, especially among repeaters.
+
+Files:
+
+- `analysis/concept_knowledge_modeling/repeat_student_concept_profiles_paired.csv`
+- `analysis/concept_knowledge_modeling/repeat_student_concept_profile_pair_rows.csv`
+- `analysis/concept_knowledge_modeling/repeat_student_concept_profile_pair_summary.csv`
+- `analysis/concept_knowledge_modeling/repeat_student_concept_retention_acquisition_summary.csv`
+
+## 9f) Concept-Level Decomposition of the Final-S2 Bottleneck
+
+This step links the Step 4/8 process finding (S2 = parseable code, zero public tests passed) to concepts and construct proxies.
+
+### Final-S2 cohort size and snapshot-alignment quality
+
+- final public-run S2 attempts: `36,616` student-question attempts
+- selected snapshot row available: `36,616` (`100%`)
+- selected snapshot is itself a public test_run row: `30,481` (`83.24%`)
+- selected snapshot matches S2-like public conditions: `28,974` (`79.13%`)
+- aligned proxy subset retained for decomposition:
+  - attempts: `28,974`
+  - concept-tag rows: `47,068`
+
+This means the selected-snapshot construct proxy is useful, but not perfect; Step 9 reports the alignment rate explicitly.
+
+### Which concepts dominate final-S2?
+
+Top concept-tag rows within final-S2 attempts:
+
+- `String manipulation`: `10,620`
+- `Loops and iteration`: `9,516`
+- `Input parsing / output formatting`: `8,352`
+
+### Selection vs application decomposition (proxy-based)
+
+Using concept-specific construct proxies (with quality labels), the primary percentages below are read from the **aligned-proxy** rollup (`selected_snapshot_s2_like = True`):
+
+- `Pattern printing`: `93.61%` application-gap proxy (relevant construct present)
+- `Loops and iteration`: `64.71%` application-gap proxy
+- `String manipulation`: `65.26%` application-gap proxy (**weak proxy**)
+- `Data analysis / aggregation`: `66.80%` application-gap proxy
+- `List / tuple operations`: `46.66%` application-gap vs `53.34%` selection-gap proxy (near split)
+- `Arithmetic / conditionals`: `58.32%` application-gap proxy vs `41.68%` selection-gap proxy
+
+Important proxy caveats:
+
+- `Dictionary operations`: `99.14%` selection-gap proxy is driven by the **narrow `dict_comp` proxy** and should not be read as "students never used dictionaries" in a literal sense.
+- `File operations`: `90.42%` selection-gap proxy is also influenced by weak proxies (`import_*`, `try_stmt`) because `open()` is not tracked.
+
+Pedagogical implication:
+
+- For concepts like loops/pattern/data-analysis, many S2 failures already include relevant constructs (application/debugging problem).
+- For concepts with more balanced or proxy-absent signals, interventions should distinguish concept selection from implementation/debugging failures.
+
+Files:
+
+- `analysis/concept_knowledge_modeling/s2_final_attempt_concept_decomposition_rows.csv`
+- `analysis/concept_knowledge_modeling/s2_final_attempt_concept_decomposition_summary.csv`
+- `analysis/concept_knowledge_modeling/s2_final_attempt_concept_decomposition_summary_aligned_proxy.csv`
+- `analysis/concept_knowledge_modeling/s2_final_attempt_concept_decomposition_proxy_rollup.csv`
+- `analysis/concept_knowledge_modeling/s2_final_attempt_concept_decomposition_proxy_rollup_aligned_proxy.csv`
+- `analysis/concept_knowledge_modeling/s2_final_attempt_snapshot_alignment_summary.csv`
+
+## Step 9 Summary (Operational / Curriculum Implications)
+
+1. The concept map is now complete (`251/251` questions) and reproducible, with full guide-cue coverage.
+2. The hardest concept cluster is clear: `Data analysis / aggregation` (and then pattern/file/formatting-heavy work).
+3. Construct-usage-vs-mastery distinguishes intervention types:
+   - `Loops`: high usage + low mastery -> **practice + feedback**
+   - `ListComp/DictComp/Try`: low usage + low mastery -> **exposure + pattern recognition + practice**
+4. Repeat students often master new concepts across terms, but retention/acquisition for `Data analysis` and `Pattern printing` is weak.
+5. Final-S2 failures are concept-heavy in strings/loops/formatting, and many already show relevant constructs -> the bottleneck is often **application/debugging**, not just concept exposure.
+6. The empirical prerequisite graph is useful for curriculum review, but it needs a real syllabus-order comparison (not the proxy order used here) before making sequencing changes.

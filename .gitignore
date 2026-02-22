@@ -9,4 +9,7 @@ analysis/error_taxonomy/
 analysis/syntax_bottleneck_quantified/
 analysis/process_analysis/
 analysis/psychometric_irt/
+analysis/evaluation_redesign/
+analysis/longitudinal_analysis/
+analysis/concept_knowledge_modeling/
 analysis/__pycache__/

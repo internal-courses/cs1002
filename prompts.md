@@ -777,3 +777,321 @@ For the above analyses
 
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# The Syntax Bottleneck — Quantified"
+
+## Context From Steps 1–6
+
+These are the findings that shape everything below.
+
+**The gating waterfall (Step 4)** decomposes all 151,778 student-question rows:
+
+| Gate                                                            | Combined % |
+| --------------------------------------------------------------- | ---------- |
+| Unmodified skeleton / didn't attempt                            | 6.14%      |
+| Syntax gated — mechanical (structure evident, localised errors) | 7.14%      |
+| Syntax gated — fundamental (no recoverable structure)           | 2.36%      |
+| Formatting gated                                                | 0.25%      |
+| Edge-case gated (passes core, fails edge cases)                 | 7.35%      |
+| Genuine logic failure                                           | 26.72%     |
+| Partial pass                                                    | 3.21%      |
+| Full pass                                                       | 46.83%     |
+
+**Genuine logic failure is the single largest failure bucket** — roughly 3x the combined syntax gates. The formatting tax is negligible (0.25%).
+
+**The data has two tracks.** 23 of 35 namespaces have zero submission capture (a data pipeline issue, not student behaviour). Track A (12 submission-positive namespaces, \~42,918 submitter rows + \~11,112 non-submitter rows) has private test results. Track B (23 zero-submission namespaces, \~97,748 rows) has public test\_run results only.
+
+**The S2 self-loop is the dominant "death spiral."** Students in State S2 (parseable code, zero public tests passing) have a 78.93% probability of remaining in S2 at the next test\_run. This is a debugging and problem-decomposition gap, not a syntax gap.
+
+**Test cases are heavily redundant.** 34.46% of within-question item pairs have phi > 0.90\. Cronbach's alpha > 0.97 across namespaces.
+
+**Partial credit adds limited information for \~half the questions.** 47.35% of questions have narrow GRM thresholds (b2 - b1 < 0.35), meaning the "some tests passed" and "all tests passed" categories are nearly the same difficulty level.
+
+**The exam is low-ability blind.** 33/35 namespaces provide much less measurement information in the low-ability region than in the middle. The median low-to-mid information ratio is 0.1555.
+
+**Term progression is a filter, not a cohort.** Term 2 students are those who failed Term 1; Term 3 students failed Term 2\. Students who pass leave the system. The 503 students present in all three terms are the persistently struggling population.
+
+**No wave-pair linking exists.** Step 6 found zero shared anchor items between Wave 1 and Wave 2 within any term, so IRT-based within-term growth analysis is not currently feasible.
+
+**Behavioural archetypes from Step 5:**
+
+| Archetype                | % of Attempts | Success Rate |
+| ------------------------ | ------------- | ------------ |
+| Steady builder           | 16.10%        | 88.73%       |
+| Incremental debugger     | 7.72%         | 77.28%       |
+| Regression               | 10.07%        | 5.88%        |
+| One-shot                 | 8.67%         | 5.49%        |
+| Skeleton-only            | 6.14%         | 0.48%        |
+| Stuck and abandoned      | 3.47%         | 3.43%        |
+| Thrasher                 | 1.82%         | 43.47%       |
+| **Other (unclassified)** | **52.64%**    | —            |
+
+Thrashers spend 2.2x the time of incremental debuggers but achieve much worse outcomes. 52.64% of attempts are unclassified — this needs resolution before the archetype story can be presented.
+
+**Other key findings:**
+
+- 15 cliff-like questions identified (high discrimination + bimodal shape warning).
+- Some variant pairs show material linked-θ differences (up to 0.653).
+- 50% of runtime errors in the data are "Runtime Error (unspecified)" because the platform provides generic summaries.
+- 45% of students who end with non-parseable code had parseable code at some earlier point (regression).
+- Recovery analysis: syntax errors with structural intent resolve faster (50% within 1 run) than those without (44%). Wrong Answer errors persist to final run 39% of the time.
+
+---
+
+## Step 7: Evaluation Redesign
+
+**7a. Fix the submission capture pipeline.**
+
+23/35 namespaces have zero submission events. This is an instrumentation issue — students in these namespaces have test\_run activity (and 48.76% passed all public tests in at least one run) but no submissions are recorded. Without fixing this, 64% of student-question rows lack private test results and formal scores.
+
+Investigate:
+
+- Why do these namespaces have no submission events? Is it a logging failure, a UI workflow difference, or a platform configuration change across terms?
+- The affected namespaces cluster by term: 100% of 25t1 namespaces, 40% of 25t2 Wave 2, 50% of 25t3 Wave 1, 75% of 25t3 Wave 2.
+
+This is the highest-priority operational fix because it directly determines how much data is available for all future analysis and scoring.
+
+**7b. Address the S2 bottleneck — the largest intervention opportunity.**
+
+The S2 state (parseable code, zero tests passing) affects the largest struggling population. The 78.93% self-loop probability means students in this state almost never escape by doing more of the same. These students can write syntactically valid Python but cannot get their logic to produce correct output.
+
+This is a problem-solving and debugging gap, not a syntax or knowledge gap. Design interventions targeting three specific sub-skills:
+
+1. **Reading and interpreting test case failures.** Currently, students see generic pass/fail results. Provide structured feedback on the first failing test case: the input, the expected output, and the student's actual output. This is a platform change with high leverage — it directly helps the S2 population diagnose what's wrong.
+2. **Problem decomposition.** Redesign questions to include explicit sub-tasks (e.g., "First, write a function that does X. Then, use it to do Y."). This gives students intermediate checkpoints and makes partial credit meaningful at genuinely different difficulty levels — addressing the narrow-threshold problem from Step 6 simultaneously.
+3. **Incremental testing strategy.** Use Step 5's "incremental debugger" trajectories as teaching exemplars. Show students what effective debugging looks like (small targeted changes, test after each change) vs. what thrashing looks like (large rewrites, no progress). The data shows incremental debuggers achieve 77% success in 2,170 seconds while thrashers achieve 43% success in 4,717 seconds — better process beats more effort.
+
+**7c. Redesign test cases for difficulty spread and reduced redundancy.**
+
+Step 2 found 34.46% of within-question item pairs are near-redundant (phi > 0.90). Step 6 found 47.35% of questions have narrow partial-credit thresholds (b2 - b1 < 0.35). These are two views of the same problem: test cases within a question cluster at one difficulty level rather than spanning a range.
+
+For each question, using the transitive reduction from Step 2:
+
+1. **Keep** the minimal non-redundant test case chain (the items that add genuinely new information).
+2. **Replace** redundant test cases with cases at deliberately different difficulty levels:
+  - At least one **warm-up case** that tests the simplest possible input (single-element list, trivial arithmetic, basic happy path). This directly addresses low-ability blindness — students who handle the basic case get credit.
+  - At least one **stretch case** that tests a non-obvious edge (empty input, negative numbers, very large input, boundary conditions).
+3. **Target**: b2 - b1 > 0.5 for redesigned questions, meaning the "some tests passed" and "all tests passed" categories reflect a genuine ability difference.
+
+High-priority targets:
+
+- The 15 cliff-like questions flagged by Step 6 (high discrimination + bimodal shape).
+- Questions with dependency-graph edge density = 1.0 from Step 2 (every test case equivalent).
+- High-thrasher questions from Step 5: "Pattern printing — Centered Triangle Of Zeroes" (12.59% thrasher), "Reversed Squares of List Elements" (7.08%), "Pangram Check" (6.96%).
+
+**7d. Add easy warm-up questions for low-ability measurement.**
+
+33/35 namespaces provide roughly 6x less measurement information in the low-ability region than in the middle. The exam cannot distinguish among weak students — it lumps them all at zero. Given the progressive-filter term structure (later terms contain weaker students), this is a measurement-design mismatch: the instrument is least precise where diagnostic resolution is most needed.
+
+Add 1–2 genuinely easy questions per exam that most students can at least partially solve. These contribute almost no information about strong students (who pass them trivially) but discriminate among weak students. They also serve a pedagogical function: a successful starting experience may reduce the "skeleton-only" (6.14%) and "stuck and abandoned" (3.47%) archetypes.
+
+**7e. Implement layered scoring.**
+
+Replace all-or-nothing scoring with:
+
+| Layer                | What It Measures             | How to Score                                                                            | Weight |
+| -------------------- | ---------------------------- | --------------------------------------------------------------------------------------- | ------ |
+| **Attempt**          | Meaningful engagement?       | Code structurally differs from skeleton (tree-sitter comparison) by ≥N added constructs | 5–10%  |
+| **Runnability**      | Valid Python that executes?  | ast.parse() succeeds AND code runs without crash on minimal input                       | 10–15% |
+| **Core correctness** | Handles the main case?       | Passes designated "core" test cases (the warm-up cases from 7c)                         | 35–45% |
+| **Edge robustness**  | Handles boundary conditions? | Passes remaining test cases                                                             | 25–35% |
+
+**Caveat**: Layered scoring is only effective for questions where the test cases span a genuine difficulty range. For the 47.35% of questions with narrow b2 - b1 thresholds, layered scoring collapses back to near-binary until the test cases are redesigned (7c). Simulate layered scoring against historical data and report separately for questions with wide vs. narrow threshold gaps.
+
+**7f. Audit problem statement clarity.**
+
+For questions with the highest "wrong output — logic" rates (from Step 3) and the highest thrasher rates (from Step 5):
+
+- Review problem statements for ambiguity.
+- Cross-reference with tree-sitter structural analysis: if students build correct structure (right loops, right data structures) but produce wrong output, the gap may be in problem interpretation, not concept understanding.
+- Concretely: "How many distinct incorrect interpretations could a careful student reasonably make?" If more than one, rewrite.
+
+Specific targets: the high-thrash questions named in 7c.
+
+**7g. Investigate variant equivalence.**
+
+Step 6 found some variant pairs with material θ differences after linking (e.g., ns\_25t1\_py22\_1 vs \_2: +0.653). For variant pairs with large differences:
+
+- Review whether question content is truly equivalent in difficulty.
+- Check whether student assignment to variants is random or cohort-based. If cohort-based, the difference may reflect the population, not the instrument.
+- If instrument differences are confirmed, adjust future variant design for better equivalence.
+
+**7h. Improve runtime error feedback.**
+
+50% of runtime error rows in the data are "Runtime Error (unspecified)" because the platform provides generic error summaries. This limits both student learning (they can't see what went wrong) and analytical precision (future analyses can't classify runtime error types).
+
+Ensure the exam platform exposes the specific Python exception type and traceback to students and in logged data. This is both a pedagogical improvement and a data quality improvement.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Step 7: Evaluation Redesign"
+
+## Step 8: Longitudinal Analysis
+
+The term structure is a progressive filter: Term 2 students failed Term 1, Term 3 students failed Term 2\. Students who pass leave the system. This means cross-term aggregate comparisons are misleading (later terms have weaker populations by construction), but individual-level paired comparisons are deeply informative.
+
+Step 6 found no shared anchor items between Wave 1 and Wave 2, so IRT-linked growth analysis is not feasible. This step uses alternative approaches.
+
+**8a. Within-term growth (Wave 1 → Wave 2) — alternative approaches.**
+
+For students who took both waves (\~4,290 in 25t1, \~2,933 in 25t2, \~2,682 in 25t3), the \~35-day gap between waves is the only clean same-population comparison:
+
+1. **Rank-based comparison.** For students in both waves, compute their rank within their wave's score distribution. Compare Wave 1 rank to Wave 2 rank. Students who improve in relative rank are learning.
+2. **Category-based comparison.** Using the GRM categories (0 = no tests passed, 1 = some, 2 = all), compute the fraction of students who improve, stay the same, or decline from Wave 1 to Wave 2\. Weight by question count (students attempt \~7 questions per wave). This is coarse but robust.
+3. **Archetype shift analysis.** For students in both waves, compare their primary archetype in Wave 1 vs. Wave 2:
+  - Do "thrashers" in Wave 1 become "steady builders" or "incremental debuggers" in Wave 2?
+  - Do "skeleton-only" students in Wave 1 show any engagement improvement in Wave 2?
+  - Do "regression" students in Wave 1 learn to maintain working code in Wave 2?
+4. **State-transition improvement.** Compare the student's dominant state in Wave 1 (what state they spent the most test\_runs in) to their dominant state in Wave 2\. A shift from dominant-S2 to dominant-S3 or S4 is progress even if the final score doesn't change much.
+
+**8b. Cross-term analysis for repeat students (paired comparisons).**
+
+For the 2,010 students in t1∩t2 and 1,367 in t2∩t3 (students who failed the earlier term and are retaking):
+
+1. **Error profile matching.** Compare each student's error taxonomy (from Step 3) in Term N to Term N+1:
+  - If they failed on runtime errors (TypeError, NameError) in t1, do the same error types appear in t2?
+  - If they were syntax-gated in t1, are they still syntax-gated in t2? Or have they shifted to a different failure mode (logic error, edge case)?
+  - Shifting from syntax failure to logic failure is _progress_ — even if the score is still low.
+2. **Archetype stability.** Same as 8a.3 but across terms. Does the \~35-day inter-term gap (plus additional instruction) change student process behaviour?
+3. **Tree-sitter structural progression.** Compare the structural inventory of each student's code across terms:
+  - In t1, did they ever use for-loops? In t2, do they use for-loops more consistently?
+  - In t1, did they ever use functions? In t2, are they decomposing problems into functions?
+  - Use tree-sitter construct timeline data from Step 5.
+4. **S2 escape rate.** For students who were predominantly in S2 (parseable, zero tests) in Term N, what fraction escape to S3 or S4 in Term N+1? This directly measures whether inter-term remediation is addressing the largest bottleneck.
+
+**8c. The 503 all-three-terms students.**
+
+Dedicated analysis of the persistently struggling population:
+
+1. **Three-term error trajectory.** Plot each student's primary error category across t1 → t2 → t3\. Common patterns to look for:
+  - **Persistent S2**: Valid code, wrong output, all three terms. These students understand Python syntax but not algorithmic thinking.
+  - **Persistent syntax**: Can't write parseable code even after three attempts. Need fundamentally different instruction.
+  - **Cycling**: Syntax failure in t1, runtime error in t2, wrong output in t3\. This is progress even though they haven't passed.
+2. **Archetype trajectory.** Three-term archetype sequence. Are they always "skeleton-only"? Always "thrasher"? Or do their process patterns shift?
+3. **What distinguishes eventual passers.** Among the 503, do any pass in t3? If so, what changed — in their error profile, archetype, structural complexity, or state transitions? These success stories should inform intervention design.
+
+**8d. "Pass-through" analysis.**
+
+Model the probability of passing (and exiting the system) as a function of:
+
+- Wave 1 → Wave 2 improvement (from 8a)
+- Primary archetype (from Step 5)
+- Primary error category (from Step 3)
+- Number of questions with any test pass
+
+This identifies which student characteristics at the start of a term predict successful exit. The complement identifies who will persist to the next term — and these are the students targeted interventions should focus on.
+
+**8e. Recommend anchor design for future terms.**
+
+Since no wave-pair linking currently exists, recommend that future exam design include 2–3 deliberate anchor questions shared between Wave 1 and Wave 2 of the same term. These should be:
+
+- Moderate difficulty (not ceiling or floor)
+- From the questions with the best GRM discrimination parameters (Step 6)
+- Identical in content and test cases across waves
+
+This is a low-cost design change that enables proper IRT-linked growth analysis in future terms.
+
+**What This Tells You**: Without IRT-linked growth curves, you can still answer the core longitudinal questions through archetype shifts, error profile changes, state-transition improvements, and structural progression. The picture is less statistically precise but potentially more pedagogically informative — you see _what changed in how students work_, not just whether a latent score moved.
+
+**Action point**: If archetype and error profiles are stable across terms for the 503 students, current inter-term remediation is not working for this group. The specific stable patterns (persistent S2, persistent thrasher, persistent skeleton-only) identify what kind of alternative intervention to try.
+
+**Action point**: Include anchor questions in future exam design (8e). This is a low-cost change that unlocks proper growth analysis.
+
+## Step 9: Concept Dependency and Knowledge Modelling
+
+**9a. Build a concept-question map.**
+
+Using the question cues from the OPPE guide, tag each of the 251 questions with primary concepts:
+
+| Concept                           | Example Question Cues                                                        |
+| --------------------------------- | ---------------------------------------------------------------------------- |
+| Arithmetic / conditionals         | "Check is even or divisible by 5," "Describe Number Based on Divisibility"   |
+| String manipulation               | "Deinterleave Even and Odd Indices in String," "Create Slug from String"     |
+| List / tuple operations           | "Middle element from list," "Extract Border Elements," "Rotate Even Indices" |
+| Dictionary operations             | "Merge two dictionaries and sum on conflicts"                                |
+| Loops and iteration               | "Counts unique even and odd numbers," "Running Average Skipping NaN"         |
+| Pattern printing                  | "W Pattern," "Z Pattern," "Diamond," "Hexagon"                               |
+| Input parsing / output formatting | "Markdown Image to HTML Image," "Format Tic-Tac-Toe Board"                   |
+| Data analysis / aggregation       | "Student Score Filter," "Employee Task Analysis"                             |
+| File operations                   | "Column Totals in a Markdown Table," "File Content Zig-Zag Shift"            |
+| Mathematical / algorithmic        | "Check if a Triangle is Obtuse," "Compute Polynomial Value"                  |
+
+Many questions will map to 2–3 concepts. Tag all relevant ones.
+
+**9b. Concept-level mastery rates.**
+
+For each concept, aggregate pass rates across all questions tagged with that concept. Use public-best outcomes for the full population (consistent with Step 6's GRM basis).
+
+Break down by term — noting that cross-term declines reflect weaker populations (progressive filter), not curriculum failure. Within-term Wave 1 → Wave 2 comparisons on concept-level mastery are cleaner.
+
+**9c. Tree-sitter construct usage vs. mastery.**
+
+This is directly computable from existing Step 3 and Step 5 outputs (`structural_inventory_by_question.csv`, `construct_first_appearance_summary_global.csv`).
+
+Build the usage-vs-mastery table:
+
+| Concept             | Relevant Construct(s)                   | Usage Rate (ever used in attempt) | Mastery Rate (among users) | Gap Type |
+| ------------------- | --------------------------------------- | --------------------------------- | -------------------------- | -------- |
+| Loops               | for\_loop (46.71%), while\_loop (5.13%) | ?                                 | ?                          | ?        |
+| List comprehensions | list\_comp (4.53%)                      | ?                                 | ?                          | ?        |
+| Dictionaries        | dict\_comp (0.41%)                      | ?                                 | ?                          | ?        |
+| Error handling      | try\_stmt (1.45%)                       | ?                                 | ?                          | ?        |
+
+For each concept, classify the gap:
+
+- **Low usage, high mastery when used** → Students don't know _when_ to deploy this construct. Teach pattern recognition (more examples of when to use it, not more drill on how).
+- **High usage, low mastery** → Students know when but not how. More practice and worked examples needed.
+- **Low usage, low mastery** → Construct hasn't been absorbed at all. Curriculum coverage issue.
+
+**9d. Concept prerequisite graph.**
+
+For each pair of concepts (A, B):
+
+- P(masters B | masters A) — does knowing A predict knowing B?
+- P(masters B | fails A) — can they know B without A?
+
+If P(masters B | masters A) >> P(masters B | fails A), A is empirically a prerequisite for B. Build a directed graph.
+
+Compare against the curriculum's teaching order. Misalignments — concepts taught before their empirical prerequisites — are high-priority curriculum findings.
+
+**9e. Per-student concept profiles for repeat students.**
+
+For the \~2,010 students in t1∩t2 and \~1,367 in t2∩t3, build paired concept mastery profiles:
+
+- Term N: mastered concepts A, C, D; failed B, E
+- Term N+1: mastered concepts A, B, C, D; failed E, F
+
+This shows individual learning trajectories at the concept level and feeds directly into Step 8's cross-term paired comparisons. If students consistently master new concepts between terms while retaining previously mastered ones, the remediation is working. If they cycle (master B but regress on C), something is wrong.
+
+**9f. Concept-level decomposition of the S2 bottleneck.**
+
+The S2 state (parseable, zero tests) is the largest stuck population. For students in this state on their final attempt:
+
+- Which concepts does the question require? (From the concept-question map.)
+- Does the student's code show the relevant constructs? (From tree-sitter parse.)
+- If the construct is present but the output is wrong, the failure is in _application_ of the concept.
+- If the construct is absent, the failure may be in _concept selection_ (student doesn't know which tool to use).
+
+This produces a concept-level decomposition: "40% of S2 failures on dictionary questions involve students who never use a dictionary" vs. "60% use a dictionary but use it incorrectly." Each demands a different teaching approach.
+
+**What This Tells You**: The construct-usage-vs-mastery analysis distinguishes "don't know when" from "don't know how," which demand different teaching approaches. The S2 concept decomposition connects the process finding (students stuck in S2) to the curriculum (which concepts they're stuck on and in what way). The prerequisite graph tells you whether the curriculum teaches things in the right order.
+
+**Action point**: For concepts where usage is low, the teaching intervention is _exposure and pattern recognition_ (more examples showing when to use the construct). For concepts where usage is high but mastery is low, the intervention is _practice and feedback_ (more exercises with detailed solutions).
+
+**Action point**: Realign curriculum sequence to match the empirical prerequisite graph where they diverge.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Step 9: Concept Dependency and Knowledge Modelling".
+
+## Review and correct
+
+Go through all the analysis so far and check for any errors, inconsistencies, gaps, and obvious improvements - aligning with my intent.
+Apply these changes the scripts, re-run where required, and update the documentation.
+When updating the documentation, don't mention these are updates. Instead, write it as if you're writing for the first time with the benefit of hindsight and the improved analysis.
+
+Add to .gitignore the minimal patterns required to ignore generated files. Stage changes.
