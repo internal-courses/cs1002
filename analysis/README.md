@@ -442,6 +442,7 @@ This section is a manual write-up of Step 2 ("is the exam measuring well?"), bac
 - Script: `analysis/generate_classical_item_quality.py`
 - Output folder: `analysis/classical_item_quality/`
 - Graphs: `analysis/classical_item_quality/dependency_graphs/*.dot` (directed dependency graphs per question)
+- Reduced graphs: `analysis/classical_item_quality/dependency_graphs_reduced/*.dot` (SCC-condensed + transitive-reduced dependency graphs)
 
 Key generated outputs:
 
@@ -453,13 +454,21 @@ Key generated outputs:
 - `question_item_redundancy_summary_by_namespace.csv`
 - `question_dependency_pairs.csv`
 - `question_dependency_edges.csv`
+- `question_dependency_edges_transitive_reduced.csv`
+- `question_dependency_sccs.csv`
+- `question_dependency_minimal_new_information.csv`
 - `question_dependency_graph_summary.csv`
 - `namespace_reliability_cronbach_alpha.csv`
 - `namespace_reliability_summary.csv`
 - `public_private_gap_by_question.csv`
 - `public_private_gap_summary.csv`
+- `public_private_gap_same_code_by_question.csv`
+- `public_private_gap_same_code_summary.csv`
+- `public_private_gap_same_code_coverage.csv`
 - `submitter_question_snapshots.csv`
 - `submitter_question_public_private_summary.csv`
+- `submitter_question_same_code_snapshots.csv`
+- `submitter_question_same_code_public_private_summary.csv`
 
 ## Rebuild This Analysis
 
@@ -487,14 +496,16 @@ uv run analysis/generate_classical_item_quality.py
   - for each ordered pair `(A, B)` in a question: `P(pass B | pass A)` and `P(pass B | fail A)`
   - edge flag uses the requested criterion `P(pass B | fail A) < 0.05`
   - graph export uses an additional support filter (`n_A_fail >= 5` and `n_A_pass >= 5`) to reduce one-off edges
+  - follow-up extension: strongly connected components (SCCs) + transitive reduction on the SCC-condensed DAG are exported to isolate a smaller set of "minimal new information" test-case groups (sink SCCs in the reduced graph)
 - Reliability (2d):
   - Cronbach's alpha is computed per namespace on a student × item binary matrix
   - rows: students with at least one submission in that namespace
   - columns: all observed public+private test-case items in that namespace
   - missing responses from unsubmitted questions are filled with `0` (`*_fill0` in output columns)
 - Public/private gap (2e):
-  - overfitting proxy compares "all public passed" vs "all private passed" using the selected public snapshot above and the final private submission
-  - caveat: this is **not guaranteed to be the exact same code snapshot** (students may edit code after the last public test run and before final submission)
+  - baseline proxy compares "all public passed" vs "all private passed" using the selected public snapshot above and the final private submission
+  - follow-up extension adds a **same-code pairing proxy** using `code_sha256`: final submitted code is paired with the latest public `test_run` on the same code hash before submission
+  - caveat (baseline proxy only): the selected public snapshot is **not guaranteed to be the exact same code snapshot** as the final submission
 
 ## Findings
 
@@ -503,6 +514,8 @@ uv run analysis/generate_classical_item_quality.py
 - Item-level analysis covers **607 test-case items** across the **84** namespace-question rows that have any submissions.
 - These 84 questions are in **12 submission-positive namespaces**; the remaining **23 / 35 namespaces** have no submissions, so item quality metrics and Cronbach alpha are undefined there.
 - All **42,918** submitter-question rows had a public `test_run` before the final submission, so Step 2 public/private pairing coverage is **100%** for submitters.
+- Same-code public/private pairing coverage is also effectively complete:
+  - **42,916 / 42,918** final submissions have a pre-submission public `test_run` with the same `code_sha256` (reported as **100.0%** after rounding in `public_private_gap_same_code_coverage.csv`)
 
 Important public-item caveat (data/versioning):
 
@@ -579,7 +592,23 @@ Interpretation:
 
 - The dependency graphs are often dense, not sparse.
 - This means many test cases behave like prerequisites or near-duplicates rather than independent checks.
-- For design action, these graphs should be viewed with **transitive reduction** (next step) to isolate the small set of items that add genuinely new information.
+
+Follow-up extension (SCC condensation + transitive reduction):
+
+- Full support-filtered dependency edges: **2,213**
+- SCC-condensed transitive-reduced edges: **296** (**13.38%** of full edges)
+- Total SCC components across analyzed questions: **362** (from **607** item nodes)
+- Non-trivial SCCs (size > 1): **102**
+- "Minimal new information" components (sink SCCs in reduced graphs): **99** across **84** questions
+- Per-question medians:
+  - SCC components: **4**
+  - minimal new-information components: **1**
+
+Interpretation:
+
+- Transitive reduction confirms that many dense dependency graphs collapse to a very small backbone.
+- In many questions, a single terminal SCC captures most of the incremental evaluative signal, while earlier tests mostly behave like prerequisites or equivalent checks.
+- The reduced graphs in `analysis/classical_item_quality/dependency_graphs_reduced/` are the best artifact for deciding which test cases are genuinely adding new information.
 
 ### 2d) Exam-Level Reliability (Cronbach's Alpha)
 
@@ -602,7 +631,7 @@ Interpretation:
 
 ### 2e) Public vs Private Test Case Analysis (Overfitting Proxy)
 
-Overall (`analysis/classical_item_quality/public_private_gap_summary.csv`), among **42,918** submitter-question rows with both public and private snapshots:
+Baseline proxy (`analysis/classical_item_quality/public_private_gap_summary.csv`), among **42,918** submitter-question rows with both public and private snapshots:
 
 - pass all public, fail >=1 private: **10 rows** (**0.02%**)
 - pass all private, fail >=1 public: **169 rows** (**0.39%**)
@@ -613,15 +642,27 @@ Per-question pattern:
 - Questions with any `private-all / public-not-all`: **30 / 84**
 - Questions with `public-all / private-not-all >= 20%`: **0**
 
+Same-code proxy (`analysis/classical_item_quality/public_private_gap_same_code_summary.csv`), among **42,916** rows with a same-`code_sha256` public/private pair:
+
+- pass all public, fail >=1 private: **2,341 rows** (**5.45%**)
+- pass all private, fail >=1 public: **169 rows** (**0.39%**)
+
+Same-code per-question pattern:
+
+- Questions with any `public-all / private-not-all`: **81 / 84**
+- Questions with any `private-all / public-not-all`: **30 / 84**
+- Questions with `public-all / private-not-all >= 20%`: **1 / 84**
+  - `ns_25t2_py11_1` Q6 (`Card to Value Tuple`): **21.01%** (`58 / 276`)
+
 Interpretation:
 
-- Under this proxy, there is **no evidence of widespread public-test overfitting**.
-- The opposite mismatch (`private-all / public-not-all`) is more common, which is counter to the usual "public tests are easier" expectation.
-- Most likely explanation: the selected public snapshot is the **last public run before submission**, which may not be the same code as the final submitted code; public test-set drift also adds noise.
-- So this is a useful screening result ("no obvious large overfit signal"), but not a definitive same-code overfitting test.
+- The same-code pairing materially changes the conclusion: there **is** a meaningful public-pass/private-fail gap once we compare public and private results on the same submitted code.
+- This is consistent with students passing visible public tests while still failing hidden/private checks on the exact same code snapshot (i.e., a plausible overfitting/generalization gap signal).
+- The baseline last-public-before-submission proxy understated this because it mixed different code snapshots.
 
 ## Action-Oriented Takeaways for Evaluation Design
 
 - Highest-priority candidates for review are **redundant** and **dependency-dense** test-case sets, not low-discrimination items (none were `< 0.15` in this snapshot).
 - Public test cases need versioning stability (or version-aware item IDs) if you want clean item-level analytics across time within a namespace-question.
-- For stronger overfitting analysis, the next iteration should compare public/private outcomes on the **same code snapshot** (e.g., via `code_sha256` pairing between timeline events and raw test-case results).
+- Use the **same-code `code_sha256` public/private gap** (not the last-public-before-submission proxy) as the primary overfitting screen in future iterations.
+- Use the **transitive-reduced SCC graphs** to identify the minimal set of test cases that contribute new information; large SCCs and high redundancy pairs are the first candidates for pruning/replacement.

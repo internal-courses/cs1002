@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = ROOT / "analysis"
 OUT_DIR = ANALYSIS_DIR / "classical_item_quality"
 GRAPHS_DIR = OUT_DIR / "dependency_graphs"
+REDUCED_GRAPHS_DIR = OUT_DIR / "dependency_graphs_reduced"
 
 
 def cpu_threads() -> int:
@@ -165,6 +166,62 @@ def setup_base_tables(conn: duckdb.DuckDBPyConnection) -> None:
 
     conn.execute(
         """
+        CREATE OR REPLACE TEMP VIEW timeline_eval_v AS
+        SELECT
+          namespace,
+          CAST(problem_id AS INTEGER) AS problem_id,
+          student_id,
+          timestamp_utc,
+          event_type,
+          evaluation_type,
+          code_sha256,
+          code_length,
+          score,
+          num_test_passed,
+          test_case_count,
+          summary
+        FROM read_parquet('analysis/submission_timeline.parquet')
+        WHERE event_type IN ('test_run', 'submission');
+        """
+    )
+
+    conn.execute(
+        """
+        CREATE OR REPLACE TEMP VIEW final_submission_timeline_v AS
+        SELECT *
+        FROM (
+          SELECT
+            s.namespace,
+            s.problem_id,
+            s.student_id,
+            s.final_submission_file,
+            s.final_submission_ts,
+            s.question_private_score,
+            t.timestamp_utc AS final_submission_timeline_ts,
+            t.code_sha256 AS final_submission_code_sha256,
+            t.code_length AS final_submission_code_length,
+            t.num_test_passed AS private_num_test_passed,
+            t.test_case_count AS private_test_case_count,
+            t.summary AS private_summary,
+            ROW_NUMBER() OVER (
+              PARTITION BY s.namespace, s.problem_id, s.student_id
+              ORDER BY t.timestamp_utc DESC, COALESCE(t.code_sha256, '') DESC
+            ) AS rn
+          FROM submitter_rows_v s
+          JOIN timeline_eval_v t
+            ON t.namespace = s.namespace
+           AND t.problem_id = s.problem_id
+           AND t.student_id = s.student_id
+          WHERE t.event_type = 'submission'
+            AND t.evaluation_type = 'private'
+            AND t.timestamp_utc = s.final_submission_ts
+        ) x
+        WHERE rn = 1;
+        """
+    )
+
+    conn.execute(
+        """
         CREATE OR REPLACE TEMP VIEW last_public_before_submission_v AS
         SELECT *
         FROM (
@@ -187,6 +244,44 @@ def setup_base_tables(conn: duckdb.DuckDBPyConnection) -> None:
             AND r.evaluation_type = 'public'
             AND r.event_ts <= s.final_submission_ts
         ) t
+        WHERE rn = 1;
+        """
+    )
+
+    conn.execute(
+        """
+        CREATE OR REPLACE TEMP VIEW last_public_same_code_before_submission_v AS
+        SELECT *
+        FROM (
+          SELECT
+            f.namespace,
+            f.problem_id,
+            f.student_id,
+            f.final_submission_file,
+            f.final_submission_ts,
+            f.final_submission_code_sha256,
+            t.timestamp_utc AS public_same_code_ts,
+            t.code_sha256 AS public_same_code_sha256,
+            t.code_length AS public_same_code_code_length,
+            t.num_test_passed AS public_num_test_passed,
+            t.test_case_count AS public_test_case_count,
+            t.summary AS public_summary,
+            ROW_NUMBER() OVER (
+              PARTITION BY f.namespace, f.problem_id, f.student_id
+              ORDER BY t.timestamp_utc DESC, COALESCE(t.code_sha256, '') DESC
+            ) AS rn
+          FROM final_submission_timeline_v f
+          JOIN timeline_eval_v t
+            ON t.namespace = f.namespace
+           AND t.problem_id = f.problem_id
+           AND t.student_id = f.student_id
+          WHERE t.event_type = 'test_run'
+            AND t.evaluation_type = 'public'
+            AND t.code_sha256 IS NOT NULL
+            AND f.final_submission_code_sha256 IS NOT NULL
+            AND t.code_sha256 = f.final_submission_code_sha256
+            AND t.timestamp_utc <= f.final_submission_ts
+        ) x
         WHERE rn = 1;
         """
     )
@@ -250,17 +345,26 @@ def setup_base_tables(conn: duckdb.DuckDBPyConnection) -> None:
         """
         SELECT
           COUNT(*) FILTER (WHERE submission_events > 0) AS submitter_rows,
-          COUNT(*) FILTER (WHERE p.public_file_name IS NOT NULL) AS with_public_pre_submission
+          COUNT(*) FILTER (WHERE p.public_file_name IS NOT NULL) AS with_public_pre_submission,
+          COUNT(*) FILTER (WHERE lpsc.public_same_code_ts IS NOT NULL) AS with_public_same_code_pre_submission
         FROM final_scores_v fs
         LEFT JOIN last_public_before_submission_v p
-          ON p.namespace = fs.namespace AND p.problem_id = fs.problem_id AND p.student_id = fs.student_id;
+          ON p.namespace = fs.namespace AND p.problem_id = fs.problem_id AND p.student_id = fs.student_id
+        LEFT JOIN last_public_same_code_before_submission_v lpsc
+          ON lpsc.namespace = fs.namespace AND lpsc.problem_id = fs.problem_id AND lpsc.student_id = fs.student_id
+        WHERE fs.submission_events > 0
         """,
     )
     if not coverage.empty:
         row = coverage.iloc[0]
         print(
-            "  submitter question rows={}, with public pre-submission={}".format(
-                int(row["submitter_rows"]), int(row["with_public_pre_submission"])
+            (
+                "  submitter question rows={}, with public pre-submission={}, "
+                "with public same-code pre-submission={}"
+            ).format(
+                int(row["submitter_rows"]),
+                int(row["with_public_pre_submission"]),
+                int(row["with_public_same_code_pre_submission"]),
             )
         )
 
@@ -288,6 +392,41 @@ def export_base_outputs(conn: duckdb.DuckDBPyConnection) -> None:
         ORDER BY s.namespace, s.problem_id, s.student_id
         """,
         OUT_DIR / "submitter_question_snapshots.csv",
+    )
+
+    copy_query(
+        conn,
+        """
+        SELECT
+          f.namespace,
+          f.problem_id,
+          q.question_title,
+          f.student_id,
+          f.final_submission_file,
+          f.final_submission_ts,
+          f.final_submission_code_sha256,
+          lpsc.public_same_code_ts,
+          lpsc.public_same_code_sha256,
+          CASE WHEN lpsc.public_same_code_ts IS NOT NULL THEN TRUE ELSE FALSE END AS has_public_same_code_pre_submission,
+          f.private_num_test_passed,
+          f.private_test_case_count,
+          CASE
+            WHEN f.private_test_case_count > 0 AND f.private_num_test_passed = f.private_test_case_count THEN TRUE
+            ELSE FALSE
+          END AS private_all_pass,
+          lpsc.public_num_test_passed,
+          lpsc.public_test_case_count,
+          CASE
+            WHEN lpsc.public_test_case_count > 0 AND lpsc.public_num_test_passed = lpsc.public_test_case_count THEN TRUE
+            ELSE FALSE
+          END AS public_same_code_all_pass
+        FROM final_submission_timeline_v f
+        LEFT JOIN last_public_same_code_before_submission_v lpsc
+          USING (namespace, problem_id, student_id)
+        LEFT JOIN question_meta_v q USING (namespace, problem_id)
+        ORDER BY f.namespace, f.problem_id, f.student_id
+        """,
+        OUT_DIR / "submitter_question_same_code_snapshots.csv",
     )
 
     copy_query(
@@ -497,6 +636,114 @@ def _parse_item_col(col: str) -> tuple[str, int]:
     return scope, int(idx)
 
 
+def _build_adj(nodes: Iterable[str], edges: Iterable[tuple[str, str]]) -> dict[str, set[str]]:
+    """Build adjacency map with all nodes present."""
+    node_list = list(nodes)
+    adj = {n: set() for n in node_list}
+    for u, v in edges:
+        if u in adj and v in adj and u != v:
+            adj[u].add(v)
+    return adj
+
+
+def _has_path(adj: dict[str, set[str]], src: str, dst: str) -> bool:
+    """Return whether a path exists from src to dst in adjacency map."""
+    if src == dst:
+        return True
+    stack = [src]
+    seen = {src}
+    while stack:
+        u = stack.pop()
+        for v in adj.get(u, ()):
+            if v == dst:
+                return True
+            if v not in seen:
+                seen.add(v)
+                stack.append(v)
+    return False
+
+
+def _toposort(nodes: Iterable[str], edges: Iterable[tuple[str, str]]) -> list[str]:
+    """Topologically sort a DAG (returns partial arbitrary order if cycles exist)."""
+    node_list = list(nodes)
+    adj = _build_adj(node_list, edges)
+    indeg = {n: 0 for n in node_list}
+    for u in node_list:
+        for v in adj[u]:
+            indeg[v] += 1
+    queue = [n for n in node_list if indeg[n] == 0]
+    out: list[str] = []
+    while queue:
+        u = queue.pop(0)
+        out.append(u)
+        for v in sorted(adj[u]):
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                queue.append(v)
+    if len(out) < len(node_list):
+        # Cycle fallback: append remaining nodes deterministically.
+        remaining = [n for n in node_list if n not in set(out)]
+        out.extend(sorted(remaining))
+    return out
+
+
+def _tarjan_scc(nodes: Iterable[str], edges: Iterable[tuple[str, str]]) -> list[list[str]]:
+    """Tarjan strongly connected components for a directed graph."""
+    node_list = list(nodes)
+    adj = _build_adj(node_list, edges)
+    index = 0
+    stack: list[str] = []
+    on_stack: set[str] = set()
+    idx: dict[str, int] = {}
+    low: dict[str, int] = {}
+    comps: list[list[str]] = []
+
+    def strongconnect(v: str) -> None:
+        nonlocal index
+        idx[v] = index
+        low[v] = index
+        index += 1
+        stack.append(v)
+        on_stack.add(v)
+
+        for w in sorted(adj[v]):
+            if w not in idx:
+                strongconnect(w)
+                low[v] = min(low[v], low[w])
+            elif w in on_stack:
+                low[v] = min(low[v], idx[w])
+
+        if low[v] == idx[v]:
+            comp: list[str] = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                comp.append(w)
+                if w == v:
+                    break
+            comps.append(sorted(comp))
+
+    for v in sorted(node_list):
+        if v not in idx:
+            strongconnect(v)
+    return comps
+
+
+def _transitive_reduction_dag(nodes: Iterable[str], edges: Iterable[tuple[str, str]]) -> set[tuple[str, str]]:
+    """Return transitive reduction for a DAG (simple edge-removal algorithm)."""
+    node_list = list(nodes)
+    edge_set = set((u, v) for u, v in edges if u != v)
+    adj = _build_adj(node_list, edge_set)
+    reduced = set(edge_set)
+    for u, v in sorted(edge_set):
+        if v in adj[u]:
+            adj[u].remove(v)
+        if _has_path(adj, u, v):
+            reduced.discard((u, v))
+        adj[u].add(v)
+    return reduced
+
+
 def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None:
     """Compute within-question redundancy correlations and dependency edges."""
     print("[4/7] Computing within-question redundancy and dependency structure...")
@@ -522,7 +769,11 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
     redundancy_rows: list[dict[str, object]] = []
     dependency_rows: list[dict[str, object]] = []
     graph_summary_rows: list[dict[str, object]] = []
+    scc_rows: list[dict[str, object]] = []
+    reduced_edge_rows: list[dict[str, object]] = []
+    minimal_info_rows: list[dict[str, object]] = []
     GRAPHS_DIR.mkdir(parents=True, exist_ok=True)
+    REDUCED_GRAPHS_DIR.mkdir(parents=True, exist_ok=True)
 
     for (namespace, problem_id), g in item_df.groupby(["namespace", "problem_id"], sort=False):
         qkey = (str(namespace), int(problem_id))
@@ -544,8 +795,55 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
                     "num_students": int(mat.shape[0]),
                     "redundant_pairs_gt_0_90": 0,
                     "dependency_edges_support5": 0,
+                    "dependency_scc_components": len(cols),
+                    "dependency_scc_nontrivial_components": 0,
+                    "largest_dependency_scc_size": 1 if cols else 0,
+                    "dependency_edges_transitive_reduced": 0,
+                    "dependency_reduced_edge_density": 0.0 if cols else math.nan,
+                    "minimal_new_information_components": len(cols),
                 }
             )
+            if cols:
+                c = cols[0]
+                scope, idx = _parse_item_col(c)
+                scc_rows.append(
+                    {
+                        "namespace": namespace,
+                        "problem_id": int(problem_id),
+                        "question_title": question_title,
+                        "component_id": "C1",
+                        "component_size": 1,
+                        "is_nontrivial_scc": False,
+                        "representative_item": c,
+                        "representative_scope": scope,
+                        "representative_index": idx,
+                        "members": c,
+                        "members_count_public": 1 if scope == "public" else 0,
+                        "members_count_private": 1 if scope == "private" else 0,
+                        "incoming_components_full": 0,
+                        "outgoing_components_full": 0,
+                        "incoming_components_reduced": 0,
+                        "outgoing_components_reduced": 0,
+                        "is_source_component_reduced": True,
+                        "is_sink_component_reduced": True,
+                    }
+                )
+                minimal_info_rows.append(
+                    {
+                        "namespace": namespace,
+                        "problem_id": int(problem_id),
+                        "question_title": question_title,
+                        "component_id": "C1",
+                        "component_size": 1,
+                        "representative_item": c,
+                        "representative_scope": scope,
+                        "representative_index": idx,
+                        "members": c,
+                        "reduced_in_degree": 0,
+                        "reduced_out_degree": 0,
+                        "is_sink_component_reduced": True,
+                    }
+                )
             continue
 
         arr_by_col = {c: mat[c].to_numpy(dtype=float) for c in cols}
@@ -631,6 +929,12 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
                 "num_students": int(mat.shape[0]),
                 "redundant_pairs_gt_0_90": int(redundant_count),
                 "dependency_edges_support5": int(len(dependency_edges_support5)),
+                "dependency_scc_components": 0,  # filled after SCC computation
+                "dependency_scc_nontrivial_components": 0,
+                "largest_dependency_scc_size": 0,
+                "dependency_edges_transitive_reduced": 0,
+                "dependency_reduced_edge_density": math.nan,
+                "minimal_new_information_components": 0,
             }
         )
 
@@ -647,6 +951,163 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
         dot_lines.append("}")
         graph_file = GRAPHS_DIR / f"{namespace}__q{int(problem_id)}.dot"
         graph_file.write_text("\n".join(dot_lines) + "\n", encoding="utf-8")
+
+        # SCC condensation + transitive reduction (DAG-level).
+        dep_edge_pairs = [(a, b) for a, b, *_ in dependency_edges_support5]
+        edge_meta = {(a, b): (ppass, pfail, n_pass, n_fail) for a, b, ppass, pfail, n_pass, n_fail in dependency_edges_support5}
+        sccs = _tarjan_scc(cols, dep_edge_pairs)
+        # Stable component ids in topological order on condensation graph when possible.
+        node_to_tmp_comp: dict[str, int] = {}
+        for i, comp in enumerate(sccs):
+            for item in comp:
+                node_to_tmp_comp[item] = i
+        comp_nodes_tmp = [f"T{i+1}" for i in range(len(sccs))]
+        tmp_name_to_items = {f"T{i+1}": sccs[i] for i in range(len(sccs))}
+        comp_edges_tmp: set[tuple[str, str]] = set()
+        for a, b in dep_edge_pairs:
+            ca = f"T{node_to_tmp_comp[a] + 1}"
+            cb = f"T{node_to_tmp_comp[b] + 1}"
+            if ca != cb:
+                comp_edges_tmp.add((ca, cb))
+        topo_tmp = _toposort(comp_nodes_tmp, comp_edges_tmp)
+        comp_id_map = {tmp: f"C{idx+1}" for idx, tmp in enumerate(topo_tmp)}
+        node_to_comp = {item: comp_id_map[f"T{node_to_tmp_comp[item] + 1}"] for item in cols}
+        comp_members: dict[str, list[str]] = {}
+        for item, cid in node_to_comp.items():
+            comp_members.setdefault(cid, []).append(item)
+        for cid in comp_members:
+            comp_members[cid] = sorted(comp_members[cid])
+
+        comp_nodes = sorted(comp_members.keys(), key=lambda c: int(c[1:]))
+        comp_edges: set[tuple[str, str]] = set()
+        edge_examples_by_comp: dict[tuple[str, str], tuple[str, str]] = {}
+        for a, b in dep_edge_pairs:
+            ca = node_to_comp[a]
+            cb = node_to_comp[b]
+            if ca == cb:
+                continue
+            comp_edges.add((ca, cb))
+            edge_examples_by_comp.setdefault((ca, cb), (a, b))
+
+        comp_edges_reduced = _transitive_reduction_dag(comp_nodes, comp_edges) if comp_edges else set()
+
+        full_in = {c: 0 for c in comp_nodes}
+        full_out = {c: 0 for c in comp_nodes}
+        for u, v in comp_edges:
+            full_out[u] += 1
+            full_in[v] += 1
+        red_in = {c: 0 for c in comp_nodes}
+        red_out = {c: 0 for c in comp_nodes}
+        for u, v in comp_edges_reduced:
+            red_out[u] += 1
+            red_in[v] += 1
+
+        nontrivial_scc_count = 0
+        largest_scc = 0
+        sink_components = 0
+        for cid in comp_nodes:
+            members = comp_members[cid]
+            largest_scc = max(largest_scc, len(members))
+            is_nontrivial = len(members) > 1
+            nontrivial_scc_count += int(is_nontrivial)
+            rep = members[-1]  # choose hardest-ish lexical representative (private/public index sorted)
+            rep_scope, rep_idx = _parse_item_col(rep)
+            members_public = sum(1 for m in members if m.startswith("public_"))
+            members_private = sum(1 for m in members if m.startswith("private_"))
+            is_sink = red_out[cid] == 0
+            sink_components += int(is_sink)
+            scc_rows.append(
+                {
+                    "namespace": namespace,
+                    "problem_id": int(problem_id),
+                    "question_title": question_title,
+                    "component_id": cid,
+                    "component_size": len(members),
+                    "is_nontrivial_scc": is_nontrivial,
+                    "representative_item": rep,
+                    "representative_scope": rep_scope,
+                    "representative_index": rep_idx,
+                    "members": "|".join(members),
+                    "members_count_public": members_public,
+                    "members_count_private": members_private,
+                    "incoming_components_full": full_in[cid],
+                    "outgoing_components_full": full_out[cid],
+                    "incoming_components_reduced": red_in[cid],
+                    "outgoing_components_reduced": red_out[cid],
+                    "is_source_component_reduced": red_in[cid] == 0,
+                    "is_sink_component_reduced": is_sink,
+                }
+            )
+            if is_sink:
+                minimal_info_rows.append(
+                    {
+                        "namespace": namespace,
+                        "problem_id": int(problem_id),
+                        "question_title": question_title,
+                        "component_id": cid,
+                        "component_size": len(members),
+                        "representative_item": rep,
+                        "representative_scope": rep_scope,
+                        "representative_index": rep_idx,
+                        "members": "|".join(members),
+                        "reduced_in_degree": red_in[cid],
+                        "reduced_out_degree": red_out[cid],
+                        "is_sink_component_reduced": True,
+                    }
+                )
+
+        for u, v in sorted(comp_edges_reduced, key=lambda t: (int(t[0][1:]), int(t[1][1:]))):
+            ex_a, ex_b = edge_examples_by_comp.get((u, v), ("", ""))
+            ppass = pfail = gap = math.nan
+            if (ex_a, ex_b) in edge_meta:
+                ppass, pfail, _, _ = edge_meta[(ex_a, ex_b)]
+                gap = ppass - pfail
+            reduced_edge_rows.append(
+                {
+                    "namespace": namespace,
+                    "problem_id": int(problem_id),
+                    "question_title": question_title,
+                    "source_component_id": u,
+                    "target_component_id": v,
+                    "source_representative_item": next(r["representative_item"] for r in scc_rows[::-1] if r["namespace"] == namespace and r["problem_id"] == int(problem_id) and r["component_id"] == u),
+                    "target_representative_item": next(r["representative_item"] for r in scc_rows[::-1] if r["namespace"] == namespace and r["problem_id"] == int(problem_id) and r["component_id"] == v),
+                    "source_component_size": len(comp_members[u]),
+                    "target_component_size": len(comp_members[v]),
+                    "example_item_a": ex_a,
+                    "example_item_b": ex_b,
+                    "example_p_pass_b_given_pass_a": ppass,
+                    "example_p_pass_b_given_fail_a": pfail,
+                    "example_dependency_gap": gap,
+                }
+            )
+
+        # Fill back summary fields for this question (last appended row).
+        max_pairs = len(comp_nodes) * (len(comp_nodes) - 1)
+        graph_summary_rows[-1]["dependency_scc_components"] = len(comp_nodes)
+        graph_summary_rows[-1]["dependency_scc_nontrivial_components"] = nontrivial_scc_count
+        graph_summary_rows[-1]["largest_dependency_scc_size"] = largest_scc
+        graph_summary_rows[-1]["dependency_edges_transitive_reduced"] = len(comp_edges_reduced)
+        graph_summary_rows[-1]["dependency_reduced_edge_density"] = (
+            (len(comp_edges_reduced) / max_pairs) if max_pairs > 0 else 0.0
+        )
+        graph_summary_rows[-1]["minimal_new_information_components"] = sink_components
+
+        # Reduced graph DOT (component-level).
+        reduced_dot = ["digraph G {", "  rankdir=LR;"]
+        for cid in comp_nodes:
+            members = comp_members[cid]
+            rep = [r for r in scc_rows if r["namespace"] == namespace and r["problem_id"] == int(problem_id) and r["component_id"] == cid][-1]["representative_item"]
+            label = f"{cid}: {rep}"
+            if len(members) > 1:
+                label += f"\\nSCC size={len(members)}"
+            reduced_dot.append(f'  "{cid}" [label="{label}"];')
+        for u, v in sorted(comp_edges_reduced, key=lambda t: (int(t[0][1:]), int(t[1][1:]))):
+            reduced_dot.append(f'  "{u}" -> "{v}";')
+        reduced_dot.append("}")
+        (REDUCED_GRAPHS_DIR / f"{namespace}__q{int(problem_id)}.dot").write_text(
+            "\n".join(reduced_dot) + "\n",
+            encoding="utf-8",
+        )
 
     redundancy_df = pd.DataFrame(redundancy_rows)
     dependency_df = pd.DataFrame(dependency_rows)
@@ -711,6 +1172,82 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
     graph_summary_df = graph_summary_df.sort_values(["namespace", "problem_id"])
     graph_summary_df.to_csv(OUT_DIR / "question_dependency_graph_summary.csv", index=False)
 
+    scc_df = pd.DataFrame(scc_rows)
+    if scc_df.empty:
+        scc_df = pd.DataFrame(
+            columns=[
+                "namespace",
+                "problem_id",
+                "question_title",
+                "component_id",
+                "component_size",
+                "is_nontrivial_scc",
+                "representative_item",
+                "representative_scope",
+                "representative_index",
+                "members",
+                "members_count_public",
+                "members_count_private",
+                "incoming_components_full",
+                "outgoing_components_full",
+                "incoming_components_reduced",
+                "outgoing_components_reduced",
+                "is_source_component_reduced",
+                "is_sink_component_reduced",
+            ]
+        )
+    else:
+        scc_df = scc_df.sort_values(["namespace", "problem_id", "component_id"])
+    scc_df.to_csv(OUT_DIR / "question_dependency_sccs.csv", index=False)
+
+    reduced_edges_df = pd.DataFrame(reduced_edge_rows)
+    if reduced_edges_df.empty:
+        reduced_edges_df = pd.DataFrame(
+            columns=[
+                "namespace",
+                "problem_id",
+                "question_title",
+                "source_component_id",
+                "target_component_id",
+                "source_representative_item",
+                "target_representative_item",
+                "source_component_size",
+                "target_component_size",
+                "example_item_a",
+                "example_item_b",
+                "example_p_pass_b_given_pass_a",
+                "example_p_pass_b_given_fail_a",
+                "example_dependency_gap",
+            ]
+        )
+    else:
+        reduced_edges_df = reduced_edges_df.sort_values(
+            ["namespace", "problem_id", "source_component_id", "target_component_id"]
+        )
+    reduced_edges_df.to_csv(OUT_DIR / "question_dependency_edges_transitive_reduced.csv", index=False)
+
+    minimal_info_df = pd.DataFrame(minimal_info_rows)
+    if minimal_info_df.empty:
+        minimal_info_df = pd.DataFrame(
+            columns=[
+                "namespace",
+                "problem_id",
+                "question_title",
+                "component_id",
+                "component_size",
+                "representative_item",
+                "representative_scope",
+                "representative_index",
+                "members",
+                "reduced_in_degree",
+                "reduced_out_degree",
+                "is_sink_component_reduced",
+            ]
+        )
+    else:
+        minimal_info_df = minimal_info_df.sort_values(["namespace", "problem_id", "component_id"])
+    minimal_info_df.to_csv(OUT_DIR / "question_dependency_minimal_new_information.csv", index=False)
+
     redundancy_summary = (
         redundancy_df.groupby("namespace", dropna=False)
         .agg(
@@ -729,8 +1266,14 @@ def compute_redundancy_and_dependencies(conn: duckdb.DuckDBPyConnection) -> None
     redundancy_summary.to_csv(OUT_DIR / "question_item_redundancy_summary_by_namespace.csv", index=False)
 
     print(
-        "  redundancy pairs={}, dependency edges (support5)={}".format(
-            len(redundancy_df), len(dependency_edges)
+        (
+            "  redundancy pairs={}, dependency edges (support5)={}, "
+            "reduced edges={}, minimal-new-info components={}"
+        ).format(
+            len(redundancy_df),
+            len(dependency_edges),
+            len(reduced_edges_df),
+            len(minimal_info_df),
         )
     )
 
@@ -865,85 +1408,130 @@ def compute_namespace_reliability(conn: duckdb.DuckDBPyConnection) -> None:
 def compute_public_private_gap(conn: duckdb.DuckDBPyConnection) -> None:
     """Compute public-vs-private all-pass mismatch metrics (overfit proxy)."""
     print("[6/7] Computing public vs private gap (overfit proxy) analysis...")
-    df = pd.read_csv(OUT_DIR / "submitter_question_public_private_summary.csv")
-    if df.empty:
-        by_q = pd.DataFrame()
-        overall = pd.DataFrame()
-    else:
-        df["has_both_scopes"] = df["public_all_pass"].notna() & df["private_all_pass"].notna()
+    def gap_aggregates(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+        if df.empty:
+            return pd.DataFrame(), pd.DataFrame()
+        work = df.copy()
+        work["has_both_scopes"] = work["public_all_pass"].notna() & work["private_all_pass"].notna()
         for col in ["public_all_pass", "private_all_pass"]:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-        with_both = df[df["has_both_scopes"]].copy()
+            work[col] = pd.to_numeric(work[col], errors="coerce")
+        with_both = work[work["has_both_scopes"]].copy()
         if with_both.empty:
-            by_q = pd.DataFrame()
-            overall = pd.DataFrame()
-        else:
-            with_both["public_all_private_not_all"] = (
-                (with_both["public_all_pass"] == 1) & (with_both["private_all_pass"] != 1)
-            )
-            with_both["private_all_public_not_all"] = (
-                (with_both["private_all_pass"] == 1) & (with_both["public_all_pass"] != 1)
-            )
-            with_both["both_all_pass"] = (
-                (with_both["public_all_pass"] == 1) & (with_both["private_all_pass"] == 1)
-            )
-            with_both["neither_all_pass"] = (
-                (with_both["public_all_pass"] != 1) & (with_both["private_all_pass"] != 1)
-            )
+            return pd.DataFrame(), pd.DataFrame()
 
-            by_q = (
-                with_both.groupby(["namespace", "problem_id", "question_title"], dropna=False)
-                .agg(
-                    submitters_with_both_scopes=("student_id", "size"),
-                    n_public_all_private_not_all=("public_all_private_not_all", "sum"),
-                    n_private_all_public_not_all=("private_all_public_not_all", "sum"),
-                    n_both_all_pass=("both_all_pass", "sum"),
-                    n_neither_all_pass=("neither_all_pass", "sum"),
-                )
-                .reset_index()
-            )
-            by_q["frac_public_all_private_not_all"] = (
-                by_q["n_public_all_private_not_all"] / by_q["submitters_with_both_scopes"]
-            ).round(6)
-            by_q["frac_private_all_public_not_all"] = (
-                by_q["n_private_all_public_not_all"] / by_q["submitters_with_both_scopes"]
-            ).round(6)
-            by_q["frac_public_all_private_not_all_pct"] = (
-                100.0 * by_q["frac_public_all_private_not_all"]
-            ).round(2)
-            by_q["frac_private_all_public_not_all_pct"] = (
-                100.0 * by_q["frac_private_all_public_not_all"]
-            ).round(2)
-            by_q = by_q.sort_values(
-                ["frac_public_all_private_not_all", "submitters_with_both_scopes"],
-                ascending=[False, False],
-            )
+        with_both["public_all_private_not_all"] = (
+            (with_both["public_all_pass"] == 1) & (with_both["private_all_pass"] != 1)
+        )
+        with_both["private_all_public_not_all"] = (
+            (with_both["private_all_pass"] == 1) & (with_both["public_all_pass"] != 1)
+        )
+        with_both["both_all_pass"] = (
+            (with_both["public_all_pass"] == 1) & (with_both["private_all_pass"] == 1)
+        )
+        with_both["neither_all_pass"] = (
+            (with_both["public_all_pass"] != 1) & (with_both["private_all_pass"] != 1)
+        )
 
-            overall = pd.DataFrame(
-                [
-                    {
-                        "submitter_question_rows_with_both_scopes": int(len(with_both)),
-                        "overall_public_all_private_not_all": int(with_both["public_all_private_not_all"].sum()),
-                        "overall_private_all_public_not_all": int(with_both["private_all_public_not_all"].sum()),
-                        "overall_frac_public_all_private_not_all": round(
-                            float(with_both["public_all_private_not_all"].mean()), 6
-                        ),
-                        "overall_frac_private_all_public_not_all": round(
-                            float(with_both["private_all_public_not_all"].mean()), 6
-                        ),
-                        "overall_frac_public_all_private_not_all_pct": round(
-                            100.0 * float(with_both["public_all_private_not_all"].mean()), 2
-                        ),
-                        "overall_frac_private_all_public_not_all_pct": round(
-                            100.0 * float(with_both["private_all_public_not_all"].mean()), 2
-                        ),
-                    }
-                ]
+        by_q = (
+            with_both.groupby(["namespace", "problem_id", "question_title"], dropna=False)
+            .agg(
+                submitters_with_both_scopes=("student_id", "size"),
+                n_public_all_private_not_all=("public_all_private_not_all", "sum"),
+                n_private_all_public_not_all=("private_all_public_not_all", "sum"),
+                n_both_all_pass=("both_all_pass", "sum"),
+                n_neither_all_pass=("neither_all_pass", "sum"),
             )
+            .reset_index()
+        )
+        by_q["frac_public_all_private_not_all"] = (
+            by_q["n_public_all_private_not_all"] / by_q["submitters_with_both_scopes"]
+        ).round(6)
+        by_q["frac_private_all_public_not_all"] = (
+            by_q["n_private_all_public_not_all"] / by_q["submitters_with_both_scopes"]
+        ).round(6)
+        by_q["frac_public_all_private_not_all_pct"] = (100.0 * by_q["frac_public_all_private_not_all"]).round(2)
+        by_q["frac_private_all_public_not_all_pct"] = (100.0 * by_q["frac_private_all_public_not_all"]).round(2)
+        by_q = by_q.sort_values(
+            ["frac_public_all_private_not_all", "submitters_with_both_scopes"],
+            ascending=[False, False],
+        )
 
+        overall = pd.DataFrame(
+            [
+                {
+                    "submitter_question_rows_with_both_scopes": int(len(with_both)),
+                    "overall_public_all_private_not_all": int(with_both["public_all_private_not_all"].sum()),
+                    "overall_private_all_public_not_all": int(with_both["private_all_public_not_all"].sum()),
+                    "overall_frac_public_all_private_not_all": round(float(with_both["public_all_private_not_all"].mean()), 6),
+                    "overall_frac_private_all_public_not_all": round(float(with_both["private_all_public_not_all"].mean()), 6),
+                    "overall_frac_public_all_private_not_all_pct": round(100.0 * float(with_both["public_all_private_not_all"].mean()), 2),
+                    "overall_frac_private_all_public_not_all_pct": round(100.0 * float(with_both["private_all_public_not_all"].mean()), 2),
+                }
+            ]
+        )
+        return by_q, overall
+
+    # Baseline proxy: last public test_run before final submission vs final private submission.
+    df_baseline = pd.read_csv(OUT_DIR / "submitter_question_public_private_summary.csv")
+    by_q, overall = gap_aggregates(df_baseline)
     by_q.to_csv(OUT_DIR / "public_private_gap_by_question.csv", index=False)
     overall.to_csv(OUT_DIR / "public_private_gap_summary.csv", index=False)
+
+    # Cleaner proxy: same-code public test_run (same code_sha256 as final submitted code) vs final private submission.
+    same_code_df = qdf(
+        conn,
+        """
+        SELECT
+          f.namespace,
+          f.problem_id,
+          q.question_title,
+          f.student_id,
+          f.final_submission_code_sha256 AS code_sha256,
+          CASE
+            WHEN f.private_test_case_count > 0 AND f.private_num_test_passed = f.private_test_case_count THEN 1
+            ELSE 0
+          END AS private_all_pass,
+          CASE
+            WHEN lpsc.public_same_code_ts IS NULL THEN NULL
+            WHEN lpsc.public_test_case_count > 0 AND lpsc.public_num_test_passed = lpsc.public_test_case_count THEN 1
+            ELSE 0
+          END AS public_all_pass,
+          f.private_num_test_passed,
+          f.private_test_case_count,
+          lpsc.public_num_test_passed,
+          lpsc.public_test_case_count,
+          f.final_submission_ts,
+          lpsc.public_same_code_ts,
+          CASE WHEN lpsc.public_same_code_ts IS NOT NULL THEN TRUE ELSE FALSE END AS has_public_same_code_pair
+        FROM final_submission_timeline_v f
+        LEFT JOIN last_public_same_code_before_submission_v lpsc
+          USING (namespace, problem_id, student_id)
+        LEFT JOIN question_meta_v q USING (namespace, problem_id)
+        ORDER BY f.namespace, f.problem_id, f.student_id
+        """
+    )
+    same_code_df.to_csv(OUT_DIR / "submitter_question_same_code_public_private_summary.csv", index=False)
+
+    same_code_by_q, same_code_overall = gap_aggregates(same_code_df)
+    same_code_by_q.to_csv(OUT_DIR / "public_private_gap_same_code_by_question.csv", index=False)
+    same_code_overall.to_csv(OUT_DIR / "public_private_gap_same_code_summary.csv", index=False)
+
+    coverage = pd.DataFrame(
+        [
+            {
+                "submitter_question_rows_final_private": int(len(same_code_df)),
+                "rows_with_same_code_public_pair": int(same_code_df["has_public_same_code_pair"].astype(bool).sum()) if not same_code_df.empty else 0,
+            }
+        ]
+    )
+    if not coverage.empty and coverage.loc[0, "submitter_question_rows_final_private"] > 0:
+        coverage["same_code_pair_coverage_pct"] = round(
+            100.0 * coverage["rows_with_same_code_public_pair"] / coverage["submitter_question_rows_final_private"],
+            2,
+        )
+    else:
+        coverage["same_code_pair_coverage_pct"] = np.nan
+    coverage.to_csv(OUT_DIR / "public_private_gap_same_code_coverage.csv", index=False)
 
 
 def compute_summary_rollups() -> None:
@@ -952,8 +1540,13 @@ def compute_summary_rollups() -> None:
     items = pd.read_csv(OUT_DIR / "item_difficulty_discrimination.csv")
     redundancy = pd.read_csv(OUT_DIR / "question_item_redundancy_pairs.csv")
     deps = pd.read_csv(OUT_DIR / "question_dependency_edges.csv")
+    deps_reduced = pd.read_csv(OUT_DIR / "question_dependency_edges_transitive_reduced.csv")
+    dep_scc = pd.read_csv(OUT_DIR / "question_dependency_sccs.csv")
+    dep_min = pd.read_csv(OUT_DIR / "question_dependency_minimal_new_information.csv")
     rel = pd.read_csv(OUT_DIR / "namespace_reliability_cronbach_alpha.csv")
     gap = pd.read_csv(OUT_DIR / "public_private_gap_by_question.csv")
+    gap_same = pd.read_csv(OUT_DIR / "public_private_gap_same_code_by_question.csv")
+    gap_same_cov = pd.read_csv(OUT_DIR / "public_private_gap_same_code_coverage.csv")
 
     helper_rows = []
     if not items.empty:
@@ -989,6 +1582,33 @@ def compute_summary_rollups() -> None:
                 "value": int(len(deps)),
             }
         )
+    if not deps_reduced.empty:
+        helper_rows.append(
+            {
+                "metric": "dependency_edges_transitive_reduced",
+                "value": int(len(deps_reduced)),
+            }
+        )
+    if not dep_scc.empty:
+        helper_rows.append(
+            {
+                "metric": "dependency_scc_components",
+                "value": int(len(dep_scc)),
+            }
+        )
+        helper_rows.append(
+            {
+                "metric": "dependency_nontrivial_scc_components",
+                "value": int(dep_scc["is_nontrivial_scc"].fillna(False).astype(bool).sum()),
+            }
+        )
+    if not dep_min.empty:
+        helper_rows.append(
+            {
+                "metric": "minimal_new_information_components",
+                "value": int(len(dep_min)),
+            }
+        )
     if not rel.empty:
         alpha = pd.to_numeric(rel["cronbach_alpha_all_public_private_fill0"], errors="coerce").dropna()
         helper_rows.append({"metric": "namespaces_with_alpha", "value": int(alpha.size)})
@@ -1003,6 +1623,22 @@ def compute_summary_rollups() -> None:
                 "value": int(
                     (pd.to_numeric(gap["frac_public_all_private_not_all"], errors="coerce") >= 0.20).sum()
                 ),
+            }
+        )
+    if not gap_same.empty:
+        helper_rows.append(
+            {
+                "metric": "questions_same_code_public_all_private_not_all_ge_20pct",
+                "value": int(
+                    (pd.to_numeric(gap_same["frac_public_all_private_not_all"], errors="coerce") >= 0.20).sum()
+                ),
+            }
+        )
+    if not gap_same_cov.empty:
+        helper_rows.append(
+            {
+                "metric": "same_code_pair_coverage_pct",
+                "value": float(pd.to_numeric(gap_same_cov["same_code_pair_coverage_pct"], errors="coerce").iloc[0]),
             }
         )
     pd.DataFrame(helper_rows).to_csv(OUT_DIR / "classical_item_quality_helper_metrics.csv", index=False)

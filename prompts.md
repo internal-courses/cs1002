@@ -393,3 +393,12 @@ For the above analyses
 
 - Add scripts to analysis/ which will generate outputs in analysis/ and run them.
 - Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Classical Item Quality Analysis"
+
+## Revise
+
+Yes, do both:
+
+1. A follow-up step using same-code public/private pairing via code_sha256 for a cleaner overfitting estimate.
+2. Add transitive reduction on the dependency graphs to isolate the minimal “new information” test cases per question.
+
+Update the scripts, re-run, and update the documentation.
