@@ -3,3 +3,4 @@ problems/**/*.json
 problems/*.html
 analysis/*.csv
 analysis/*.parquet
+analysis/score_failure_profiles/

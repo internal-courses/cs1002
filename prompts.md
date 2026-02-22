@@ -233,7 +233,7 @@ Write this version without referring to the history, as if it were the first dra
 
 ### Optimization
 
-Move analyze/* into analysis/* and update the docs accordingly.
+Move analyze/_ into analysis/_ and update the docs accordingly.
 Also, submission_timeline.json is huge. Is there a benefit to keeping it this way? Or can DuckDB process the raw JSON files almost as efficiently?
 What would be the optimal space and speed efficient way of storing this data? Don't hesitate to rewrite completely - focus on what's best, not what's incrementally better.
 Modify accordingly and update analysis/README.md. Ensure that everything is written line a first draft - not referencing any history.
@@ -241,3 +241,101 @@ Modify accordingly and update analysis/README.md. Ensure that everything is writ
 ### Execution
 
 Include a ```bash Markdown code fence, copy-pasting which will generate all the output scripts. Add comments mentioning how long it'll take - for scripts that'll take longer than 5 seconds.
+
+# Step 1: Score Distributions, Failure Profiles, and the Non-Submission Problem
+
+Read analysis/README.md to understand the data structure.
+
+Now, we need a baseline picture of what's happening before we can diagnose why. But the single most striking fact from Step 0 — that 71.72% of student-question rows have activity but no submission — means the baseline picture is more nuanced than "who scored what."
+
+Let's calculate: Score Distributions, Failure Profiles, and the Non-Submission Problem
+
+**1a. Classify every student-question row by outcome category.**
+
+Using `final_scores.csv` (which has both `submission_events` count and `latest_submission_score`) and `submission_timeline.parquet` (which has all test_run events), classify each of the 151,778 student-question rows into one of these categories:
+
+| Category                    | Definition                                                       |
+| --------------------------- | ---------------------------------------------------------------- |
+| **Full pass**               | Has a submission; latest submission score = 100 (or max)         |
+| **Partial pass**            | Has a submission; 0 < score < max                                |
+| **Submitted, zero**         | Has a submission; score = 0                                      |
+| **Active, never submitted** | Has test_run events but no submission event                      |
+| **No activity**             | No events at all (if any such rows exist after Step 0 filtering) |
+
+The "active, never submitted" category is critical. It's 71.72% of rows. These students _tried_ — they wrote code, ran tests — but never crossed the threshold to submit. Understanding why is one of your central questions.
+
+**1b. Within "active, never submitted," further classify using timeline data.**
+
+Join to `submission_timeline.parquet` and characterise each non-submitting student-question:
+
+- **Had passing test runs but didn't submit**: The student got at least one test_run where some/all public tests passed, yet never submitted. This could indicate they didn't realise they needed to submit separately, ran out of time, or weren't confident enough.
+- **All test runs failed**: Every test_run failed. Student was stuck and eventually gave up or ran out of time.
+- **Very few events (≤3 test_runs)**: Barely attempted. Possibly opened the question, looked at it, and moved on.
+- **Substantial activity, all failing**: Many test_runs (>10) but never passed a public test. This is the "thrashing" or "stuck" population.
+
+**1c. Per-question score distributions.**
+
+For each of the 251 questions, compute:
+
+- Submission rate (fraction of assigned students who submitted)
+- Among submitters: score distribution (histogram or summary stats: mean, median, % at zero, % at full marks)
+- Among all assigned students (including non-submitters as zeros): effective score distribution
+- Pass rate per individual test case (public and private separately, from submission test results)
+
+Plot the score distributions. Flag questions that are:
+
+- **Ceiling**: >80% of submitters get full marks (too easy, or only confident students submit)
+- **Floor**: >70% of submitters score zero (too hard, or there's a gating problem)
+- **Bimodal**: Clusters at zero and full marks with little in between (threshold/cliff effect)
+- **Healthy spread**: Scores distributed across the range
+
+**1d. Aggregate by wave, term, and time slot.**
+
+Using `schedule.csv` for timing:
+
+- Compare submission rates and score distributions between Wave 1 and Wave 2 within each term.
+- Compare across time slots within a wave (e.g., the morning exam vs the afternoon exam on the same day). Your schedule shows that 25t1 Wave 2 has three back-to-back exams on a single Sunday (py21 at 09:15, py22 at 13:30, py23 at 16:15). If performance or submission rates decline through the day, that's fatigue, not difficulty.
+- Compare across terms for any reused questions (your guide noted some questions appear in multiple terms, e.g., "Check is even or divisible by 5" in 25t1 py11_1 and 25t2 py12_1).
+
+**1e. The non-submission investigation.**
+
+This is important enough to deserve its own sub-analysis. For the "active, never submitted" population:
+
+- What's the distribution of their test_run count? (Are most doing 1–2 runs, or are some doing 50+ runs and still not submitting?)
+- What's the distribution of their total active time?
+- What fraction had at least one test_run that passed at least one public test case?
+- Does the non-submission rate vary by question, by wave, by time slot? If it's higher for the 3rd exam of the day, it may be a time/fatigue issue. If it's higher for specific questions, those questions may be demoralising or confusing.
+- What does the _last_ snapshot of non-submitters look like? Is it parseable? Does it represent a partial solution?
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings as a NEW section in analysis/README.md called "Score Distributions, Failure Profiles, and the Non-Submission Problem"
+
+## Revise
+
+Drop the generate_readme.py - it's fine if this is manually generated. Update "## 8) Score Distributions, Failure Profiles, and the Non-Submission Problem" into "# Score Distributions, Failure Profiles, and the Non-Submission Problem", i.e. a L1 heading.
+
+If there are any other insights from the data that will be useful for future analysis or are noteworthy, include them in analysis/README.md manually.
+
+Take a final look at the overall changes to analysis/README.md for consistency from the perspective of a person reading it for the first time, revise as required. Then `git add` all source files (not generated files) including analysis/README.md.
+
+## Re-revise
+
+Delete analysis/generate_readme.py and re-document as if analysis/README.md was manually written. Stage changes.
+
+Add to .gitignore the minimal patterns required to ignore generated files. Stage changes.
+
+## Clarification
+
+I've made a few manual edits to analysis/README.md.
+
+Also, one clarification. Students who write Term 1 need not write Term 2. I mean, if they've passed in Term 1, they just move on. Only failing students need to write Term 2. Likewise Term 2 to Term 3. Clarify this in analysis/README.md.
+
+**Reused question comparison**. analysis/README.md compares "Check is even or divisible by 5" across t1 and t2. But t2 students are the ones who _failed_ t1, so if this question has a lower pass rate in t2, that's expected from population composition alone — it doesn't tell you anything about the question or the teaching. Add a note that cross-term comparisons on reused questions are confounded by the progressive-filter design: later terms have weaker populations by construction, so pass rate changes reflect the population mix, not question difficulty or learning.
+
+**Term-wave summary in 1d** — the framing currently reads as a term-over-term comparison (submission rates, effective means across terms). Any language that implies comparison across terms should note that t1, t2, t3 populations are not comparable cohorts. Within-term Wave 1 vs Wave 2 comparisons remain valid since those are the same students ~35 days apart.
+
+**Non-submission behavioural profiles** — currently pooled across all terms. This is fine as a global baseline, but worth flagging that Term 3 non-submitters in submission-positive namespaces are twice-failing students, which may give them different behavioural signatures than Term 1 non-submitters encountering the exam for the first time. If you want to check this cheaply, break the `non_submission_subtype_summary.csv` by term and see whether the thrashing/stuck proportions shift.
