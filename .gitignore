@@ -5,3 +5,4 @@ analysis/*.csv
 analysis/*.parquet
 analysis/score_failure_profiles/
 analysis/classical_item_quality/
+analysis/error_taxonomy/

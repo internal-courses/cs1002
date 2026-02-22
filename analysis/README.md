@@ -666,3 +666,272 @@ Interpretation:
 - Public test cases need versioning stability (or version-aware item IDs) if you want clean item-level analytics across time within a namespace-question.
 - Use the **same-code `code_sha256` public/private gap** (not the last-public-before-submission proxy) as the primary overfitting screen in future iterations.
 - Use the **transitive-reduced SCC graphs** to identify the minimal set of test cases that contribute new information; large SCCs and high redundancy pairs are the first candidates for pruning/replacement.
+
+# Error Taxonomy
+
+Manual note:
+
+- This section is written manually from generated outputs in `analysis/error_taxonomy/`.
+- The script does not write README text.
+
+## Outputs
+
+Primary outputs (see also `analysis/error_taxonomy/output_manifest.csv`):
+
+- `selected_snapshot_taxonomy_rows.csv` (one row per student-question, with track selection, skeleton comparison, tree-sitter metrics, syntax taxonomy)
+- `best_public_test_run_classification_rows.csv` (best public `test_run` outcome + runtime/wrong-output classifications from raw `CompilationResult.test_case_results`)
+- `regression_rows.csv` (parseability and structural regression flags)
+- `global_error_profile_multilabel.csv`
+- `final_primary_taxonomy_summary.csv`
+- `final_primary_taxonomy_by_term.csv`
+- `final_primary_taxonomy_by_question.csv`
+- `skeleton_modification_status_summary.csv`
+- `syntax_error_taxonomy_summary.csv`
+- `runtime_error_type_summary.csv`
+- `wrong_output_subtype_summary.csv`
+- `structural_inventory_by_track.csv`
+- `structural_inventory_by_term.csv`
+- `structural_inventory_by_question.csv`
+- `non_submission_behaviour_by_term.csv`
+- `scaffold_strip_status_summary.csv`
+
+## Rebuild This Analysis
+
+```bash
+# ~2-10 minutes depending on cache/warm disk
+uv run analysis/generate_error_taxonomy.py
+```
+
+## Method and Scope (Important)
+
+- Population: full `151,778` student-question rows from `analysis/final_scores.csv`
+- Track definitions (as requested):
+- Track A submitters: latest submission code (submission event -> `code_sha256`)
+- Track A non-submitters in submission-positive namespaces: last `test_run` snapshot
+- Track B zero-submission namespaces: best public `test_run` snapshot (max public tests passed, tie-broken by recency)
+- Coverage:
+- `151,778 / 151,778` rows have a selected event and selected code hash (`100%`)
+- `151,778 / 151,778` rows also have a best public `test_run` classification row (`100%`)
+- Tree-sitter parser:
+- `tree-sitter-python` is used on the selected snapshot code for Python questions, including non-`ast.parse()` code
+- Non-Python rows are retained and explicitly marked `Unsupported language (non-Python)` (there are `18` such rows; C questions inside `ns_25t1_py_15_exe`)
+- Critical data caveat (and fix implemented in the script):
+- `code_snapshots.parquet` stores the **assembled evaluator file**, not just the student-edited region
+- This includes per-question scaffolding (for example hidden prefix/suffix test harness code)
+- The script strips `prefixed_code` / `suffixed_invisible_code` (and leading `uneditable_code` if present) from question JSON before structural analysis and skeleton comparison
+- Strip diagnostics are exported in `scaffold_strip_status_summary.csv`
+- Skeleton comparison:
+- Skeleton comes from question JSON `allowed_languages[].code_template` (not from `question_metadata.csv`, which does not include skeleton text)
+- `new_constructs_added` and `skeleton_constructs_removed_or_missing` are tree-sitter construct-count deltas relative to that skeleton
+- `added_regions_structurally_coherent` is an approximation: `new_constructs_added > 0` and no tree-sitter `ERROR` / missing-token nodes in the extracted student code
+- Syntax taxonomy (3d):
+- Based on `ast.parse()` exception class/message plus tree-sitter error-context signals
+- Categories are `Indentation error`, `Missing delimiters`, `Invalid syntax`
+- Runtime errors (3e):
+- Classified from the **first failing case** in the best public `test_run` by regexing traceback output in `test_case_results[].output`
+- Many rows remain `Runtime Error (unspecified)` because the platform summary is generic and some traces do not expose a typed exception string
+- Wrong-output taxonomy (3f):
+- Implemented here as a **heuristic baseline**, not a validated LLM classifier
+- `wrong_output_llm_review_sample.csv` exports up to 40 wrong-answer examples per question for future LLM/manual validation
+- Regression (3g):
+- Parseability regression uses full timeline `is_parseable` sequence and the final attempt snapshot
+- Structural regression uses tree-sitter complexity comparisons on milestone snapshots (attempt final, best public, last parseable before final)
+- Caveat: the current regression complexity metrics are hash-level and computed on the assembled snapshot text (scaffolding included); this is still useful for within-question deltas because scaffolding is mostly constant within a question, but it is less clean than the stripped selected-snapshot structural metrics
+- Cross-term caveat:
+- `t2` and `t3` are progressively filtered (weaker-by-construction) populations
+- Cross-term differences are descriptive, not causal
+- Within-term comparisons (for the same term cohort) remain the more defensible lens
+
+## Findings
+
+### Coverage and Track Composition
+
+- Track A submitters: `42,918`
+- Track A non-submitters (submission-positive namespaces): `11,112`
+- Track B zero-submission namespaces: `97,748`
+- No rows are left without a selected code snapshot in Step 3 (`0` missing)
+
+### Scaffolding in Code Snapshots (Important for Interpretation)
+
+- The raw snapshots include evaluator scaffolding; without stripping, structural inventory and skeleton-comparison results are misleading.
+- After stripping:
+- `prefix_suffix_not_found` is low in the Python tracks:
+- Track A submitters: `0.85%`
+- Track A non-submitters (submission-positive NS): `1.09%`
+- Many rows are `partial_prefix_suffix` rather than `exact_prefix_suffix`, which is expected because snapshots often differ in trailing whitespace/newlines around injected sections.
+- `no_scaffolding_config` rows are expected for questions whose JSON has no prefix/suffix scaffolding.
+
+### 3c) Skeleton Modification Status (Selected Snapshot)
+
+Overall (`151,778` rows):
+
+- `Modified, structurally valid`: `128,005` (`84.34%`)
+- `Modified, partially broken`: `10,847` (`7.15%`)
+- `Unmodified skeleton`: `5,687` (`3.75%`)
+- `Empty / trivial`: `3,628` (`2.39%`)
+- `Modified, fundamentally broken`: `3,593` (`2.37%`)
+- `Unsupported language (non-Python)`: `18` (`0.01%`)
+
+By track (selected examples):
+
+- Track A submitters: `Modified, structurally valid` `37,716 / 42,918` (`87.88%`)
+- Track A submitters: `Modified, partially broken` `4.49%`
+- Track A submitters: `Modified, fundamentally broken` `1.97%`
+- Track A submitters: `Unmodified skeleton` `3.28%`
+- Track A non-submitters (submission-positive NS): `Modified, structurally valid` `7,694 / 11,112` (`69.24%`)
+- Track A non-submitters (submission-positive NS): `Modified, partially broken` `16.68%`
+- Track A non-submitters (submission-positive NS): `Modified, fundamentally broken` `4.71%`
+- Track A non-submitters (submission-positive NS): `Unmodified skeleton` `5.46%`
+- Track B zero-submission namespaces: `Modified, structurally valid` `82,595 / 97,748` (`84.50%`)
+- Track B zero-submission namespaces: `Modified, partially broken` `7.23%`
+- Track B zero-submission namespaces: `Modified, fundamentally broken` `2.27%`
+- Track B zero-submission namespaces: `Unmodified skeleton` `3.76%`
+
+Interpretation:
+
+- The "modified, partially broken" population is substantial, especially in Track A non-submitters in submission-positive namespaces (`16.68%`).
+- This supports the intervention hypothesis from the prompt: many failures are not "no attempt"; they are structured attempts with local syntax/assembly problems.
+
+### Structural Distance from Skeleton (3b / 3c)
+
+Among Python rows:
+
+- Students usually add structure beyond the skeleton:
+- Track A submitters: `92.54%` have `new_constructs_added > 0`
+- Track A non-submitters (submission-positive NS): `86.54%`
+- Track B zero-submission namespaces: `91.36%`
+- Added structure is often coherent:
+- Track A submitters: `94.41%` of rows with additions have `added_regions_structurally_coherent = true`
+- Track A non-submitters (submission-positive NS): `78.76%`
+- Track B zero-submission namespaces: `91.40%`
+
+Interpretation:
+
+- The main gap for Track A non-submitters in submission-positive namespaces is not "no editing"; it is a higher rate of structurally broken additions.
+
+### 3b / 3h) Structural Inventory (Curriculum Signal, With Caveats)
+
+The structural inventory is much more plausible after stripping scaffolding. Selected-snapshot presence rates by track:
+
+- `for_loop`: ~`41%` across all three tracks (`40.57%`, `43.39%`, `40.96%`)
+- `list_comp`: low (`3.24%` to `3.89%`)
+- `dict_comp`: very low (`0.22%` to `0.39%`)
+- `while_loop`: low (`2.09%` to `4.04%`)
+
+Important interpretation caveat:
+
+- `function_def`, `return_stmt`, and some `if` usage are inflated by function-type templates (skeleton-provided code), so they are not pure "student-chosen construct" measures.
+- Use `new_constructs_added` and question-level breakdowns for a cleaner curriculum signal.
+
+### 3d) Syntax Error Taxonomy (Selected Snapshot, Python Rows with `ast.parse()` failure)
+
+The syntax mix is strikingly stable across tracks.
+
+- Track A non-submitters (submission-positive NS), among non-parseable Python snapshots (`3,221`): `Invalid syntax` `61.88%`, `Indentation error` `23.13%`, `Missing delimiters` `15.00%`
+- Track A submitters, among non-parseable Python snapshots (`3,775`): `Invalid syntax` `59.21%`, `Indentation error` `25.48%`, `Missing delimiters` `15.31%`
+- Track B zero-submission namespaces, among non-parseable Python snapshots (`12,379`): `Invalid syntax` `61.60%`, `Indentation error` `23.44%`, `Missing delimiters` `14.96%`
+
+Tree-sitter context signal (all tracks combined, error-context tags):
+
+- Error contexts are concentrated in function bodies (`42.9%` of tagged contexts), then conditionals (`12.6%`), loops (`10.7%`), and top-level (`11.09%`).
+
+Tree-sitter adds coverage beyond `ast.parse()`:
+
+- Some rows are `ast`-nonparseable but tree-sitter still yields a structurally coherent tree (no `ERROR`/missing-token nodes):
+- Track A submitters: `674`
+- Track A non-submitters (submission-positive NS): `558`
+- Track B zero-submission namespaces: `2,074`
+
+### 3e) Runtime Errors from Best Public `test_run`
+
+Best public `test_run` outcomes by track:
+
+- Track A submitters: `All Cases Passed` `25,745` (`59.99%`), `Wrong Answer` `9,894` (`23.05%`), `Runtime Error` `7,236` (`16.86%`)
+- Track A non-submitters (submission-positive NS): `Runtime Error` `6,898` (`62.08%`), `Wrong Answer` `4,101` (`36.91%`), `All Cases Passed` `70` (`0.63%`)
+- Track B zero-submission namespaces: `All Cases Passed` `47,661` (`48.76%`), `Runtime Error` `26,180` (`26.78%`), `Wrong Answer` `23,589` (`24.13%`)
+
+Runtime subtype mix (within runtime-error rows) is similar across tracks:
+
+- Dominant buckets are `Runtime Error (unspecified)`, `TypeError`, and `NameError`
+- Example shares:
+- Track A non-submitters (submission-positive NS): `Runtime Error (unspecified)` `50.9%`, `TypeError` `16.54%`, `NameError` `12.87%`
+- Track B zero-submission namespaces: `52.43%`, `19.42%`, `10.88%`
+
+### 3f) Wrong-Output Failure Taxonomy (Heuristic Baseline)
+
+This is a heuristic baseline using first-failing-case output vs expected output from the best public `test_run` (not a validated LLM classifier yet).
+
+Within wrong-answer rows:
+
+- Track A submitters: `Wrong output - partial correctness` `58.39%`, `Wrong output - logic/completely wrong` `40.34%`
+- Track A non-submitters (submission-positive NS): `Wrong output - logic/completely wrong` `87.56%`, `Wrong output - partial correctness` `11.56%`
+- Track B zero-submission namespaces: `Wrong output - logic/completely wrong` `52.79%`, `Wrong output - partial correctness` `45.52%`
+
+Formatting-only and simple off-by-one heuristics are rare in this baseline (`<=1.25%` each track).
+
+Practical implication:
+
+- The submission-positive non-submitter group looks qualitatively more "stuck" on best public runs than submitters who eventually submit (runtime-heavy, and among wrong answers mostly logic-level failures).
+
+### 3g) Regression Detection
+
+Parseability regression (among Python rows ending non-parseable):
+
+- Track A submitters: `1,831 / 3,924` (`46.66%`) had an earlier parseable snapshot
+- Track A non-submitters (submission-positive NS): `1,429 / 3,212` (`44.49%`)
+- Track B zero-submission namespaces: `5,910 / 13,022` (`45.38%`)
+
+Peak-to-final public regression (best public > last public pass count):
+
+- Track A submitters: `3.18%`
+- Track A non-submitters (submission-positive NS): `2.29%`
+- Track B zero-submission namespaces: `2.88%`
+
+Structural regression proxies (tree-sitter complexity decrease):
+
+- vs best public snapshot: low in all tracks (`0.46%` to `0.87%`)
+- vs last parseable snapshot before final:
+- Track A non-submitters (submission-positive NS): `9.38%`
+- Track B zero-submission namespaces: `4.09%`
+- Track A submitters: `1.88%`
+
+Interpretation:
+
+- Regression is real and common for parseability (~45% of non-parseable endings had earlier parseable code).
+- Structural simplification/backtracking is especially common in Track A non-submitters in submission-positive namespaces.
+
+### 3h) Global Error Profile and Non-Submission Behaviour
+
+Selected lines from `global_error_profile_multilabel.csv`:
+
+- `Unmodified skeleton`: `5,687` total (`1,409` submitters, `607` Track A non-submitters, `3,671` Track B)
+- `Modified, partially broken`: `10,847` total
+- `Modified, fundamentally broken`: `3,593` total
+- `Regression: earlier parseable, final non-parseable`: `9,170` total
+- `Wrong output - partial correctness`: `16,988` total
+- `Wrong output - logic/completely wrong`: `20,035` total
+
+Track-level final primary taxonomy (`final_primary_taxonomy_summary.csv`) highlights:
+
+- Track A non-submitters (submission-positive NS): `Runtime error` `4,002`, `Wrong output` `3,581`, `Public full pass, no submit` `70`
+- Track B zero-submission namespaces: `Public full pass, no submit` `47,610`, `Wrong output` `19,833`, `Runtime error` `14,933`
+
+This sharp difference reinforces the earlier instrumentation/capture caveat:
+
+- Track B (zero-submission namespaces) is dominated by students who often reach a public-pass state but have no submission capture.
+- Track A non-submitters in submission-positive namespaces are a different population and look much more genuinely stuck on observed best public runs.
+
+Cheap term-split check for pooled non-submission behaviour (requested follow-up):
+
+- Track A non-submitters (submission-positive NS):
+- `25t2`: public-pass evidence `5.38%`, stuck/thrash proxy (`>10` test runs and zero public passes) `27.94%`
+- `25t3`: public-pass evidence `6.49%`, stuck/thrash proxy `27.12%`
+- Interpretation:
+- In this snapshot, the coarse non-submission subtype mix is very similar between `25t2` and `25t3` within submission-positive namespaces.
+
+## Action-Oriented Takeaways for Step 3
+
+- The "modified, partially broken" and syntax-error populations are large enough to justify tooling/interventions aimed at **mechanical repair** (linting, syntax-focused feedback, clearer compiler/parser messages).
+- Separate analyses for submission-positive non-submitters (genuinely stuck population) and zero-submission namespaces (instrumentation/capture problem).
+- Treat structural inventory metrics as useful after scaffolding stripping, but still partly template-influenced for constructs commonly provided by skeletons.
+- Promote `regression_rows.csv` and `selected_snapshot_taxonomy_rows.csv` to the next step (e.g., targeted feedback design / remediation experiments), especially rows flagged by `parseability_regression_flag`, `skeleton_modification_status = Modified, partially broken`, and `best_public_runtime_error_type IN (TypeError, NameError, ValueError)`.

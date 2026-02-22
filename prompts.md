@@ -402,3 +402,120 @@ Yes, do both:
 2. Add transitive reduction on the dependency graphs to isolate the minimal “new information” test cases per question.
 
 Update the scripts, re-run, and update the documentation.
+
+# Step 3: Error Taxonomy (Full Population, Tree-Sitter-Enabled)
+
+Steps 1 and 2 told you _that_ students are failing and that your test cases are heavily redundant. Step 3 tells you _how_ students fail — the nature of the errors. Tree-sitter fundamentally upgrades this step by enabling structural analysis even on broken code. `temp/tree_sitter_example.py` has a demo of how to use tree-sitter-python.
+
+**3a. Define the code to classify for each track.**
+
+| Track                                               | Code to Classify                                       | Source                                                                |
+| --------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------------------- |
+| Track A: submitters                                 | Latest submission code                                 | Submission event → code_snapshots.parquet via code_sha256             |
+| Track A: non-submitters (in submission-positive NS) | Last test_run snapshot code                            | Last test_run in submission_timeline.parquet → code_snapshots.parquet |
+| Track B: zero-submission NS                         | Best test_run snapshot code (most public tests passed) | Best-scoring test_run → code_snapshots.parquet                        |
+
+This gives you classifiable code for essentially all 151,778 student-question rows.
+
+**3b. Tree-sitter structural parse of every code snapshot.**
+
+Use tree-sitter-python as the primary parser for _all_ code snapshots (not just parseable ones):
+
+For each snapshot, extract:
+
+- **Structural constructs present**: Which of the following appear in the tree? Function definitions, for-loops, while-loops, if/elif/else chains, list comprehensions, dictionary comprehensions, try/except blocks, class definitions, return statements, print statements, import statements.
+- **ERROR node count and location**: Tree-sitter marks unparseable regions as ERROR nodes while still parsing surrounding structure. Count the ERROR nodes and identify where they occur (inside a loop body? in a function signature? at top level?).
+- **Structural distance from skeleton**: Compare the tree-sitter parse tree of the student's code against the skeleton code from `question_metadata.csv`. Compute:
+  - Number of new constructs added beyond skeleton
+  - Number of skeleton constructs removed or broken
+  - Whether the student's additions are structurally coherent (no ERROR nodes in added regions) vs. structurally broken
+
+This works on the _full population_ — including the \~20% of snapshots that `ast.parse()` rejects. Tree-sitter will still identify that a student wrote a for-loop with a missing colon, a function with mismatched parentheses, etc.
+
+**3c. Classify by skeleton modification status.**
+
+For each code snapshot, using the tree-sitter structural comparison:
+
+| Category                           | Definition                                                                                                          |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Unmodified skeleton**            | Structural tree is identical (or near-identical by edit distance) to skeleton. Student didn't meaningfully attempt. |
+| **Modified, structurally valid**   | Student added/changed constructs; no ERROR nodes in the tree.                                                       |
+| **Modified, partially broken**     | Student added constructs but some regions have ERROR nodes. Structure is partially intelligible.                    |
+| **Modified, fundamentally broken** | Extensive ERROR nodes; tree structure is not recoverable.                                                           |
+| **Empty / trivial**                | <3 non-blank, non-comment lines beyond skeleton.                                                                    |
+
+This is a richer classification than the binary parseable/non-parseable from `ast.parse()`, because tree-sitter distinguishes "one missing colon in an otherwise well-structured program" from "completely garbled code."
+
+**3d. Classify syntax errors in non-parseable code.**
+
+For code that fails `ast.parse()`, use both the `ast` error message and tree-sitter ERROR node analysis:
+
+- **Indentation errors**: Tree-sitter will show correct structure at the wrong nesting level.
+- **Missing delimiters**: ERROR node at a specific token boundary (colon, parenthesis, bracket).
+- **Invalid syntax**: Catch-all for other parse failures.
+
+Additionally, using tree-sitter: _what was the student trying to do?_ If the ERROR node is inside a for-loop with a correct iterable and body but a missing colon, you can infer the student understands iteration but has a syntax gap. This is the distinction between "can't write Python" and "understands the concept but makes mechanical errors."
+
+**3e. Classify runtime errors (parseable, failing code).**
+
+From test_run results in the timeline (`status`, `reason` fields):
+
+- NameError, TypeError, IndexError, KeyError, ValueError, ZeroDivisionError, RecursionError, AttributeError
+- Timeout / time limit exceeded
+- MemoryError / resource limit
+
+Use the primary error from the _best_ test_run (most tests passed) for each student-question.
+
+**3f. Classify wrong-output failures.**
+
+For code that runs without errors but fails test cases:
+
+- **Formatting mismatch**: Whitespace, delimiters, case differences.
+- **Off-by-one / boundary**: Correct for typical inputs, wrong for edge cases.
+- **Partial correctness**: Some cases pass, fundamentally wrong on others.
+- **Completely wrong approach**: Algorithm is incorrect.
+
+Use LLM-assisted classification at scale. Validate against a manual sample of \~30–50 per question.
+
+**3g. Regression detection.**
+
+For each student-question attempt, scan the timeline's `is_parseable` sequence:
+
+- **Regression flag**: At least one intermediate snapshot was parseable, but the final code is not.
+- **Peak-to-final regression**: Student achieved N passing tests at some point but final state has fewer.
+
+Report: "X% of students who ended with non-parseable code had parseable code at some earlier point."
+
+With tree-sitter, extend this: did the structural complexity of the code _decrease_ over the attempt? (Student had a function with a loop, then deleted it and started over.) Track structural regression, not just parseability regression.
+
+**3h. Build the global error profile.**
+
+Aggregate across both tracks:
+
+| Error Category                                              | Track A Submissions | Track A Non-Submitters | Track B (All) | Total |
+| ----------------------------------------------------------- | ------------------- | ---------------------- | ------------- | ----- |
+| Unmodified skeleton                                         | ?                   | ?                      | ?             | ?     |
+| Modified, partially broken (tree-sitter: structure evident) | ?                   | ?                      | ?             | ?     |
+| Modified, fundamentally broken                              | ?                   | ?                      | ?             | ?     |
+| Runtime error (by type)                                     | ?                   | ?                      | ?             | ?     |
+| Wrong output — formatting                                   | ?                   | ?                      | ?             | ?     |
+| Wrong output — edge case                                    | ?                   | ?                      | ?             | ?     |
+| Wrong output — logic                                        | ?                   | ?                      | ?             | ?     |
+| Timeout                                                     | ?                   | ?                      | ?             | ?     |
+| Partial pass                                                | ?                   | ?                      | ?             | ?     |
+| Full pass                                                   | ?                   | ?                      | ?             | ?     |
+
+Also report the tree-sitter structural inventory: across all student-question rows, what fraction of students used for-loops? Functions? List comprehensions? Dictionaries? This is a curriculum-level signal: if only 15% of students ever use list comprehensions despite being taught them, that construct hasn't been absorbed.
+
+Break down by question and by term — remembering that cross-term comparisons reflect progressively weaker populations, not curriculum changes.
+
+**What This Tells You**: The tree-sitter-enriched error taxonomy tells you not just _that_ code is broken but _what the student was trying to build_. A student with a well-structured program that has one ERROR node (a missing colon) is fundamentally different from a student with garbled code, even though both fail `ast.parse()`. The structural inventory also doubles as a curriculum diagnostic: which constructs are students actually deploying?
+
+**Action point**: If the "modified, partially broken" category is large (many students with mostly-correct structure and localised errors), this is strong evidence for interventions that help students fix specific mechanical issues — linters, better error messages, targeted syntax exercises. If "unmodified skeleton" is large, the problem is more fundamental.
+
+---
+
+For the above analyses
+
+- Add scripts to analysis/ which will generate outputs in analysis/ and run them.
+- Document your process (including how to re-build the outputs) and your findings (manually, not using a script) as a NEW section in analysis/README.md called "# Error Taxonomy"
