@@ -1339,3 +1339,71 @@ GUIDELINES:
 Link extensively to specific steps and data outputs in the analysis directory for transparency and reproducibility.
 Always include individual examples (specific students, specific questions, specific code snippets, etc.) to illustrate key points and avoid abstraction.
 IMPORTANT: Write in simple language (ELI15) to be accessible to non-technical stakeholders, even students, and laymen unfamiliar with this exam system.
+
+# Error clusters
+
+Based on analysis/README.md and analysis/REPORT.md, use tree-sitter-python to parse student submissions (just the final submissions that are evaluated) and find out patterns of errors in the code, i.e. for each question, the most common ways in which the student goes wrong at a logic level. Factor in the test cases, but go beyond that, perhaps finding similarities / clustering the ASTs, finding common subtrees, etc. The goal is to identify common error patterns that can be used to provide targeted feedback to students and inform instructional design.
+
+Your task is to create an analysis/ERRORS.md, where, for each question, comprehensively and exhaustively you will list the error patterns in student submissions along with their frequency and impact, sharing specific examples and explanations of why each type of error occurs.
+
+Make sure the error patterns are not broad categories. For every question, dive deep, check for differences in the code of different students, and identify specific patterns of errors that are common across multiple students. For example, instead of just saying "students struggle with loops", identify specific patterns like "students often forget to initialize the loop variable" or "students frequently use the wrong comparison operator in the loop condition".
+
+First create a plan for how to do this, test it out, evaluate if it produces the kind of rich insights we are looking for, and if not, iterate on the approach until it does.
+
+Then apply it for one question, share the result, and get feedback.
+
+## Cluster questions
+
+This is a great start! Make a few changes:
+
+- Cluster questions. Some questions are very similar. Cluster the questions themselves first, if they're nearly semantically identical, and mention each variant by showing the full code base for one question as example, then mentioning how the others are different. Then perform this analysis at a question level.
+- Create a separate analysis/ERRORS-*.md for each question cluster. Begin by finding the cluster for the question you just analyzed and move the analysis there (naming the file appropriately) and extending the analysis to the other questions in the cluster.
+- Replace analysis/ERRORS.md listing all the question clusters along with their variations and the number of submissions for each question. This will be the "index" of the error analyses and should link to the specific analysis/ERRORS-*.md files for each cluster. (Link to the files even before they're created. This file will serve as the reference to create future files.)
+- Ensure that the representative examples are from actual student submissions and mention the student ID (which is already an anonymized hash).
+
+Do this first, share the result and get feedback. Then we can proceed to the next question cluster.
+
+## Reduce residuals and run next 3
+
+In analysis/ERRORS.md, if there are no final_submitters, drop the variant in the table. Otherwise this looks fine.
+
+Revise this question cluster. Analyze more carefully and re-cluster so that residuals are always under 5% - and preferably much smaller than than. The aim is not to have more clusters, but rather, to have fewer clusters than we do, but that they better represent the kinds of errors students make, so that the "Other" category is small enough to be uninformative.
+
+Always begin by showing the variant frequencies in this format for every pattern, even if it occurs in only one question variant. This ensures consistency and comparability.
+
+```markdown
+- Cluster frequency: `243/665` (`36.5%`)
+- Variant frequencies:
+  - `ns_25t2_py21_1/16`: `129/337` (`38.3%`)
+  - `ns_25t2_py21_2/18`: `114/328` (`34.8%`)
+```
+
+Redo the current cluster. Then, SYSTEMATICALLY, repeat this process for 3 more clusters - pick the ones with the highest final_submitters.
+
+### Next 3
+
+Proceed with the next three clusters with the highest final_submitters.
+
+### Stage and proceed
+
+Gitignore generated files and stage the code and markdown files for commit.
+
+Then, proceed with with the next three clusters with the highest final_submitters.
+
+### Proceed with the next
+
+Proceed with the next 5 clusters with the highest final_submitters.
+
+---
+
+(This was repeated multiple times)
+
+### Take stock and plan next steps
+
+Update analysis/ERRORS.md to include a short summary (up to ~50 words) that summarizes the key error patterns for each cluster that has been analyzed.
+
+Then summarize (at the top of analysis/ERRORS.md) the overall insights from the error pattern analysis so far. What kinds of mistakes do students commonly make and why? What are underlying patterns? What are the implications for problem and test case design? How should we plan for this in the AI era? (Feel free to search online for reference material.)
+
+Think like an expert: What would an expert in this field check, what patterns would an expert recognize, that beginners would miss?
+
+Write for a lay audience. ELI15.

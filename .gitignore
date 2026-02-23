@@ -12,4 +12,10 @@ analysis/psychometric_irt/
 analysis/evaluation_redesign/
 analysis/longitudinal_analysis/
 analysis/concept_knowledge_modeling/
+analysis/error_pattern_pilot/
+analysis/question_clusters.csv
+analysis/question_cluster_members.csv
+
+# Python cache
+__pycache__/
 analysis/__pycache__/
