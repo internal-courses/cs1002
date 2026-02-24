@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/6` (canonical) | 817 | 637 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/6` (canonical) |              817 |      637 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/6` | 817 | 180 | 637 | 567 | 70 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/6` |              817 |       180 |      637 |                567 |                     70 |
 
 ## Private Case Structure
 
@@ -44,32 +44,32 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/6` |
-| --- | ---: | ---: | ---: |
-| Single-character-only parser (fixed-position indexing) fails multi-character or multi-digit private cases | 274 | 43.0% | 274 |
-| Syntax / non-parseable final submission | 70 | 11.0% | 70 |
-| Incorrect expression parsing/formatting logic (broad wrong-answer failure) | 53 | 8.3% | 53 |
-| Hard-codes public sample expressions/outputs instead of parsing and expanding arbitrary terms | 42 | 6.6% | 42 |
-| No return / implicit `None` | 37 | 5.8% | 37 |
-| Runtime NameError from using symbolic term names (`a`, `b`, `x`, ...) as Python variables | 28 | 4.4% | 28 |
-| Uses boolean-chain truthiness (`and`/`or`) over string literals instead of computing the expansion from input | 28 | 4.4% | 28 |
-| Uses length-specific fixed slices/indices (works for a few sample lengths, fails general terms) | 16 | 2.5% | 16 |
-| Runtime TypeError | 13 | 2.0% | 13 |
-| Runtime ValueError | 10 | 1.6% | 10 |
-| Runtime error (parseable final submission) | 10 | 1.6% | 10 |
-| Runtime TypeError from string/list mixing in expression parsing or output formatting | 9 | 1.4% | 9 |
-| Runtime IndexError | 9 | 1.4% | 9 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 8 | 1.3% | 8 |
-| Runtime RecursionError | 7 | 1.1% | 7 |
-| Uses expression-length branching and fragile slices instead of parsing terms around parentheses/`+` | 7 | 1.1% | 7 |
-| Runtime NameError | 4 | 0.6% | 4 |
-| Runtime IndexError from fixed-position string indexing while parsing expression terms | 3 | 0.5% | 3 |
-| Adds top-level test/print calls after the function definition, causing evaluator output pollution / wrong answer | 2 | 0.3% | 2 |
-| Runtime AttributeError | 2 | 0.3% | 2 |
-| Uses the wrong nested-loop cross product (iterates the same term list twice) | 2 | 0.3% | 2 |
-| Time Limit Exceeded | 1 | 0.2% | 1 |
-| Returns the literal expansion for `(a+b)(c+d)` regardless of the input expression | 1 | 0.2% | 1 |
-| Tokenizes the expression but then assumes exactly four symbol characters (fails multi-char terms) | 1 | 0.2% | 1 |
+| Pattern                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py14_1/6` |
+| ---------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Single-character-only parser (fixed-position indexing) fails multi-character or multi-digit private cases        |           274 |                 43.0% |                274 |
+| Syntax / non-parseable final submission                                                                          |            70 |                 11.0% |                 70 |
+| Incorrect expression parsing/formatting logic (broad wrong-answer failure)                                       |            53 |                  8.3% |                 53 |
+| Hard-codes public sample expressions/outputs instead of parsing and expanding arbitrary terms                    |            42 |                  6.6% |                 42 |
+| No return / implicit `None`                                                                                      |            37 |                  5.8% |                 37 |
+| Runtime NameError from using symbolic term names (`a`, `b`, `x`, ...) as Python variables                        |            28 |                  4.4% |                 28 |
+| Uses boolean-chain truthiness (`and`/`or`) over string literals instead of computing the expansion from input    |            28 |                  4.4% |                 28 |
+| Uses length-specific fixed slices/indices (works for a few sample lengths, fails general terms)                  |            16 |                  2.5% |                 16 |
+| Runtime TypeError                                                                                                |            13 |                  2.0% |                 13 |
+| Runtime ValueError                                                                                               |            10 |                  1.6% |                 10 |
+| Runtime error (parseable final submission)                                                                       |            10 |                  1.6% |                 10 |
+| Runtime TypeError from string/list mixing in expression parsing or output formatting                             |             9 |                  1.4% |                  9 |
+| Runtime IndexError                                                                                               |             9 |                  1.4% |                  9 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                        |             8 |                  1.3% |                  8 |
+| Runtime RecursionError                                                                                           |             7 |                  1.1% |                  7 |
+| Uses expression-length branching and fragile slices instead of parsing terms around parentheses/`+`              |             7 |                  1.1% |                  7 |
+| Runtime NameError                                                                                                |             4 |                  0.6% |                  4 |
+| Runtime IndexError from fixed-position string indexing while parsing expression terms                            |             3 |                  0.5% |                  3 |
+| Adds top-level test/print calls after the function definition, causing evaluator output pollution / wrong answer |             2 |                  0.3% |                  2 |
+| Runtime AttributeError                                                                                           |             2 |                  0.3% |                  2 |
+| Uses the wrong nested-loop cross product (iterates the same term list twice)                                     |             2 |                  0.3% |                  2 |
+| Time Limit Exceeded                                                                                              |             1 |                  0.2% |                  1 |
+| Returns the literal expansion for `(a+b)(c+d)` regardless of the input expression                                |             1 |                  0.2% |                  1 |
+| Tokenizes the expression but then assumes exactly four symbol characters (fails multi-char terms)                |             1 |                  0.2% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -151,21 +151,21 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `e5651854cd7f45c7b5fc80c420e0e584`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    exp1, exp2= expr.strip().split(')(')
-    exp1= exp1.replace(')',"")
-    exp1= exp1.replace('(',"")
-    expa=exp1.split("+")
-    u=expa[0]
-    v=expa[1]
-    exp2=exp2.replace(')',"")
-    exp2=exp2.replace('(',"")
-    expb=exp2.split("+")
-    r=expb[0]
-    w=expb[1]
-    ss= (u, "*", r, " + ", u, "*", w, " + ", v, "*", r, " + ", v, "*", w)
-    pp = str(ss)
-    return pp
+...
+exp1, exp2 = expr.strip().split(")(")
+exp1 = exp1.replace(")", "")
+exp1 = exp1.replace("(", "")
+expa = exp1.split("+")
+u = expa[0]
+v = expa[1]
+exp2 = exp2.replace(")", "")
+exp2 = exp2.replace("(", "")
+expb = exp2.split("+")
+r = expb[0]
+w = expb[1]
+ss = (u, "*", r, " + ", u, "*", w, " + ", v, "*", r, " + ", v, "*", w)
+pp = str(ss)
+return pp
 ```
 
 ### Hard-codes public sample expressions/outputs instead of parsing and expanding arbitrary terms
@@ -503,15 +503,15 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `0a88a70fa2d44f08868a4ce29382bb64`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    n = str(input())
-    expand_sum_of_products = ""
-    char1 = first_element
-    char2 = second_element
-    char3 = third_element
-    char4 = fourth_element
-    for char in string():
-        expand_sum_of_products = "char1*char3 + char1*char4 + char2*char3 + char2*char4"
-    return expand_sum_of_products
+n = str(input())
+expand_sum_of_products = ""
+char1 = first_element
+char2 = second_element
+char3 = third_element
+char4 = fourth_element
+for char in string():
+    expand_sum_of_products = "char1*char3 + char1*char4 + char2*char3 + char2*char4"
+return expand_sum_of_products
 ```
 
 ### Runtime RecursionError
@@ -526,12 +526,9 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `79a66d76d45e426e8a75135b9da94c26`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    is_equal(
-        expand_sum_of_products("(a+b)(c+d)"),
-    "a*c + a*d + b*c + b*d"
-    )
-    print('x*z + x*w + y*z + y*w')
-    print('1*10 + 1*12 + 5*10 + 5*12')
+is_equal(expand_sum_of_products("(a+b)(c+d)"), "a*c + a*d + b*c + b*d")
+print("x*z + x*w + y*z + y*w")
+print("1*10 + 1*12 + 5*10 + 5*12")
 ```
 
 ### Uses expression-length branching and fragile slices instead of parsing terms around parentheses/`+`
@@ -578,17 +575,17 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `fce3dadb7bc34fe3b7d0569d31786724`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    #expand_sum_of_products
+# expand_sum_of_products
 
-    # sum = "(a+b) (c+d)"
+# sum = "(a+b) (c+d)"
 
-    # sum = "(x+y) (z+w)"
+# sum = "(x+y) (z+w)"
 
-    # sum = "(1+5) (10+12)"
+# sum = "(1+5) (10+12)"
 
 
-    #Returns
-     #sum_of_products_string
+# Returns
+# sum_of_products_string
 ```
 
 ### Runtime IndexError from fixed-position string indexing while parsing expression terms
@@ -602,14 +599,30 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `f3fb4bd897eb463a8f52962f52088e65`, summary `Runtime Error`, score `33`, vector `100`
 
 ```python
-    l = []
-    for i in range(len(expr)):
-        if(expr[i].isalpha()):
-            l.append(expr[i])
-        '''elif(expr[i].isdigit()):
-            if(expr[i+1].isdigit()):
-                num = expr[i]+expr[i+1]'''
-    return str(l[0])+"*"+str(l[2])+" + "+str(l[0])+"*"+str(l[3])+" + "+str(l[1])+"*"+str(l[2])+" + "+str(l[1])+"*"+str(l[3])
+l = []
+for i in range(len(expr)):
+    if expr[i].isalpha():
+        l.append(expr[i])
+    """elif(expr[i].isdigit()):
+        if(expr[i+1].isdigit()):
+            num = expr[i]+expr[i+1]"""
+return (
+    str(l[0])
+    + "*"
+    + str(l[2])
+    + " + "
+    + str(l[0])
+    + "*"
+    + str(l[3])
+    + " + "
+    + str(l[1])
+    + "*"
+    + str(l[2])
+    + " + "
+    + str(l[1])
+    + "*"
+    + str(l[3])
+)
 ```
 
 ### Adds top-level test/print calls after the function definition, causing evaluator output pollution / wrong answer
@@ -623,15 +636,15 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `c07ffd33255a41df88511673bc1a4be1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    expr = expr.replace(" " , " ")
-    if expr.count('(') != 2 or expr.count(')') != 2:
-        raise ValueError("Invalid input format")
-    first = expr[expr.find('(') + 1 : expr.find(')')]
-    second = expr[expr.rfind('(') + 1 : expr.rfind(')')]
-    a,b = first.split('+')
-    c,d = second.split('+')
-    result = f"{a}*{c} + {a}*{d} + {b}*{c} + {b}*{d}"
-    return result
+expr = expr.replace(" ", " ")
+if expr.count("(") != 2 or expr.count(")") != 2:
+    raise ValueError("Invalid input format")
+first = expr[expr.find("(") + 1 : expr.find(")")]
+second = expr[expr.rfind("(") + 1 : expr.rfind(")")]
+a, b = first.split("+")
+c, d = second.split("+")
+result = f"{a}*{c} + {a}*{d} + {b}*{c} + {b}*{d}"
+return result
 ```
 
 ### Runtime AttributeError
@@ -646,13 +659,13 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `0adec33d6006463d8e91551a9a3e0738`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    words=expr.split()
-    w=words.split('+')
-    result=''
-    for word in words:
-        for i in range(len(words)):
-            result+=w[word]*w[word+1]
-    return result
+words = expr.split()
+w = words.split("+")
+result = ""
+for word in words:
+    for i in range(len(words)):
+        result += w[word] * w[word + 1]
+return result
 ```
 
 ### Uses the wrong nested-loop cross product (iterates the same term list twice)
@@ -666,16 +679,16 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `0c48678766d943c7b034e5744d8576ba`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    expr = expr.replace(" ","")
-    if expr.count('(') !=2 or expr.count(')') !=2 :
-        print ("error")
-    first_group = expr[expr.find('(')+1 : expr.find(')')]
-    second_group = expr[expr.rfind('(')+1 : expr.rfind(')')]
-    terms1 = first_group.split('+')
-    terms2 = second_group.split ('+')
-    products = [f"a*b" for a in terms1 for b in terms1]
-    return str(' + '.join(products))
+...
+expr = expr.replace(" ", "")
+if expr.count("(") != 2 or expr.count(")") != 2:
+    print("error")
+first_group = expr[expr.find("(") + 1 : expr.find(")")]
+second_group = expr[expr.rfind("(") + 1 : expr.rfind(")")]
+terms1 = first_group.split("+")
+terms2 = second_group.split("+")
+products = [f"a*b" for a in terms1 for b in terms1]
+return str(" + ".join(products))
 ```
 
 ### Time Limit Exceeded
@@ -721,14 +734,14 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `acd83ce4921b40d7b0d34a4b5038ad28`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if ("(a+b) (c+d)"):
-        return "a*c + a*d + b*c + b*d"
-    elif ("(x+y) (z+w)"):
-        return "x*z + x*w + y*z + y*w"
-    elif ("(1+5) (10+12)"):
-        return "1*10 + 1*12 + 5*10 + 5*12"
-    else:
-        return
+if "(a+b) (c+d)":
+    return "a*c + a*d + b*c + b*d"
+elif "(x+y) (z+w)":
+    return "x*z + x*w + y*z + y*w"
+elif "(1+5) (10+12)":
+    return "1*10 + 1*12 + 5*10 + 5*12"
+else:
+    return
 ```
 
 ### Tokenizes the expression but then assumes exactly four symbol characters (fails multi-char terms)
@@ -742,11 +755,27 @@ def expand_sum_of_products(expr: str) -> str:
   - Variant `ns_25t2_py14_1/6`, Student ID `c2ed0e2a45a74c5789dadf1b1119a1d5`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    n = expr.split(")(")
-    a=''
-    for i in n:
-        for j in i:
-            if j.isalnum():
-                a+=j
-    return(a[0]+"*"+a[2]+" + "+a[0]+"*"+a[3]+" + "+a[1]+"*"+a[2]+" + "+a[1]+"*"+a[3])
+n = expr.split(")(")
+a = ""
+for i in n:
+    for j in i:
+        if j.isalnum():
+            a += j
+return (
+    a[0]
+    + "*"
+    + a[2]
+    + " + "
+    + a[0]
+    + "*"
+    + a[3]
+    + " + "
+    + a[1]
+    + "*"
+    + a[2]
+    + " + "
+    + a[1]
+    + "*"
+    + a[3]
+)
 ```

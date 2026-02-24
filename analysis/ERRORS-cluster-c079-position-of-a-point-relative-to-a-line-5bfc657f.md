@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/5` (canonical) | 980 | 195 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/5` (canonical) |              980 |      195 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/5` | 980 | 785 | 195 | 137 | 58 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/5` |              980 |       785 |      195 |                137 |                     58 |
 
 ## Private Case Structure
 
@@ -44,45 +44,45 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/5` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 58 | 29.7% | 58 |
-| No return / implicit `None` | 19 | 9.7% | 19 |
-| Incorrect point-position logic (broad wrong-answer failure) | 15 | 7.7% | 15 |
-| Computes `a*x + b*y + c` but returns that raw variable instead of sign-mapping to `1/-1/0` | 10 | 5.1% | 10 |
-| Runtime NameError | 9 | 4.6% | 9 |
-| Runtime NameError from using `ax`/`by` instead of `a*x`/`b*y` | 7 | 3.6% | 7 |
-| Returns raw line-expression value `a*x + b*y + c` instead of mapping to `1/-1/0` | 7 | 3.6% | 7 |
-| Always returns a constant class label (`1` or `-1`) regardless of the point/line | 7 | 3.6% | 7 |
-| Compares `a*x+b*y+c` to exact `1`/`-1` instead of checking sign `>0/<0` | 6 | 3.1% | 6 |
-| Uses point quadrant/coordinate-sign heuristic instead of `a*x + b*y + c` | 6 | 3.1% | 6 |
-| Reads `input()` inside function (EOF under evaluator function-call tests) | 5 | 2.6% | 5 |
-| Runtime TypeError | 5 | 2.6% | 5 |
-| Infinite recursion by calling the target function inside itself | 4 | 2.1% | 4 |
-| Compares coefficients/coordinates directly instead of evaluating `a*x + b*y + c` | 3 | 1.5% | 3 |
-| Runtime error (parseable final submission) | 3 | 1.5% | 3 |
-| Hard-codes coefficient/testcase-specific conditions instead of using the line-sign rule | 3 | 1.5% | 3 |
-| Hard-codes public example cases instead of computing point position | 3 | 1.5% | 3 |
-| Runtime ValueError | 2 | 1.0% | 2 |
-| Other wrong-answer logic pattern (residual) | 2 | 1.0% | 2 |
-| Returns a constant boolean/integer expression (`1 or -1 or 0`, etc.) | 2 | 1.0% | 2 |
-| Returns one input variable (`a`, `b`, `c`, `x`, or `y`) instead of the relative-position label | 2 | 1.0% | 2 |
-| Slope/intercept comparison approach with sign/division pitfalls (fails line-orientation cases) | 2 | 1.0% | 2 |
-| Hard-codes sample data/list values instead of computing from function inputs | 1 | 0.5% | 1 |
-| Uses incorrect line equation arrangement/sign (wrong comparison to `c`) | 1 | 0.5% | 1 |
-| Runtime NameError from typo in `return`/identifier | 1 | 0.5% | 1 |
-| Reinitializes parameters inside the function (erases evaluator inputs before computation) | 1 | 0.5% | 1 |
-| Runtime AttributeError | 1 | 0.5% | 1 |
-| Uses wrong sign threshold (`< 1` instead of `< 0`) for line-expression result | 1 | 0.5% | 1 |
-| Always returns `1` (constant output) | 1 | 0.5% | 1 |
-| Partially correct line-sign logic (formula or threshold bug on specific private cases) | 1 | 0.5% | 1 |
-| Uses `>=0`/`<=0` sign checks that swallow the zero case before equality check | 1 | 0.5% | 1 |
-| Uses modulus/arithmetic tricks on line terms instead of sign of `a*x + b*y + c` | 1 | 0.5% | 1 |
-| Always returns `0` regardless of the point/line | 1 | 0.5% | 1 |
-| Runtime RecursionError | 1 | 0.5% | 1 |
-| Uses exponentiation (`a**x`, `b**y`) instead of multiplication in the line expression | 1 | 0.5% | 1 |
-| Bare `return` statement (returns `None` instead of `1/-1/0`) | 1 | 0.5% | 1 |
-| Returns raw line-expression value (cast with `int(...)`) instead of sign-mapping to `1/-1/0` | 1 | 0.5% | 1 |
+| Pattern                                                                                        | Cluster count | % of cluster non-full | `ns_25t2_py14_1/5` |
+| ---------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                        |            58 |                 29.7% |                 58 |
+| No return / implicit `None`                                                                    |            19 |                  9.7% |                 19 |
+| Incorrect point-position logic (broad wrong-answer failure)                                    |            15 |                  7.7% |                 15 |
+| Computes `a*x + b*y + c` but returns that raw variable instead of sign-mapping to `1/-1/0`     |            10 |                  5.1% |                 10 |
+| Runtime NameError                                                                              |             9 |                  4.6% |                  9 |
+| Runtime NameError from using `ax`/`by` instead of `a*x`/`b*y`                                  |             7 |                  3.6% |                  7 |
+| Returns raw line-expression value `a*x + b*y + c` instead of mapping to `1/-1/0`               |             7 |                  3.6% |                  7 |
+| Always returns a constant class label (`1` or `-1`) regardless of the point/line               |             7 |                  3.6% |                  7 |
+| Compares `a*x+b*y+c` to exact `1`/`-1` instead of checking sign `>0/<0`                        |             6 |                  3.1% |                  6 |
+| Uses point quadrant/coordinate-sign heuristic instead of `a*x + b*y + c`                       |             6 |                  3.1% |                  6 |
+| Reads `input()` inside function (EOF under evaluator function-call tests)                      |             5 |                  2.6% |                  5 |
+| Runtime TypeError                                                                              |             5 |                  2.6% |                  5 |
+| Infinite recursion by calling the target function inside itself                                |             4 |                  2.1% |                  4 |
+| Compares coefficients/coordinates directly instead of evaluating `a*x + b*y + c`               |             3 |                  1.5% |                  3 |
+| Runtime error (parseable final submission)                                                     |             3 |                  1.5% |                  3 |
+| Hard-codes coefficient/testcase-specific conditions instead of using the line-sign rule        |             3 |                  1.5% |                  3 |
+| Hard-codes public example cases instead of computing point position                            |             3 |                  1.5% |                  3 |
+| Runtime ValueError                                                                             |             2 |                  1.0% |                  2 |
+| Other wrong-answer logic pattern (residual)                                                    |             2 |                  1.0% |                  2 |
+| Returns a constant boolean/integer expression (`1 or -1 or 0`, etc.)                           |             2 |                  1.0% |                  2 |
+| Returns one input variable (`a`, `b`, `c`, `x`, or `y`) instead of the relative-position label |             2 |                  1.0% |                  2 |
+| Slope/intercept comparison approach with sign/division pitfalls (fails line-orientation cases) |             2 |                  1.0% |                  2 |
+| Hard-codes sample data/list values instead of computing from function inputs                   |             1 |                  0.5% |                  1 |
+| Uses incorrect line equation arrangement/sign (wrong comparison to `c`)                        |             1 |                  0.5% |                  1 |
+| Runtime NameError from typo in `return`/identifier                                             |             1 |                  0.5% |                  1 |
+| Reinitializes parameters inside the function (erases evaluator inputs before computation)      |             1 |                  0.5% |                  1 |
+| Runtime AttributeError                                                                         |             1 |                  0.5% |                  1 |
+| Uses wrong sign threshold (`< 1` instead of `< 0`) for line-expression result                  |             1 |                  0.5% |                  1 |
+| Always returns `1` (constant output)                                                           |             1 |                  0.5% |                  1 |
+| Partially correct line-sign logic (formula or threshold bug on specific private cases)         |             1 |                  0.5% |                  1 |
+| Uses `>=0`/`<=0` sign checks that swallow the zero case before equality check                  |             1 |                  0.5% |                  1 |
+| Uses modulus/arithmetic tricks on line terms instead of sign of `a*x + b*y + c`                |             1 |                  0.5% |                  1 |
+| Always returns `0` regardless of the point/line                                                |             1 |                  0.5% |                  1 |
+| Runtime RecursionError                                                                         |             1 |                  0.5% |                  1 |
+| Uses exponentiation (`a**x`, `b**y`) instead of multiplication in the line expression          |             1 |                  0.5% |                  1 |
+| Bare `return` statement (returns `None` instead of `1/-1/0`)                                   |             1 |                  0.5% |                  1 |
+| Returns raw line-expression value (cast with `int(...)`) instead of sign-mapping to `1/-1/0`   |             1 |                  0.5% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -165,21 +165,21 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `0ff618d955864782a5897ccc18bcaef1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    int: a
-    int: b
-    int: c
-    int: x
-    int: y
-    line = -1
-    if (line)>0:
-        return 1
-    elif line<0:
-        return -1
-    elif line==0:
-        return 0
-    line : a*x + b*y + c
-    coordinates : int(input(a,b,c,x,y))
+...
+int: a
+int: b
+int: c
+int: x
+int: y
+line = -1
+if (line) > 0:
+    return 1
+elif line < 0:
+    return -1
+elif line == 0:
+    return 0
+line: a * x + b * y + c
+coordinates: int(input(a, b, c, x, y))
 ```
 
 ### Computes `a*x + b*y + c` but returns that raw variable instead of sign-mapping to `1/-1/0`
@@ -193,16 +193,16 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `e234a3b743be4104873c7906e8255a98`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    res= a*x+b*y+c
-    return res
-    if res>0:
-         return 1
-    if res <0:
-        return -1
-    if res==0:
-        return 0
-    num=int(input())
-    s=point_position_relative_to_line(a,b,c,x,y)
+res = a * x + b * y + c
+return res
+if res > 0:
+    return 1
+if res < 0:
+    return -1
+if res == 0:
+    return 0
+num = int(input())
+s = point_position_relative_to_line(a, b, c, x, y)
 ```
 
 ### Runtime NameError
@@ -217,14 +217,14 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `2e8159ac79fa41f382a8f02728c3e874`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    value= a + b + c + x + y
-    if value == 0:
-        return "Point lies on the line"
-    elif value > 0:
-        return "point lies below the line"
-    elif value  < 0:
-        return "point lies above the line"
+...
+value = a + b + c + x + y
+if value == 0:
+    return "Point lies on the line"
+elif value > 0:
+    return "point lies below the line"
+elif value < 0:
+    return "point lies above the line"
 ```
 
 ### Runtime NameError from using `ax`/`by` instead of `a*x`/`b*y`
@@ -270,7 +270,7 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `673556f1cb1e42c480f59fff2b1dada6`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return a * x + b * y + c
+return a * x + b * y + c
 ```
 
 ### Always returns a constant class label (`1` or `-1`) regardless of the point/line
@@ -284,8 +284,8 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `dd8145c65d9740e3888de4ef0040c473`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    return -1
+...
+return -1
 ```
 
 ### Compares `a*x+b*y+c` to exact `1`/`-1` instead of checking sign `>0/<0`
@@ -331,21 +331,21 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `6bcd29ef579244b39285412d1dc7fa5d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    if x==0 and y==0 and c==0:
-        return 0
-    elif x==0 and y==0 and c<0:
-        return -1
-    elif x>0 and y>0 and c>=0:
-        return 1
-    elif x>=0 or y>=0:
-        return 0
-    elif x<=0 or y<=0 and c==0:
-        return -1
-    elif x<0 or y<0 and c!=0:
-        return -1
-    elif x<0 and y<0:
-        return -1
+...
+if x == 0 and y == 0 and c == 0:
+    return 0
+elif x == 0 and y == 0 and c < 0:
+    return -1
+elif x > 0 and y > 0 and c >= 0:
+    return 1
+elif x >= 0 or y >= 0:
+    return 0
+elif x <= 0 or y <= 0 and c == 0:
+    return -1
+elif x < 0 or y < 0 and c != 0:
+    return -1
+elif x < 0 and y < 0:
+    return -1
 ```
 
 ### Reads `input()` inside function (EOF under evaluator function-call tests)
@@ -359,18 +359,18 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `4ba275e80602423dbb4287c653130c3c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a = int(input())
-    b = int(input())
-    c = int(input())
-    x = int(input())
-    y =  int(input())
-    b = (a*x)+(b*y)+c
-    if(b==0):
-        return point_position_relative_to_line(0)
-    elif(b>0):
-        return point_position_relative_to_line(+1)
-    else:
-        return point_position_relative_to_line(-1)
+a = int(input())
+b = int(input())
+c = int(input())
+x = int(input())
+y = int(input())
+b = (a * x) + (b * y) + c
+if b == 0:
+    return point_position_relative_to_line(0)
+elif b > 0:
+    return point_position_relative_to_line(+1)
+else:
+    return point_position_relative_to_line(-1)
 ```
 
 ### Runtime TypeError
@@ -385,15 +385,15 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `94c26a944c7e4e3f9bb317c6016f795c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
+is_equal = 0
+if ((a * x) + (b * y) + c) == 0:
     is_equal = 0
-    if ((a*x)+(b*y)+c) == 0:
-        is_equal = 0
-    elif ((a*x)+(b*y)+c) > 0:
-        is_equal = 1
-    else:
-        is_equal= -1
-    print(int(is_equal))
-    return(point_position_relative_to_line (int(a,b,c,x,y)))
+elif ((a * x) + (b * y) + c) > 0:
+    is_equal = 1
+else:
+    is_equal = -1
+print(int(is_equal))
+return point_position_relative_to_line(int(a, b, c, x, y))
 ```
 
 ### Infinite recursion by calling the target function inside itself
@@ -407,15 +407,15 @@ def point_position_relative_to_line(a, b, c, x, y) -> int:
   - Variant `ns_25t2_py14_1/5`, Student ID `e039393389cc46ababfb74fc5dc9a75a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if point_position_relative_to_line(a,b,c,x,y)<0:
-        return -1
-    elif point_position_relative_to_line(a,b,c,x,y)>0:
-        return +1
-    else:
-        return 0
-    int(input(point_position_relative_to_line(1,-1,0,2,1)))
-    int(input(point_position_relative_to_line(-1,-1,-1,0,0)))
-    int(input(point_position_relative_to_line(2,-1,4,2,0)))
+if point_position_relative_to_line(a, b, c, x, y) < 0:
+    return -1
+elif point_position_relative_to_line(a, b, c, x, y) > 0:
+    return +1
+else:
+    return 0
+int(input(point_position_relative_to_line(1, -1, 0, 2, 1)))
+int(input(point_position_relative_to_line(-1, -1, -1, 0, 0)))
+int(input(point_position_relative_to_line(2, -1, 4, 2, 0)))
 ```
 
 ### Compares coefficients/coordinates directly instead of evaluating `a*x + b*y + c`
@@ -494,13 +494,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `8c4b0cd0bf1643828005c6f99d43c050`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    if a== 1 and b == -1:
-        return(1)
-    elif a==-1 and b== -1:
-        return(-1)
-    elif a==2 and b==-1:
-        return(0)
+...
+if a == 1 and b == -1:
+    return 1
+elif a == -1 and b == -1:
+    return -1
+elif a == 2 and b == -1:
+    return 0
 ```
 
 ### Hard-codes public example cases instead of computing point position
@@ -546,15 +546,15 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `4914533e73804d35b7063a7c22152cfd`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    d=int(a)*int(x) + int(b)*int(y) + int(c)
-    ans=0
-    if d>0:
-        ans=1
-    elif d<0:
-        ans=-1
-    else:
-        ans=0
-        return ans
+d = int(a) * int(x) + int(b) * int(y) + int(c)
+ans = 0
+if d > 0:
+    ans = 1
+elif d < 0:
+    ans = -1
+else:
+    ans = 0
+    return ans
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -568,13 +568,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `6ea0adea0d764d3f8dbdd434b183ec66`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if(x > a):
-        output = 1
-    elif(a == x):
-        output = 0
-    else:
-        output = -1
-    return output
+if x > a:
+    output = 1
+elif a == x:
+    output = 0
+else:
+    output = -1
+return output
 ```
 
 ### Returns a constant boolean/integer expression (`1 or -1 or 0`, etc.)
@@ -588,7 +588,7 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `0bba8ccc6fe0438d8f049dc33bee64d2`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return ((1 and 0) and (-1) )
+return (1 and 0) and (-1)
 ```
 
 ### Returns one input variable (`a`, `b`, `c`, `x`, or `y`) instead of the relative-position label
@@ -602,7 +602,7 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `a6563c2086a14b4f9a281b48ca2b2db1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return a
+return a
 ```
 
 ### Slope/intercept comparison approach with sign/division pitfalls (fails line-orientation cases)
@@ -648,9 +648,9 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `196a4b5b24c64553b621891d478e8d9f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    line =[-1,-1,-1,0,0]
-    point_position = [0,1,-1,2,1]
-    return
+line = [-1, -1, -1, 0, 0]
+point_position = [0, 1, -1, 2, 1]
+return
 ```
 
 ### Uses incorrect line equation arrangement/sign (wrong comparison to `c`)
@@ -664,13 +664,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `45650dc371634853b25f988b19491aa8`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    point_position_relative_to_line=(a,b,c,x,y)
-    if(a*x+b*y>c):
-        return 1
-    if(a*x+b*y<c):
-        return -1
-    else:
-        return 0
+point_position_relative_to_line = (a, b, c, x, y)
+if a * x + b * y > c:
+    return 1
+if a * x + b * y < c:
+    return -1
+else:
+    return 0
 ```
 
 ### Runtime NameError from typo in `return`/identifier
@@ -684,13 +684,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `49aa07ef0de542f2b1cf0fa690cc477d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    z=a*x+b*y+c
-    if x>z:
-        return 1
-    elif x<z:
-        retun -1
-    elif x==z:
-        return 0
+z = a * x + b * y + c
+if x > z:
+    return 1
+elif x < z:
+    retun - 1
+elif x == z:
+    return 0
 ```
 
 ### Reinitializes parameters inside the function (erases evaluator inputs before computation)
@@ -704,18 +704,18 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `5ba26c85c406422e92cadf036af2ca7a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    a = int()
-    b = int()
-    c = int()
-    x = int()
-    y = int()
-    result = a*x + b*y + c
-    if result > 0:
-        return 1
-    elif result < 0:
-        return -1
-    else:
-        return 0
+a = int()
+b = int()
+c = int()
+x = int()
+y = int()
+result = a * x + b * y + c
+if result > 0:
+    return 1
+elif result < 0:
+    return -1
+else:
+    return 0
 ```
 
 ### Runtime AttributeError
@@ -730,18 +730,18 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `6d0778a45dc241288514b5a2d0c41ff2`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a = ('1, -1, 0, 2, 1')
-    b = ('-1, -1, -1, 0, 0')
-    c = ('2, -1, -4, 2, 0')
-    x = map.a
-    y = map.b
-    result = 1
-    if map.a==x:
-        print("1")
-    elif map.b==y:
-        print("-1")
-    elif map.c!=x or map.c!=y:
-        print("0")
+a = "1, -1, 0, 2, 1"
+b = "-1, -1, -1, 0, 0"
+c = "2, -1, -4, 2, 0"
+x = map.a
+y = map.b
+result = 1
+if map.a == x:
+    print("1")
+elif map.b == y:
+    print("-1")
+elif map.c != x or map.c != y:
+    print("0")
 ```
 
 ### Uses wrong sign threshold (`< 1` instead of `< 0`) for line-expression result
@@ -755,13 +755,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `79ad15a6c66e451ab6db5bc39f36943f`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    point=(a*x)+(b*y)+c
-    if point>0:
-        return (1)
-    if point<1:
-        return (-1)
-    if point==0:
-        return (0)
+point = (a * x) + (b * y) + c
+if point > 0:
+    return 1
+if point < 1:
+    return -1
+if point == 0:
+    return 0
 ```
 
 ### Always returns `1` (constant output)
@@ -775,10 +775,10 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `808deab083764df48e22ba6d7076bc13`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    return 1
-    if a>0 and b>0 and c>0:
-        print("1")
+...
+return 1
+if a > 0 and b > 0 and c > 0:
+    print("1")
 ```
 
 ### Partially correct line-sign logic (formula or threshold bug on specific private cases)
@@ -792,16 +792,16 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `8b597d73831842de8f6408deb346f4b9`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    k= a * x
-    v= b*y
-    g=c
-    o=k+v+g
-    if o == 0:
-        return 0
-    elif(k>0):
-        return 1
-    else:
-        return -1
+k = a * x
+v = b * y
+g = c
+o = k + v + g
+if o == 0:
+    return 0
+elif k > 0:
+    return 1
+else:
+    return -1
 ```
 
 ### Uses `>=0`/`<=0` sign checks that swallow the zero case before equality check
@@ -815,13 +815,13 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `b480780ae44944c78a4a5e9c5c6ee0b5`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    ...
-    if a*x+b*y+c >= 0:
-        return(+1)
-    elif a*x+b*y+c <=0:
-        return(-1)
-    elif a*x+b*y+c ==0:
-        return(0)
+...
+if a * x + b * y + c >= 0:
+    return +1
+elif a * x + b * y + c <= 0:
+    return -1
+elif a * x + b * y + c == 0:
+    return 0
 ```
 
 ### Uses modulus/arithmetic tricks on line terms instead of sign of `a*x + b*y + c`
@@ -835,14 +835,14 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `b60b0b88cfbe4fa1a885fc99058ba031`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if(((a*x)+c)==(b*y)):
-        return 0
-    elif(x==0 and y==0):
-        return -1
-    elif(((a*x)+c)%(b*y)==0):
-        return 1
-    else:
-        return -1
+if ((a * x) + c) == (b * y):
+    return 0
+elif x == 0 and y == 0:
+    return -1
+elif ((a * x) + c) % (b * y) == 0:
+    return 1
+else:
+    return -1
 ```
 
 ### Always returns `0` regardless of the point/line
@@ -856,7 +856,7 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `b722a49ad15f4dc9b3312347a957831b`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return(0)
+return 0
 ```
 
 ### Runtime RecursionError
@@ -871,12 +871,12 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `eb44ff62625b4843adb9a614f8ac881c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    point_position_relative_to_line (a, b, c, x, y) > 0
-    1
-    point_position_relative_to_line (a, b, c, x, y) < 0
-    -1
-    point_position_relative_to_line (a, b, c, x, y) == 0
-    0
+point_position_relative_to_line(a, b, c, x, y) > 0
+1
+point_position_relative_to_line(a, b, c, x, y) < 0
+-1
+point_position_relative_to_line(a, b, c, x, y) == 0
+0
 ```
 
 ### Uses exponentiation (`a**x`, `b**y`) instead of multiplication in the line expression
@@ -890,12 +890,12 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `edb16d991c22443296e660592c1e3f47`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if a**x + b**y + c > 0:
-        return -1
-    elif a**x + b**y + c < 0:
-        return +1
-    else:
-        return 1
+if a**x + b**y + c > 0:
+    return -1
+elif a**x + b**y + c < 0:
+    return +1
+else:
+    return 1
 ```
 
 ### Bare `return` statement (returns `None` instead of `1/-1/0`)
@@ -909,7 +909,7 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `f101301749634fad874c8f3be3922455`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return
+return
 ```
 
 ### Returns raw line-expression value (cast with `int(...)`) instead of sign-mapping to `1/-1/0`
@@ -923,6 +923,6 @@ def point_position_relative_to_line(a, b, c, x, y) -> int(ax+by+c):
   - Variant `ns_25t2_py14_1/5`, Student ID `fe0b01f9bba2417f861a5b5ea7ba69c5`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    return int(a*x + b*y + c)
+...
+return int(a * x + b * y + c)
 ```

@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py22_1/15` (canonical) | 982 | 405 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py22_1/15` (canonical) |              982 |      405 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py22_1/15` | 982 | 577 | 405 | 381 | 24 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py22_1/15` |              982 |       577 |      405 |                381 |                     24 |
 
 ## Private Case Structure
 
@@ -44,32 +44,32 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py22_1/15` |
-| --- | ---: | ---: | ---: |
-| Checks `Hello`/`Hi` without requiring the trailing space | 92 | 22.7% | 92 |
-| Runtime IndexError from direct indexing on short/empty strings | 79 | 19.5% | 79 |
-| Checks first token via `split()` (accepts `Hello`/`Hi` without required trailing space) | 47 | 11.6% | 47 |
-| Syntax / non-parseable final submission | 24 | 5.9% | 24 |
-| Partially correct greeting-prefix logic (fails edge cases like no-space/leading-space/empty input) | 23 | 5.7% | 23 |
-| Strips whitespace before checking prefix (wrongly accepts leading-space inputs / changes semantics) | 19 | 4.7% | 19 |
-| Boolean-chain literal bug (`... or 'Hi'`) creates an always-truthy greeting condition | 18 | 4.4% | 18 |
-| Incorrect greeting-prefix logic (broad wrong-answer failure) | 16 | 4.0% | 16 |
-| No return / implicit `None` | 15 | 3.7% | 15 |
-| Makes the check case-insensitive (`hello`/`hi` become accepted) | 12 | 3.0% | 12 |
-| Always returns `True` (constant output) | 12 | 3.0% | 12 |
-| Extracts the first word manually (or via `split`) and compares to `Hello`/`Hi`, ignoring required trailing-space semantics | 10 | 2.5% | 10 |
-| Runtime NameError | 5 | 1.2% | 5 |
-| Uses `and` between `Hello` and `Hi` prefix checks (impossible conjunction) | 5 | 1.2% | 5 |
-| Always returns `False` (constant output) | 4 | 1.0% | 4 |
-| Other wrong-answer logic pattern (residual) | 4 | 1.0% | 4 |
-| Hard-codes public sample strings/examples instead of the general prefix rule | 4 | 1.0% | 4 |
-| Checks `Hello`/`Hi` prefixes without trailing space using `startswith((...))` | 4 | 1.0% | 4 |
-| Uses substring containment (`in`) instead of checking the prefix | 4 | 1.0% | 4 |
-| Runtime TypeError | 3 | 0.7% | 3 |
-| Uses `startswith("Hello" or "Hi")` (Python `or` collapses to one prefix) | 2 | 0.5% | 2 |
-| Runtime AttributeError | 1 | 0.2% | 1 |
-| Runtime error (parseable final submission) | 1 | 0.2% | 1 |
-| Runtime RecursionError | 1 | 0.2% | 1 |
+| Pattern                                                                                                                    | Cluster count | % of cluster non-full | `ns_25t2_py22_1/15` |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Checks `Hello`/`Hi` without requiring the trailing space                                                                   |            92 |                 22.7% |                  92 |
+| Runtime IndexError from direct indexing on short/empty strings                                                             |            79 |                 19.5% |                  79 |
+| Checks first token via `split()` (accepts `Hello`/`Hi` without required trailing space)                                    |            47 |                 11.6% |                  47 |
+| Syntax / non-parseable final submission                                                                                    |            24 |                  5.9% |                  24 |
+| Partially correct greeting-prefix logic (fails edge cases like no-space/leading-space/empty input)                         |            23 |                  5.7% |                  23 |
+| Strips whitespace before checking prefix (wrongly accepts leading-space inputs / changes semantics)                        |            19 |                  4.7% |                  19 |
+| Boolean-chain literal bug (`... or 'Hi'`) creates an always-truthy greeting condition                                      |            18 |                  4.4% |                  18 |
+| Incorrect greeting-prefix logic (broad wrong-answer failure)                                                               |            16 |                  4.0% |                  16 |
+| No return / implicit `None`                                                                                                |            15 |                  3.7% |                  15 |
+| Makes the check case-insensitive (`hello`/`hi` become accepted)                                                            |            12 |                  3.0% |                  12 |
+| Always returns `True` (constant output)                                                                                    |            12 |                  3.0% |                  12 |
+| Extracts the first word manually (or via `split`) and compares to `Hello`/`Hi`, ignoring required trailing-space semantics |            10 |                  2.5% |                  10 |
+| Runtime NameError                                                                                                          |             5 |                  1.2% |                   5 |
+| Uses `and` between `Hello` and `Hi` prefix checks (impossible conjunction)                                                 |             5 |                  1.2% |                   5 |
+| Always returns `False` (constant output)                                                                                   |             4 |                  1.0% |                   4 |
+| Other wrong-answer logic pattern (residual)                                                                                |             4 |                  1.0% |                   4 |
+| Hard-codes public sample strings/examples instead of the general prefix rule                                               |             4 |                  1.0% |                   4 |
+| Checks `Hello`/`Hi` prefixes without trailing space using `startswith((...))`                                              |             4 |                  1.0% |                   4 |
+| Uses substring containment (`in`) instead of checking the prefix                                                           |             4 |                  1.0% |                   4 |
+| Runtime TypeError                                                                                                          |             3 |                  0.7% |                   3 |
+| Uses `startswith("Hello" or "Hi")` (Python `or` collapses to one prefix)                                                   |             2 |                  0.5% |                   2 |
+| Runtime AttributeError                                                                                                     |             1 |                  0.2% |                   1 |
+| Runtime error (parseable final submission)                                                                                 |             1 |                  0.2% |                   1 |
+| Runtime RecursionError                                                                                                     |             1 |                  0.2% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -215,14 +215,23 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `0da654ac991d4aa1a2dd5b41b7efd4b9`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-   x= s[0:6]
-   y= s[0:3]
-   if (x=="Hello " or x=="hello " or x=="HELLO " or x=="heLLo " or x=="hELLO " or x=="HeLlO " or x=="hElLo " or x=="HELLo " ):
-       return True
-   elif (y=="Hi " or y=="hi " or y=="HI " or y=="hI" ):
-       return True
-   else:
-       return False
+x = s[0:6]
+y = s[0:3]
+if (
+    x == "Hello "
+    or x == "hello "
+    or x == "HELLO "
+    or x == "heLLo "
+    or x == "hELLO "
+    or x == "HeLlO "
+    or x == "hElLo "
+    or x == "HELLo "
+):
+    return True
+elif y == "Hi " or y == "hi " or y == "HI " or y == "hI":
+    return True
+else:
+    return False
 ```
 
 ### Strips whitespace before checking prefix (wrongly accepts leading-space inputs / changes semantics)
@@ -300,18 +309,20 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `8c72b50b479647a1babde4c3e7d10bd8`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    bool=(True, False)
-    if(s):
-        s=("Hello", "Hi")
-        return(True)
-    elif(s):
-        s=("Hithere", "Welcome")
-        return(False)
-    else:
-        return("OK")
-    def is_equal(A):
-        A=(starts_with_greeting(s), "bool")
-        print(A)
+bool = (True, False)
+if s:
+    s = ("Hello", "Hi")
+    return True
+elif s:
+    s = ("Hithere", "Welcome")
+    return False
+else:
+    return "OK"
+
+
+def is_equal(A):
+    A = (starts_with_greeting(s), "bool")
+    print(A)
 ```
 
 ### No return / implicit `None`
@@ -391,12 +402,12 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `cc61ea411a4f4cff9c125cccd3f78729`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    s = {"hello ","Hi "}
-    for i in s:
-        if i == "Hello ":
-            return True
-        elif i == "Hi ":
-            return True
+s = {"hello ", "Hi "}
+for i in s:
+    if i == "Hello ":
+        return True
+    elif i == "Hi ":
+        return True
 ```
 
 ### Extracts the first word manually (or via `split`) and compares to `Hello`/`Hi`, ignoring required trailing-space semantics
@@ -410,19 +421,19 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `340fce4c21fb4eaea58e137862867e2b`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    word = ""
-    s = s.lower()
-    for i in s:
-        if i == ' ':
-            break
-        else:
-            word += i
-    if word == "hello":
-        return True
-    elif word == "hi":
-        return True
+word = ""
+s = s.lower()
+for i in s:
+    if i == " ":
+        break
     else:
-        return False
+        word += i
+if word == "hello":
+    return True
+elif word == "hi":
+    return True
+else:
+    return False
 ```
 
 ### Runtime NameError
@@ -437,12 +448,12 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `d6ad28442e9e434db73567370b038861`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if iStreamAs.startwith ("Hello"):
-        return True
-    elif iStreamAs.startwith ("Hi"):
-        return True
-    else:
-        return False
+if iStreamAs.startwith("Hello"):
+    return True
+elif iStreamAs.startwith("Hi"):
+    return True
+else:
+    return False
 ```
 
 ### Uses `and` between `Hello` and `Hi` prefix checks (impossible conjunction)
@@ -456,15 +467,15 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `3598ccbe31ff449bae4dd781dd30dd7d`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    if s[0:5]=="Hello" or s[0:2]=="Hi":
-        return True
-    else:
-        return False
-    '''
-    if (s[0:5]=="Hello" and s[6]==" ") or (s[0:2] and s[3]==" "):
-        return True
-    else:
-        return False'''
+if s[0:5] == "Hello" or s[0:2] == "Hi":
+    return True
+else:
+    return False
+"""
+if (s[0:5]=="Hello" and s[6]==" ") or (s[0:2] and s[3]==" "):
+    return True
+else:
+    return False"""
 ```
 
 ### Always returns `False` (constant output)
@@ -479,13 +490,13 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `aabbd7568c7e4f33aa4c6788f664086d`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    s_str=s.split(' ')
-    greet_word=['Hello','Hi']
-    for char in s_str:
-        if greet_word[0]==s_str[0] or greet_word[1]==s_str[0]:
-            return(True)
-        else:
-            return(False)
+s_str = s.split(" ")
+greet_word = ["Hello", "Hi"]
+for char in s_str:
+    if greet_word[0] == s_str[0] or greet_word[1] == s_str[0]:
+        return True
+    else:
+        return False
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -499,15 +510,15 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `e499194e5cc04cff9ec5484545eefb54`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    H="Hello "
-    h="Hi "
-    for i in range(len(s)):
-        if (s[0:5]==H):
-            return True
-        elif(s[0:3]==h):
-            return True
-        else:
-            return False
+H = "Hello "
+h = "Hi "
+for i in range(len(s)):
+    if s[0:5] == H:
+        return True
+    elif s[0:3] == h:
+        return True
+    else:
+        return False
 ```
 
 ### Hard-codes public sample strings/examples instead of the general prefix rule
@@ -521,12 +532,12 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `e5c98dbe050d4d2c816344b402a17bc7`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    for i in s:
-        if i[0] == ("Hello there ") or i[0] == ("Hi friend ") :
-            return False
-        else:
-            return True
+...
+for i in s:
+    if i[0] == ("Hello there ") or i[0] == ("Hi friend "):
+        return False
+    else:
+        return True
 ```
 
 ### Checks `Hello`/`Hi` prefixes without trailing space using `startswith((...))`
@@ -572,13 +583,13 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `b5774add0243429e87bf974726f72d76`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    for i in s:
-        if "Hello" in s:
-             return True
-        elif 'Hi'in s:
-            return True
-        else:
-            return False
+for i in s:
+    if "Hello" in s:
+        return True
+    elif "Hi" in s:
+        return True
+    else:
+        return False
 ```
 
 ### Runtime TypeError
@@ -593,13 +604,13 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `b7d58357b99047b090f5abae237464d0`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s = str('Hello there', 'Hi friend', 'Good morning', ' HiThere')
-    for i in s:
-        s_w_t = split.s
-        s_w_w = append.s
-        return True
-    else:
-        return False
+s = str("Hello there", "Hi friend", "Good morning", " HiThere")
+for i in s:
+    s_w_t = split.s
+    s_w_w = append.s
+    return True
+else:
+    return False
 ```
 
 ### Uses `startswith("Hello" or "Hi")` (Python `or` collapses to one prefix)
@@ -613,10 +624,10 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `0d0b149e4e1d41d2bb6a0929a0905d08`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    if s.startswith(("Hello" or "Hi")):
-        return True
-    else:
-        return False
+if s.startswith(("Hello" or "Hi")):
+    return True
+else:
+    return False
 ```
 
 ### Runtime AttributeError
@@ -631,10 +642,10 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `8b19220c23c0436bbebff9e2bcb05d05`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if s.start("Hello" or "Hi"):
-       return True
-    else:
-       return False
+if s.start("Hello" or "Hi"):
+    return True
+else:
+    return False
 ```
 
 ### Runtime error (parseable final submission)
@@ -649,7 +660,7 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `c7218380af4d460b8e03a2bfe33094cf`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
+...
 ```
 
 ### Runtime RecursionError
@@ -664,6 +675,6 @@ def starts_with_greeting(s):
   - Variant `ns_25t2_py22_1/15`, Student ID `f92c1eaf820e46679028a3a6d529ee4f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    return starts_with_greeting('Hello') or starts_with_greeting('Hi')
+...
+return starts_with_greeting("Hello") or starts_with_greeting("Hi")
 ```

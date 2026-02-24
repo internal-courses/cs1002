@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py14_1/11` (canonical) | 347 | 308 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py14_1/11` (canonical) |              347 |      308 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py14_1/11` | 347 | 39 | 308 | 252 | 56 |
-| `ns_25t3_py14_2/12` | 0 | 0 | 0 | 0 | 0 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py14_1/11` |              347 |        39 |      308 |                252 |                     56 |
+| `ns_25t3_py14_2/12` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,31 +47,31 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py14_1/11` | `ns_25t3_py14_2/12` |
-| --- | ---: | ---: | ---: | ---: |
-| Leaves template placeholders (`...`) in multiple required sales-analysis helper functions | 82 | 26.6% | 82 | 0 |
-| Syntax / non-parseable final submission | 56 | 18.2% | 56 | 0 |
-| Early helpers are mostly correct, but `region_with_max_sales(...)` / `steady_revenue_products(...)` logic fails hidden cases | 38 | 12.3% | 38 | 0 |
-| Runtime NameError from undefined variables/accumulators in sales-analysis helpers | 30 | 9.7% | 30 | 0 |
-| Runtime TypeError from treating sales records/list containers as the wrong shape | 24 | 7.8% | 24 | 0 |
-| Leaves the template placeholder `...` in `steady_revenue_products(...)` (partial multi-function implementation) | 13 | 4.2% | 13 | 0 |
-| Runtime KeyError from wrong sales-record keys or fragile dictionary indexing | 12 | 3.9% | 12 | 0 |
-| Uses the sample variable `sales` inside helper functions instead of `sales_data` | 9 | 2.9% | 9 | 0 |
-| Hard-codes public sample outputs (`17000`, `5000`, `'R1'`, sample product set) instead of computing from `sales_data` | 6 | 1.9% | 6 | 0 |
-| Uses the sample variable `sales` inside helpers instead of the parameter `sales_data` | 5 | 1.6% | 5 | 0 |
-| Runtime AttributeError from list/dict API misuse in sales-analysis helpers | 4 | 1.3% | 4 | 0 |
-| Leaves the template placeholder `...` in `region_with_max_sales(...)` (partial multi-function implementation) | 4 | 1.3% | 4 | 0 |
-| Runtime ValueError from malformed aggregation / conversion logic in sales-analysis helpers | 4 | 1.3% | 4 | 0 |
-| Branch initialization bug in helper output variables before return | 4 | 1.3% | 4 | 0 |
-| Most sales-analysis helpers work, but one hidden edge-case remains (commonly region tie-break aggregation or exact set semantics) | 3 | 1.0% | 3 | 0 |
-| In `region_with_max_sales(...)`, compares individual records (or `revenue*quantity`) instead of aggregated totals per region | 3 | 1.0% | 3 | 0 |
-| In `steady_revenue_products(...)`, filters by per-record revenue `< 5000` instead of product revenue range `< 5000` | 2 | 0.6% | 2 | 0 |
-| Leaves the template placeholder `...` in `revenue_range_for_product(...)` (partial multi-function implementation) | 2 | 0.6% | 2 | 0 |
-| Sales-analysis helper logic is broadly incorrect across the required functions | 2 | 0.6% | 2 | 0 |
-| Only `total_revenue_in_region(...)` is mostly correct; later sales-analysis helpers are incorrect/incomplete | 2 | 0.6% | 2 | 0 |
-| In `revenue_range_for_product(...)`, sums product revenues instead of returning `max(revenue) - min(revenue)` | 1 | 0.3% | 1 | 0 |
-| In `total_revenue_in_region(...)`, compares the whole record to `region` instead of the record's `'region'` field | 1 | 0.3% | 1 | 0 |
-| Reads input interactively inside helper functions instead of using the provided `sales_data` parameters | 1 | 0.3% | 1 | 0 |
+| Pattern                                                                                                                           | Cluster count | % of cluster non-full | `ns_25t3_py14_1/11` | `ns_25t3_py14_2/12` |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Leaves template placeholders (`...`) in multiple required sales-analysis helper functions                                         |            82 |                 26.6% |                  82 |                   0 |
+| Syntax / non-parseable final submission                                                                                           |            56 |                 18.2% |                  56 |                   0 |
+| Early helpers are mostly correct, but `region_with_max_sales(...)` / `steady_revenue_products(...)` logic fails hidden cases      |            38 |                 12.3% |                  38 |                   0 |
+| Runtime NameError from undefined variables/accumulators in sales-analysis helpers                                                 |            30 |                  9.7% |                  30 |                   0 |
+| Runtime TypeError from treating sales records/list containers as the wrong shape                                                  |            24 |                  7.8% |                  24 |                   0 |
+| Leaves the template placeholder `...` in `steady_revenue_products(...)` (partial multi-function implementation)                   |            13 |                  4.2% |                  13 |                   0 |
+| Runtime KeyError from wrong sales-record keys or fragile dictionary indexing                                                      |            12 |                  3.9% |                  12 |                   0 |
+| Uses the sample variable `sales` inside helper functions instead of `sales_data`                                                  |             9 |                  2.9% |                   9 |                   0 |
+| Hard-codes public sample outputs (`17000`, `5000`, `'R1'`, sample product set) instead of computing from `sales_data`             |             6 |                  1.9% |                   6 |                   0 |
+| Uses the sample variable `sales` inside helpers instead of the parameter `sales_data`                                             |             5 |                  1.6% |                   5 |                   0 |
+| Runtime AttributeError from list/dict API misuse in sales-analysis helpers                                                        |             4 |                  1.3% |                   4 |                   0 |
+| Leaves the template placeholder `...` in `region_with_max_sales(...)` (partial multi-function implementation)                     |             4 |                  1.3% |                   4 |                   0 |
+| Runtime ValueError from malformed aggregation / conversion logic in sales-analysis helpers                                        |             4 |                  1.3% |                   4 |                   0 |
+| Branch initialization bug in helper output variables before return                                                                |             4 |                  1.3% |                   4 |                   0 |
+| Most sales-analysis helpers work, but one hidden edge-case remains (commonly region tie-break aggregation or exact set semantics) |             3 |                  1.0% |                   3 |                   0 |
+| In `region_with_max_sales(...)`, compares individual records (or `revenue*quantity`) instead of aggregated totals per region      |             3 |                  1.0% |                   3 |                   0 |
+| In `steady_revenue_products(...)`, filters by per-record revenue `< 5000` instead of product revenue range `< 5000`               |             2 |                  0.6% |                   2 |                   0 |
+| Leaves the template placeholder `...` in `revenue_range_for_product(...)` (partial multi-function implementation)                 |             2 |                  0.6% |                   2 |                   0 |
+| Sales-analysis helper logic is broadly incorrect across the required functions                                                    |             2 |                  0.6% |                   2 |                   0 |
+| Only `total_revenue_in_region(...)` is mostly correct; later sales-analysis helpers are incorrect/incomplete                      |             2 |                  0.6% |                   2 |                   0 |
+| In `revenue_range_for_product(...)`, sums product revenues instead of returning `max(revenue) - min(revenue)`                     |             1 |                  0.3% |                   1 |                   0 |
+| In `total_revenue_in_region(...)`, compares the whole record to `region` instead of the record's `'region'` field                 |             1 |                  0.3% |                   1 |                   0 |
+| Reads input interactively inside helper functions instead of using the provided `sales_data` parameters                           |             1 |                  0.3% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -160,8 +160,8 @@ def total_revenue_in_region(sales_data: list, region: str) -> int:
     """Sum of revenue for the specified region."""
     tot_revenue = 0
     for product in sales_data:
-        if product["region"]==region:
-            tot_revenue+=product["revenue"]
+        if product["region"] == region:
+            tot_revenue += product["revenue"]
     return tot_revenue
 
 
@@ -171,9 +171,11 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
     max_revenue = -1
     min_revenue = -1
     for prod in sales_data:
-        if prod["product"]==product:
-            if max_revenue==-1:
+        if prod["product"] == product:
+            if max_revenue == -1:
                 max_revenue = prod["revenue"]
+
+
 # ...
 ```
 
@@ -191,21 +193,23 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
 ```python
 def total_revenue_in_region(sales_data: list, region: str) -> int:
     """Sum of revenue for the specified region."""
-    total=0
+    total = 0
     for record in sales_data:
-         if record ["region"]==region:
-             total +=record["revenue"]
+        if record["region"] == region:
+            total += record["revenue"]
     return total
+
 
 def revenue_range_for_product(sales_data: list, product: str) -> int:
     """Maximum revenue minus minimum revenue for the given product."""
     revenues = []
     for record in sales_data:
-        if record["product"]==product:
+        if record["product"] == product:
             revenues.append(record["revenue"])
     if not revenues:
         return 0
     return max(revenues) - min(revenues)
+
 
 # ...
 ```
@@ -225,13 +229,12 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
 def total_revenue_in_region(sales_data: list, region: str) -> int:
     c = 0
     q = int()
-    for i in range (len(sales_data)):
-        if sales_data[i]['region'] == region:
+    for i in range(len(sales_data)):
+        if sales_data[i]["region"] == region:
             q = 1
-            r = int(sales_data[i]['revenue']) * q
+            r = int(sales_data[i]["revenue"]) * q
             c = c + r
     return c
-
 
     """Sum of revenue for the specified region."""
     ...
@@ -240,6 +243,8 @@ def total_revenue_in_region(sales_data: list, region: str) -> int:
 def revenue_range_for_product(sales_data: list, product: str) -> int:
     m = 0
     ma = 0
+
+
 # ...
 ```
 
@@ -570,6 +575,8 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
 def region_with_max_sales(sales_data: list) -> str:
     """Region with highest total revenue; ties broken by total quantity_sold."""
     region_data = {}
+
+
 # ...
 ```
 
@@ -622,9 +629,10 @@ def total_revenue_in_region(sales_data: list, region: str) -> int:
     """Sum of revenue for the specified region."""
     total = 0
     for i in sales_data:
-        if i['region']==region:
-            total = total + i['revenue']
+        if i["region"] == region:
+            total = total + i["revenue"]
     return total
+
 
 def revenue_range_for_product(sales_data: list, product: str) -> int:
     """Maximum revenue minus minimum revenue for the given product."""
@@ -632,10 +640,12 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
     max = 0
     min = 9999999999999999
     for i in sales_data:
-        if i['product']==product:
-            sale = sale + [i['revenue']]
+        if i["product"] == product:
+            sale = sale + [i["revenue"]]
     if len(sale) == 0 or len(sale) == 1:
         return 0
+
+
 # ...
 ```
 
@@ -686,22 +696,24 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
 ```python
 def total_revenue_in_region(sales_data: list, region: str) -> int:
     """Sum of revenue for the specified region."""
-    return(17000)
-    return(0)
+    return 17000
+    return 0
+
+
 def revenue_range_for_product(sales_data: list, product: str) -> int:
     """Maximum revenue minus minimum revenue for the given product."""
-    return(5000)
+    return 5000
 
 
 def region_with_max_sales(sales_data: list) -> str:
     """Region with highest total revenue; ties broken by total quantity_sold."""
-    return('R1')
+    return "R1"
 
 
 def steady_revenue_products(sales_data: list) -> list:
     """Products whose revenue range is < 5000, sorted alphabetically."""
-    dict={'Camera','Laptop','Phone','Tablet'}
-    return(dict)
+    dict = {"Camera", "Laptop", "Phone", "Tablet"}
+    return dict
 ```
 
 ### Only `total_revenue_in_region(...)` is mostly correct; later sales-analysis helpers are incorrect/incomplete
@@ -734,6 +746,8 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
         r = i["revenue"]
         if i["product"] == product:
             total_revenue.append(r)
+
+
 # ...
 ```
 
@@ -750,18 +764,20 @@ def revenue_range_for_product(sales_data: list, product: str) -> int:
 
 ```python
 def total_revenue_in_region(sales_data: list, region: str) -> int:
-    return sum(record['revenue'] for record in sales_data if record['region']==region)
+    return sum(record["revenue"] for record in sales_data if record["region"] == region)
+
 
 def revenue_range_for_product(sales_data: list, product: str) -> int:
-    return sum(record['revenue'] for record in sales_data if record['product']==product)
+    return sum(record["revenue"] for record in sales_data if record["product"] == product)
     if not revenue:
         return 0
-    if len(revenue)==1:
+    if len(revenue) == 1:
         return 0
-    return max(revenue)-min(revenue)
+    return max(revenue) - min(revenue)
+
+
 def region_with_max_sales(sales_data: list) -> str:
     """Region with highest total revenue; ties broken by total quantity_sold."""
-
 
 
 def steady_revenue_products(sales_data: list) -> list:
@@ -831,5 +847,7 @@ def region_with_max_sales(sales_data: list) -> str:
 
 def steady_revenue_products(sales_data: list) -> list:
     """Products whose revenue range is < 5000, sorted alphabetically."""
+
+
 # ...
 ```

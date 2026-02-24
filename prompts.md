@@ -867,8 +867,10 @@ For each question, using the transitive reduction from Step 2:
 
 1. **Keep** the minimal non-redundant test case chain (the items that add genuinely new information).
 2. **Replace** redundant test cases with cases at deliberately different difficulty levels:
-  - At least one **warm-up case** that tests the simplest possible input (single-element list, trivial arithmetic, basic happy path). This directly addresses low-ability blindness — students who handle the basic case get credit.
-  - At least one **stretch case** that tests a non-obvious edge (empty input, negative numbers, very large input, boundary conditions).
+
+- At least one **warm-up case** that tests the simplest possible input (single-element list, trivial arithmetic, basic happy path). This directly addresses low-ability blindness — students who handle the basic case get credit.
+- At least one **stretch case** that tests a non-obvious edge (empty input, negative numbers, very large input, boundary conditions).
+
 3. **Target**: b2 - b1 > 0.5 for redesigned questions, meaning the "some tests passed" and "all tests passed" categories reflect a genuine ability difference.
 
 High-priority targets:
@@ -940,9 +942,11 @@ For students who took both waves (\~4,290 in 25t1, \~2,933 in 25t2, \~2,682 in 2
 1. **Rank-based comparison.** For students in both waves, compute their rank within their wave's score distribution. Compare Wave 1 rank to Wave 2 rank. Students who improve in relative rank are learning.
 2. **Category-based comparison.** Using the GRM categories (0 = no tests passed, 1 = some, 2 = all), compute the fraction of students who improve, stay the same, or decline from Wave 1 to Wave 2\. Weight by question count (students attempt \~7 questions per wave). This is coarse but robust.
 3. **Archetype shift analysis.** For students in both waves, compare their primary archetype in Wave 1 vs. Wave 2:
-  - Do "thrashers" in Wave 1 become "steady builders" or "incremental debuggers" in Wave 2?
-  - Do "skeleton-only" students in Wave 1 show any engagement improvement in Wave 2?
-  - Do "regression" students in Wave 1 learn to maintain working code in Wave 2?
+
+- Do "thrashers" in Wave 1 become "steady builders" or "incremental debuggers" in Wave 2?
+- Do "skeleton-only" students in Wave 1 show any engagement improvement in Wave 2?
+- Do "regression" students in Wave 1 learn to maintain working code in Wave 2?
+
 4. **State-transition improvement.** Compare the student's dominant state in Wave 1 (what state they spent the most test\_runs in) to their dominant state in Wave 2\. A shift from dominant-S2 to dominant-S3 or S4 is progress even if the final score doesn't change much.
 
 **8b. Cross-term analysis for repeat students (paired comparisons).**
@@ -950,14 +954,18 @@ For students who took both waves (\~4,290 in 25t1, \~2,933 in 25t2, \~2,682 in 2
 For the 2,010 students in t1∩t2 and 1,367 in t2∩t3 (students who failed the earlier term and are retaking):
 
 1. **Error profile matching.** Compare each student's error taxonomy (from Step 3) in Term N to Term N+1:
-  - If they failed on runtime errors (TypeError, NameError) in t1, do the same error types appear in t2?
-  - If they were syntax-gated in t1, are they still syntax-gated in t2? Or have they shifted to a different failure mode (logic error, edge case)?
-  - Shifting from syntax failure to logic failure is _progress_ — even if the score is still low.
+
+- If they failed on runtime errors (TypeError, NameError) in t1, do the same error types appear in t2?
+- If they were syntax-gated in t1, are they still syntax-gated in t2? Or have they shifted to a different failure mode (logic error, edge case)?
+- Shifting from syntax failure to logic failure is _progress_ — even if the score is still low.
+
 2. **Archetype stability.** Same as 8a.3 but across terms. Does the \~35-day inter-term gap (plus additional instruction) change student process behaviour?
 3. **Tree-sitter structural progression.** Compare the structural inventory of each student's code across terms:
-  - In t1, did they ever use for-loops? In t2, do they use for-loops more consistently?
-  - In t1, did they ever use functions? In t2, are they decomposing problems into functions?
-  - Use tree-sitter construct timeline data from Step 5.
+
+- In t1, did they ever use for-loops? In t2, do they use for-loops more consistently?
+- In t1, did they ever use functions? In t2, are they decomposing problems into functions?
+- Use tree-sitter construct timeline data from Step 5.
+
 4. **S2 escape rate.** For students who were predominantly in S2 (parseable, zero tests) in Term N, what fraction escape to S3 or S4 in Term N+1? This directly measures whether inter-term remediation is addressing the largest bottleneck.
 
 **8c. The 503 all-three-terms students.**
@@ -965,9 +973,11 @@ For the 2,010 students in t1∩t2 and 1,367 in t2∩t3 (students who failed the 
 Dedicated analysis of the persistently struggling population:
 
 1. **Three-term error trajectory.** Plot each student's primary error category across t1 → t2 → t3\. Common patterns to look for:
-  - **Persistent S2**: Valid code, wrong output, all three terms. These students understand Python syntax but not algorithmic thinking.
-  - **Persistent syntax**: Can't write parseable code even after three attempts. Need fundamentally different instruction.
-  - **Cycling**: Syntax failure in t1, runtime error in t2, wrong output in t3\. This is progress even though they haven't passed.
+
+- **Persistent S2**: Valid code, wrong output, all three terms. These students understand Python syntax but not algorithmic thinking.
+- **Persistent syntax**: Can't write parseable code even after three attempts. Need fundamentally different instruction.
+- **Cycling**: Syntax failure in t1, runtime error in t2, wrong output in t3\. This is progress even though they haven't passed.
+
 2. **Archetype trajectory.** Three-term archetype sequence. Are they always "skeleton-only"? Always "thrasher"? Or do their process patterns shift?
 3. **What distinguishes eventual passers.** Among the 503, do any pass in t3? If so, what changed — in their error profile, archetype, structural complexity, or state transitions? These success stories should inform intervention design.
 
@@ -1434,3 +1444,25 @@ Write like Malcolm Gladwell. Visualize like the NYT graphics team. Think like a 
 Beauty and aesthetics are key.
 
 Create this as a single errors.html (under analysis/) that loads errors.json and renders the narrative.
+
+## Visualize report
+
+Using analysis/REPORT.md using any supporting material you need into a **Narrative-driven Data Story** that synthesizes the findings from the report.
+
+The objective is to help the reader understand how the exams are structured & organized, what questions look like, how students perform, etc. - effectively giving an outsider a perspective of the entire Python OPPE examination infrastructure.
+
+Write like Malcolm Gladwell. Visualize like the NYT graphics team. Think like a detective who must defend findings under scrutiny.
+
+- **Compelling hook**: Start with a human angle, tension, or mystery that draws readers in
+- **Story arc**: Build the narrative through discovery, revealing insights progressively
+- **Integrated visualizations**: Beautiful, **interactive** charts that are revelatory and advance the story (not decorative)
+- **Link for context** EVERYWHERE possible. For non-HTML content (e.g. code, configurations, images), consider popups with captions (syntax-highlighted for text files). Re-use popup code similar entities for consistency and efficiency. Wherever possible, show examples of actual problem statements, student solutions, test cases, etc. as code as popups. Weave it into the narrative in the few key places where it adds the most value.
+- **Concrete examples**: Make abstract patterns tangible through specific cases
+- **Evidence woven in**: Data points, statistics, and supporting details flow naturally within the prose
+- **"Wait, really?" moments**: Position surprising findings for maximum impact
+- **So what?**: Clear implications and actions embedded in the narrative
+- **Honest caveats**: Acknowledge limitations without undermining the story
+
+Beauty and aesthetics are key.
+
+Create this as a single report.html (under analysis/) that loads required files and renders the narrative.

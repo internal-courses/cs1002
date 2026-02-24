@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_1/6` (canonical) | 525 | 471 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_1/6` (canonical) |              525 |      471 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_1/6` | 525 | 54 | 471 | 393 | 78 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_1/6` |              525 |        54 |      471 |                393 |                     78 |
 
 ## Private Case Structure
 
@@ -44,33 +44,33 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_1/6` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 78 | 16.6% | 78 |
-| Parses only `+` forms (or mishandles `-`), causing `ValueError` on subtraction/negative cases | 65 | 13.8% | 65 |
-| Runtime ValueError | 33 | 7.0% | 33 |
-| Runtime NameError from undefined parsed variables/intermediates in equation-solving logic | 33 | 7.0% | 33 |
-| Converts a missing/implied coefficient to `int(...)` (e.g., `x + b = c`), causing `ValueError` | 30 | 6.4% | 30 |
-| Returns constant sample answers (`3.0`/`4.0`) instead of solving the given equation | 29 | 6.2% | 29 |
-| Fixed-position parser fails on hidden spacing/sign/multi-digit formats (`ValueError`) | 26 | 5.5% | 26 |
-| Runtime TypeError | 25 | 5.3% | 25 |
-| No return / implicit `None` | 24 | 5.1% | 24 |
-| Runtime error (parseable final submission) | 20 | 4.2% | 20 |
-| Equation parsing/solving logic is broadly incorrect across hidden test formats | 19 | 4.0% | 19 |
-| Reads `input()` inside function-type question (EOF under evaluator `solve_for_x(...)` calls) | 17 | 3.6% | 17 |
-| Sample-driven or fixed-format parser that only handles a narrow subset of equation forms | 17 | 3.6% | 17 |
-| Fixed-index / fragile split parsing causes `IndexError` on hidden equation formats | 10 | 2.1% | 10 |
-| Calls `solve_for_x(...)` from inside `solve_for_x` using sample examples (infinite recursion) | 8 | 1.7% | 8 |
-| Parses equations primarily via `'+'` splits and fails robust subtraction/negative-term handling | 7 | 1.5% | 7 |
-| Hard-codes public sample equations/answers instead of parsing arbitrary equations | 6 | 1.3% | 6 |
-| Uses fixed character positions to parse `a`, `b`, and `c`, which fails on hidden formats | 6 | 1.3% | 6 |
-| Runtime AttributeError | 5 | 1.1% | 5 |
-| Runtime IndexError | 5 | 1.1% | 5 |
-| Time Limit Exceeded | 4 | 0.8% | 4 |
-| Not able to run | 1 | 0.2% | 1 |
-| Uses floor division (`//`) when solving for `x`, truncating results incorrectly | 1 | 0.2% | 1 |
-| Partially correct parser with hidden edge-case failures (spacing/sign/implied coefficient) | 1 | 0.2% | 1 |
-| Partially correct parser: basic forms work, but sign/spacing/implied-coefficient hidden cases fail | 1 | 0.2% | 1 |
+| Pattern                                                                                            | Cluster count | % of cluster non-full | `ns_25t2_py13_1/6` |
+| -------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                            |            78 |                 16.6% |                 78 |
+| Parses only `+` forms (or mishandles `-`), causing `ValueError` on subtraction/negative cases      |            65 |                 13.8% |                 65 |
+| Runtime ValueError                                                                                 |            33 |                  7.0% |                 33 |
+| Runtime NameError from undefined parsed variables/intermediates in equation-solving logic          |            33 |                  7.0% |                 33 |
+| Converts a missing/implied coefficient to `int(...)` (e.g., `x + b = c`), causing `ValueError`     |            30 |                  6.4% |                 30 |
+| Returns constant sample answers (`3.0`/`4.0`) instead of solving the given equation                |            29 |                  6.2% |                 29 |
+| Fixed-position parser fails on hidden spacing/sign/multi-digit formats (`ValueError`)              |            26 |                  5.5% |                 26 |
+| Runtime TypeError                                                                                  |            25 |                  5.3% |                 25 |
+| No return / implicit `None`                                                                        |            24 |                  5.1% |                 24 |
+| Runtime error (parseable final submission)                                                         |            20 |                  4.2% |                 20 |
+| Equation parsing/solving logic is broadly incorrect across hidden test formats                     |            19 |                  4.0% |                 19 |
+| Reads `input()` inside function-type question (EOF under evaluator `solve_for_x(...)` calls)       |            17 |                  3.6% |                 17 |
+| Sample-driven or fixed-format parser that only handles a narrow subset of equation forms           |            17 |                  3.6% |                 17 |
+| Fixed-index / fragile split parsing causes `IndexError` on hidden equation formats                 |            10 |                  2.1% |                 10 |
+| Calls `solve_for_x(...)` from inside `solve_for_x` using sample examples (infinite recursion)      |             8 |                  1.7% |                  8 |
+| Parses equations primarily via `'+'` splits and fails robust subtraction/negative-term handling    |             7 |                  1.5% |                  7 |
+| Hard-codes public sample equations/answers instead of parsing arbitrary equations                  |             6 |                  1.3% |                  6 |
+| Uses fixed character positions to parse `a`, `b`, and `c`, which fails on hidden formats           |             6 |                  1.3% |                  6 |
+| Runtime AttributeError                                                                             |             5 |                  1.1% |                  5 |
+| Runtime IndexError                                                                                 |             5 |                  1.1% |                  5 |
+| Time Limit Exceeded                                                                                |             4 |                  0.8% |                  4 |
+| Not able to run                                                                                    |             1 |                  0.2% |                  1 |
+| Uses floor division (`//`) when solving for `x`, truncating results incorrectly                    |             1 |                  0.2% |                  1 |
+| Partially correct parser with hidden edge-case failures (spacing/sign/implied coefficient)         |             1 |                  0.2% |                  1 |
+| Partially correct parser: basic forms work, but sign/spacing/implied-coefficient hidden cases fail |             1 |                  0.2% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -539,16 +539,16 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `d282de2807ad4c8380e0a570512bb723`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if solve_for_x("2x +3 = 11"):
-        print(4.0)
-    if solve_for_x("5x -2 =13"):
-        print(3.0)
-    if solve_for_x("-3x +10=1"):
-        print(3.0)
-    if solve_for_x("x + 2 = 5"):
-        print(3.0)
-    if solve_for_x("2x=6"):
-        print(3.0)
+if solve_for_x("2x +3 = 11"):
+    print(4.0)
+if solve_for_x("5x -2 =13"):
+    print(3.0)
+if solve_for_x("-3x +10=1"):
+    print(3.0)
+if solve_for_x("x + 2 = 5"):
+    print(3.0)
+if solve_for_x("2x=6"):
+    print(3.0)
 ```
 
 ### Parses equations primarily via `'+'` splits and fails robust subtraction/negative-term handling
@@ -594,14 +594,14 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `a855a71294774a2a8051744fcfc41fb2`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    ...
-    '''if equation=='ax + b = c' :
-       return (float(equation[8:])-float(equation[5]) / float(equation[0]))
-    elif equation=='ax -b = c':
-        return (float(equation[8:])-float(equation[5]) / float(equation[0]))
-    elif equation=='-3x + 10 = 1':
-        return (float(equation[8:])-float(equation[5]) / float(equation[0]))'''
-    return 3.0
+...
+"""if equation=='ax + b = c' :
+   return (float(equation[8:])-float(equation[5]) / float(equation[0]))
+elif equation=='ax -b = c':
+    return (float(equation[8:])-float(equation[5]) / float(equation[0]))
+elif equation=='-3x + 10 = 1':
+    return (float(equation[8:])-float(equation[5]) / float(equation[0]))"""
+return 3.0
 ```
 
 ### Uses fixed character positions to parse `a`, `b`, and `c`, which fails on hidden formats
@@ -615,24 +615,24 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `fa7fb11db3234e0ebc924b9eb7e8636e`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    sum=0
-    total=0
-    if(equation[0]!='-'):
-        if(equation[3]=='+'):
-            sum=int(equation[-1:-3:-1])-int(equation[5])
-            total=sum//(int(equation[0]))
-    #elif(equation[0]!='-'):
-        elif(equation[3]=='-'):
-            sum=int(equation[-2::])+int(equation[5])
-            total=sum//(int(equation[0]))
-    else:
-        if(equation[4]=='+'):
-            sum=int(equation[-1::])-int(equation[6:8:])
-            total=-(sum//(int(equation[1])))
-        elif(equation[4]=='-'):
-            sum=int(equation[-1::])-int(equation[6:8:])
-            total=-(sum//(int(equation[1])))
-    return float(total)
+sum = 0
+total = 0
+if equation[0] != "-":
+    if equation[3] == "+":
+        sum = int(equation[-1:-3:-1]) - int(equation[5])
+        total = sum // (int(equation[0]))
+    # elif(equation[0]!='-'):
+    elif equation[3] == "-":
+        sum = int(equation[-2::]) + int(equation[5])
+        total = sum // (int(equation[0]))
+else:
+    if equation[4] == "+":
+        sum = int(equation[-1::]) - int(equation[6:8:])
+        total = -(sum // (int(equation[1])))
+    elif equation[4] == "-":
+        sum = int(equation[-1::]) - int(equation[6:8:])
+        total = -(sum // (int(equation[1])))
+return float(total)
 ```
 
 ### Runtime AttributeError
@@ -647,11 +647,11 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `139005fc975e48c9ae8439c4e5528b1a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    coeff = (equation.split('x'))
-    coefff = (coeff.split('+'))
-    coeffff = (coefff.split('='))
-    lst = [coefff]
-    return((coeffff-coefff)/coeff)
+coeff = equation.split("x")
+coefff = coeff.split("+")
+coeffff = coefff.split("=")
+lst = [coefff]
+return (coeffff - coefff) / coeff
 ```
 
 ### Runtime IndexError
@@ -730,7 +730,7 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `3162f85245d543d4929e6ab8de2e78bc`, summary `Not able to run`, score `0`, vector `000`
 
 ```python
-    ...
+...
 ```
 
 ### Uses floor division (`//`) when solving for `x`, truncating results incorrectly
@@ -744,14 +744,15 @@ def solve_for_x(equation: str) -> float:
   - Variant `ns_25t2_py13_1/6`, Student ID `4b7169105f504bf18254cd92756e2deb`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    import math
-    equation=str(input)
-    c=11 or 13 or 1
-    a=2 or 5 or -2
-    b=3 or -3 or 10
-    for i in equation:
-        x=(c-b)//a
-    return float(x)
+import math
+
+equation = str(input)
+c = 11 or 13 or 1
+a = 2 or 5 or -2
+b = 3 or -3 or 10
+for i in equation:
+    x = (c - b) // a
+return float(x)
 ```
 
 ### Partially correct parser with hidden edge-case failures (spacing/sign/implied coefficient)

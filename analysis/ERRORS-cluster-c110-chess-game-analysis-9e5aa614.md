@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/12` (canonical) | 354 | 334 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/12` (canonical) |              354 |      334 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/12` | 354 | 20 | 334 | 285 | 49 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/12` |              354 |        20 |      334 |                285 |                     49 |
 
 ## Private Case Structure
 
@@ -44,31 +44,31 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/12` |
-| --- | ---: | ---: | ---: |
-| Leaves template placeholders (`...`) in multiple required chess-analysis helper functions | 221 | 66.2% | 221 |
-| Syntax / non-parseable final submission | 49 | 14.7% | 49 |
-| In `count_piece_moves(...)`, misclassifies queenside castling (`O-O-O`) as a `Queen` move | 9 | 2.7% | 9 |
-| Leaves the template placeholder `...` in `remaining_pieces(...)` (partial multi-function implementation) | 8 | 2.4% | 8 |
-| Runtime NameError from undefined helpers/maps/counters in chess-analysis functions | 8 | 2.4% | 8 |
-| Leaves the template placeholder `...` in `n_checks(...)` (partial multi-function implementation) | 5 | 1.5% | 5 |
-| Leaves the template placeholder `...` in `most_used_piece(...)` (partial multi-function implementation) | 5 | 1.5% | 5 |
-| Uses undefined globals like `piece_map` / `piece_values` in chess-analysis helpers | 3 | 0.9% | 3 |
-| Uses undefined move variables (`moves`, `move`) inside helper functions | 3 | 0.9% | 3 |
-| Partial chess-analysis implementation: `parse_moves`/basic helpers work, but later helper semantics fail on hidden SAN cases | 3 | 0.9% | 3 |
-| Runtime TypeError from wrong container/value types in chess helper computations | 3 | 0.9% | 3 |
-| In `parse_moves(...)`, strips move numbers but forgets to remove the trailing game result token (`1-0`/`0-1`/`1/2-1/2`) | 2 | 0.6% | 2 |
-| Recursive/self-calling helper (`get_n_moves`, etc.) without a terminating base case | 2 | 0.6% | 2 |
-| Chess-analysis helper logic is broadly incorrect across the required functions | 2 | 0.6% | 2 |
-| In `parse_moves(...)`, removes tokens while iterating, which skips SAN tokens and leaves move numbers/results behind | 2 | 0.6% | 2 |
-| Near-complete chess-analysis helpers, but hidden SAN edge cases fail (commonly result-token filtering, castling semantics, or tie-break/player-parity logic) | 2 | 0.6% | 2 |
-| Parses SAN by searching for `#`/`+` positions (`.index(...)`) and crashes when the symbol is absent | 1 | 0.3% | 1 |
-| Implements only a subset of the required chess-analysis helper functions | 1 | 0.3% | 1 |
-| In `remaining_pieces(...)`, counts captures without separating white/black moves by parity | 1 | 0.3% | 1 |
-| In `parse_moves(...)`, returns an undefined `moves` variable instead of parsed SAN tokens | 1 | 0.3% | 1 |
-| In `n_checks(...)`, counts checks across all moves instead of only the specified player's moves | 1 | 0.3% | 1 |
-| Runtime AttributeError from string/list/dict API misuse in chess helper logic | 1 | 0.3% | 1 |
-| Copies evaluator/sample games and checks into the submission instead of implementing general chess-analysis helpers | 1 | 0.3% | 1 |
+| Pattern                                                                                                                                                      | Cluster count | % of cluster non-full | `ns_25t2_py14_1/12` |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | ------------------: |
+| Leaves template placeholders (`...`) in multiple required chess-analysis helper functions                                                                    |           221 |                 66.2% |                 221 |
+| Syntax / non-parseable final submission                                                                                                                      |            49 |                 14.7% |                  49 |
+| In `count_piece_moves(...)`, misclassifies queenside castling (`O-O-O`) as a `Queen` move                                                                    |             9 |                  2.7% |                   9 |
+| Leaves the template placeholder `...` in `remaining_pieces(...)` (partial multi-function implementation)                                                     |             8 |                  2.4% |                   8 |
+| Runtime NameError from undefined helpers/maps/counters in chess-analysis functions                                                                           |             8 |                  2.4% |                   8 |
+| Leaves the template placeholder `...` in `n_checks(...)` (partial multi-function implementation)                                                             |             5 |                  1.5% |                   5 |
+| Leaves the template placeholder `...` in `most_used_piece(...)` (partial multi-function implementation)                                                      |             5 |                  1.5% |                   5 |
+| Uses undefined globals like `piece_map` / `piece_values` in chess-analysis helpers                                                                           |             3 |                  0.9% |                   3 |
+| Uses undefined move variables (`moves`, `move`) inside helper functions                                                                                      |             3 |                  0.9% |                   3 |
+| Partial chess-analysis implementation: `parse_moves`/basic helpers work, but later helper semantics fail on hidden SAN cases                                 |             3 |                  0.9% |                   3 |
+| Runtime TypeError from wrong container/value types in chess helper computations                                                                              |             3 |                  0.9% |                   3 |
+| In `parse_moves(...)`, strips move numbers but forgets to remove the trailing game result token (`1-0`/`0-1`/`1/2-1/2`)                                      |             2 |                  0.6% |                   2 |
+| Recursive/self-calling helper (`get_n_moves`, etc.) without a terminating base case                                                                          |             2 |                  0.6% |                   2 |
+| Chess-analysis helper logic is broadly incorrect across the required functions                                                                               |             2 |                  0.6% |                   2 |
+| In `parse_moves(...)`, removes tokens while iterating, which skips SAN tokens and leaves move numbers/results behind                                         |             2 |                  0.6% |                   2 |
+| Near-complete chess-analysis helpers, but hidden SAN edge cases fail (commonly result-token filtering, castling semantics, or tie-break/player-parity logic) |             2 |                  0.6% |                   2 |
+| Parses SAN by searching for `#`/`+` positions (`.index(...)`) and crashes when the symbol is absent                                                          |             1 |                  0.3% |                   1 |
+| Implements only a subset of the required chess-analysis helper functions                                                                                     |             1 |                  0.3% |                   1 |
+| In `remaining_pieces(...)`, counts captures without separating white/black moves by parity                                                                   |             1 |                  0.3% |                   1 |
+| In `parse_moves(...)`, returns an undefined `moves` variable instead of parsed SAN tokens                                                                    |             1 |                  0.3% |                   1 |
+| In `n_checks(...)`, counts checks across all moves instead of only the specified player's moves                                                              |             1 |                  0.3% |                   1 |
+| Runtime AttributeError from string/list/dict API misuse in chess helper logic                                                                                |             1 |                  0.3% |                   1 |
+| Copies evaluator/sample games and checks into the submission instead of implementing general chess-analysis helpers                                          |             1 |                  0.3% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -85,24 +85,28 @@ Residual `Other` after second-pass re-clustering: `0/334` (`0.0%`)
   - Variant `ns_25t2_py14_1/12`, Student ID `5f9297993822468abfc4c4d8d97ba86e`, summary `Wrong Answer`, score `83`, vector `111`
 
 ```python
-alphabets=['a','b','c','d','e','f','g','h','o','i','j','k','n','r','q','x']
+alphabets = ["a", "b", "c", "d", "e", "f", "g", "h", "o", "i", "j", "k", "n", "r", "q", "x"]
+
+
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    movess=game.split(" ")
-    finalmove=[]
+    movess = game.split(" ")
+    finalmove = []
     for move in movess:
         for char in move:
             if char.lower() in alphabets:
-                    finalmove.append(move)
-                    break
-    return (list(finalmove))
+                finalmove.append(move)
+                break
+    return list(finalmove)
     ...
 
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    movess=game.split(" ")
-    finalmove=[]
+    movess = game.split(" ")
+    finalmove = []
+
+
 # ...
 ```
 
@@ -168,6 +172,8 @@ def get_n_moves(game: str) -> int:
 
     # Filter out the move numbers and just count the actual moves (excluding periods)
     total_moves = len([move for move in moves if not move.endswith(".")])
+
+
 # ...
 ```
 
@@ -184,20 +190,20 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    l=game.split(" ")
-    for i in range(1,(len(l)//3)+1):
+    l = game.split(" ")
+    for i in range(1, (len(l) // 3) + 1):
         l.remove(f"{i}.")
     l.pop(-1)
     return l
 
+
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    l=game.split(" ")
-    for i in range(1,(len(l)//3)+1):
+    l = game.split(" ")
+    for i in range(1, (len(l) // 3) + 1):
         l.remove(f"{i}.")
 
-
-    return(len(l)-1)
+    return len(l) - 1
 
 
 # ...
@@ -280,11 +286,11 @@ def count_piece_moves(moves: list) -> dict:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    moves_list = game.split(' ')
+    moves_list = game.split(" ")
     for i in moves_list:
-        if i.endswith('.'):
+        if i.endswith("."):
             moves_list.remove(i)
-        if i == '1-0':
+        if i == "1-0":
             moves_list.remove(i)
 
     return moves_list
@@ -292,10 +298,12 @@ def parse_moves(game: str) -> list:
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    moves_list = game.split(' ')
+    moves_list = game.split(" ")
     for i in moves_list:
-        if i.endswith('.'):
+        if i.endswith("."):
             moves_list.remove(i)
+
+
 # ...
 ```
 
@@ -312,11 +320,12 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    game = re.sub(r'\d+\.', '',game).strip()
+    game = re.sub(r"\d+\.", "", game).strip()
     moves = game.split()
-    if moves[-1] in {"1-0","0-1","1/2-1/2"}:
+    if moves[-1] in {"1-0", "0-1", "1/2-1/2"}:
         moves.pop()
     return moves
+
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
@@ -328,6 +337,8 @@ def count_piece_moves(moves: list) -> dict:
 
     During castling a move is counted for both king and rook.
     """
+
+
 # ...
 ```
 
@@ -408,21 +419,22 @@ PIECE_VALUES = {
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    l=[]
-    game2=""
-    for i in range(len(game)-3):
-        if (game[i] in "1234567890" and game[i+1]==".") or game[i]==".":
+    l = []
+    game2 = ""
+    for i in range(len(game) - 3):
+        if (game[i] in "1234567890" and game[i + 1] == ".") or game[i] == ".":
             continue
         else:
-            game2+=game[i]
-    l=game2.split(" ")
-    l2=[]
+            game2 += game[i]
+    l = game2.split(" ")
+    l2 = []
     for ele in l:
-        if ele=="" or ele==' ' or ele in '123456789':
+        if ele == "" or ele == " " or ele in "123456789":
             continue
         else:
             l2.append(ele)
     return l2
+
 
 # ...
 ```
@@ -440,22 +452,22 @@ def parse_moves(game: str) -> list:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    s=game
-    l=s.split(' ')
-    l2=[]
+    s = game
+    l = s.split(" ")
+    l2 = []
     for x in l:
-        if(not('.' in x)):
+        if not ("." in x):
             l2.append(x)
 
-    return l2[:len(l2)-1:]
-
-
+    return l2[: len(l2) - 1 :]
 
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    s=game
-    l=s.split(' ')
+    s = game
+    l = s.split(" ")
+
+
 # ...
 ```
 
@@ -472,14 +484,81 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    return['d4', 'd5', 'c4', 'Nf6', 'cxd5', 'Nxd5', 'Nf3', 'Be6', 'e4', 'Nb6', 'Nc3', 'f5', 'Ng5', 'Qd7', 'Nb5', 'c6', 'Nxe6', 'Qxe6', 'Nc7+', 'Kd8', 'Nxe6+', 'Ke8', 'Nc7+', 'Kd8', 'Bf4', 'N8d7', 'd5', 'e6', 'dxe6', 'Bb4+', 'Ke2', 'Rc8', 'exd7', 'Nxd7', 'Ne6+', 'Ke7', 'Nxg7', 'Rcg8', 'Bd6+', 'Bxd6', 'Nxf5+', 'Ke6', 'Qxd6+', 'Kf7', 'Qxd7+', 'Kf8', 'Qe7#']
-['e4', 'e5', 'Nf3', 'Nc6', 'Bb5', 'a6', 'Ba4', 'b5', 'Bb3', 'Nd4', 'Nxd4', 'exd4', 'O-O', 'Bb7', 'Qf3', 'Bc5', 'Qxf7#']
+    return [
+        "d4",
+        "d5",
+        "c4",
+        "Nf6",
+        "cxd5",
+        "Nxd5",
+        "Nf3",
+        "Be6",
+        "e4",
+        "Nb6",
+        "Nc3",
+        "f5",
+        "Ng5",
+        "Qd7",
+        "Nb5",
+        "c6",
+        "Nxe6",
+        "Qxe6",
+        "Nc7+",
+        "Kd8",
+        "Nxe6+",
+        "Ke8",
+        "Nc7+",
+        "Kd8",
+        "Bf4",
+        "N8d7",
+        "d5",
+        "e6",
+        "dxe6",
+        "Bb4+",
+        "Ke2",
+        "Rc8",
+        "exd7",
+        "Nxd7",
+        "Ne6+",
+        "Ke7",
+        "Nxg7",
+        "Rcg8",
+        "Bd6+",
+        "Bxd6",
+        "Nxf5+",
+        "Ke6",
+        "Qxd6+",
+        "Kf7",
+        "Qxd7+",
+        "Kf8",
+        "Qe7#",
+    ]
 
+
+[
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "Bb5",
+    "a6",
+    "Ba4",
+    "b5",
+    "Bb3",
+    "Nd4",
+    "Nxd4",
+    "exd4",
+    "O-O",
+    "Bb7",
+    "Qf3",
+    "Bc5",
+    "Qxf7#",
+]
 
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    return (47 and 17)
+    return 47 and 17
 
 
 def count_piece_moves(moves: list) -> dict:
@@ -487,6 +566,7 @@ def count_piece_moves(moves: list) -> dict:
 
     During castling a move is counted for both king and rook.
     """
+
 
 # ...
 ```
@@ -547,11 +627,13 @@ def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
     turns = 0
     lists = game.split(" ")
-    movesy = len(lists)//3
-    if len(lists)%3==0:
-        return movesy*2-1
+    movesy = len(lists) // 3
+    if len(lists) % 3 == 0:
+        return movesy * 2 - 1
     else:
-        return movesy*2
+        return movesy * 2
+
+
 # ...
 ```
 
@@ -568,12 +650,12 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    indexes=([str(i)+'.' for i in range(100)])
-    move=game.split()
-    ans=[]
+    indexes = [str(i) + "." for i in range(100)]
+    move = game.split()
+    ans = []
     for s in move:
         if s in indexes:
-           pass
+            pass
         else:
             ans.append(s)
 
@@ -583,6 +665,7 @@ def parse_moves(game: str) -> list:
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
     return len(parse_moves(game))
+
 
 # ...
 ```
@@ -600,21 +683,21 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    last = game.index('#')
-    first = game.index('.')
-    s = game[first+1: last+1]
+    last = game.index("#")
+    first = game.index(".")
+    s = game[first + 1 : last + 1]
     s = s.strip()
-    lst = s.split('.')
+    lst = s.split(".")
 
     new_list = []
     for move in lst:
-        m = move.strip().split(' ')
+        m = move.strip().split(" ")
         new_list.append(m[0].strip())
-        if len(m)>2:
-
+        if len(m) > 2:
             new_list.append(m[1].strip())
 
-    return (new_list)
+    return new_list
+
 
 # ...
 ```
@@ -632,14 +715,15 @@ def parse_moves(game: str) -> list:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    a=game.split()
-    b=[]
-    for i in range(0,len(a)-2,3):
-        b=b+[a[i+1]]+[a[i+2]]
+    a = game.split()
+    b = []
+    for i in range(0, len(a) - 2, 3):
+        b = b + [a[i + 1]] + [a[i + 2]]
     b.reverse()
-    b=b[1:]
+    b = b[1:]
     b.reverse()
     return b
+
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
@@ -647,7 +731,9 @@ def get_n_moves(game: str) -> int:
 
 
 def count_piece_moves(moves: list) -> dict:
-    piece_counts = {'King': 0, 'Queen': 0, 'Rook': 0, 'Bishop': 0, 'Knight': 0, 'Pawn': 0}
+    piece_counts = {"King": 0, "Queen": 0, "Rook": 0, "Bishop": 0, "Knight": 0, "Pawn": 0}
+
+
 # ...
 ```
 
@@ -696,15 +782,15 @@ def count_piece_moves(moves: list) -> dict:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    game=game.replace('\n','').replace('\r','')
-    tokens=game.split()
-    moves=[]
+    game = game.replace("\n", "").replace("\r", "")
+    tokens = game.split()
+    moves = []
     for token in tokens:
-        if(token[0].isdigit() and token[-1]=='.'):
+        if token[0].isdigit() and token[-1] == ".":
             continue
-        if(token[0].isdigit() and token.endswith('.')):
+        if token[0].isdigit() and token.endswith("."):
             continue
-        if(token in ['1-0','0-1','1/2-1/2']):
+        if token in ["1-0", "0-1", "1/2-1/2"]:
             continue
         moves.append(token)
     return moves
@@ -712,6 +798,8 @@ def parse_moves(game: str) -> list:
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
+
+
 # ...
 ```
 
@@ -728,10 +816,10 @@ def get_n_moves(game: str) -> int:
 ```python
 def parse_moves(game: str) -> list:
     """Returns a list with alternate white and black moves."""
-    result=[]
-    moves=game.split()
+    result = []
+    moves = game.split()
     for i in range(len(moves)):
-        if i==len(moves)-1:
+        if i == len(moves) - 1:
             return result
         if moves[i].endswith("."):
             continue
@@ -742,8 +830,10 @@ def parse_moves(game: str) -> list:
 
 def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
-    result1=parse_moves(game)
+    result1 = parse_moves(game)
     return len(result1)
+
+
 # ...
 ```
 
@@ -765,7 +855,7 @@ def parse_moves(game: str) -> list:
     for token in tokens:
         if "." in token:
             continue
-        if token in {'1-0', '0-1', '1/2-1/2'}:
+        if token in {"1-0", "0-1", "1/2-1/2"}:
             continue
         moves.append(token)
     return moves
@@ -775,6 +865,7 @@ def get_n_moves(game: str) -> int:
     """Returns the total number of moves played in the game."""
     moves = parse_moves(game)
     return len(moves)
+
 
 # ...
 ```

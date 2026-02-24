@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py22/7` (canonical) | 432 | 111 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py22/7` (canonical) |              432 |      111 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py22/7` | 432 | 321 | 111 | 94 | 17 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py22/7` |              432 |       321 |      111 |                 94 |                     17 |
 
 ## Private Case Structure
 
@@ -45,28 +45,28 @@ Private-case vectors in this report are 4-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py22/7` |
-| --- | ---: | ---: | ---: |
-| Runtime TypeError | 21 | 18.9% | 21 |
-| No return / implicit `None` | 18 | 16.2% | 18 |
-| Syntax / non-parseable final submission | 17 | 15.3% | 17 |
-| Incorrect tail-squaring or in-place modification logic (broad wrong-answer failure) | 11 | 9.9% | 11 |
-| Computes/returns a transformed tail slice but does not write it back to `l` in place | 9 | 8.1% | 9 |
-| Runtime NameError from undefined temporary variables in tail-squaring logic | 9 | 8.1% | 9 |
-| Runtime IndexError | 5 | 4.5% | 5 |
-| Returns the input list unchanged (does not square the last three elements) | 5 | 4.5% | 5 |
-| Runtime error (parseable final submission) | 3 | 2.7% | 3 |
-| Runtime ValueError | 2 | 1.8% | 2 |
-| Fixed-position indexing assumes longer lists and crashes on hidden shorter-list cases | 2 | 1.8% | 2 |
-| Uses list values like strings/scalars (e.g., `(l[-3:])**2` or `l.replace(...)`) while squaring the tail | 1 | 0.9% | 1 |
-| Uses an empty negative-step range (`range(-1, -4)`) so the tail-squaring loop never runs | 1 | 0.9% | 1 |
-| Returns an intermediate value/list instead of mutating `l` in place as required | 1 | 0.9% | 1 |
-| Removes and rebuilds the tail via `pop/remove` + append/insert, causing order/element mistakes | 1 | 0.9% | 1 |
-| Runtime AttributeError | 1 | 0.9% | 1 |
-| Hard-codes public sample outputs/lists instead of squaring the last three elements generically | 1 | 0.9% | 1 |
-| Copies evaluator/sample calls into `square_last_three(...)`, causing recursive/self-test execution | 1 | 0.9% | 1 |
-| Rebuilds/reassigns `l` (or returns a new list) instead of modifying the original list in place | 1 | 0.9% | 1 |
-| Length-conditional partial implementation: passes some list sizes but fails hidden size/edge variants | 1 | 0.9% | 1 |
+| Pattern                                                                                                 | Cluster count | % of cluster non-full | `ns_25t3_py22/7` |
+| ------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Runtime TypeError                                                                                       |            21 |                 18.9% |               21 |
+| No return / implicit `None`                                                                             |            18 |                 16.2% |               18 |
+| Syntax / non-parseable final submission                                                                 |            17 |                 15.3% |               17 |
+| Incorrect tail-squaring or in-place modification logic (broad wrong-answer failure)                     |            11 |                  9.9% |               11 |
+| Computes/returns a transformed tail slice but does not write it back to `l` in place                    |             9 |                  8.1% |                9 |
+| Runtime NameError from undefined temporary variables in tail-squaring logic                             |             9 |                  8.1% |                9 |
+| Runtime IndexError                                                                                      |             5 |                  4.5% |                5 |
+| Returns the input list unchanged (does not square the last three elements)                              |             5 |                  4.5% |                5 |
+| Runtime error (parseable final submission)                                                              |             3 |                  2.7% |                3 |
+| Runtime ValueError                                                                                      |             2 |                  1.8% |                2 |
+| Fixed-position indexing assumes longer lists and crashes on hidden shorter-list cases                   |             2 |                  1.8% |                2 |
+| Uses list values like strings/scalars (e.g., `(l[-3:])**2` or `l.replace(...)`) while squaring the tail |             1 |                  0.9% |                1 |
+| Uses an empty negative-step range (`range(-1, -4)`) so the tail-squaring loop never runs                |             1 |                  0.9% |                1 |
+| Returns an intermediate value/list instead of mutating `l` in place as required                         |             1 |                  0.9% |                1 |
+| Removes and rebuilds the tail via `pop/remove` + append/insert, causing order/element mistakes          |             1 |                  0.9% |                1 |
+| Runtime AttributeError                                                                                  |             1 |                  0.9% |                1 |
+| Hard-codes public sample outputs/lists instead of squaring the last three elements generically          |             1 |                  0.9% |                1 |
+| Copies evaluator/sample calls into `square_last_three(...)`, causing recursive/self-test execution      |             1 |                  0.9% |                1 |
+| Rebuilds/reassigns `l` (or returns a new list) instead of modifying the original list in place          |             1 |                  0.9% |                1 |
+| Length-conditional partial implementation: passes some list sizes but fails hidden size/edge variants   |             1 |                  0.9% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -116,20 +116,22 @@ Residual `Other` after second-pass re-clustering: `0/111` (`0.0%`)
 
 ```python
 def square_last_three(l: list) -> None:
-    '''
+    """
     Given a list of integers, square the last three numbers in the list.
     Arguments:
     l: list - a list of integers.
 
     Return: None - the list is modified in place.
-    '''
+    """
+
+
 l = [4, 5, 6, 7, 8]
 
 for i in range(-3, 0):
     l[i] = l[i] ** 2
 
 print(l)
-l =[10, 20, 30, 40]
+l = [10, 20, 30, 40]
 for i in range(-3, 0):
     l[i] = l[i] ** 2
 print(l)
@@ -234,7 +236,7 @@ def square_last_three(l: list) -> None:
   - Variant `ns_25t3_py22/7`, Student ID `eb5f9f921c2b4592ac6359e22592491e`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-'''def square_last_three(l: list) -> None:
+"""def square_last_three(l: list) -> None:
 
     Given a list of integers, square the last three numbers in the list.
 
@@ -245,8 +247,9 @@ def square_last_three(l: list) -> None:
 
 l = int(input('enter a number: '))
 lambda x = square_last_three(x),l [4,5,36,49,64]
-print(lambda)'''
-print ("[4, 5, 36, 49, 64]")
+print(lambda)"""
+
+print("[4, 5, 36, 49, 64]")
 ```
 
 ### Runtime IndexError
@@ -261,16 +264,16 @@ print ("[4, 5, 36, 49, 64]")
   - Variant `ns_25t3_py22/7`, Student ID `1234a1eca23e4a898de3cd27438e3d58`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    a = l[-1]**2
-    b = l[-2]**2
-    c = l[-3]**2
-    l.remove(l[-1])
-    l.remove(l[-2])
-    l.remove(l[-3])
-    l.append(c)
-    l.append(b)
-    l.append(a)
-    return l
+a = l[-1] ** 2
+b = l[-2] ** 2
+c = l[-3] ** 2
+l.remove(l[-1])
+l.remove(l[-2])
+l.remove(l[-3])
+l.append(c)
+l.append(b)
+l.append(a)
+return l
 ```
 
 ### Returns the input list unchanged (does not square the last three elements)
@@ -284,14 +287,14 @@ print ("[4, 5, 36, 49, 64]")
   - Variant `ns_25t3_py22/7`, Student ID `1f6f8c0f60e644019e19bd10db0b414f`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    l=[]
-    a1=len(l)-1*len(l)-1
-    a2=len(l)-2*len(l)-2
-    a3=len(l)-3*len(l)-3
-    l.append(a1)
-    l.append(a2)
-    l.append(a3)
-    return l
+l = []
+a1 = len(l) - 1 * len(l) - 1
+a2 = len(l) - 2 * len(l) - 2
+a3 = len(l) - 3 * len(l) - 3
+l.append(a1)
+l.append(a2)
+l.append(a3)
+return l
 ```
 
 ### Runtime error (parseable final submission)
@@ -308,21 +311,21 @@ print ("[4, 5, 36, 49, 64]")
 ```python
 l = input()
 
+
 def square_last_three(l: list) -> None:
-    '''
+    """
     Given a list of integers, square the last three numbers in the list.
 
     Arguments:
     l: list - a list of integers.
 
     Return: None - the list is modified in place.
-    '''
-
+    """
 
 
 l = input()
 X = str(l)
-    #First_last = l[-1]...
+# First_last = l[-1]...
 
 # ...
 ```
@@ -338,11 +341,11 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `76f9eef6eb2f45ebac44c6c0d415cfb6`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    s = str(l)
-    if len(l) > 3:
-        return l
-    else:
-        return l[:-3] + int(s[-1])**2 + int(s[-2])**2 + int(s[-1])**2
+s = str(l)
+if len(l) > 3:
+    return l
+else:
+    return l[:-3] + int(s[-1]) ** 2 + int(s[-2]) ** 2 + int(s[-1]) ** 2
 ```
 
 ### Fixed-position indexing assumes longer lists and crashes on hidden shorter-list cases
@@ -388,8 +391,8 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `0a9035ff99a34b259c9b3ab569256719`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    ...
-    return (l[-3:])**2
+...
+return (l[-3:]) ** 2
 ```
 
 ### Uses an empty negative-step range (`range(-1, -4)`) so the tail-squaring loop never runs
@@ -403,11 +406,11 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `0da654ac991d4aa1a2dd5b41b7efd4b9`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    list=[]
-    for i in range(-1,-4):
-        l[i]=l[i]**2
-        print(l)
-    return l
+list = []
+for i in range(-1, -4):
+    l[i] = l[i] ** 2
+    print(l)
+return l
 ```
 
 ### Returns an intermediate value/list instead of mutating `l` in place as required
@@ -441,21 +444,21 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `6656eb7d607b47e4bc24acfd1de5caed`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    l1=''
-    if len(l)==5:
-        a1=l[-1]**2
-        b1=l[-2]**2
-        c1=l[-3]**2
-        l1=[c1,b1,a1]
-        l.remove(6)
-        l.remove(7)
-        l.remove(8)
-        l.remove(4)
-        l.remove(5)
-        l.append(4)
-        l.append(5)
-        l.append(l1)
-        return l
+l1 = ""
+if len(l) == 5:
+    a1 = l[-1] ** 2
+    b1 = l[-2] ** 2
+    c1 = l[-3] ** 2
+    l1 = [c1, b1, a1]
+    l.remove(6)
+    l.remove(7)
+    l.remove(8)
+    l.remove(4)
+    l.remove(5)
+    l.append(4)
+    l.append(5)
+    l.append(l1)
+    return l
 ```
 
 ### Runtime AttributeError
@@ -470,14 +473,14 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `8011fecd7d834346b729ad2762066c7b`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    l = list(map(int,"Enter numbers:").sort())
-    l1 = []
-    for i in range(len(l)-3):
-        l1 = l1.append(l[i])
-    for x in range((len(l)-3),(len(l))):
-        l2 = l[x] ** 2
-    l1 = l1 + l2
-    return square_last_three(l1)
+l = list(map(int, "Enter numbers:").sort())
+l1 = []
+for i in range(len(l) - 3):
+    l1 = l1.append(l[i])
+for x in range((len(l) - 3), (len(l))):
+    l2 = l[x] ** 2
+l1 = l1 + l2
+return square_last_three(l1)
 ```
 
 ### Hard-codes public sample outputs/lists instead of squaring the last three elements generically
@@ -491,7 +494,7 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `85ba8d132a734a90803e4acf4145d9de`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    return [4, 5, 36, 49, 64]
+return [4, 5, 36, 49, 64]
 ```
 
 ### Copies evaluator/sample calls into `square_last_three(...)`, causing recursive/self-test execution
@@ -505,24 +508,12 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `93a166dcb2594bb58c52afb865e68937`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-   l=[4,5,6,7,8]
-   modify_check(
-       lambda x:square_last_three(x),
-       l,[4,5,36,49,64],
-       should_modify=True
-    )
-   l=[10,20,30,40]
-   modify_check(
-        lambda x:square_last_three(x),
-        l,[10,400,900,1600],
-        should_modify=True
-    )
-   l=[3,5,7]
-   modify_check(
-        lambda x:square_last_three(x),
-        l,[9,25,49],
-        should_modify=True
-    )
+l = [4, 5, 6, 7, 8]
+modify_check(lambda x: square_last_three(x), l, [4, 5, 36, 49, 64], should_modify=True)
+l = [10, 20, 30, 40]
+modify_check(lambda x: square_last_three(x), l, [10, 400, 900, 1600], should_modify=True)
+l = [3, 5, 7]
+modify_check(lambda x: square_last_three(x), l, [9, 25, 49], should_modify=True)
 ```
 
 ### Rebuilds/reassigns `l` (or returns a new list) instead of modifying the original list in place
@@ -536,10 +527,10 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `b176d24662444237b49ebb17cd70e0f7`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    ...
-    l = [4, 5, 6, 7, 8]
-    square_last_three = [4, 5, 6**2, 7**2, 8**2]
-    return square_last_three
+...
+l = [4, 5, 6, 7, 8]
+square_last_three = [4, 5, 6**2, 7**2, 8**2]
+return square_last_three
 ```
 
 ### Length-conditional partial implementation: passes some list sizes but fails hidden size/edge variants
@@ -553,20 +544,20 @@ X = str(l)
   - Variant `ns_25t3_py22/7`, Student ID `c5c1004ea8f0472399b168d535c6150b`, summary `Wrong Answer`, score `75`, vector `0011`
 
 ```python
-    s=len(l)//2
-    v=len(l)
-    if v%2!=0:
-        if v<5:
-            for i in range(s-1,v):
-                l[i]=l[i]**2
-            return l
-        else:
-            for i in range(s,v):
-                l[i]=l[i]**2
-            return l
+s = len(l) // 2
+v = len(l)
+if v % 2 != 0:
+    if v < 5:
+        for i in range(s - 1, v):
+            l[i] = l[i] ** 2
+        return l
     else:
-        if v>3:
-            for i in range(s-1,v):
-                l[i]=l[i]**2
-            return l
+        for i in range(s, v):
+            l[i] = l[i] ** 2
+        return l
+else:
+    if v > 3:
+        for i in range(s - 1, v):
+            l[i] = l[i] ** 2
+        return l
 ```

@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inside the Exam | The OPPE Python Assessment: What the Data Reveals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f7f2;--bg-alt:#f0ede5;--bg-dark:#1e1b16;
+  --text:#1c1917;--muted:#6b6560;--rule:#d6cfc4;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--blue:#1d4ed8;--purple:#6d28d9;
+  --teal:#0f766e;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Crimson Pro',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:20px;line-height:1.68;-webkit-font-smoothing:antialiased}
+
+.col{max-width:700px;margin:0 auto;padding:0 28px}
+.wide{max-width:1100px;margin:0 auto;padding:0 28px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+header{padding:48px 0 0}
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(2.1rem,5.5vw,3.8rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:14px}
+.dek{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--muted);line-height:1.45;margin-bottom:28px}
+.byline{font-family:var(--sans);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-bottom:28px;border-bottom:1px solid var(--rule)}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--rule);margin:44px 0}
+.stat{padding:24px 10px;text-align:center}
+.stat:not(:last-child){border-right:1px solid var(--rule)}
+.stat-n{font-family:var(--sans);font-size:2.2rem;font-weight:700;line-height:1;letter-spacing:-.03em;display:block}
+.stat-n.r{color:var(--red)}.stat-n.a{color:var(--amber)}.stat-n.g{color:var(--green)}
+.stat-l{font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+
+p{margin-bottom:1.45em}
+.section{margin:56px 0}
+.act{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h2{font-family:var(--serif);font-size:clamp(1.55rem,3vw,2.15rem);font-weight:700;line-height:1.18;margin-bottom:22px;letter-spacing:-.015em}
+h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin:32px 0 10px}
+
+.pq{font-family:var(--serif);font-size:1.38rem;font-style:italic;line-height:1.38;color:var(--red);border-left:4px solid var(--red);padding:14px 22px;margin:40px 0}
+
+.r{color:var(--red);font-weight:600}
+.a{color:var(--amber);font-weight:600}
+.g{color:var(--green);font-weight:600}
+.b{color:var(--blue);font-weight:600}
+.p{color:var(--purple);font-weight:600}
+
+.callout{background:var(--bg-alt);border-left:4px solid var(--amber);padding:18px 22px;margin:32px 0;font-family:var(--sans);font-size:13.5px;line-height:1.6}
+.callout strong{display:block;margin-bottom:5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
+.callout.good{border-color:var(--green)}.callout.good strong{color:var(--green)}
+.callout.bad{border-color:var(--red)}.callout.bad strong{color:var(--red)}
+
+.sep{border:none;border-top:1px solid var(--rule);margin:48px 0}
+
+.chart-wrap{margin:8px 0 4px}
+.chart-hed{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.chart-sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+
+#tip{position:fixed;background:#1c1917;color:#f9f7f2;padding:11px 15px;border-radius:4px;font-family:var(--sans);font-size:12px;line-height:1.5;pointer-events:none;z-index:1000;max-width:310px;opacity:0;transition:opacity .12s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#tip.on{opacity:1}
+#tip strong{color:#f9d4a0;display:block;margin-bottom:3px}
+
+.recs{list-style:none;margin:24px 0}
+.recs li{display:grid;grid-template-columns:36px 1fr;gap:10px;margin-bottom:20px;align-items:start}
+.rec-n{font-family:var(--sans);font-weight:700;font-size:12px;color:var(--amber);padding-top:2px}
+.rec-t strong{font-family:var(--sans);font-size:13px;font-weight:600;display:block;margin-bottom:2px}
+.rec-impact{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-top:4px}
+.rec-impact.vh{background:#fef3c7;color:#92400e}
+.rec-impact.h{background:#dcfce7;color:#14532d}
+.rec-impact.c{background:#fee2e2;color:#991b1b}
+
+.meth{border-top:1px solid var(--rule);padding:36px 0;margin-top:56px}
+.meth p{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.8em}
+
+.chart-svg text{font-family:var(--sans)}
+
+@media(max-width:640px){
+  body{font-size:18px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:none}
+}
+</style>
+</head>
+<body>
+
+<div id="tip"></div>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<div class="col">
+<header>
+  <div class="kicker">OPPE 2025 · Python Programming Assessment · Research Report</div>
+  <h1>Inside the Exam</h1>
+  <p class="dek">What happens when 13,000 students sit a programming exam three times — and what the data says we should do differently</p>
+  <div class="byline">Analysis across 2,057,658 events · 151,778 student-question attempts · Three terms, 2025</div>
+</header>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat"><span class="stat-n">13,623</span><span class="stat-l">Unique students</span></div>
+  <div class="stat"><span class="stat-n a">46.83%</span><span class="stat-l">Full pass rate</span></div>
+  <div class="stat"><span class="stat-n r">26.72%</span><span class="stat-l">Logic failures</span></div>
+  <div class="stat"><span class="stat-n g">80.95%</span><span class="stat-l">Repeaters who improve</span></div>
+</div>
+
+<!-- HOOK -->
+<section class="section">
+  <p>Somewhere in India, in April 2025, a student submits her Python exam for the third time. Three terms. Three sittings. Each one roughly 35 days after the last wave. She's not lazy — she's persistent. But something about the exam keeps catching her out, and no one is entirely sure what.</p>
+  <p>The OPPE — the Online Programming Practice Exam — tests Python coding across a national cohort of students. It runs in waves: a first sitting at the start of the term, a second sitting roughly five weeks later. Students who struggle can come back the next term. The system is designed with compassion. But compassion alone doesn't tell you <em>why</em> someone keeps failing, or what help would actually work.</p>
+  <p>Two million event logs later, we have answers. Not perfect ones — but actionable ones. The findings rewrote several assumptions about who struggles, how, and why. This is that story.</p>
+</section>
+</div><!-- /col -->
+
+<hr class="sep" style="max-width:700px;margin:0 auto 48px">
+
+<!-- ═══════════════════════ ACT I: WATERFALL ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act I</div>
+  <h2>The Wrong Diagnosis</h2>
+  <p>The working hypothesis going into this analysis was familiar and plausible: students are blocked by syntax. They can't write valid Python. Fix the syntax problem, fix the pass rate.</p>
+  <p>The data disagrees.</p>
+  <p>The chart below shows every student-question attempt, sorted into eight categories depending on where the attempt ended. Read it like a funnel — from the top pass rate down to the students who never wrote a line of code. The big bar in the middle is the one that matters.</p>
+</section>
+</div>
+
+<!-- WATERFALL CHART -->
+<div class="bleed" style="background:var(--bg-alt);padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Where 100% of student-question attempts end — the gating waterfall</div>
+    <div class="chart-sub">Hover any bar for details. Syntax gates (combined) account for less than 10% of all attempts.</div>
+    <div id="waterfall-chart" class="chart-wrap" style="min-height:320px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Combined syntax gates — mechanical and fundamental — total just <span class="r">9.5%</span> of all attempts. Genuine logic failure — code that runs, that passes some tests, that looks correct but isn't — accounts for <span class="r">26.72%</span>. Logic failure is nearly <em>three times</em> more common than syntax failure.</p>
+  <div class="pq">"The biggest problem is not students failing to write Python syntax. The biggest problem is students writing runnable Python that gives the wrong answer."</div>
+  <p>And there's a subtler finding embedded in the waterfall: <span class="a">45.49%</span> of students who ended with non-parseable code had parseable code earlier in the same session. They broke working code while trying to fix it. That's not a knowledge failure. That's a debugging workflow failure — and it calls for a completely different intervention.</p>
+  <p>The full-pass rate, at <span class="g">46.83%</span>, is healthier than many assume. This exam is not impossible. But the path to raising it runs through logic and debugging support, not a syntax remediation campaign.</p>
+</section>
+
+<hr class="sep">
+</div>
+
+<!-- ═══════════════════════ ACT II: PROCESS ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act II</div>
+  <h2>The Student Who Tries the Hardest Gets the Worst Grade</h2>
+  <p>If raw effort determined outcomes, the students who ran the most tests and spent the most time coding would have the highest pass rates. They don't. Not even close.</p>
+  <p>The chart below plots every student archetype — defined by how students actually work, not just their final score — by the median time spent versus the success rate achieved. The bubble size shows how common the archetype is.</p>
+</section>
+</div>
+
+<!-- ARCHETYPE CHART -->
+<div class="bleed" style="background:#fff;padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Effort vs. outcomes by student archetype</div>
+    <div class="chart-sub">Each bubble = one archetype. Size = share of all attempts. X = median active time. Y = success rate. Hover for details.</div>
+    <div id="arch-chart" class="chart-wrap" style="min-height:420px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>The <strong>Steady builder</strong> finishes with a <span class="g">89% success rate</span>, spending a median of 643 seconds. The <strong>Volatile reworker</strong> — who keeps restructuring code, running test after test, spending more than <em>five times as long</em> — ends with <span class="r">36% success</span>. The <strong>Thrasher</strong>, who runs a median of 36 public tests and spends over 75 minutes, achieves only 44%.</p>
+  <p>This is not about intelligence. Both archetypes are attempting the same problems. The difference is process: the Steady builder makes small, focused changes and tests them. The Volatile reworker makes sweeping rewrites and gets lost in a tangle of their own edits.</p>
+  <div class="callout">
+    <strong>The Regression Archetype</strong>
+    7.66% of attempts belong to students who end with code that is <em>worse</em> than what they started with. Their success rate: 5.65%. This is the extreme case of the Volatile reworker — students who had something passable, kept editing, and destroyed it. Nearly half (45.49%) of all sessions that end in syntax errors passed through a parseable state first.
+  </div>
+
+  <h3>The S2 Death Spiral</h3>
+  <p>The most important single number in this analysis: <span class="r">78.93%</span>. That's the probability that a student who is in State 2 — code runs, passes zero tests — will still be in State 2 on their next submission.</p>
+  <p>State 2 is the largest state in the entire dataset: <span class="r">47.1%</span> of all public test-run states. Once students enter it, they almost never escape through more of the same. They need targeted feedback. They need to know <em>what</em> is wrong, not just that it's wrong. Getting from S2 to S3 (some tests passing) happens only 7.18% of the time in the next run; reaching full pass (S4) happens 3.56% of the time.</p>
+</section>
+</div>
+
+<!-- S2 FLOW CHART -->
+<div class="bleed" style="background:var(--bg-alt);padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">State 2 is nearly inescapable — the transition probabilities</div>
+    <div class="chart-sub">S2: code runs but passes 0 public tests (47.1% of all public runs). The self-loop is 78.93%.</div>
+    <div id="s2-chart" class="chart-wrap" style="min-height:220px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Syntax errors, by contrast, clear quickly. Students with structural syntax errors resolve them within a single public run <span class="g">50.33%</span> of the time. Wrong-answer problems persist to the final submission <span class="r">39.03%</span> of the time. Syntax errors are painful but soluble. Logic errors are sticky.</p>
+</section>
+
+<hr class="sep">
+</div>
+
+<!-- ═══════════════════════ ACT III: CONCEPTS ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act III</div>
+  <h2>What Students Don't Understand — and Why It's Not What You'd Expect</h2>
+  <p>The ten concepts tested in this exam are not equally hard. The chart below shows the fraction of students who pass all public tests for each concept — from easiest to hardest. The gap is shocking.</p>
+</section>
+</div>
+
+<!-- CONCEPT CHART -->
+<div class="bleed" style="background:#fff;padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Concept mastery (% passing all public tests) — sorted easiest to hardest</div>
+    <div class="chart-sub">A 39-point gap separates arithmetic (easiest) from data analysis (hardest). Hover for details.</div>
+    <div id="concept-chart" class="chart-wrap" style="min-height:320px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p><span class="g">Arithmetic and conditionals</span>: 60% pass rate. <span class="r">Data analysis and aggregation</span>: 21% pass rate. That's a 39-point gap between the easiest concept and the hardest. The hard concepts share a profile: they require students to maintain a coherent mental model across multiple functions, handle non-trivial input formats, and produce precisely formatted output.</p>
+  <p>But here's the finding that changes the teaching prescription: the data analysis failure is not primarily a <em>selection</em> failure. Students who are stuck in S2 (code runs, passes zero tests) are, in most cases, already using the right constructs. They picked the right tool. They just can't make the tool do the right thing.</p>
+  <p>Across S2 failures in data analysis questions: <span class="r">66.8%</span> are application-gap failures — students who chose the right approach but couldn't execute it correctly. For pattern printing, that number reaches <span class="r">93.6%</span>. This means "teach the concept again" is the wrong intervention. The intervention needed is debugging practice — worked examples, guided code reading, small-step walkthroughs.</p>
+
+  <div class="callout">
+    <strong>The Loop Paradox</strong>
+    Loops are used in 48.7% of all attempts — students know when they need a loop. But among those students, the pass rate is only 45.7%. They know the tool exists. They don't know how to use it without making it exit too early, iterate over the wrong thing, or accumulate the wrong result. High usage, low mastery = practice problem, not exposure problem.
+  </div>
+</section>
+
+<hr class="sep">
+</div>
+
+<!-- ═══════════════════════ ACT IV: IMPROVEMENT ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act IV</div>
+  <h2>The Good News, the Bad News, and the 181</h2>
+  <p>Here is the genuinely hopeful finding: most students improve. The chart below shows the fraction of paired students — those who sat both Wave 1 and Wave 2 in the same term — whose performance moved up, stayed the same, or declined.</p>
+</section>
+</div>
+
+<!-- IMPROVEMENT CHART -->
+<div class="bleed" style="background:var(--bg-alt);padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Within-term improvement: Wave 1 → Wave 2, three terms</div>
+    <div class="chart-sub">Weighted by number of questions attempted. Hover for exact figures.</div>
+    <div id="improve-chart" class="chart-wrap" style="min-height:260px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Across all three terms, <span class="g">57–69%</span> of students improve between Wave 1 and Wave 2 within the same term. For students who come back the next term — the determined repeaters — <span class="g">80.95%</span> improve. Students who start blocked by syntax are progressing: more than half of those who were syntax-gated in Term 1 moved to pass-like profiles in Term 2.</p>
+  <p>The structural improvement is visible in the code itself, not just the scores. Between terms, students use significantly more <code>for</code> loops and <code>if</code> statements, and fewer <code>print()</code> calls as a substitute for proper output. The code is getting more competent.</p>
+
+  <div class="pq">"The failures are comprehensible. They have names, they have causes — and causes, unlike chaos, can be fixed."</div>
+
+  <p>Now the bad news.</p>
+  <p>There are 497 students who appear in all three terms — the most persistent cohort. The expectation might be that these are students stuck in S2, running code that runs but fails. That's wrong.</p>
+</section>
+</div>
+
+<!-- 497 CHART -->
+<div class="bleed" style="background:#fff;padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">The 497 persistent students — what their state trajectories actually show</div>
+    <div class="chart-sub">Top dominant-state trajectories across all three terms. S1 = non-parseable syntax. S0 = no code at all.</div>
+    <div id="trajectory-chart" class="chart-wrap" style="min-height:300px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Of the 497 students seen across all three terms, <span class="r">181</span> follow the same trajectory: non-parseable syntax in Term 1, non-parseable syntax in Term 2, non-parseable syntax in Term 3. Not S2. Not logic failure. Fundamental syntax. They can't yet write code that runs.</p>
+  <p>Only 3 students in this persistent cohort start from S2. The hardest-to-help group needs <em>foundational</em> Python instruction — typing, basic syntax, what a function looks like, how indentation works. No amount of debugging practice helps someone who can't write a parseable function.</p>
+  <p>Meanwhile, the dominant-S2 students — the ones in the death spiral — are a <em>different</em> group. The bad news for them: escape rate from dominant-S2 to dominant-S3/S4 is exactly <span class="r">0%</span> within-term and cross-term in this dataset. None of the students who were predominantly S2 across a term or wave moved to a predominantly S3/S4 state by looking. They need a different kind of support — structured, conceptual help — not just more run attempts.</p>
+</section>
+
+<hr class="sep">
+</div>
+
+<!-- ═══════════════════════ ACT V: EVALUATION ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act V</div>
+  <h2>The Exam Is Measuring the Wrong Things — Partially</h2>
+  <p>The evaluation system has real strengths. Public-test overfitting — the phenomenon where students game the sample tests — is almost nonexistent: just 0.02% of submitters had public scores much higher than private scores. Formatting is not a meaningful barrier (0.25% of attempts). These are good signs.</p>
+  <p>But there are three design problems that limit both fairness and insight.</p>
+
+  <div class="callout bad">
+    <strong>Problem 1: Test Cases Are Highly Redundant</strong>
+    34.46% of within-question test-case pairs are near-redundant — they test the same thing twice. The median Cronbach's alpha is 0.9716, meaning tests are consistent but overlapping. This wastes measurement capacity that could be used to probe harder edge cases.
+  </div>
+
+  <div class="callout bad">
+    <strong>Problem 2: The Exam Can't See Its Weakest Students</strong>
+    33 out of 35 question sets are flagged as "low-ability blind." The median ratio of information at low versus mid ability is 0.1555 — the exam discriminates well among average students, but provides almost no signal about weaker students. Later-term cohorts contain disproportionately more weaker students. The exam is least useful precisely where it's most needed.
+  </div>
+
+  <div class="callout bad">
+    <strong>Problem 3: Some Variants Aren't Equivalent</strong>
+    Students receive different question variants, which are supposed to be interchangeable. They are not always. The largest linked theta gap between variants is 0.653 — equivalent to a meaningful shift in apparent ability. A student assigned a harder variant appears worse than they are.
+  </div>
+
+  <div class="callout good">
+    <strong>What the Evaluation Does Well</strong>
+    No meaningful public-private gaming (0.02%). No formatting tax (0.25%). The pass-through risk model predicts future outcomes with AUC 0.9193 — good enough to use for targeted support planning before each term.
+  </div>
+</section>
+
+<hr class="sep">
+</div>
+
+<!-- ═══════════════════════ ACT VI: IMPLICATIONS ═══════════════════════ -->
+<div class="col">
+<section class="section">
+  <div class="act">Act VI — Implications</div>
+  <h2>What Needs to Change</h2>
+  <p>The findings in this data are not uniformly discouraging. Most students improve. Most archetypes can be redirected with the right intervention. But specific, concrete actions are needed across three domains: teaching, exam design, and platform infrastructure.</p>
+
+  <ul class="recs">
+    <li>
+      <span class="rec-n">01</span>
+      <div class="rec-t">
+        <strong>Fix the submission capture pipeline</strong>
+        23 of 35 question sets have zero recorded private submissions — a platform instrumentation failure. Any conclusion about student behavior in those sessions is unreliable. This is a critical operational problem, not a research footnote.
+        <span class="rec-impact c">Critical · Low effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">02</span>
+      <div class="rec-t">
+        <strong>Target the S2 bottleneck with structured feedback</strong>
+        Students stuck in "code runs, passes zero tests" need to know <em>what</em> is wrong — not just that it's wrong. A structured hint system, even rule-based ("Your function returns after the first iteration"), would give these students a path out. The 78.93% self-loop rate proves that more runs without better feedback don't work.
+        <span class="rec-impact vh">Very High Impact · Moderate effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">03</span>
+      <div class="rec-t">
+        <strong>Redesign test cases for difficulty spread</strong>
+        Reduce redundant test pairs (currently 34.46%) and widen the difficulty gradient. Every question needs a warm-up case that the weakest students can pass, and a stretch case that challenges the strongest. This simultaneously improves measurement and gives partial-credit more meaning.
+        <span class="rec-impact vh">Very High Impact · Moderate effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">04</span>
+      <div class="rec-t">
+        <strong>Teach debugging process explicitly</strong>
+        Steady builders succeed not because they're smarter — they succeed because they edit less and test more precisely. This process can be modeled explicitly: show exemplar trajectories, teach the "small edit → test → read failure → repeat" loop. The Volatile reworker doesn't need a harder problem; they need a better workflow.
+        <span class="rec-impact vh">Very High Impact · Moderate effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">05</span>
+      <div class="rec-t">
+        <strong>Design a foundational Python program for the 497 persistent cohort</strong>
+        The majority of students who appear across all three terms are syntax-blocked, not logic-blocked. They need a different track entirely — one focused on basic program construction, not advanced debugging. Sending them to the same course content again without change is unlikely to help.
+        <span class="rec-impact h">High Impact · High effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">06</span>
+      <div class="rec-t">
+        <strong>Focus concept support on the hardest cluster</strong>
+        Data analysis, pattern printing, input parsing/formatting, and file operations all have pass rates below 31%. The S2 decomposition shows most failures here are application gaps — students need debugging practice and worked examples, not re-exposure to definitions. The intervention type matters as much as the intervention intensity.
+        <span class="rec-impact h">High Impact · Moderate effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">07</span>
+      <div class="rec-t">
+        <strong>Audit and fix variant inequivalence before publishing results</strong>
+        A theta gap of 0.653 between variants means one variant is meaningfully harder than its counterpart. Students assigned the harder variant appear less capable than they are. Fix the highest-priority pairs (py22 in Term 1, py21 in Term 2) before using scores comparatively.
+        <span class="rec-impact vh">Very High Impact · Low effort</span>
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">08</span>
+      <div class="rec-t">
+        <strong>Deploy the risk model for pre-term support targeting</strong>
+        The pass-through model (AUC 0.9193) can identify students at risk before they sit an exam. Use it: flag the highest-risk quartile before each term, and route them to appropriate support tracks rather than reactive remediation after they fail.
+        <span class="rec-impact h">High Impact · Moderate effort</span>
+      </div>
+    </li>
+  </ul>
+
+  <p>The system that produced these results is already better than most. It runs a national programming assessment at scale, gives students multiple chances, and tracks outcomes over time. These recommendations are not a condemnation — they're the next level. The data exists. The patterns are clear. The cost of not acting is that the 181 students in the permanent S1 → S1 → S1 spiral come back for a fourth term without anything having changed for them.</p>
+  <p>They deserve better than that.</p>
+</section>
+
+<!-- METHODOLOGY -->
+<div class="meth">
+  <p><strong>Data sources:</strong> This analysis covers 2,057,658 event logs from 13,623 unique students across three OPPE terms (25t1, 25t2, 25t3), each with two waves separated by approximately 35 days. The 151,778 student-question attempt rows are the primary unit of analysis. Waterfall percentages are calculated over all student-question attempts. Archetype analysis covers all attempts with resolved primary labels (13 categories); "Other" residual is 6.40%. Concept mastery uses public-best all-pass rate as a proxy, consistent with the psychometric model.</p>
+  <p><strong>Caveats:</strong> 23 of 35 question sets (Track B) have zero captured private submissions — public-best scores are used as the psychometric input for these namespaces, which slightly overstates absolute mastery (14.27% of submitters have public category > private category). The 497 all-three-term cohort is a persistent subset, not the full repeater population. S2 escape rate of 0% is based on dominant-state classification (strict lens); transitions do occur at the run level. Prerequisite graph and concept tags are heuristically generated and should be cross-checked against the actual curriculum before operational use.</p>
+  <p><strong>Steps 4–9:</strong> Waterfall (Step 4), Process archetypes (Step 5/5a), IRT psychometrics (Step 6), Evaluation redesign synthesis (Step 7), Longitudinal analysis (Step 8), Concept knowledge modelling (Step 9).</p>
+</div>
+</div><!-- /col -->
+
+<script>
+// ─────────────────────────────────────────────
+// TOOLTIP
+// ─────────────────────────────────────────────
+const tip = document.getElementById('tip');
+function showTip(e, html) {
+  tip.innerHTML = html;
+  tip.classList.add('on');
+  moveTip(e);
+}
+function moveTip(e) {
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = (x + tw > window.innerWidth - 10 ? e.clientX - tw - 14 : x) + 'px';
+  tip.style.top  = (y + th > window.innerHeight - 10 ? e.clientY - th - 10 : y) + 'px';
+}
+function hideTip() { tip.classList.remove('on'); }
+
+// ─────────────────────────────────────────────
+// DATA (embedded)
+// ─────────────────────────────────────────────
+const WATERFALL = [
+  {gate:'Full pass',          pct:46.83, color:'#4ade80', desc:'46.83% of all student-question attempts passed all private tests. This exam is passable.'},
+  {gate:'Genuine logic failure',pct:26.72,color:'#fb923c', desc:'26.72%: code runs, produces wrong answers. Logic failure — not syntax. This is the primary teaching problem.'},
+  {gate:'Edge-case gated',    pct:7.35,  color:'#fcd34d', desc:'7.35%: passes core tests, fails edge/boundary cases. High-value "almost there" group.'},
+  {gate:'Syntax — mechanical',pct:7.14,  color:'#94a3b8', desc:'7.14%: non-parseable, but intended structure is visible. Often resolves in one run (50.3%).'},
+  {gate:'Didn\'t attempt',    pct:6.14,  color:'#cbd5e1', desc:'6.14%: unmodified skeleton or no submission. 89.8% of non-submission rows are in namespaces with broken capture (platform issue).'},
+  {gate:'Partial pass',       pct:3.21,  color:'#a78bfa', desc:'3.21%: passed some but not all private tests. Partial credit signals some conceptual understanding.'},
+  {gate:'Syntax — fundamental',pct:2.36, color:'#64748b', desc:'2.36%: non-parseable, no recoverable structure. Foundational Python instruction needed.'},
+  {gate:'Formatting gated',   pct:0.25,  color:'#d1fae5', desc:'0.25%: correct logic, wrong output format. Not a significant problem — evaluation is format-tolerant.'},
+];
+
+const ARCHETYPES = [
+  {name:'Minimal-change solver', pct:18.54, success:77.27, time:37,    runs:3,  color:'#15803d', desc:'Solves quickly with few edits. Median 37s active. Success 77%.'},
+  {name:'Volatile reworker',     pct:17.75, success:35.95, time:3223,  runs:18, color:'#b91c1c', desc:'Keeps restructuring. Median 54 min active. Success only 36%.'},
+  {name:'Steady builder',        pct:15.95, success:89.04, time:643,   runs:6,  color:'#15803d', desc:'Best success rate (89%). Works methodically, 11 min median.'},
+  {name:'Builder with setbacks', pct:8.29,  success:41.76, time:844,   runs:7,  color:'#d97706', desc:'Makes progress but regresses. Median 14 min. Success 42%.'},
+  {name:'Incremental debugger',  pct:7.66,  success:77.65, time:1998,  runs:13, color:'#15803d', desc:'Systematic debugging. 33 min median, 78% success. Smart effort.'},
+  {name:'Regression',            pct:7.66,  success:5.65,  time:3016,  runs:13, color:'#b91c1c', desc:'Ends with worse code than they started. 50 min, 6% success.'},
+  {name:'Skeleton-only',         pct:6.14,  success:0.48,  time:1,     runs:1,  color:'#64748b', desc:'Never moved beyond the template. Foundational support needed.'},
+  {name:'One-shot',              pct:5.02,  success:9.44,  time:0,     runs:1,  color:'#64748b', desc:'Single submission. No iteration. 9% success — sink or swim.'},
+  {name:'Stuck and abandoned',   pct:2.77,  success:4.11,  time:3117,  runs:8,  color:'#b91c1c', desc:'52 min of effort, then gives up. 4% success. Needs intervention.'},
+  {name:'Thrasher',              pct:1.81,  success:43.59, time:4529,  runs:36, color:'#d97706', desc:'36 median runs, 75+ min. 44% success — more effort, poor returns.'},
+  {name:'Flat stuck',            pct:1.67,  success:0.12,  time:224,   runs:3,  color:'#b91c1c', desc:'Stagnates immediately, never progresses. 0.1% success.'},
+];
+
+const S2_TRANSITIONS = [
+  {from:'S2',to:'S2',     pct:78.93,color:'#b91c1c', label:'Stay in S2'},
+  {from:'S2',to:'Other',  pct:10.33,color:'#94a3b8', label:'Back to S0/S1'},
+  {from:'S2',to:'S3',     pct:7.18, color:'#f59e0b', label:'S2 → S3 (some pass)'},
+  {from:'S2',to:'S4',     pct:3.56, color:'#4ade80', label:'S2 → S4 (all pass)'},
+];
+
+const CONCEPTS = [
+  {name:'Arithmetic / conditionals',    pass:60.23, students:13152},
+  {name:'List / tuple operations',      pass:52.02, students:11927},
+  {name:'String manipulation',          pass:51.83, students:12990},
+  {name:'Math / algorithmic',           pass:45.12, students:8037},
+  {name:'Dictionary operations',        pass:36.26, students:7804},
+  {name:'Loops and iteration',          pass:40.34, students:11495},
+  {name:'File operations',              pass:30.52, students:3842},
+  {name:'Input parsing / formatting',   pass:29.52, students:10706},
+  {name:'Pattern printing',             pass:30.49, students:6706},
+  {name:'Data analysis / aggregation',  pass:21.14, students:10203},
+].sort((a,b) => b.pass - a.pass);
+
+const IMPROVEMENT = [
+  {term:'25t1 (Apr)', improve:57.68, same:14.31, decline:28.02},
+  {term:'25t2 (Jul)', improve:68.92, same:10.10, decline:20.98},
+  {term:'25t3 (Nov)', improve:59.14, same:12.84, decline:28.01},
+];
+
+const TRAJECTORIES = [
+  {traj:'S1 → S1 → S1',         n:181, desc:'Fundamental syntax — stuck all 3 terms'},
+  {traj:'S0 → S1 → S1',         n:69,  desc:'No code → syntax x2'},
+  {traj:'S0 → S0 → S1',         n:36,  desc:'No code x2 → first syntax attempt'},
+  {traj:'S1 → S1 → S0',         n:34,  desc:'Regressed to no-code at end'},
+  {traj:'S1 → S0 → S1',         n:29,  desc:'Oscillating between no-code and syntax'},
+  {traj:'S1 → S1 → S1b',        n:23,  desc:'Progress: gaining structure by Term 3'},
+  {traj:'S1b → S1 → S1',        n:15,  desc:'Regression from structured syntax'},
+  {traj:'S0 → S0 → S0',         n:14,  desc:'Never wrote code — 3 terms'},
+  {traj:'S0 → S1 → S0',         n:14,  desc:'One-term attempt, then nothing'},
+  {traj:'S1 → S1b → S1',        n:13,  desc:'Brief improvement, then regression'},
+];
+
+// ─────────────────────────────────────────────
+// CHART: WATERFALL
+// ─────────────────────────────────────────────
+function buildWaterfall(el) {
+  const ML = 230, MR = 70, MT = 8, MB = 28;
+  const CW = el.clientWidth || 900;
+  const W = CW - ML - MR;
+  const ROW = 34, H = WATERFALL.length * ROW + MT + MB;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ML},${MT})`);
+
+  const x = d3.scaleLinear().domain([0, 52]).range([0, W]);
+  g.append('g').attr('transform', `translate(0,${WATERFALL.length * ROW})`)
+    .call(d3.axisBottom(x).tickFormat(d => d + '%').ticks(6))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'))
+    .call(a => a.selectAll('line').attr('stroke', '#d6cfc4'));
+
+  WATERFALL.forEach((d, i) => {
+    const y = i * ROW;
+    const bw = x(d.pct);
+
+    g.append('rect').attr('x', 0).attr('y', y + 4).attr('width', bw).attr('height', ROW - 8)
+      .attr('fill', d.color).attr('opacity', 0.85);
+
+    const lbl = d.gate.length > 28 ? d.gate.slice(0, 26) + '…' : d.gate;
+    g.append('text').attr('x', -6).attr('y', y + ROW / 2).attr('text-anchor', 'end')
+      .attr('dominant-baseline', 'middle').attr('font-size', 11)
+      .attr('fill', i === 0 ? '#15803d' : i === 1 ? '#b91c1c' : '#333')
+      .attr('font-weight', i < 2 ? '600' : '400').text(lbl);
+
+    g.append('text').attr('x', bw + 6).attr('y', y + ROW / 2)
+      .attr('dominant-baseline', 'middle').attr('font-size', 11)
+      .attr('fill', i === 0 ? '#15803d' : i === 1 ? '#b91c1c' : '#555')
+      .attr('font-weight', i < 2 ? '700' : '400').text(d.pct + '%');
+
+    g.append('rect').attr('x', -ML).attr('y', y).attr('width', CW).attr('height', ROW)
+      .attr('fill', 'transparent')
+      .on('mousemove', e => showTip(e, `<strong>${d.gate}</strong>${d.pct}% of all attempts<br>${d.desc}`))
+      .on('mouseleave', hideTip);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: ARCHETYPE BUBBLE
+// ─────────────────────────────────────────────
+function buildArchChart(el) {
+  const ML = 52, MR = 32, MT = 32, MB = 52;
+  const CW = el.clientWidth || 900;
+  const H = 420, W = CW - ML - MR, h = H - MT - MB;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ML},${MT})`);
+
+  const maxTime = 4600;
+  const x = d3.scaleLog().domain([1, maxTime]).range([0, W]).clamp(true);
+  const y = d3.scaleLinear().domain([0, 100]).range([h, 0]);
+  const rScale = d => Math.max(7, Math.sqrt(d.pct) * 8.5);
+
+  // Gridlines
+  g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(''))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('line').attr('stroke','#e8e3da').attr('stroke-dasharray','3,5'));
+
+  // Quadrant labels
+  const qStyle = {attr: {font: 'var(--sans)', 'font-size': 10, fill: '#c5bfb8', 'font-style': 'italic'}};
+  g.append('text').attr('x', W * 0.08).attr('y', h * 0.12).attr('font-size', 10).attr('fill', '#c5bfb8').attr('font-style','italic').text('✓ Efficient & effective');
+  g.append('text').attr('x', W * 0.55).attr('y', h * 0.12).attr('font-size', 10).attr('fill', '#c5bfb8').attr('font-style','italic').text('Slow but effective');
+  g.append('text').attr('x', W * 0.55).attr('y', h * 0.92).attr('font-size', 10).attr('fill', '#fca5a5').attr('font-style','italic').text('→ High effort, low return');
+
+  // Axes
+  g.append('g').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(x).tickValues([10, 100, 600, 1800, 3600]).tickFormat(d => {
+      if (d >= 3600) return (d/3600).toFixed(0)+'h';
+      if (d >= 60) return Math.round(d/60)+'min';
+      return d+'s';
+    }))
+    .call(a => a.select('.domain').attr('stroke','#d6cfc4'))
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+  g.append('g').call(d3.axisLeft(y).tickFormat(d => d + '%'))
+    .call(a => a.select('.domain').attr('stroke','#d6cfc4'))
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+
+  svg.append('text').attr('x', ML + W/2).attr('y', H - 8).attr('text-anchor', 'middle')
+    .attr('font-size', 11).attr('fill', '#9b9086').text('Median active time (log scale)');
+  svg.append('text').attr('transform','rotate(-90)').attr('x',-(MT+h/2)).attr('y',14)
+    .attr('text-anchor','middle').attr('font-size',11).attr('fill','#9b9086').text('Success rate');
+
+  // Dots
+  const arches = ARCHETYPES.filter(d => d.time > 0);
+  g.selectAll('circle').data(arches).join('circle')
+    .attr('cx', d => x(Math.max(1, d.time)))
+    .attr('cy', d => y(d.success))
+    .attr('r', d => rScale(d))
+    .attr('fill', d => d.color)
+    .attr('stroke', '#fff').attr('stroke-width', 1.5).attr('opacity', 0.8)
+    .on('mousemove', (e, d) => showTip(e, `<strong>${d.name}</strong>${d.pct.toFixed(1)}% of attempts · ${d.success}% success<br>Median: ${d.time >= 3600 ? (d.time/3600).toFixed(1)+'h' : d.time >= 60 ? Math.round(d.time/60)+'min' : d.time+'s'}, ${d.runs} test runs<br>${d.desc}`))
+    .on('mouseleave', hideTip);
+
+  // Labels for key archetypes
+  [
+    {name:'Steady builder',    dx:2,   dy:-16},
+    {name:'Volatile reworker', dx:-5,  dy:16},
+    {name:'Minimal-change solver', dx:2, dy:-14},
+    {name:'Regression',        dx:2,   dy:15},
+    {name:'Thrasher',          dx:2,   dy:-14},
+  ].forEach(({name, dx, dy}) => {
+    const d = ARCHETYPES.find(a => a.name === name);
+    if (!d) return;
+    g.append('text')
+      .attr('x', x(Math.max(1, d.time)) + dx)
+      .attr('y', y(d.success) + dy)
+      .attr('text-anchor', 'middle').attr('font-size', 9.5).attr('fill', '#444')
+      .text(name);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: S2 FLOW
+// ─────────────────────────────────────────────
+function buildS2Chart(el) {
+  const CW = el.clientWidth || 900;
+  const H = 220;
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+
+  // Title S2 box
+  const bw = 140, bh = 60, bx = CW * 0.25, by = (H - bh) / 2;
+  svg.append('rect').attr('x', bx).attr('y', by).attr('width', bw).attr('height', bh)
+    .attr('rx', 6).attr('fill', '#b91c1c').attr('opacity', 0.9);
+  svg.append('text').attr('x', bx + bw/2).attr('y', by + 22).attr('text-anchor', 'middle')
+    .attr('font-size', 13).attr('font-weight', '700').attr('fill', '#fff').text('STATE 2');
+  svg.append('text').attr('x', bx + bw/2).attr('y', by + 40).attr('text-anchor', 'middle')
+    .attr('font-size', 10).attr('fill', '#fca5a5').text('Code runs, 0 tests pass');
+  svg.append('text').attr('x', bx + bw/2).attr('y', by + 54).attr('text-anchor', 'middle')
+    .attr('font-size', 10).attr('fill', '#fca5a5').text('47.1% of all public runs');
+
+  // Self-loop label
+  const lx = bx + bw * 0.5;
+  svg.append('text').attr('x', lx).attr('y', by - 28).attr('text-anchor', 'middle')
+    .attr('font-size', 22).attr('font-weight', '900').attr('fill', '#b91c1c').text('78.93%');
+  svg.append('text').attr('x', lx).attr('y', by - 10).attr('text-anchor', 'middle')
+    .attr('font-size', 10).attr('fill', '#888').text('stay in S2 next run');
+
+  // Arrow self-loop (curved)
+  const path = `M ${bx+40},${by} C ${bx+40},${by-50} ${bx+bw-40},${by-50} ${bx+bw-40},${by}`;
+  svg.append('path').attr('d', path).attr('fill', 'none').attr('stroke', '#b91c1c')
+    .attr('stroke-width', 2.5).attr('marker-end', 'url(#arr-red)');
+
+  // Arrow defs
+  const defs = svg.append('defs');
+  ['arr-red','arr-amber','arr-green','arr-gray'].forEach((id, i) => {
+    const colors = ['#b91c1c','#f59e0b','#4ade80','#94a3b8'];
+    const m = defs.append('marker').attr('id', id).attr('markerWidth',8).attr('markerHeight',8)
+      .attr('refX',4).attr('refY',2).attr('orient','auto');
+    m.append('path').attr('d','M0,0 L0,4 L6,2 z').attr('fill', colors[i]);
+  });
+
+  // Output arrows
+  const outputs = [
+    {label:'S3 (some pass)', pct:'7.18%', y: H*0.25, color:'#f59e0b', arr:'arr-amber'},
+    {label:'S4 (all pass)',  pct:'3.56%', y: H*0.55, color:'#4ade80', arr:'arr-green'},
+    {label:'S0/S1 (back to broken)', pct:'10.33%', y: H*0.82, color:'#94a3b8', arr:'arr-gray'},
+  ];
+
+  outputs.forEach(o => {
+    const tx = bx + bw + 32, rx = bx + bw + 8;
+    svg.append('line').attr('x1', bx + bw).attr('y1', by + bh/2).attr('x2', rx).attr('y2', o.y)
+      .attr('stroke', o.color).attr('stroke-width', 1.5);
+    svg.append('line').attr('x1', rx).attr('y1', o.y).attr('x2', tx).attr('y2', o.y)
+      .attr('stroke', o.color).attr('stroke-width', 1.5).attr('marker-end', `url(#${o.arr})`);
+    svg.append('text').attr('x', tx + 8).attr('y', o.y - 5).attr('font-size', 10.5)
+      .attr('fill', '#333').text(o.label);
+    svg.append('text').attr('x', tx + 8).attr('y', o.y + 11).attr('font-size', 10.5)
+      .attr('font-weight', '600').attr('fill', o.color).text(o.pct);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: CONCEPT MASTERY
+// ─────────────────────────────────────────────
+function buildConceptChart(el) {
+  const ML = 250, MR = 70, MT = 8, MB = 28;
+  const CW = el.clientWidth || 900;
+  const W = CW - ML - MR;
+  const ROW = 28, H = CONCEPTS.length * ROW + MT + MB;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ML},${MT})`);
+
+  const x = d3.scaleLinear().domain([0, 70]).range([0, W]);
+  g.append('g').attr('transform', `translate(0,${CONCEPTS.length * ROW})`)
+    .call(d3.axisBottom(x).tickFormat(d => d + '%').ticks(5))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+
+  const colorScale = d3.scaleSequential().domain([20, 62]).interpolator(t => d3.interpolateRdYlGn(t)).clamp(true);
+
+  CONCEPTS.forEach((d, i) => {
+    const y = i * ROW;
+    const bw = x(d.pass);
+    const isHard = d.pass < 35;
+    const isEasy = d.pass > 55;
+
+    g.append('rect').attr('x', 0).attr('y', y + 4).attr('width', bw).attr('height', ROW - 8)
+      .attr('fill', colorScale(d.pass)).attr('opacity', 0.85);
+
+    g.append('text').attr('x', -6).attr('y', y + ROW/2).attr('text-anchor', 'end')
+      .attr('dominant-baseline', 'middle').attr('font-size', 10.5)
+      .attr('fill', isHard ? '#b91c1c' : isEasy ? '#15803d' : '#333')
+      .attr('font-weight', (isHard || isEasy) ? '600' : '400').text(d.name);
+
+    g.append('text').attr('x', bw + 6).attr('y', y + ROW/2)
+      .attr('dominant-baseline', 'middle').attr('font-size', 10.5)
+      .attr('fill', isHard ? '#b91c1c' : isEasy ? '#15803d' : '#555')
+      .attr('font-weight', (isHard || isEasy) ? '700' : '400')
+      .text(d.pass.toFixed(0) + '%');
+
+    g.append('rect').attr('x', -ML).attr('y', y).attr('width', CW).attr('height', ROW)
+      .attr('fill', 'transparent')
+      .on('mousemove', e => showTip(e, `<strong>${d.name}</strong>${d.pass.toFixed(1)}% pass all public tests<br>${d.students.toLocaleString()} students tested`))
+      .on('mouseleave', hideTip);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: IMPROVEMENT
+// ─────────────────────────────────────────────
+function buildImproveChart(el) {
+  const ML = 90, MR = 30, MT = 24, MB = 40;
+  const CW = el.clientWidth || 900;
+  const H = 260, W = CW - ML - MR, h = H - MT - MB;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ML},${MT})`);
+
+  const terms = IMPROVEMENT.map(d => d.term);
+  const x0 = d3.scaleBand().domain(terms).range([0, W]).padding(0.35);
+  const x1 = d3.scaleBand().domain(['improve','same','decline']).range([0, x0.bandwidth()]).padding(0.08);
+  const y = d3.scaleLinear().domain([0, 80]).range([h, 0]);
+
+  const colors = {improve: '#4ade80', same: '#d6cfc4', decline: '#f87171'};
+  const labels = {improve: 'Improve', same: 'Same', decline: 'Decline'};
+
+  g.append('g').call(d3.axisLeft(y).tickFormat(d => d + '%').ticks(5))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+  g.append('g').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(x0).tickSize(0))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 11).attr('fill', '#444').attr('dy', '1.4em'));
+
+  IMPROVEMENT.forEach(d => {
+    ['improve','same','decline'].forEach(k => {
+      const bx = x0(d.term) + x1(k);
+      const bh = h - y(d[k]);
+      const by = y(d[k]);
+      g.append('rect').attr('x', bx).attr('y', by).attr('width', x1.bandwidth()).attr('height', bh)
+        .attr('fill', colors[k]).attr('opacity', 0.85);
+      if (bh > 16) {
+        g.append('text').attr('x', bx + x1.bandwidth()/2).attr('y', by + bh/2 + 1)
+          .attr('text-anchor','middle').attr('dominant-baseline','middle')
+          .attr('font-size', 9.5).attr('fill', k === 'same' ? '#555' : '#1c1917').attr('font-weight','600')
+          .text(d[k].toFixed(0) + '%');
+      }
+    });
+    const barG = g.append('g').attr('transform', `translate(${x0(d.term)},0)`);
+    barG.append('rect').attr('x', 0).attr('y', 0).attr('width', x0.bandwidth()).attr('height', h)
+      .attr('fill', 'transparent')
+      .on('mousemove', e => {
+        showTip(e, `<strong>${d.term}</strong><span style="color:#4ade80">▲ Improve: ${d.improve.toFixed(1)}%</span><br><span style="color:#d6cfc4">— Same: ${d.same.toFixed(1)}%</span><br><span style="color:#f87171">▼ Decline: ${d.decline.toFixed(1)}%</span>`);
+      })
+      .on('mouseleave', hideTip);
+  });
+
+  // Legend
+  const lx = W - 220;
+  ['improve','same','decline'].forEach((k, i) => {
+    const lxo = lx + i * 75;
+    g.append('rect').attr('x', lxo).attr('y', -18).attr('width', 10).attr('height', 10).attr('rx',2).attr('fill', colors[k]);
+    g.append('text').attr('x', lxo + 14).attr('y', -10).attr('font-size', 10).attr('fill', '#666').text(labels[k]);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: 497 TRAJECTORIES
+// ─────────────────────────────────────────────
+function buildTrajectoryChart(el) {
+  const ML = 230, MR = 70, MT = 8, MB = 16;
+  const CW = el.clientWidth || 900;
+  const W = CW - ML - MR;
+  const ROW = 27, H = TRAJECTORIES.length * ROW + MT + MB;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ML},${MT})`);
+
+  const max = d3.max(TRAJECTORIES, d => d.n);
+  const x = d3.scaleLinear().domain([0, max]).range([0, W]);
+  g.append('g').attr('transform', `translate(0,${TRAJECTORIES.length * ROW})`)
+    .call(d3.axisBottom(x).ticks(5))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+
+  TRAJECTORIES.forEach((d, i) => {
+    const y = i * ROW;
+    const isStuck = d.traj.includes('S1') && !d.traj.includes('S4') && !d.traj.includes('S3');
+    const isTop = i === 0;
+    const fill = isTop ? '#b91c1c' : isStuck ? '#fb923c' : '#94a3b8';
+    const bw = x(d.n);
+
+    g.append('rect').attr('x', 0).attr('y', y + 4).attr('width', bw).attr('height', ROW - 8)
+      .attr('fill', fill).attr('opacity', isTop ? 0.9 : 0.65);
+
+    g.append('text').attr('x', -6).attr('y', y + ROW/2).attr('text-anchor','end')
+      .attr('dominant-baseline','middle').attr('font-size', 10.5)
+      .attr('fill', isTop ? '#b91c1c' : '#333').attr('font-weight', isTop ? '700' : '400')
+      .attr('font-family', 'var(--mono)').text(d.traj);
+
+    g.append('text').attr('x', bw + 6).attr('y', y + ROW/2)
+      .attr('dominant-baseline','middle').attr('font-size', 10.5)
+      .attr('fill', isTop ? '#b91c1c' : '#555').attr('font-weight', isTop ? '700' : '400')
+      .text(d.n + ' students');
+
+    g.append('rect').attr('x', -ML).attr('y', y).attr('width', CW).attr('height', ROW)
+      .attr('fill','transparent')
+      .on('mousemove', e => showTip(e, `<strong>${d.traj}</strong>${d.n} students<br>${d.desc}`))
+      .on('mouseleave', hideTip);
+  });
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+function init() {
+  buildWaterfall(document.getElementById('waterfall-chart'));
+  buildArchChart(document.getElementById('arch-chart'));
+  buildS2Chart(document.getElementById('s2-chart'));
+  buildConceptChart(document.getElementById('concept-chart'));
+  buildImproveChart(document.getElementById('improve-chart'));
+  buildTrajectoryChart(document.getElementById('trajectory-chart'));
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

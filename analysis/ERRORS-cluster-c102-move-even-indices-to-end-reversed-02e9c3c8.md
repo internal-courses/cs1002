@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py11/9` (canonical) | 464 | 189 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py11/9` (canonical) |              464 |      189 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py11/9` | 464 | 275 | 189 | 137 | 52 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py11/9` |              464 |       275 |      189 |                137 |                     52 |
 
 ## Private Case Structure
 
@@ -44,20 +44,20 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py11/9` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 52 | 27.5% | 52 |
-| Hard-codes the public example tuple/output shape instead of processing arbitrary tuples | 50 | 26.5% | 50 |
-| No return / implicit `None` | 29 | 15.3% | 29 |
-| Runtime TypeError from mixing tuple/list/scalar operations while rebuilding the tuple | 24 | 12.7% | 24 |
-| Runtime NameError from undefined temporary lists/indices in even/odd split logic | 13 | 6.9% | 13 |
-| Runtime AttributeError | 6 | 3.2% | 6 |
-| Fixed-position indexing assumes longer tuples and fails on hidden small-tuple or slice-edge cases | 5 | 2.6% | 5 |
-| Incorrect tuple slicing/reconstruction logic for moving even indices to the end in reversed order | 4 | 2.1% | 4 |
-| Runtime error (parseable final submission) | 2 | 1.1% | 2 |
-| Runtime RecursionError | 2 | 1.1% | 2 |
-| Uses non-existent tuple/string reverse APIs (`t.reversed()`) or wrong reverse method semantics | 1 | 0.5% | 1 |
-| Runtime ValueError | 1 | 0.5% | 1 |
+| Pattern                                                                                           | Cluster count | % of cluster non-full | `ns_25t3_py11/9` |
+| ------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Syntax / non-parseable final submission                                                           |            52 |                 27.5% |               52 |
+| Hard-codes the public example tuple/output shape instead of processing arbitrary tuples           |            50 |                 26.5% |               50 |
+| No return / implicit `None`                                                                       |            29 |                 15.3% |               29 |
+| Runtime TypeError from mixing tuple/list/scalar operations while rebuilding the tuple             |            24 |                 12.7% |               24 |
+| Runtime NameError from undefined temporary lists/indices in even/odd split logic                  |            13 |                  6.9% |               13 |
+| Runtime AttributeError                                                                            |             6 |                  3.2% |                6 |
+| Fixed-position indexing assumes longer tuples and fails on hidden small-tuple or slice-edge cases |             5 |                  2.6% |                5 |
+| Incorrect tuple slicing/reconstruction logic for moving even indices to the end in reversed order |             4 |                  2.1% |                4 |
+| Runtime error (parseable final submission)                                                        |             2 |                  1.1% |                2 |
+| Runtime RecursionError                                                                            |             2 |                  1.1% |                2 |
+| Uses non-existent tuple/string reverse APIs (`t.reversed()`) or wrong reverse method semantics    |             1 |                  0.5% |                1 |
+| Runtime ValueError                                                                                |             1 |                  0.5% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -141,7 +141,7 @@ def move_even_indices_to_end_reversed(t):
 
 ```python
 def move_even_indices_to_end_reversed(t):
-    '''
+    """
     Given a tuple `t`, move all elements at even indices to the end
     in reversed order, while keeping odd-indexed elements as they are.
 
@@ -155,7 +155,8 @@ def move_even_indices_to_end_reversed(t):
 
     Returns:
         tuple: A new tuple with odd-indexed elements followed by reversed even-indexed elements.
-    '''
+    """
+
 
 print("('b','d','f','e','c','a')")
 ```
@@ -171,18 +172,19 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `0a106e4bebfd4c13a901cfac5ebc6336`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    '''even_index = (t[0],t[2],t[4])
-    re_even_index = (even_index.reversed)
-    odd_index = (t[1],t[3])
-    final_output = f"{odd_index} +{re_even_index} "
-    return final_output'''
-    for n in t.index:
-        if n%2 == 0:
-            even_index += n
-            even_index = even_index.reversed
-        else:
-            odd_index += n
-    return (f"{odd_index} + {even_index}")
+"""even_index = (t[0],t[2],t[4])
+re_even_index = (even_index.reversed)
+odd_index = (t[1],t[3])
+final_output = f"{odd_index} +{re_even_index} "
+return final_output"""
+
+for n in t.index:
+    if n % 2 == 0:
+        even_index += n
+        even_index = even_index.reversed
+    else:
+        odd_index += n
+return f"{odd_index} + {even_index}"
 ```
 
 ### Runtime NameError from undefined temporary lists/indices in even/odd split logic
@@ -196,12 +198,12 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `e9b8132b4db646f9bc4f88d5e385752a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    arr=list(t)
-    odd_indexed = [arr[i] for i in range (len(arr)) if i % 2 !=0]
-    even_indexed = [arr[i] for i in range (len(arr)) if i % 2 == 0]
-    result = odd_indexed +list(reversed(even-indexed))
-    return tuple(result)
+...
+arr = list(t)
+odd_indexed = [arr[i] for i in range(len(arr)) if i % 2 != 0]
+even_indexed = [arr[i] for i in range(len(arr)) if i % 2 == 0]
+result = odd_indexed + list(reversed(even - indexed))
+return tuple(result)
 ```
 
 ### Runtime AttributeError
@@ -239,23 +241,23 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `8cfe5b38ff4b403491556f70518474a7`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    l = list(t)
-    length = len(l)
-    l1 = []
-    l2 = []
-    for i in range(length):
-        if(i%2 == 0):
-            l1.append(l[i])
-        else:
-            l2.append(l[i])
-    lth = len(l1)
-    l3 = []
-    l4 = []
-    for j in range(lth):
-        l3[j] = l1[(lth-1)-j]
-    l4 = l2 + l3
-    t1 = tuple(l4)
-    return t1
+l = list(t)
+length = len(l)
+l1 = []
+l2 = []
+for i in range(length):
+    if i % 2 == 0:
+        l1.append(l[i])
+    else:
+        l2.append(l[i])
+lth = len(l1)
+l3 = []
+l4 = []
+for j in range(lth):
+    l3[j] = l1[(lth - 1) - j]
+l4 = l2 + l3
+t1 = tuple(l4)
+return t1
 ```
 
 ### Incorrect tuple slicing/reconstruction logic for moving even indices to the end in reversed order
@@ -269,20 +271,20 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `242f6a6bda8d40adb0a6324bf648b44e`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if len(t) == 2:
-        return (t[-1], t[0])
-    elif len(t) == 3:
-        return (t[1], t[2], t[0])
-    elif len(t) == 4:
-        return (t[1], t[3], t[2], t[0])
-    elif len(t) == 5:
-        return (t[1], t[3], t[4], t[2], t[0])
-    elif len(t) == 6:
-        return (t[1], t[3], t[5], t[4], t[2], t[0])
-    elif len(t) == 7:
-        return (t[1], t[3], t[5], t[6], t[4], t[2], t[0])
-    elif len(t) == 8:
-        return (t[1], t[3], t[5], t[7], t[6], t[4], t[2], t[0])
+if len(t) == 2:
+    return (t[-1], t[0])
+elif len(t) == 3:
+    return (t[1], t[2], t[0])
+elif len(t) == 4:
+    return (t[1], t[3], t[2], t[0])
+elif len(t) == 5:
+    return (t[1], t[3], t[4], t[2], t[0])
+elif len(t) == 6:
+    return (t[1], t[3], t[5], t[4], t[2], t[0])
+elif len(t) == 7:
+    return (t[1], t[3], t[5], t[6], t[4], t[2], t[0])
+elif len(t) == 8:
+    return (t[1], t[3], t[5], t[7], t[6], t[4], t[2], t[0])
 ```
 
 ### Runtime error (parseable final submission)
@@ -297,23 +299,23 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `172355adc4da493bb9a384955f8221ae`, summary `Runtime Error`, score `67`, vector `011`
 
 ```python
-    l=list(t)
-    l1=[]
-    l2=[]
-    if l!=[]:
-        for i in range(len(l)):
-            if i%2!=0:
-                l1=l1+[l[i]]
-            else:
-                l2=l2+[l[i]]
-        for j in range(len(l1)):
-            l3=l2[::-1]
-        l4=l1+l3
-        t=tuple(l4)
-        return t
-    else:
-        t=()
-        return t
+l = list(t)
+l1 = []
+l2 = []
+if l != []:
+    for i in range(len(l)):
+        if i % 2 != 0:
+            l1 = l1 + [l[i]]
+        else:
+            l2 = l2 + [l[i]]
+    for j in range(len(l1)):
+        l3 = l2[::-1]
+    l4 = l1 + l3
+    t = tuple(l4)
+    return t
+else:
+    t = ()
+    return t
 ```
 
 ### Runtime RecursionError
@@ -328,8 +330,8 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `36b06d193e214495ac347cdcdd86fb20`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    t = (10, 20, 30, 40, 50)
-    move_even_indices_to_end_reversed(t)
+t = (10, 20, 30, 40, 50)
+move_even_indices_to_end_reversed(t)
 ```
 
 ### Uses non-existent tuple/string reverse APIs (`t.reversed()`) or wrong reverse method semantics
@@ -343,7 +345,7 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `008f24528b0a4f4cb589dc4838be9a08`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    t.reversed()
+t.reversed()
 ```
 
 ### Runtime ValueError
@@ -357,10 +359,10 @@ print("('b','d','f','e','c','a')")
   - Variant `ns_25t3_py11/9`, Student ID `bcdce38be417426d8c7e7d9cf15136af`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    z = list(t)
-    b = []
-    for i in range(len(z)):
-        if i%2==0:
-            b.remove(z[i])
-    return b
+z = list(t)
+b = []
+for i in range(len(z)):
+    if i % 2 == 0:
+        b.remove(z[i])
+return b
 ```

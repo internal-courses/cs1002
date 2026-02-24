@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py11_1/9` (canonical) | 336 | 262 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py11_1/9` (canonical) |              336 |      262 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py11_1/9` | 336 | 74 | 262 | 205 | 57 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py11_1/9` |              336 |        74 |      262 |                205 |                     57 |
 
 ## Private Case Structure
 
@@ -44,26 +44,26 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py11_1/9` |
-| --- | ---: | ---: | ---: |
-| Hard-codes the public sample pair set (`{(1,3), (2,2)}`) / sample inputs instead of general pair generation | 78 | 29.8% | 78 |
-| Syntax / non-parseable final submission | 57 | 21.8% | 57 |
-| Runtime TypeError | 25 | 9.5% | 25 |
-| Skeleton placeholder `...` left in function | 19 | 7.3% | 19 |
-| Returns inside loop before completing full check/computation | 19 | 7.3% | 19 |
-| Runtime NameError | 14 | 5.3% | 14 |
-| No return / implicit `None` | 11 | 4.2% | 11 |
-| Runtime IndexError | 10 | 3.8% | 10 |
-| Runtime error (parseable final submission) | 7 | 2.7% | 7 |
-| Runtime AttributeError | 7 | 2.7% | 7 |
-| Incorrect unique-sum-pair logic (returns too early, wrong return type, or non-general pair construction) | 5 | 1.9% | 5 |
-| Nested-loop pair generation does not correctly enforce unique-pair semantics / duplicate handling | 3 | 1.1% | 3 |
-| Runtime ValueError | 2 | 0.8% | 2 |
-| Returns a single tuple pair (`a, b`) instead of the required set of all unique pairs | 1 | 0.4% | 1 |
-| Builds all pair tuples and removes reversed duplicates while iterating the same list (mutation skips cases) | 1 | 0.4% | 1 |
-| Accumulates pairs in a list then converts to `set`, but duplicate/order logic is still incorrect | 1 | 0.4% | 1 |
-| Single-pass complement logic stores `target` instead of `num` (`seen.add(target)`), so valid pairs are missed | 1 | 0.4% | 1 |
-| Counter-based solution nests the `num < complement` branch under `num == complement`, so distinct-value pairs are skipped | 1 | 0.4% | 1 |
+| Pattern                                                                                                                   | Cluster count | % of cluster non-full | `ns_25t2_py11_1/9` |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Hard-codes the public sample pair set (`{(1,3), (2,2)}`) / sample inputs instead of general pair generation               |            78 |                 29.8% |                 78 |
+| Syntax / non-parseable final submission                                                                                   |            57 |                 21.8% |                 57 |
+| Runtime TypeError                                                                                                         |            25 |                  9.5% |                 25 |
+| Skeleton placeholder `...` left in function                                                                               |            19 |                  7.3% |                 19 |
+| Returns inside loop before completing full check/computation                                                              |            19 |                  7.3% |                 19 |
+| Runtime NameError                                                                                                         |            14 |                  5.3% |                 14 |
+| No return / implicit `None`                                                                                               |            11 |                  4.2% |                 11 |
+| Runtime IndexError                                                                                                        |            10 |                  3.8% |                 10 |
+| Runtime error (parseable final submission)                                                                                |             7 |                  2.7% |                  7 |
+| Runtime AttributeError                                                                                                    |             7 |                  2.7% |                  7 |
+| Incorrect unique-sum-pair logic (returns too early, wrong return type, or non-general pair construction)                  |             5 |                  1.9% |                  5 |
+| Nested-loop pair generation does not correctly enforce unique-pair semantics / duplicate handling                         |             3 |                  1.1% |                  3 |
+| Runtime ValueError                                                                                                        |             2 |                  0.8% |                  2 |
+| Returns a single tuple pair (`a, b`) instead of the required set of all unique pairs                                      |             1 |                  0.4% |                  1 |
+| Builds all pair tuples and removes reversed duplicates while iterating the same list (mutation skips cases)               |             1 |                  0.4% |                  1 |
+| Accumulates pairs in a list then converts to `set`, but duplicate/order logic is still incorrect                          |             1 |                  0.4% |                  1 |
+| Single-pass complement logic stores `target` instead of `num` (`seen.add(target)`), so valid pairs are missed             |             1 |                  0.4% |                  1 |
+| Counter-based solution nests the `num < complement` branch under `num == complement`, so distinct-value pairs are skipped |             1 |                  0.4% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -294,21 +294,19 @@ def unique_sum_pairs(nums: list, k: int) -> set:
 
 ```python
 ...
-s=set()
-eq=0
+s = set()
+eq = 0
 for i in nums:
-        for j in nums:
-            if i==j and  nums[i]+nums[j]==k:
+    for j in nums:
+        if i == j and nums[i] + nums[j] == k:
+            for m in nums:
+                if m == nums[i]:
+                    eq += 1
+                if eq >= 2:
+                    s.add((nums[i], nums[i]))
 
-                for m in nums:
-                    if m==nums[i]:
-                        eq+=1
-                    if eq >=2:
-                        s.add((nums[i],nums[i]))
-
-
-            elif nums[i]+nums[j]==k:
-                s.add((nums[i],nums[j]))
+        elif nums[i] + nums[j] == k:
+            s.add((nums[i], nums[j]))
 return sorted(s)
 ```
 
@@ -391,14 +389,14 @@ print('elements')
 ```python
 count = {}
 for num in nums:
-        if num in count:
-            count[num] += 1
-        else:
-            count[num] = 1
+    if num in count:
+        count[num] += 1
+    else:
+        count[num] = 1
 pair = set()
 for num in count:
-        if k - num in count and (num != k - num and count [num] > 1):
-           pair = set(sorted((num, k - num)))
+    if k - num in count and (num != k - num and count[num] > 1):
+        pair = set(sorted((num, k - num)))
 return pair
 ```
 
@@ -415,14 +413,14 @@ return pair
 ```python
 newlist = []
 for i in nums:
-        for j in nums:
-            if i+j==k and i<j:
-                newlist.append((i,j))
-            elif i+j==k and i==j:
-                newlist.append((i,j))
-                break
-            else:
-                pass
+    for j in nums:
+        if i + j == k and i < j:
+            newlist.append((i, j))
+        elif i + j == k and i == j:
+            newlist.append((i, j))
+            break
+        else:
+            pass
 return set(newlist)
 ...
 ```
@@ -472,13 +470,13 @@ return tu1
 ```python
 b = nums.copy()
 c = 0
-d=0
+d = 0
 for i in nums:
-        for j in b:
-            if i + j == k:
-                c= i
-                d= j
-return c,d
+    for j in b:
+        if i + j == k:
+            c = i
+            d = j
+return c, d
 ```
 
 ### Builds all pair tuples and removes reversed duplicates while iterating the same list (mutation skips cases)
@@ -492,21 +490,21 @@ return c,d
   - Variant `ns_25t2_py11_1/9`, Student ID `24da594976024ad68e3659fe8169bc11`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-l=[]
-z=list(set(nums))
+l = []
+z = list(set(nums))
 for i in z:
-        for j in z:
-            if(i+j==k):
-                u=[]
-                u.append(i)
-                u.append(j)
-                l.append(tuple(u))
-d=list(set(l))
+    for j in z:
+        if i + j == k:
+            u = []
+            u.append(i)
+            u.append(j)
+            l.append(tuple(u))
+d = list(set(l))
 for i in d:
-        for j in d:
-            if(i[0]==j[1] and i[1]==j[0]):
-                if(i[0]!=j[0] and i[1]!=j[1]):
-                    d.remove(j)
+    for j in d:
+        if i[0] == j[1] and i[1] == j[0]:
+            if i[0] != j[0] and i[1] != j[1]:
+                d.remove(j)
 return set(d)
 ```
 
@@ -524,10 +522,10 @@ return set(d)
 complement = {}
 answers = []
 for num in nums:
-        if num not in complement.values():
-            complement[num] = k - num
-        # print(num, k-num)
-        answers.append(tuple(sorted([num, k - num])))
+    if num not in complement.values():
+        complement[num] = k - num
+    # print(num, k-num)
+    answers.append(tuple(sorted([num, k - num])))
 return set(answers)
 ```
 
@@ -546,12 +544,12 @@ seen = set()
 used = set()
 result = set()
 for num in nums:
-        target = k - num
-        if target in seen and (target not in used and  num not in used):
-            result.add(tuple(sorted((num , target))))
-            used.add(num)
-            used.add(target)
-        seen.add(target)
+    target = k - num
+    if target in seen and (target not in used and num not in used):
+        result.add(tuple(sorted((num, target))))
+        used.add(num)
+        used.add(target)
+    seen.add(target)
 return result
 ```
 
@@ -566,15 +564,15 @@ return result
   - Variant `ns_25t2_py11_1/9`, Student ID `3d9f954f5e024097b29b53f440205c56`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-count=Counter(nums)
-result=set()
+count = Counter(nums)
+result = set()
 for num in count:
-     complement = k-num
-     if complement in count:
-         if num==complement:
-             if count[num]>=2:
-                 result.add((num,num))
-             elif num<complement:
-                 result.add((num,complement))
+    complement = k - num
+    if complement in count:
+        if num == complement:
+            if count[num] >= 2:
+                result.add((num, num))
+            elif num < complement:
+                result.add((num, complement))
 return result
 ```

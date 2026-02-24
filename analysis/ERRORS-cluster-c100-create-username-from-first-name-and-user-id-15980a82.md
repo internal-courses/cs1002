@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py22/6` (canonical) | 495 | 89 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py22/6` (canonical) |              495 |       89 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py22/6` | 495 | 406 | 89 | 70 | 19 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py22/6` |              495 |       406 |       89 |                 70 |                     19 |
 
 ## Private Case Structure
 
@@ -46,30 +46,30 @@ Private-case vectors in this report are 5-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py22/6` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 19 | 21.3% | 19 |
-| No return / implicit `None` | 7 | 7.9% | 7 |
-| Hard-codes public sample usernames/names instead of generating the username from arbitrary inputs | 7 | 7.9% | 7 |
-| Uses the first 3 characters but forgets to lowercase the name prefix | 7 | 7.9% | 7 |
-| Username construction logic is broadly incorrect (lowercasing, prefix length, or input usage) | 6 | 6.7% | 6 |
-| Reads `input()` in a function-type question instead of using `first_name, user_id` parameters | 5 | 5.6% | 5 |
-| Runtime TypeError | 5 | 5.6% | 5 |
-| Runtime error (parseable final submission) | 4 | 4.5% | 4 |
-| Runtime NameError | 4 | 4.5% | 4 |
-| Calls `create_username(...)` inside itself using sample examples (recursive/self-test code in function) | 4 | 4.5% | 4 |
-| Uses undefined lowercasing helper/identifier (`lower`, `lowercase`) instead of `.lower()` | 4 | 4.5% | 4 |
-| Misuses string APIs (`tolower`, `.append`, or `.lower` without proper call/usage) while building username | 3 | 3.4% | 3 |
-| Short-name edge-case bug: indexes `[0],[1],[2]` in a branch that still runs for names shorter than 3 | 3 | 3.4% | 3 |
-| Lowercases only specific sample initials (A/B/J) instead of calling `.lower()` on the whole name | 2 | 2.2% | 2 |
-| Lowercases the full name but forgets to truncate to the first 3 characters for long names | 2 | 2.2% | 2 |
-| Branch initialization bug: `id_str` is defined only in one branch and used in both | 1 | 1.1% | 1 |
-| References `.lower` but does not call it (`.lower()` missing) | 1 | 1.1% | 1 |
-| Runtime ValueError | 1 | 1.1% | 1 |
-| Indexes the first three characters without a safe short-name guard (`len(name) < 3`) | 1 | 1.1% | 1 |
-| Sample-specific/manual case handling (initial-letter-specific logic) instead of general lowercase+prefix logic | 1 | 1.1% | 1 |
-| Length-branch bug: long names return the full name instead of a 3-letter prefix | 1 | 1.1% | 1 |
-| Single hidden-case miss: truncation/length-branch logic is wrong for one name-length scenario | 1 | 1.1% | 1 |
+| Pattern                                                                                                        | Cluster count | % of cluster non-full | `ns_25t3_py22/6` |
+| -------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Syntax / non-parseable final submission                                                                        |            19 |                 21.3% |               19 |
+| No return / implicit `None`                                                                                    |             7 |                  7.9% |                7 |
+| Hard-codes public sample usernames/names instead of generating the username from arbitrary inputs              |             7 |                  7.9% |                7 |
+| Uses the first 3 characters but forgets to lowercase the name prefix                                           |             7 |                  7.9% |                7 |
+| Username construction logic is broadly incorrect (lowercasing, prefix length, or input usage)                  |             6 |                  6.7% |                6 |
+| Reads `input()` in a function-type question instead of using `first_name, user_id` parameters                  |             5 |                  5.6% |                5 |
+| Runtime TypeError                                                                                              |             5 |                  5.6% |                5 |
+| Runtime error (parseable final submission)                                                                     |             4 |                  4.5% |                4 |
+| Runtime NameError                                                                                              |             4 |                  4.5% |                4 |
+| Calls `create_username(...)` inside itself using sample examples (recursive/self-test code in function)        |             4 |                  4.5% |                4 |
+| Uses undefined lowercasing helper/identifier (`lower`, `lowercase`) instead of `.lower()`                      |             4 |                  4.5% |                4 |
+| Misuses string APIs (`tolower`, `.append`, or `.lower` without proper call/usage) while building username      |             3 |                  3.4% |                3 |
+| Short-name edge-case bug: indexes `[0],[1],[2]` in a branch that still runs for names shorter than 3           |             3 |                  3.4% |                3 |
+| Lowercases only specific sample initials (A/B/J) instead of calling `.lower()` on the whole name               |             2 |                  2.2% |                2 |
+| Lowercases the full name but forgets to truncate to the first 3 characters for long names                      |             2 |                  2.2% |                2 |
+| Branch initialization bug: `id_str` is defined only in one branch and used in both                             |             1 |                  1.1% |                1 |
+| References `.lower` but does not call it (`.lower()` missing)                                                  |             1 |                  1.1% |                1 |
+| Runtime ValueError                                                                                             |             1 |                  1.1% |                1 |
+| Indexes the first three characters without a safe short-name guard (`len(name) < 3`)                           |             1 |                  1.1% |                1 |
+| Sample-specific/manual case handling (initial-letter-specific logic) instead of general lowercase+prefix logic |             1 |                  1.1% |                1 |
+| Length-branch bug: long names return the full name instead of a 3-letter prefix                                |             1 |                  1.1% |                1 |
+| Single hidden-case miss: truncation/length-branch logic is wrong for one name-length scenario                  |             1 |                  1.1% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -102,7 +102,6 @@ def create_username(first_name: str, user_id: int) -> str:
     Returns:
     str: The generated username.
     """
-
 
 
 # ...
@@ -210,12 +209,12 @@ def create_username(first_name: str, user_id: int) -> str:
   - Variant `ns_25t3_py22/6`, Student ID `754bdc34424d45fd88bd49fbb8cf5e34`, summary `Wrong Answer`, score `0`, vector `00000`
 
 ```python
-   name_lower=first_name.lower()
-   if len(name_lower)>=3:
-       name_part=name_lower[:3]
-   else:
-        name_part=name_lower
-   return f"{name_part}-{user_id}"
+name_lower = first_name.lower()
+if len(name_lower) >= 3:
+    name_part = name_lower[:3]
+else:
+    name_part = name_lower
+return f"{name_part}-{user_id}"
 ```
 
 ### Reads `input()` in a function-type question instead of using `first_name, user_id` parameters
@@ -229,24 +228,25 @@ def create_username(first_name: str, user_id: int) -> str:
   - Variant `ns_25t3_py22/6`, Student ID `cd2735a1e75240fbac10b254388ac951`, summary `Runtime Error`, score `0`, vector `00000`
 
 ```python
-'''
-    Create a username from the first name and user ID.
+"""
+Create a username from the first name and user ID.
 
-    The username is formed by taking the first three letters of the first name
-    in lowercase and concatenating it with the user ID. If the first name has
-    fewer than three letters, the entire name in lowercase is used.
+The username is formed by taking the first three letters of the first name
+in lowercase and concatenating it with the user ID. If the first name has
+fewer than three letters, the entire name in lowercase is used.
 
-    Parameters:
-    first_name (str): The first name of the user.
-    user_id (int): The user ID.
+Parameters:
+first_name (str): The first name of the user.
+user_id (int): The user ID.
 
-    Returns:
-    '''
+Returns:
+"""
+
 first_name = str(input())
 user_id = int(input())
 
-a = (first_name[0:4])
-b =( user_id[0:4])
+a = first_name[0:4]
+b = user_id[0:4]
 # ...
 ```
 
@@ -321,15 +321,16 @@ else:
   - Variant `ns_25t3_py22/6`, Student ID `eb5f9f921c2b4592ac6359e22592491e`, summary `Runtime Error`, score `0`, vector `00000`
 
 ```python
-'''def create_username(first_name: str, user_id: int) -> str:
+"""def create_username(first_name: str, user_id: int) -> str:
 first_name = str(input('enter the first name: '))
 user_id = int(input('enter the user id: '))
  a = first_name
  b = user_id
  username = (a.list[2]) + (b.list[2])
  print (username)
-'''
-print ("'ali123'")
+"""
+
+print("'ali123'")
 ```
 
 ### Calls `create_username(...)` inside itself using sample examples (recursive/self-test code in function)
@@ -343,10 +344,10 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `93a166dcb2594bb58c52afb865e68937`, summary `Runtime Error`, score `0`, vector `00000`
 
 ```python
-    create_username("Alice",123)
-    create_username("Bob",456)
-    create_username("Jo",789)
-    first_name=lower(first_name)
+create_username("Alice", 123)
+create_username("Bob", 456)
+create_username("Jo", 789)
+first_name = lower(first_name)
 ```
 
 ### Uses undefined lowercasing helper/identifier (`lower`, `lowercase`) instead of `.lower()`
@@ -392,18 +393,19 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `20d7219dccd8427ca1eb239f3f8d5dc9`, summary `Runtime Error`, score `0`, vector `00000`
 
 ```python
-    '''name2 = tolower(first_name)
-    name1 = name2.split("")
-    name = name1[:3]
-    name= "".join(name)
-    username = name + user_id
-    return username'''
-    name = list(first_name)
-    name1 = name[:3]
-    name2 = str(name)
-    name_made = name2.tolower()
-    username = name_made + user_id
-    print(username)
+"""name2 = tolower(first_name)
+name1 = name2.split("")
+name = name1[:3]
+name= "".join(name)
+username = name + user_id
+return username"""
+
+name = list(first_name)
+name1 = name[:3]
+name2 = str(name)
+name_made = name2.tolower()
+username = name_made + user_id
+print(username)
 ```
 
 ### Short-name edge-case bug: indexes `[0],[1],[2]` in a branch that still runs for names shorter than 3
@@ -417,13 +419,13 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `5b5aa1138e494ddbbd21e8204bc65149`, summary `Runtime Error`, score `80`, vector `00111`
 
 ```python
-    if len(first_name)>=3:
-        username = first_name[0] + first_name[1] + first_name[2]
-        new = username.lower() + str(user_id)
-    else:
-         username = first_name[0] + first_name[1]
-         new = username.lower() + str(user_id)
-    return new
+if len(first_name) >= 3:
+    username = first_name[0] + first_name[1] + first_name[2]
+    new = username.lower() + str(user_id)
+else:
+    username = first_name[0] + first_name[1]
+    new = username.lower() + str(user_id)
+return new
 ```
 
 ### Lowercases only specific sample initials (A/B/J) instead of calling `.lower()` on the whole name
@@ -522,9 +524,9 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `2a4504f6e5e54c5380b4d921c35a26a1`, summary `Wrong Answer`, score `80`, vector `00111`
 
 ```python
-    username=str.lower(first_name)
-    id=str(user_id)
-    return username+id
+username = str.lower(first_name)
+id = str(user_id)
+return username + id
 ```
 
 ### Runtime ValueError
@@ -538,8 +540,8 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `3c148ff7692f4e409fa15d83d2a61227`, summary `Runtime Error`, score `0`, vector `00000`
 
 ```python
-    if len(int(first_name)<=3):
-        return f"({first_name.lower()}{user_id})"
+if len(int(first_name) <= 3):
+    return f"({first_name.lower()}{user_id})"
 ```
 
 ### Indexes the first three characters without a safe short-name guard (`len(name) < 3`)
@@ -553,9 +555,9 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `49c4a4ec711e4a1485a1bef3f6f0fb4e`, summary `Runtime Error`, score `60`, vector `00110`
 
 ```python
-    lowered_first_name = first_name.lower()
-    str_user_id = str(user_id)
-    return(lowered_first_name[0] + lowered_first_name[1] +lowered_first_name[2] +str_user_id)
+lowered_first_name = first_name.lower()
+str_user_id = str(user_id)
+return lowered_first_name[0] + lowered_first_name[1] + lowered_first_name[2] + str_user_id
 ```
 
 ### Sample-specific/manual case handling (initial-letter-specific logic) instead of general lowercase+prefix logic
@@ -601,12 +603,12 @@ print ("'ali123'")
   - Variant `ns_25t3_py22/6`, Student ID `676b6777bdaf45c090e9351a216f5d7d`, summary `Wrong Answer`, score `80`, vector `00111`
 
 ```python
-    first_name = first_name.lower()
-    if len(first_name)<=3:
-        username = first_name[:3] + str(user_id)
-    else:
-        username = first_name + str(user_id)
-    return username
+first_name = first_name.lower()
+if len(first_name) <= 3:
+    username = first_name[:3] + str(user_id)
+else:
+    username = first_name + str(user_id)
+return username
 ```
 
 ### Single hidden-case miss: truncation/length-branch logic is wrong for one name-length scenario

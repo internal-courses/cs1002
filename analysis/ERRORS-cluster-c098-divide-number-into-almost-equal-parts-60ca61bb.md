@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_1/7` (canonical) | 525 | 368 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_1/7` (canonical) |              525 |      368 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_1/7` | 525 | 157 | 368 | 302 | 66 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_1/7` |              525 |       157 |      368 |                302 |                     66 |
 
 ## Private Case Structure
 
@@ -44,28 +44,28 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_1/7` |
-| --- | ---: | ---: | ---: |
-| Hard-codes public sample outputs or `(n, k)` cases instead of computing a general partition | 106 | 28.8% | 106 |
-| Incorrect partition construction (wrong length/sum/order or non-general logic) | 77 | 20.9% | 77 |
-| Syntax / non-parseable final submission | 66 | 17.9% | 66 |
-| No return / implicit `None` | 42 | 11.4% | 42 |
-| Runtime TypeError | 14 | 3.8% | 14 |
-| Runtime NameError from undefined counters/helpers while constructing the partition list | 10 | 2.7% | 10 |
-| Runtime IndexError | 7 | 1.9% | 7 |
-| Runtime error (parseable final submission) | 7 | 1.9% | 7 |
-| Sorts/reorders the result after construction, which breaks the required stable larger-first ordering | 6 | 1.6% | 6 |
-| Passes simpler/equal-split cases but distributes the remainder incorrectly on non-divisible inputs | 6 | 1.6% | 6 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 5 | 1.4% | 5 |
-| Time Limit Exceeded | 4 | 1.1% | 4 |
-| Runtime ValueError | 4 | 1.1% | 4 |
-| Runtime AttributeError | 4 | 1.1% | 4 |
-| Computes quotient/remainder but sorts the result, breaking the required larger-first order | 3 | 0.8% | 3 |
-| Mixes numeric and list accumulators while building the output parts (list/int type error) | 2 | 0.5% | 2 |
-| Handles only exact-division cases (`n % k == 0`) and omits the non-divisible remainder case | 2 | 0.5% | 2 |
-| Uses `k`-specific branches / length-specific outputs instead of a general quotient-remainder solution | 1 | 0.3% | 1 |
-| Assumes a fixed 3-element output list (e.g., `[0,0,0]`) instead of length `k` | 1 | 0.3% | 1 |
-| Runtime RecursionError | 1 | 0.3% | 1 |
+| Pattern                                                                                               | Cluster count | % of cluster non-full | `ns_25t2_py13_1/7` |
+| ----------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Hard-codes public sample outputs or `(n, k)` cases instead of computing a general partition           |           106 |                 28.8% |                106 |
+| Incorrect partition construction (wrong length/sum/order or non-general logic)                        |            77 |                 20.9% |                 77 |
+| Syntax / non-parseable final submission                                                               |            66 |                 17.9% |                 66 |
+| No return / implicit `None`                                                                           |            42 |                 11.4% |                 42 |
+| Runtime TypeError                                                                                     |            14 |                  3.8% |                 14 |
+| Runtime NameError from undefined counters/helpers while constructing the partition list               |            10 |                  2.7% |                 10 |
+| Runtime IndexError                                                                                    |             7 |                  1.9% |                  7 |
+| Runtime error (parseable final submission)                                                            |             7 |                  1.9% |                  7 |
+| Sorts/reorders the result after construction, which breaks the required stable larger-first ordering  |             6 |                  1.6% |                  6 |
+| Passes simpler/equal-split cases but distributes the remainder incorrectly on non-divisible inputs    |             6 |                  1.6% |                  6 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)               |             5 |                  1.4% |                  5 |
+| Time Limit Exceeded                                                                                   |             4 |                  1.1% |                  4 |
+| Runtime ValueError                                                                                    |             4 |                  1.1% |                  4 |
+| Runtime AttributeError                                                                                |             4 |                  1.1% |                  4 |
+| Computes quotient/remainder but sorts the result, breaking the required larger-first order            |             3 |                  0.8% |                  3 |
+| Mixes numeric and list accumulators while building the output parts (list/int type error)             |             2 |                  0.5% |                  2 |
+| Handles only exact-division cases (`n % k == 0`) and omits the non-divisible remainder case           |             2 |                  0.5% |                  2 |
+| Uses `k`-specific branches / length-specific outputs instead of a general quotient-remainder solution |             1 |                  0.3% |                  1 |
+| Assumes a fixed 3-element output list (e.g., `[0,0,0]`) instead of length `k`                         |             1 |                  0.3% |                  1 |
+| Runtime RecursionError                                                                                |             1 |                  0.3% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -213,16 +213,16 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `ff23805daf6344998ef8bc2238138833`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    avg = (k)//n
-    rem = (k)% n
-    result = []
-    start = 0
-    for i in range(n):
-        end = start+avg+(1 if i<rem else 0)
-        result .append(list[start : end])
-        start=end
-    return result
+...
+avg = (k) // n
+rem = (k) % n
+result = []
+start = 0
+for i in range(n):
+    end = start + avg + (1 if i < rem else 0)
+    result.append(list[start:end])
+    start = end
+return result
 ```
 
 ### Runtime NameError from undefined counters/helpers while constructing the partition list
@@ -236,17 +236,17 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `3b26534dff4843bd817619c7df7a5951`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    sum1 = 0
-    while (sum1 != n):
-        i = 0
-        while (i<k) :
-            temp = random(int)
-            sum += temp
-            l.insert(0, temp)
-            i += 1
-    if sum1 == n :
-        list.sort(key=None, reverse = True)
-        return list
+sum1 = 0
+while sum1 != n:
+    i = 0
+    while i < k:
+        temp = random(int)
+        sum += temp
+        l.insert(0, temp)
+        i += 1
+if sum1 == n:
+    list.sort(key=None, reverse=True)
+    return list
 ```
 
 ### Runtime IndexError
@@ -261,22 +261,22 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `fa7fb11db3234e0ebc924b9eb7e8636e`, summary `Runtime Error`, score `33`, vector `100`
 
 ```python
-    l=[]
-    for i in range(k):
-        if n%k==1:
-            l.append(int(n/k))
-        elif n%k==0:
-            l.append(int(n/k))
-        elif n%k==2:
-            l.append(int(n/k))
-    length=len(l)
-    for j in range(k):
-        if(sum(l)!=n):
-            l[(length-1)]+=1
-        length=length-1
-    l.sort()
-    l.reverse()
-    return l
+l = []
+for i in range(k):
+    if n % k == 1:
+        l.append(int(n / k))
+    elif n % k == 0:
+        l.append(int(n / k))
+    elif n % k == 2:
+        l.append(int(n / k))
+length = len(l)
+for j in range(k):
+    if sum(l) != n:
+        l[(length - 1)] += 1
+    length = length - 1
+l.sort()
+l.reverse()
+return l
 ```
 
 ### Runtime error (parseable final submission)
@@ -291,20 +291,20 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `1b78ba5a5c6c41ee9bc5f26aa52b6bf4`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    lst = []
-    mst = []
-    sum = 0
-    for i in range(k):
-        noof += 1
-        i += 1
-        for j in range(noof):
-            if m<n:
-                sum += m
-                mst.append(sum)
-                if (sum == n):
-                    lst.append(mst)
-    return lst
+...
+lst = []
+mst = []
+sum = 0
+for i in range(k):
+    noof += 1
+    i += 1
+    for j in range(noof):
+        if m < n:
+            sum += m
+            mst.append(sum)
+            if sum == n:
+                lst.append(mst)
+return lst
 ```
 
 ### Sorts/reorders the result after construction, which breaks the required stable larger-first ordering
@@ -318,24 +318,24 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `80639f4eaa364e7fa816d5672ebf5892`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    p = (n/k)
-    o = p - (n//k)
-    if o>=0.5:
-        t = math.ceil(p)
-    else:
-        t = math.floor(p)
-    lis = []
-    suma = 0
-    for i in range(k-1):
-        lis.append(t)
-        suma+= t
-    x = n-suma
-    lis.append(x)
-    lis.sort()
-    sol = []
-    for j in range(len(lis)-1,-1,-1):
-        sol.append(lis[j])
-    return sol
+p = n / k
+o = p - (n // k)
+if o >= 0.5:
+    t = math.ceil(p)
+else:
+    t = math.floor(p)
+lis = []
+suma = 0
+for i in range(k - 1):
+    lis.append(t)
+    suma += t
+x = n - suma
+lis.append(x)
+lis.sort()
+sol = []
+for j in range(len(lis) - 1, -1, -1):
+    sol.append(lis[j])
+return sol
 ```
 
 ### Passes simpler/equal-split cases but distributes the remainder incorrectly on non-divisible inputs
@@ -381,19 +381,19 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `0b4cc28f35474b64adb6fa769c896595`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    list = []
-    a = int(input("enter order1"))
-    b = int(input("enter order2"))
-    c = int(input("enter order3"))
-    n = int(input("enter the number"))
-    k = int(input("enter the number1"))
-    k = len(list)
-    n = a+b+c
-    list = list.append(a)
-    list = list.append(b)
-    list = list.append(c)
-    print(list)
-    print(list)
+list = []
+a = int(input("enter order1"))
+b = int(input("enter order2"))
+c = int(input("enter order3"))
+n = int(input("enter the number"))
+k = int(input("enter the number1"))
+k = len(list)
+n = a + b + c
+list = list.append(a)
+list = list.append(b)
+list = list.append(c)
+print(list)
+print(list)
 ```
 
 ### Time Limit Exceeded
@@ -407,19 +407,19 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `0824f51aa9364f11b942c5beef49ea10`, summary `Time Limit Exceeded`, score `0`, vector `000`
 
 ```python
-    l1= []
-    if(n%k==0):
-        for i in range(k):
-            l1.append(n//k)
+l1 = []
+if n % k == 0:
+    for i in range(k):
+        l1.append(n // k)
+else:
+    if (k * 2 > n) and (n != 0):
+        l1.append(k - 1)
+        k = k - 1
+        n = n - (k - 1)
     else:
-        if((k*2>n) and (n!=0)):
-            l1.append(k-1)
-            k=(k-1)
-            n=(n-(k-1))
-        else:
-            while(n!=0):
-                l1.append(k*2)
-    return l1
+        while n != 0:
+            l1.append(k * 2)
+return l1
 ```
 
 ### Runtime ValueError
@@ -466,17 +466,17 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `b40432590f9a4aac83d1706195930428`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    l=[]
-    summation=n
-    total=0
-    for i in range(k-1):
-        a=n//k
-        l.append(a)
-        total+=a
-    b=summation-total
-    l.append(b)
-    x=l.reverse().sort()
-    return l
+l = []
+summation = n
+total = 0
+for i in range(k - 1):
+    a = n // k
+    l.append(a)
+    total += a
+b = summation - total
+l.append(b)
+x = l.reverse().sort()
+return l
 ```
 
 ### Computes quotient/remainder but sorts the result, breaking the required larger-first order
@@ -554,23 +554,23 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `cee10ddf88e940e485cd4b1da6f14c77`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    if n%k==0:
-        x=[]
-        for i in range(k):
-            x.append(n//k)
-        return x
-    if n%k==1:
-        y=[]
-        for i in range(k):
-            y.append(n//k+(n%k))
-            n=n-(n%k)
-        return y
-    if n%k==2:
-        z=[]
-        for i in range(k-1):
-            z.append(n%k)
-        z.append(1)
-        return z
+if n % k == 0:
+    x = []
+    for i in range(k):
+        x.append(n // k)
+    return x
+if n % k == 1:
+    y = []
+    for i in range(k):
+        y.append(n // k + (n % k))
+        n = n - (n % k)
+    return y
+if n % k == 2:
+    z = []
+    for i in range(k - 1):
+        z.append(n % k)
+    z.append(1)
+    return z
 ```
 
 ### Uses `k`-specific branches / length-specific outputs instead of a general quotient-remainder solution
@@ -640,19 +640,13 @@ def divide_into_almost_equal_parts(n: int, k: int) -> list:
   - Variant `ns_25t2_py13_1/7`, Student ID `e0e08ab2fd9b4654b2ec7d7dcddc0aea`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if n>0 and k>0:
-        is_equal(divide_into_almost_equal_parts (5, 3),
-        [2, 2, 1]
-        )
-        return [2, 2, 1]
-    if n>0 and k>0:
-        is_equal (divide_into_almost_equal_parts (16,3),
-        [6, 5, 5]
-        )
-        return [6, 5, 5]
-    if n>0 and k>0:
-        is_equal (divide_into_almost_equal_parts (12, 4),
-        [3, 3, 3, 3]
-        )
-        return [3, 3, 3, 3]
+if n > 0 and k > 0:
+    is_equal(divide_into_almost_equal_parts(5, 3), [2, 2, 1])
+    return [2, 2, 1]
+if n > 0 and k > 0:
+    is_equal(divide_into_almost_equal_parts(16, 3), [6, 5, 5])
+    return [6, 5, 5]
+if n > 0 and k > 0:
+    is_equal(divide_into_almost_equal_parts(12, 4), [3, 3, 3, 3])
+    return [3, 3, 3, 3]
 ```

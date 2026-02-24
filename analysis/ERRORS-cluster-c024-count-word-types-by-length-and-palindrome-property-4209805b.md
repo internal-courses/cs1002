@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py13_1/11` (canonical) | 426 | 272 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py13_1/11` (canonical) |              426 |      272 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py13_1/11` | 426 | 154 | 272 | 215 | 57 |
-| `ns_25t3_py13_2/12` | 0 | 0 | 0 | 0 | 0 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py13_1/11` |              426 |       154 |      272 |                215 |                     57 |
+| `ns_25t3_py13_2/12` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -49,28 +49,28 @@ Private-case vectors in this report are 5-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py13_1/11` | `ns_25t3_py13_2/12` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 57 | 21.0% | 57 | 0 |
-| Uses `split(' ')` instead of `split()`, so hidden trailing-space lines create empty-string tokens that are miscounted | 48 | 17.6% | 48 | 0 |
-| Incorrect multi-line word-category counting logic (input handling, tokenization, or category assignment is broadly wrong) | 39 | 14.3% | 39 | 0 |
-| Reads only one text line after `n` and ignores the remaining lines | 31 | 11.4% | 31 | 0 |
-| Empty/comment-only final submission | 21 | 7.7% | 21 | 0 |
-| Hard-codes public sample count outputs instead of counting word categories from the input | 11 | 4.0% | 11 | 0 |
-| Runtime NameError from undefined counters/helpers (`reverse`, `word`, etc.) in counting logic | 11 | 4.0% | 11 | 0 |
-| Mostly correct category counting, but hidden input-tokenization/aggregation edge case fails (commonly `split(' ')` or per-line output placement) | 11 | 4.0% | 11 | 0 |
-| Runtime error (parseable final submission) | 11 | 4.0% | 11 | 0 |
-| Resets the category counters inside the per-line loop, so only the last line (or partial totals) are reported | 8 | 2.9% | 8 | 0 |
-| Runtime TypeError from treating words/lists as scalars (or malformed palindrome checks) | 6 | 2.2% | 6 | 0 |
-| Partially correct counting logic with a hidden edge-case bug (word palindrome test or multi-line aggregation semantics) | 5 | 1.8% | 5 | 0 |
-| Runtime AttributeError from string/list method misuse while splitting/checking words | 3 | 1.1% | 3 | 0 |
-| Reads input until EOF instead of consuming exactly `n` lines after the first line | 2 | 0.7% | 2 | 0 |
-| Iterates characters of each line (`for word in line`) instead of splitting into words first | 2 | 0.7% | 2 | 0 |
-| Runtime IndexError from fixed-index word/slice assumptions while classifying word categories | 2 | 0.7% | 2 | 0 |
-| Compares against the reversed word-list/string (`p = s[::-1]`) instead of checking each word palindrome independently | 1 | 0.4% | 1 | 0 |
-| Runtime EOFError from incorrect input protocol (wrong number/order of `input()` calls) | 1 | 0.4% | 1 | 0 |
-| Normalizes words and changes palindrome semantics (hidden tests expect the direct word palindrome check) | 1 | 0.4% | 1 | 0 |
-| Inefficient palindrome-check/counting logic (nested loops over characters/indices) causing Time Limit Exceeded | 1 | 0.4% | 1 | 0 |
+| Pattern                                                                                                                                          | Cluster count | % of cluster non-full | `ns_25t3_py13_1/11` | `ns_25t3_py13_2/12` |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | ------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                                                          |            57 |                 21.0% |                  57 |                   0 |
+| Uses `split(' ')` instead of `split()`, so hidden trailing-space lines create empty-string tokens that are miscounted                            |            48 |                 17.6% |                  48 |                   0 |
+| Incorrect multi-line word-category counting logic (input handling, tokenization, or category assignment is broadly wrong)                        |            39 |                 14.3% |                  39 |                   0 |
+| Reads only one text line after `n` and ignores the remaining lines                                                                               |            31 |                 11.4% |                  31 |                   0 |
+| Empty/comment-only final submission                                                                                                              |            21 |                  7.7% |                  21 |                   0 |
+| Hard-codes public sample count outputs instead of counting word categories from the input                                                        |            11 |                  4.0% |                  11 |                   0 |
+| Runtime NameError from undefined counters/helpers (`reverse`, `word`, etc.) in counting logic                                                    |            11 |                  4.0% |                  11 |                   0 |
+| Mostly correct category counting, but hidden input-tokenization/aggregation edge case fails (commonly `split(' ')` or per-line output placement) |            11 |                  4.0% |                  11 |                   0 |
+| Runtime error (parseable final submission)                                                                                                       |            11 |                  4.0% |                  11 |                   0 |
+| Resets the category counters inside the per-line loop, so only the last line (or partial totals) are reported                                    |             8 |                  2.9% |                   8 |                   0 |
+| Runtime TypeError from treating words/lists as scalars (or malformed palindrome checks)                                                          |             6 |                  2.2% |                   6 |                   0 |
+| Partially correct counting logic with a hidden edge-case bug (word palindrome test or multi-line aggregation semantics)                          |             5 |                  1.8% |                   5 |                   0 |
+| Runtime AttributeError from string/list method misuse while splitting/checking words                                                             |             3 |                  1.1% |                   3 |                   0 |
+| Reads input until EOF instead of consuming exactly `n` lines after the first line                                                                |             2 |                  0.7% |                   2 |                   0 |
+| Iterates characters of each line (`for word in line`) instead of splitting into words first                                                      |             2 |                  0.7% |                   2 |                   0 |
+| Runtime IndexError from fixed-index word/slice assumptions while classifying word categories                                                     |             2 |                  0.7% |                   2 |                   0 |
+| Compares against the reversed word-list/string (`p = s[::-1]`) instead of checking each word palindrome independently                            |             1 |                  0.4% |                   1 |                   0 |
+| Runtime EOFError from incorrect input protocol (wrong number/order of `input()` calls)                                                           |             1 |                  0.4% |                   1 |                   0 |
+| Normalizes words and changes palindrome semantics (hidden tests expect the direct word palindrome check)                                         |             1 |                  0.4% |                   1 |                   0 |
+| Inefficient palindrome-check/counting logic (nested loops over characters/indices) causing Time Limit Exceeded                                   |             1 |                  0.4% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -123,23 +123,23 @@ for word in words:
 
 ```python
 # write your code here
-n=int(input())
-odd_pali=0
-even_pali=0
-odd_nor=0
-even_nor=0
+n = int(input())
+odd_pali = 0
+even_pali = 0
+odd_nor = 0
+even_nor = 0
 
 for i in range(n):
-    if i==0:
-        line0=input()
-    elif i==1:
-        line1=input()
-    elif i==2:
-        line2=input()
-    elif i==3:
-        line3=input()
-    elif i==4:
-        line4=input()
+    if i == 0:
+        line0 = input()
+    elif i == 1:
+        line1 = input()
+    elif i == 2:
+        line2 = input()
+    elif i == 3:
+        line3 = input()
+    elif i == 4:
+        line4 = input()
 # ...
 ```
 
@@ -198,7 +198,7 @@ count_odd_palindrome = 0
 count_even_palindrome = 0
 count_odd_only = 0
 count_even_only = 0
-while n>0:
+while n > 0:
     odd = False
     even = False
     palindrome = False
@@ -277,7 +277,7 @@ if l % 2 == 0:
 else:
     print("odd")
 
-s=words.split()
+s = words.split()
 if s[0] == s[-1]:
     print("palindrome")
 else:
@@ -286,7 +286,7 @@ else:
 count_even_palindrome == 0
 if word == even and palindrome:
     print("even_palindrome")
-count_even_palindrome +=1
+count_even_palindrome += 1
 # ...
 ```
 
@@ -346,13 +346,13 @@ even_normal = 0
 for word in n:
     words = input().split()
     if words.islower() or words.isupper():
-        if len(words)%2 != 0 and words[1:-1]==words[-1:1]:
+        if len(words) % 2 != 0 and words[1:-1] == words[-1:1]:
             odd_palindrome_count += 1
-        elif len(words)%2 == 0 and words[1:-1]==words[-1:1]:
+        elif len(words) % 2 == 0 and words[1:-1] == words[-1:1]:
             even_palindrome_count += 1
-        elif len(words)%2 != 0 and words[1:-1] != words[-1:1]:
+        elif len(words) % 2 != 0 and words[1:-1] != words[-1:1]:
             odd_normal += 1
-        elif len(words)%2 == 0 and words[1:-1] != words[-1:1]:
+        elif len(words) % 2 == 0 and words[1:-1] != words[-1:1]:
             even_normal += 1
 # ...
 ```
@@ -371,22 +371,22 @@ for word in n:
 ```python
 # write your code here
 
-n=int(input())
+n = int(input())
 for i in range(n):
-    words=input()
-oddpalindrome=0
-evenpalindrome=0
-oddnormal=0
-evennormal=0
+    words = input()
+oddpalindrome = 0
+evenpalindrome = 0
+oddnormal = 0
+evennormal = 0
 for word in words:
-    if len(word)%2==0:
-        if word[0]==word[-1]:
-            evenpalindrome +=1
+    if len(word) % 2 == 0:
+        if word[0] == word[-1]:
+            evenpalindrome += 1
         else:
-            evennormal +=1
+            evennormal += 1
     else:
-        if word[0]==word[-1]:
-            oddpalindrome+=1
+        if word[0] == word[-1]:
+            oddpalindrome += 1
 # ...
 ```
 
@@ -435,24 +435,24 @@ for item in range(0, len(words)) :
   - Variant `ns_25t3_py13_1/11`, Student ID `6d5999cd1a534f80bf70f531f38a5e4e`, summary `Wrong Answer`, score `20`, vector `00010`
 
 ```python
-#words = str(input())
-#new =[words]
-#reverse = str(new[::1])
-#length = int(len(words))
-#count1 = 0
-#count2 = 0
-#count3 = 0
-#count4 = 0
-#for i in range(10):
-    #if length%2==0 and "reverse"=="words":
-        #count2 += 1
-    #elif length%2==0 and "reverse"!="words":
-        #count4 += 1
-    #elif length%2!=0 and "reverse"=="words":
-        #count1 += 1
-    #else:
-        #count3 += 1
-print (1,1,1,1)
+# words = str(input())
+# new =[words]
+# reverse = str(new[::1])
+# length = int(len(words))
+# count1 = 0
+# count2 = 0
+# count3 = 0
+# count4 = 0
+# for i in range(10):
+# if length%2==0 and "reverse"=="words":
+# count2 += 1
+# elif length%2==0 and "reverse"!="words":
+# count4 += 1
+# elif length%2!=0 and "reverse"=="words":
+# count1 += 1
+# else:
+# count3 += 1
+print(1, 1, 1, 1)
 ```
 
 ### Runtime AttributeError from string/list method misuse while splitting/checking words
@@ -473,15 +473,15 @@ s = str(input)
 
 odd_palindrome_count = 0
 
-if s.len % 2 != 0 and s == s[::-1] :
+if s.len % 2 != 0 and s == s[::-1]:
     odd_palindrome_count += 1
 
 even_palindrome = 0
-if s.len % 2 ==0 and  s == s[::-1]:
-    even_palindrome +=1
+if s.len % 2 == 0 and s == s[::-1]:
+    even_palindrome += 1
 
 odd_normal = 0
-if s.len % 2 != 0 and  s != s[::-1]:
+if s.len % 2 != 0 and s != s[::-1]:
     odd_normal += 1
 
 even_normal = 0
@@ -535,22 +535,22 @@ try:
 ```python
 # write your code here
 
-num=int(input())
-lines=[]
-a1=0
-a2=0
+num = int(input())
+lines = []
+a1 = 0
+a2 = 0
 
-a3=0
-a4=0
+a3 = 0
+a4 = 0
 
 for i in range(num):
-    line=input()
+    line = input()
     lines.append(line)
 
 
 for line in lines:
     for word in line:
-        new=word[::-1]
+        new = word[::-1]
 # ...
 ```
 
@@ -571,18 +571,18 @@ lst = string1.join(" ")
 for i in lst:
     s1 = str(lst[1])
     str1 = s1[::-1]
-    count_ev_p =0
-    count_od_p =0
-    count_od_nor =0
-    count_ev_nor =0
-    if (len(s1)%2==0 and str1 == s1):
-        count_ev_p = count_ev_p +1
+    count_ev_p = 0
+    count_od_p = 0
+    count_od_nor = 0
+    count_ev_nor = 0
+    if len(s1) % 2 == 0 and str1 == s1:
+        count_ev_p = count_ev_p + 1
 
-    if(len(s1)%2==0 and str1 != s1):
-        count_ev_nor = count_ev_nor +1
+    if len(s1) % 2 == 0 and str1 != s1:
+        count_ev_nor = count_ev_nor + 1
 
-    if(len(s1)%2==1 and str1 == s1):
-        count_od_p = count_od_p+1
+    if len(s1) % 2 == 1 and str1 == s1:
+        count_od_p = count_od_p + 1
 
 # ...
 ```
@@ -666,21 +666,20 @@ print(k)
 
 ```python
 # write your code here
-n= int(input())
-#initialize counters
+n = int(input())
+# initialize counters
 odd_palindrome_count = 0
 even_palindrome_count = 0
 odd_normal_count = 0
 even_normal_count = 0
 
-for _ in range (n):
+for _ in range(n):
     line = input()
     words = line.split()
 
 for word in words:
     word_lower = word.lower()
-    is_palindrome = word_lower == word_lower [::-1]
-
+    is_palindrome = word_lower == word_lower[::-1]
 
     is_odd_length = len(word) % 2 == 1
 # ...
@@ -702,19 +701,19 @@ for word in words:
 
 n = int(input())
 count1 = 0
-count2 =0
+count2 = 0
 count3 = 0
 count4 = 0
 line = [input() for i in range(n)]
 
 for words in line:
-    if len(words)%2 == 0:
+    if len(words) % 2 == 0:
         for ch in words:
             for i in range(len(words)):
-                if (words[i] == words[-1::-1]):
-                   count2 += 1
+                if words[i] == words[-1::-1]:
+                    count2 += 1
 
                 else:
-                   count4 += 1
+                    count4 += 1
 # ...
 ```

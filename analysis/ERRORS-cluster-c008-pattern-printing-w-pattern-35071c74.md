@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py12_1/13` (canonical) | 367 | 180 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py12_1/13` (canonical) |              367 |      180 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,11 +33,11 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t1_py11_1/10` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t1_py_15_exe/13` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t2_py12_1/13` | 367 | 187 | 180 | 141 | 39 |
+| Variant                | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t1_py11_1/10`    |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t1_py_15_exe/13` |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t2_py12_1/13`    |              367 |       187 |      180 |                141 |                     39 |
 
 ## Private Case Structure
 
@@ -49,29 +49,29 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t1_py11_1/10` | `ns_25t1_py_15_exe/13` | `ns_25t2_py12_1/13` |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Incorrect W-pattern printing logic (missing output, wrong row formula, or formatting mismatch) | 54 | 30.0% | 0 | 0 | 54 |
-| Syntax / non-parseable final submission | 39 | 21.7% | 0 | 0 | 39 |
-| Empty/comment-only final submission | 24 | 13.3% | 0 | 0 | 24 |
-| Row-spacing arithmetic is incorrect (bars/slashes are printed, but the W geometry/spacing is wrong) | 22 | 12.2% | 0 | 0 | 22 |
-| Hard-codes small sample sizes (`n=1/2/3/...`) with `if/elif` branches instead of a general pattern loop | 16 | 8.9% | 0 | 0 | 16 |
-| Runtime NameError | 4 | 2.2% | 0 | 0 | 4 |
-| Hard-codes the public sample sizes (`n=1/2/5`, etc.) instead of generating the W pattern for arbitrary `n` | 4 | 2.2% | 0 | 0 | 4 |
-| Uses a grid/nested-loop character plot that prints extra spaces/separators and fails exact row formatting | 2 | 1.1% | 0 | 0 | 2 |
-| Builds row strings by adding integers to strings (string-multiplication/concatenation arithmetic bug) | 2 | 1.1% | 0 | 0 | 2 |
-| Prints the same row (`|/\\|`) repeatedly instead of widening the interior spacing each row | 2 | 1.1% | 0 | 0 | 2 |
-| Repeats bars/slashes/backslashes `n` times (`'|'*n`, `'/'*n`) instead of printing single boundary/slash characters per row | 1 | 0.6% | 0 | 0 | 1 |
-| Center-spacing off-by-two bug (`2*i-2`) breaks the first rows of the W pattern | 1 | 0.6% | 0 | 0 | 1 |
-| Submits a helper/function-style return value instead of reading `n` and printing the W pattern rows | 1 | 0.6% | 0 | 0 | 1 |
-| Uses loop/size variables (`n`, `w`, etc.) without reading the input size first | 1 | 0.6% | 0 | 0 | 1 |
-| Reuses `n` as the loop variable (`for n in range(...)`), corrupting the intended pattern size | 1 | 0.6% | 0 | 0 | 1 |
-| Uses invalid input conversion (`input(int())`) instead of reading the integer with `int(input())` | 1 | 0.6% | 0 | 0 | 1 |
-| Builds placeholder row arrays (e.g., `['1 ']*...`) instead of constructing exact W rows with `|`, `/`, and `\\` | 1 | 0.6% | 0 | 0 | 1 |
-| Unrelated pasted function/problem solution instead of W-pattern generation | 1 | 0.6% | 0 | 0 | 1 |
-| Infinite loop in pattern generation (e.g., `while` loop that never updates the loop variable) | 1 | 0.6% | 0 | 0 | 1 |
-| Hard-codes a specific W output (fixed rows) instead of generating the pattern from the input `n` | 1 | 0.6% | 0 | 0 | 1 |
-| Runtime error (parseable final submission) | 1 | 0.6% | 0 | 0 | 1 |
+| Pattern                                                                                                    |                                                              Cluster count | % of cluster non-full | `ns_25t1_py11_1/10` | `ns_25t1_py_15_exe/13` | `ns_25t2_py12_1/13` |
+| ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------: | --------------------: | ------------------: | ---------------------: | ------------------: |
+| Incorrect W-pattern printing logic (missing output, wrong row formula, or formatting mismatch)             |                                                                         54 |                 30.0% |                   0 |                      0 |                  54 |
+| Syntax / non-parseable final submission                                                                    |                                                                         39 |                 21.7% |                   0 |                      0 |                  39 |
+| Empty/comment-only final submission                                                                        |                                                                         24 |                 13.3% |                   0 |                      0 |                  24 |
+| Row-spacing arithmetic is incorrect (bars/slashes are printed, but the W geometry/spacing is wrong)        |                                                                         22 |                 12.2% |                   0 |                      0 |                  22 |
+| Hard-codes small sample sizes (`n=1/2/3/...`) with `if/elif` branches instead of a general pattern loop    |                                                                         16 |                  8.9% |                   0 |                      0 |                  16 |
+| Runtime NameError                                                                                          |                                                                          4 |                  2.2% |                   0 |                      0 |                   4 |
+| Hard-codes the public sample sizes (`n=1/2/5`, etc.) instead of generating the W pattern for arbitrary `n` |                                                                          4 |                  2.2% |                   0 |                      0 |                   4 |
+| Uses a grid/nested-loop character plot that prints extra spaces/separators and fails exact row formatting  |                                                                          2 |                  1.1% |                   0 |                      0 |                   2 |
+| Builds row strings by adding integers to strings (string-multiplication/concatenation arithmetic bug)      |                                                                          2 |                  1.1% |                   0 |                      0 |                   2 |
+| Prints the same row (`                                                                                     |        /\\|`) repeatedly instead of widening the interior spacing each row |                     2 |                1.1% |                      0 |                   0 |
+| Repeats bars/slashes/backslashes `n` times (`'                                                             | '*n`,`'/'*n`) instead of printing single boundary/slash characters per row |                     1 |                0.6% |                      0 |                   0 |
+| Center-spacing off-by-two bug (`2*i-2`) breaks the first rows of the W pattern                             |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Submits a helper/function-style return value instead of reading `n` and printing the W pattern rows        |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Uses loop/size variables (`n`, `w`, etc.) without reading the input size first                             |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Reuses `n` as the loop variable (`for n in range(...)`), corrupting the intended pattern size              |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Uses invalid input conversion (`input(int())`) instead of reading the integer with `int(input())`          |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Builds placeholder row arrays (e.g., `['1 ']*...`) instead of constructing exact W rows with `             |                                                             `,`/`, and`\\` |                     1 |                0.6% |                      0 |                   0 |
+| Unrelated pasted function/problem solution instead of W-pattern generation                                 |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Infinite loop in pattern generation (e.g., `while` loop that never updates the loop variable)              |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Hard-codes a specific W output (fixed rows) instead of generating the pattern from the input `n`           |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
+| Runtime error (parseable final submission)                                                                 |                                                                          1 |                  0.6% |                   0 |                      0 |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -179,20 +179,20 @@ n = int(input())
 
 for i in range(n):
     # Left side of the pattern
-    print('|', end='')
+    print("|", end="")
 
     # Forward slash and space pattern for the first diagonal
     for j in range(i):
-        print(' ', end='')
-    print('/', end='')
+        print(" ", end="")
+    print("/", end="")
 
     # Space in between diagonals
-    for j in range(2*(n - i - 1) - 1):
-        print(' ', end='')
+    for j in range(2 * (n - i - 1) - 1):
+        print(" ", end="")
 
     # Backslash and space pattern for the second diagonal
     if i < n - 1:
-        print('\\', end='')
+        print("\\", end="")
 # ...
 ```
 
@@ -212,17 +212,17 @@ for i in range(n):
 # Write your code here to read the input and print the output
 
 
-n=int(input())
-if n==1:
+n = int(input())
+if n == 1:
     print("|/\|")
-elif n==2:
+elif n == 2:
     print("| /\ |")
     print("|/  \|")
-elif n==3:
+elif n == 3:
     print("|  /\  |")
     print("| /  \ |")
     print("|/    \|")
-elif n==4:
+elif n == 4:
     print("|   /\   |")
     print("|  /  \  |")
     print("| /    \ |")
@@ -248,9 +248,9 @@ elif n==4:
 
 n = int(input())
 
-right_row = (n - 1 - i)
+right_row = n - 1 - i
 left_row = 2 * i
-middle_row = '|' + ' ' * left_spaces + '/' + ' ' * middle_spaces + '\\'+ '' * left_spaces + '|'
+middle_row = "|" + " " * left_spaces + "/" + " " * middle_spaces + "\\" + "" * left_spaces + "|"
 print(line)
 ```
 
@@ -268,22 +268,22 @@ print(line)
 
 ```python
 # Write your code here to read the input and print the output
-n=int(input())
-if n==1:
+n = int(input())
+if n == 1:
     print("|/\|")
-if n==2:
+if n == 2:
     print("| /\ |")
     print("|/  \|")
-if n==3:
+if n == 3:
     print("|  /\  |")
     print("| /  \ |")
     print("|/    \|")
-if n==4:
+if n == 4:
     print("|   /\   |")
     print("|  /  \  |")
     print("| /    \ |")
     print("|/      \|")
-if n==5:
+if n == 5:
     print("|    /\    |")
 # ...
 ```
@@ -340,10 +340,10 @@ for i in range(n):
 n = int(input())
 for i in range(n):
     left = "|" + " " * i
-    spaces_between = max(0,2*i - 1)
-    mid = " " * (2*(n-1-i)) + "/" + " "* spaces_between + (2*i-1) + "\\"
-    right = " " * (2*(n-1-i) + "|")
-    print(left+mid+right)
+    spaces_between = max(0, 2 * i - 1)
+    mid = " " * (2 * (n - 1 - i)) + "/" + " " * spaces_between + (2 * i - 1) + "\\"
+    right = " " * (2 * (n - 1 - i) + "|")
+    print(left + mid + right)
 ```
 
 ### Prints the same row (`|/\\|`) repeatedly instead of widening the interior spacing each row
@@ -363,8 +363,7 @@ for i in range(n):
 
 n = int(input())
 for i in range(n):
-
-     print("|"+"/\\"+"|")
+    print("|" + "/\\" + "|")
 ```
 
 ### Repeats bars/slashes/backslashes `n` times (`'|'*n`, `'/'*n`) instead of printing single boundary/slash characters per row
@@ -382,9 +381,13 @@ for i in range(n):
 ```python
 # Write your code here to read the input and print the output
 
-n=int(input())
+n = int(input())
 for i in range(n):
-    print(("|"*(n)+" "*(n-1)+"/"*n+" "*2*i+"\\"*n+" "*(n-1)+"|"*(n)).rstrip())
+    print(
+        (
+            "|" * (n) + " " * (n - 1) + "/" * n + " " * 2 * i + "\\" * n + " " * (n - 1) + "|" * (n)
+        ).rstrip()
+    )
 ```
 
 ### Center-spacing off-by-two bug (`2*i-2`) breaks the first rows of the W pattern
@@ -403,13 +406,13 @@ for i in range(n):
 # Write your code here to read the input and print the output
 
 n = int(input())
-for i in range (n):
-    print("|",end="")
-    print(" "*(n-i-1),end="")
-    print("/",end="")
-    print(" "*(2*i-2),end="")
-    print("\\",end="")
-    print(" "*(n-i-1),end="")
+for i in range(n):
+    print("|", end="")
+    print(" " * (n - i - 1), end="")
+    print("/", end="")
+    print(" " * (2 * i - 2), end="")
+    print("\\", end="")
+    print(" " * (n - i - 1), end="")
     print("|")
 ```
 
@@ -426,13 +429,13 @@ for i in range (n):
   - Variant `ns_25t2_py12_1/13`, Student ID `0bf880516c12486d8fb3f137ec413a4d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if size < 2:
-        print("the size should be above 3")
-    size = 2*(n - 2)
-    leading_spaces = 2 * n - 1
-    centre_spacing = '' * 2 * (n - i - 1)
-    print("f|{leading_spaces}/{centre_spacing}\\{leading_spaces}|")
-    return print_w_pattern
+if size < 2:
+    print("the size should be above 3")
+size = 2 * (n - 2)
+leading_spaces = 2 * n - 1
+centre_spacing = "" * 2 * (n - i - 1)
+print("f|{leading_spaces}/{centre_spacing}\\{leading_spaces}|")
+return print_w_pattern
 ```
 
 ### Uses loop/size variables (`n`, `w`, etc.) without reading the input size first
@@ -449,10 +452,10 @@ for i in range (n):
 
 ```python
 # Write your code here to read the input and print the output
-#| /\ |
-#|/  \|
+# | /\ |
+# |/  \|
 for i in range(n):
-    str_line='|'*i
+    str_line = "|" * i
 ```
 
 ### Reuses `n` as the loop variable (`for n in range(...)`), corrupting the intended pattern size
@@ -469,8 +472,8 @@ for i in range(n):
 
 ```python
 # Write your code here to read the input and print the output
-n=int(input())
-for n in range(0,n):
+n = int(input())
+for n in range(0, n):
     print("|/\|")
 ```
 
@@ -509,11 +512,11 @@ print(n)
 n = int(input())
 
 for i in range(n):
-    row= ['1 '] * (2 * n)         # total width = 2n
-    row[0] = '|'                  # Left border
-    row[-1] = '|'                 # Right border
-    row[n - 1 + i] = '//'          # Left diagonal moves left
-    row[n - 1 + i] = '/'
+    row = ["1 "] * (2 * n)  # total width = 2n
+    row[0] = "|"  # Left border
+    row[-1] = "|"  # Right border
+    row[n - 1 + i] = "//"  # Left diagonal moves left
+    row[n - 1 + i] = "/"
 ```
 
 ### Unrelated pasted function/problem solution instead of W-pattern generation
@@ -566,9 +569,9 @@ elif(values>=50 and values<85):
 # Write your code here to read the input and print the output
 
 w = int(input())
-while (w>=1):
-    w1=("|''*(w-1)/\''*(w-1)/")
-print('w1')
+while w >= 1:
+    w1 = "|''*(w-1)/''*(w-1)/"
+print("w1")
 print(w1)
 ```
 
@@ -585,22 +588,22 @@ print(w1)
   - Variant `ns_25t2_py12_1/13`, Student ID `d0d3a3bef55848f8b13f91cfa4e26ecd`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-print('|               /\               |')
-print('|              /  \              |')
-print('|             /    \             |')
-print('|            /      \            |')
-print('|           /        \           |')
-print('|          /          \          |')
-print('|         /            \         |')
-print('|        /              \        |')
-print('|       /                \       |')
-print('|      /                  \      |')
-print('|     /                    \     |')
-print('|    /                      \    |')
-print('|   /                        \   |')
-print('|  /                          \  |')
-print('| /                            \ |')
-print('|/                              \|')
+print("|               /\               |")
+print("|              /  \              |")
+print("|             /    \             |")
+print("|            /      \            |")
+print("|           /        \           |")
+print("|          /          \          |")
+print("|         /            \         |")
+print("|        /              \        |")
+print("|       /                \       |")
+print("|      /                  \      |")
+print("|     /                    \     |")
+print("|    /                      \    |")
+print("|   /                        \   |")
+print("|  /                          \  |")
+print("| /                            \ |")
+print("|/                              \|")
 ```
 
 ### Runtime error (parseable final submission)

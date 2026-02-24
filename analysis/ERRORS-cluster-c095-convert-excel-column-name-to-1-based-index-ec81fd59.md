@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/9` (canonical) | 579 | 403 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/9` (canonical) |              579 |      403 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/9` | 579 | 176 | 403 | 336 | 67 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/9` |              579 |       176 |      403 |                336 |                     67 |
 
 ## Private Case Structure
 
@@ -44,30 +44,30 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/9` |
-| --- | ---: | ---: | ---: |
-| Incorrect Excel column-to-index conversion logic (broad wrong-answer failure) | 84 | 20.8% | 84 |
-| Syntax / non-parseable final submission | 67 | 16.6% | 67 |
-| No return / implicit `None` | 57 | 14.1% | 57 |
-| Hard-codes sample column names/indices (e.g., `AZ`, `BBA`, `1405`) instead of computing arbitrary Excel indices | 45 | 11.2% | 45 |
-| Single-letter-only / partial conversion logic (fails 2-letter and longer columns) | 29 | 7.2% | 29 |
-| Handles 1- and 2-letter columns but fails longer labels (3+/4-letter support missing or hard-coded) | 24 | 6.0% | 24 |
-| Runtime NameError from undefined accumulator/dictionary variables in base-26 conversion logic | 20 | 5.0% | 20 |
-| Returns from inside the character loop, so only the first Excel letter contributes to the index | 17 | 4.2% | 17 |
-| Uses a partial letter dictionary / single-letter lookup only, so multi-letter columns are not handled correctly | 16 | 4.0% | 16 |
-| Runtime TypeError | 11 | 2.7% | 11 |
-| Runtime error (parseable final submission) | 8 | 2.0% | 8 |
-| Runtime RecursionError from calling `excel_index(...)` recursively without progress/base case | 5 | 1.2% | 5 |
-| Runtime KeyError from incomplete letter-to-number dictionary lookup (missing entries for some letters) | 5 | 1.2% | 5 |
-| Runtime ValueError from invalid string/number conversion while parsing the column label | 4 | 1.0% | 4 |
-| Enumerates Excel labels in a list and searches with `.index(...)` (works only up to the generated max length) | 3 | 0.7% | 3 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 2 | 0.5% | 2 |
-| Handles only 1- and 2-letter columns with explicit branches (missing general support for longer labels) | 1 | 0.2% | 1 |
-| Length-limited/hard-coded fallback for longer columns (e.g., returns a constant or `-1` for unsupported lengths) | 1 | 0.2% | 1 |
-| Runtime IndexError | 1 | 0.2% | 1 |
-| Two-letter formula only (fails single-letter and longer-column cases) | 1 | 0.2% | 1 |
-| Runtime TypeError from treating the whole column string as one character/number | 1 | 0.2% | 1 |
-| Runtime AttributeError | 1 | 0.2% | 1 |
+| Pattern                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py14_1/9` |
+| ---------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Incorrect Excel column-to-index conversion logic (broad wrong-answer failure)                                    |            84 |                 20.8% |                 84 |
+| Syntax / non-parseable final submission                                                                          |            67 |                 16.6% |                 67 |
+| No return / implicit `None`                                                                                      |            57 |                 14.1% |                 57 |
+| Hard-codes sample column names/indices (e.g., `AZ`, `BBA`, `1405`) instead of computing arbitrary Excel indices  |            45 |                 11.2% |                 45 |
+| Single-letter-only / partial conversion logic (fails 2-letter and longer columns)                                |            29 |                  7.2% |                 29 |
+| Handles 1- and 2-letter columns but fails longer labels (3+/4-letter support missing or hard-coded)              |            24 |                  6.0% |                 24 |
+| Runtime NameError from undefined accumulator/dictionary variables in base-26 conversion logic                    |            20 |                  5.0% |                 20 |
+| Returns from inside the character loop, so only the first Excel letter contributes to the index                  |            17 |                  4.2% |                 17 |
+| Uses a partial letter dictionary / single-letter lookup only, so multi-letter columns are not handled correctly  |            16 |                  4.0% |                 16 |
+| Runtime TypeError                                                                                                |            11 |                  2.7% |                 11 |
+| Runtime error (parseable final submission)                                                                       |             8 |                  2.0% |                  8 |
+| Runtime RecursionError from calling `excel_index(...)` recursively without progress/base case                    |             5 |                  1.2% |                  5 |
+| Runtime KeyError from incomplete letter-to-number dictionary lookup (missing entries for some letters)           |             5 |                  1.2% |                  5 |
+| Runtime ValueError from invalid string/number conversion while parsing the column label                          |             4 |                  1.0% |                  4 |
+| Enumerates Excel labels in a list and searches with `.index(...)` (works only up to the generated max length)    |             3 |                  0.7% |                  3 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)                          |             2 |                  0.5% |                  2 |
+| Handles only 1- and 2-letter columns with explicit branches (missing general support for longer labels)          |             1 |                  0.2% |                  1 |
+| Length-limited/hard-coded fallback for longer columns (e.g., returns a constant or `-1` for unsupported lengths) |             1 |                  0.2% |                  1 |
+| Runtime IndexError                                                                                               |             1 |                  0.2% |                  1 |
+| Two-letter formula only (fails single-letter and longer-column cases)                                            |             1 |                  0.2% |                  1 |
+| Runtime TypeError from treating the whole column string as one character/number                                  |             1 |                  0.2% |                  1 |
+| Runtime AttributeError                                                                                           |             1 |                  0.2% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -94,14 +94,17 @@ def excel_index(column: str) -> int:
         int: The 1-based column index.
     """
 
+
 from copy import deepcopy
 
 
 def order_repr(d):
-    '''Print in lexicographical order of repr if dict and set'''
-    if isinstance(d,dict):
-        d = sorted(d.items(), key=lambda x:order_repr(x[0]) )
-        return f"{{{', '.join(f'{order_repr(k)}: {order_repr(v)}' for k,v in d)}}}"
+    """Print in lexicographical order of repr if dict and set"""
+    if isinstance(d, dict):
+        d = sorted(d.items(), key=lambda x: order_repr(x[0]))
+        return f"{{{', '.join(f'{order_repr(k)}: {order_repr(v)}' for k, v in d)}}}"
+
+
 # ...
 ```
 
@@ -269,18 +272,72 @@ def excel_index(column: str) -> int:
   - Variant `ns_25t2_py14_1/9`, Student ID `5912db62fdce4f82be42b66b636314e3`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    Alphabets= ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    numbers=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
-    value = list(zip(Alphabets, numbers))
-    """if column in value:
-        return value, key=numbers
-    """
-    if len(column)==1:
-        if columnn in Alphabets:
-            return
-    if len(column)==2:
-        value = 26 + numbers
-        return value
+Alphabets = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
+numbers = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+]
+value = list(zip(Alphabets, numbers))
+"""if column in value:
+    return value, key=numbers
+"""
+if len(column) == 1:
+    if columnn in Alphabets:
+        return
+if len(column) == 2:
+    value = 26 + numbers
+    return value
 ```
 
 ### Returns from inside the character loop, so only the first Excel letter contributes to the index
@@ -294,22 +351,49 @@ def excel_index(column: str) -> int:
   - Variant `ns_25t2_py14_1/9`, Student ID `4cfeaa82e7ef49108c84e852c1a7b3da`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    charlist = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
-    charlist2 = []
-    charlist3 = []
-    for char in charlist:
-        for i in charlist:
-            charlist2.append(char+i)
-    for char in charlist:
-        for i in charlist2:
-            charlist3.append(char+i)
-    for char in charlist2:
-        charlist.append(char)
-    for char in charlist3:
-        charlist.append(char)
-    if column in charlist:
-        idx = charlist.index(column) + 1
-        return idx
+charlist = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
+charlist2 = []
+charlist3 = []
+for char in charlist:
+    for i in charlist:
+        charlist2.append(char + i)
+for char in charlist:
+    for i in charlist2:
+        charlist3.append(char + i)
+for char in charlist2:
+    charlist.append(char)
+for char in charlist3:
+    charlist.append(char)
+if column in charlist:
+    idx = charlist.index(column) + 1
+    return idx
 ```
 
 ### Uses a partial letter dictionary / single-letter lookup only, so multi-letter columns are not handled correctly
@@ -365,13 +449,15 @@ def excel_index(column: str) -> int:
     Returns:
         int: The 1-based column index.
     """
+
+
 excel_index = input()
-if excel_index=="B" :
-    result= "2"
-if excel_index =="BA" :
-    result= "53"
+if excel_index == "B":
+    result = "2"
+if excel_index == "BA":
+    result = "53"
 else:
-    result= "52"
+    result = "52"
 
 
 # ...
@@ -399,9 +485,10 @@ def excel_index(column: str) -> int:
         int: The 1-based column index.
     """
 
+
 result = 0
 for char in column:
-    result = result*26 + (ord(char.upper())-ord('A')+1)
+    result = result * 26 + (ord(char.upper()) - ord("A") + 1)
 return result
 
 from copy import deepcopy
@@ -421,10 +508,10 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `4e735e3c953e413eb32a0c5b5e2b9ef7`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    return (excel_index("AZ"),52)
-    (excel_index("BA"),53)
-    (excel_index("B"),2)
-    (excel_index("BBA"),1405)
+return (excel_index("AZ"), 52)
+(excel_index("BA"), 53)
+(excel_index("B"), 2)
+(excel_index("BBA"), 1405)
 ```
 
 ### Runtime KeyError from incomplete letter-to-number dictionary lookup (missing entries for some letters)
@@ -470,18 +557,45 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `0c8d23bbd40e4f5fa8f60ea5ddf4f09f`, summary `Runtime Error`, score `67`, vector `011`
 
 ```python
-    column = column.upper()
-    alpha = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-    lst = alpha.copy()
-    for x in alpha:
-        for y in alpha:
-            lst.append(x+y)
-    new_lst = lst.copy()
-    for x in new_lst:
-        for y in alpha:
-            lst.append(x+y)
-    result = lst.index(column) + 1
-    return result
+column = column.upper()
+alpha = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
+lst = alpha.copy()
+for x in alpha:
+    for y in alpha:
+        lst.append(x + y)
+new_lst = lst.copy()
+for x in new_lst:
+    for y in alpha:
+        lst.append(x + y)
+result = lst.index(column) + 1
+return result
 ```
 
 ### Enumerates Excel labels in a list and searches with `.index(...)` (works only up to the generated max length)
@@ -527,9 +641,9 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `783811feb8304e6682e42654eb328ca9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    column= int(input())
-    print("The Excel coloumn name is: ",column)
-    return 0
+column = int(input())
+print("The Excel coloumn name is: ", column)
+return 0
 ```
 
 ### Handles only 1- and 2-letter columns with explicit branches (missing general support for longer labels)
@@ -575,23 +689,23 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `0415cbb7a3f8491fb7e8fa1fc0330847`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    ...
-    a="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    b=[]
-    for i in range(26):
-        b.append(a[i])
-    for i in range(26) :
-        for j in range(26):
-            b.append(a[i]+a[j])
-    for i in range(26):
-        for j in range(26):
-            for k in range(26):
-                b.append(a[i]+a[j]+a[k])
-    if column not in b :
-        return -1
-    o = b.index(column)
-    s = o + 1
-    return s
+...
+a = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+b = []
+for i in range(26):
+    b.append(a[i])
+for i in range(26):
+    for j in range(26):
+        b.append(a[i] + a[j])
+for i in range(26):
+    for j in range(26):
+        for k in range(26):
+            b.append(a[i] + a[j] + a[k])
+if column not in b:
+    return -1
+o = b.index(column)
+s = o + 1
+return s
 ```
 
 ### Runtime IndexError
@@ -606,13 +720,13 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `6ccec9f68114454c99fcf26c569d3d23`, summary `Runtime Error`, score `67`, vector `011`
 
 ```python
-    result=1
-    st="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    for i in range(len(column)):
-        column=column[i::]
-        a=st.index(column[i-len(column)])+1
-        result+=26**(len(column)-1)*a
-    return result-1
+result = 1
+st = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+for i in range(len(column)):
+    column = column[i::]
+    a = st.index(column[i - len(column)]) + 1
+    result += 26 ** (len(column) - 1) * a
+return result - 1
 ```
 
 ### Two-letter formula only (fails single-letter and longer-column cases)
@@ -683,5 +797,5 @@ from copy import deepcopy
   - Variant `ns_25t2_py14_1/9`, Student ID `f479c651a9444423bd090680115bb02f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
+...
 ```

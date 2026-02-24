@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py11/8` (canonical) | 628 | 169 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py11/8` (canonical) |              628 |      169 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py11/8` | 628 | 459 | 169 | 109 | 60 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py11/8` |              628 |       459 |      169 |                109 |                     60 |
 
 ## Private Case Structure
 
@@ -44,22 +44,22 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py11/8` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 60 | 35.5% | 60 |
-| Incorrect last-digit comparison logic (broad wrong-answer failure) | 34 | 20.1% | 34 |
-| Runtime TypeError from indexing integers directly instead of using `% 10` / `str(...)` | 17 | 10.1% | 17 |
-| Runtime NameError from wrong variable names in last-digit comparison | 13 | 7.7% | 13 |
-| No return / implicit `None` | 12 | 7.1% | 12 |
-| Compares the full numbers for equality instead of comparing only the last digits | 10 | 5.9% | 10 |
-| Runtime TypeError | 6 | 3.6% | 6 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 6 | 3.6% | 6 |
-| Runtime error (parseable final submission) | 3 | 1.8% | 3 |
-| Runtime RecursionError | 3 | 1.8% | 3 |
-| Runtime ValueError | 2 | 1.2% | 2 |
-| Partially correct last-digit comparison (uses wrong variable/digit extraction in some cases) | 1 | 0.6% | 1 |
-| Uses parity/even-odd checks instead of comparing the last digits | 1 | 0.6% | 1 |
-| Runtime NameError | 1 | 0.6% | 1 |
+| Pattern                                                                                      | Cluster count | % of cluster non-full | `ns_25t3_py11/8` |
+| -------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Syntax / non-parseable final submission                                                      |            60 |                 35.5% |               60 |
+| Incorrect last-digit comparison logic (broad wrong-answer failure)                           |            34 |                 20.1% |               34 |
+| Runtime TypeError from indexing integers directly instead of using `% 10` / `str(...)`       |            17 |                 10.1% |               17 |
+| Runtime NameError from wrong variable names in last-digit comparison                         |            13 |                  7.7% |               13 |
+| No return / implicit `None`                                                                  |            12 |                  7.1% |               12 |
+| Compares the full numbers for equality instead of comparing only the last digits             |            10 |                  5.9% |               10 |
+| Runtime TypeError                                                                            |             6 |                  3.6% |                6 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                    |             6 |                  3.6% |                6 |
+| Runtime error (parseable final submission)                                                   |             3 |                  1.8% |                3 |
+| Runtime RecursionError                                                                       |             3 |                  1.8% |                3 |
+| Runtime ValueError                                                                           |             2 |                  1.2% |                2 |
+| Partially correct last-digit comparison (uses wrong variable/digit extraction in some cases) |             1 |                  0.6% |                1 |
+| Uses parity/even-odd checks instead of comparing the last digits                             |             1 |                  0.6% |                1 |
+| Runtime NameError                                                                            |             1 |                  0.6% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -77,8 +77,8 @@ Residual `Other` after second-pass re-clustering: `0/169` (`0.0%`)
   - Variant `ns_25t3_py11/8`, Student ID `a1db6afedd6046a58e3329e908b7c50a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-def compare_last_digits(num1:int, num2:int) -> str:
-    '''
+def compare_last_digits(num1: int, num2: int) -> str:
+    """
     Given two integers, check whether their last digits are the same.
 
     Args:
@@ -87,14 +87,16 @@ def compare_last_digits(num1:int, num2:int) -> str:
 
     Returns:
         str: "same" if last digits match else "different"
-    '''
+    """
     ...
 
-def compare_last_digits(num1: int, num2:int) -> str:
 
-   # Given two integers, check whether their last digits are the same.
-    num1 : 123 #first number
-    num2 : 43 #second number
+def compare_last_digits(num1: int, num2: int) -> str:
+    # Given two integers, check whether their last digits are the same.
+    num1: 123  # first number
+    num2: 43  # second number
+
+
 # ...
 ```
 
@@ -161,18 +163,18 @@ def compare_last_digits(num1: int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `aec87f7f7a5a408191523e17556d422a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    num1=str(num1)
-    l1=num1[-1]
-    num2=str(num2)
-    l2=num2[-1]
-    a=same
-    b=different
-    if l1==l2:
-        print(a)
-    else:
-        print(b)
-    return
+...
+num1 = str(num1)
+l1 = num1[-1]
+num2 = str(num2)
+l2 = num2[-1]
+a = same
+b = different
+if l1 == l2:
+    print(a)
+else:
+    print(b)
+return
 ```
 
 ### No return / implicit `None`
@@ -187,8 +189,8 @@ def compare_last_digits(num1: int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `52366b5b9bbc4774b3055edecfe53d32`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-def compare_last_digits(num1:int, num2:int) -> str:
-    '''
+def compare_last_digits(num1: int, num2: int) -> str:
+    """
     Given two integers, check whether their last digits are the same.
 
     Args:
@@ -197,7 +199,7 @@ def compare_last_digits(num1:int, num2:int) -> str:
 
     Returns:
         str: "same" if last digits match else "different"
-    '''
+    """
 ```
 
 ### Compares the full numbers for equality instead of comparing only the last digits
@@ -211,12 +213,12 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `19932c940353412d87cce7f3af903769`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    num1=1,2,3,4,5,6,7,8,9,0
-    num2=1,2,3,4,6,7,8,9,0
-    if num1==num2:
-        return True
-    else:
-        return False
+num1 = 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+num2 = 1, 2, 3, 4, 6, 7, 8, 9, 0
+if num1 == num2:
+    return True
+else:
+    return False
 ```
 
 ### Runtime TypeError
@@ -261,13 +263,13 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `b03f2fe5dcd14b35bbf374e205abd2af`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    a = int(input("Enter your num1: "))
-    b = int(input("Enter your num2: "))
-    if a % 10 == 0 and b % 10 == 0:
-        print("if last digits match: same")
-    else:
-        print("different")
+...
+a = int(input("Enter your num1: "))
+b = int(input("Enter your num2: "))
+if a % 10 == 0 and b % 10 == 0:
+    print("if last digits match: same")
+else:
+    print("different")
 ```
 
 ### Runtime error (parseable final submission)
@@ -282,12 +284,12 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `0bb38722278b44d59931ccdb205777e8`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if num1 == num2:
-     return "same"
-    elif num2%num1 == num2:
-     return "same"
-    else:
-     return "different"
+if num1 == num2:
+    return "same"
+elif num2 % num1 == num2:
+    return "same"
+else:
+    return "different"
 ```
 
 ### Runtime RecursionError
@@ -302,12 +304,12 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `8a5fc7686ad940999cffe5aeb3dc142b`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    last_digit_of_num1 = num1
-    last_digit_of_num2 = num2
-    if compare_last_digits(num1,num2):
-       return 'same'
-    else:
-       return 'different'
+last_digit_of_num1 = num1
+last_digit_of_num2 = num2
+if compare_last_digits(num1, num2):
+    return "same"
+else:
+    return "different"
 ```
 
 ### Runtime ValueError
@@ -343,12 +345,12 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `58778bb350c64d84975d6734a854dad2`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    num1 = str(num1)
-    num2 = str(num2)
-    if num1[:1] == num2[-1:]:
-        return 'same'
-    else:
-        return 'different'
+num1 = str(num1)
+num2 = str(num2)
+if num1[:1] == num2[-1:]:
+    return "same"
+else:
+    return "different"
 ```
 
 ### Uses parity/even-odd checks instead of comparing the last digits
@@ -362,12 +364,12 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `b0a52dc61da6496db21fb1fcf98fde8e`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if num1%2==0 and num2%2==0:
-              return ('same')
-    elif num1%3==1 and num2%3==1:
-              return ('same')
-    else:
-              return ('different')
+if num1 % 2 == 0 and num2 % 2 == 0:
+    return "same"
+elif num1 % 3 == 1 and num2 % 3 == 1:
+    return "same"
+else:
+    return "different"
 ```
 
 ### Runtime NameError
@@ -382,5 +384,5 @@ def compare_last_digits(num1:int, num2:int) -> str:
   - Variant `ns_25t3_py11/8`, Student ID `b3dab4ca0ba64e4681cffe714e6a69ed`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
+...
 ```

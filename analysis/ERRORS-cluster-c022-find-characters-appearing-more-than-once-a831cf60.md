@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py13_1/10` (canonical) | 564 | 317 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py13_1/10` (canonical) |              564 |      317 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py13_1/10` | 564 | 247 | 317 | 263 | 54 |
-| `ns_25t3_py13_2/10` | 0 | 0 | 0 | 0 | 0 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py13_1/10` |              564 |       247 |      317 |                263 |                     54 |
+| `ns_25t3_py13_2/10` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,30 +47,30 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py13_1/10` | `ns_25t3_py13_2/10` |
-| --- | ---: | ---: | ---: | ---: |
-| Incorrect repeated-character detection logic (returns wrong type/order/content) | 118 | 37.2% | 118 | 0 |
-| Syntax / non-parseable final submission | 54 | 17.0% | 54 | 0 |
-| Runtime TypeError from invalid indexing/loop variables while scanning repeated characters | 15 | 4.7% | 15 | 0 |
-| Uses `split()`/word-based logic, but the task is about repeated characters within a single string | 15 | 4.7% | 15 | 0 |
-| No return / implicit `None` | 15 | 4.7% | 15 | 0 |
-| Appends a character every time `count(ch) > 1`, so repeated characters appear multiple times in the output list | 12 | 3.8% | 12 | 0 |
-| Builds repeated characters and then converts to `set`, which destroys the required first-appearance order | 11 | 3.5% | 11 | 0 |
-| Hard-codes sample outputs/examples instead of detecting repeated characters from arbitrary input | 11 | 3.5% | 11 | 0 |
-| Runtime NameError from undefined lists/counters in repeated-character tracking | 11 | 3.5% | 11 | 0 |
-| Tracks repeats in the order of second appearance (`seen`/`repeated` sets), not the required first appearance order | 10 | 3.2% | 10 | 0 |
-| Second-appearance order bug (`seen`/`repeated` approach): output order is wrong on cases like `mississippi` | 9 | 2.8% | 9 | 0 |
-| Uses `set(s)` in the main scan, which loses first-appearance order of repeated characters | 7 | 2.2% | 7 | 0 |
-| Order-loss bug from using `set(...)`/`list(set(...))` (repeated characters found, but output order is unstable/incorrect) | 7 | 2.2% | 7 | 0 |
-| Lowercases the string, changing case-sensitive character identity and output order/values | 4 | 1.3% | 4 | 0 |
-| Runtime error (parseable final submission) | 4 | 1.3% | 4 | 0 |
-| Runtime IndexError from manual nested-index scans over the string | 3 | 0.9% | 3 | 0 |
-| Runtime AttributeError from string/list API misuse in repeated-character logic | 3 | 0.9% | 3 | 0 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 3 | 0.9% | 3 | 0 |
-| Runtime RecursionError from accidental recursive `repeated_characters(...)` call | 2 | 0.6% | 2 | 0 |
-| Time Limit Exceeded | 1 | 0.3% | 1 | 0 |
-| Runtime ValueError | 1 | 0.3% | 1 | 0 |
-| Converts the input to a set first, losing duplicate counts before checking which characters repeat | 1 | 0.3% | 1 | 0 |
+| Pattern                                                                                                                   | Cluster count | % of cluster non-full | `ns_25t3_py13_1/10` | `ns_25t3_py13_2/10` |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Incorrect repeated-character detection logic (returns wrong type/order/content)                                           |           118 |                 37.2% |                 118 |                   0 |
+| Syntax / non-parseable final submission                                                                                   |            54 |                 17.0% |                  54 |                   0 |
+| Runtime TypeError from invalid indexing/loop variables while scanning repeated characters                                 |            15 |                  4.7% |                  15 |                   0 |
+| Uses `split()`/word-based logic, but the task is about repeated characters within a single string                         |            15 |                  4.7% |                  15 |                   0 |
+| No return / implicit `None`                                                                                               |            15 |                  4.7% |                  15 |                   0 |
+| Appends a character every time `count(ch) > 1`, so repeated characters appear multiple times in the output list           |            12 |                  3.8% |                  12 |                   0 |
+| Builds repeated characters and then converts to `set`, which destroys the required first-appearance order                 |            11 |                  3.5% |                  11 |                   0 |
+| Hard-codes sample outputs/examples instead of detecting repeated characters from arbitrary input                          |            11 |                  3.5% |                  11 |                   0 |
+| Runtime NameError from undefined lists/counters in repeated-character tracking                                            |            11 |                  3.5% |                  11 |                   0 |
+| Tracks repeats in the order of second appearance (`seen`/`repeated` sets), not the required first appearance order        |            10 |                  3.2% |                  10 |                   0 |
+| Second-appearance order bug (`seen`/`repeated` approach): output order is wrong on cases like `mississippi`               |             9 |                  2.8% |                   9 |                   0 |
+| Uses `set(s)` in the main scan, which loses first-appearance order of repeated characters                                 |             7 |                  2.2% |                   7 |                   0 |
+| Order-loss bug from using `set(...)`/`list(set(...))` (repeated characters found, but output order is unstable/incorrect) |             7 |                  2.2% |                   7 |                   0 |
+| Lowercases the string, changing case-sensitive character identity and output order/values                                 |             4 |                  1.3% |                   4 |                   0 |
+| Runtime error (parseable final submission)                                                                                |             4 |                  1.3% |                   4 |                   0 |
+| Runtime IndexError from manual nested-index scans over the string                                                         |             3 |                  0.9% |                   3 |                   0 |
+| Runtime AttributeError from string/list API misuse in repeated-character logic                                            |             3 |                  0.9% |                   3 |                   0 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)                                   |             3 |                  0.9% |                   3 |                   0 |
+| Runtime RecursionError from accidental recursive `repeated_characters(...)` call                                          |             2 |                  0.6% |                   2 |                   0 |
+| Time Limit Exceeded                                                                                                       |             1 |                  0.3% |                   1 |                   0 |
+| Runtime ValueError                                                                                                        |             1 |                  0.3% |                   1 |                   0 |
+| Converts the input to a set first, losing duplicate counts before checking which characters repeat                        |             1 |                  0.3% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -219,19 +219,19 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `2553699800c043c0bf3ca3dbe8e8860c`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    repeat = []
-    new_list = []
-    for char in s:
-        repeat.append(char)
-    for char in repeat:
-        if repeat.count(char) > 1:
-            new_list.append(char)
-    for char in new_list:
-        if new_list.count(char) > 1:
-            new_list.remove(char)
-    return new_list
-    """Finds characters that appear more than once."""
-    ...
+repeat = []
+new_list = []
+for char in s:
+    repeat.append(char)
+for char in repeat:
+    if repeat.count(char) > 1:
+        new_list.append(char)
+for char in new_list:
+    if new_list.count(char) > 1:
+        new_list.remove(char)
+return new_list
+"""Finds characters that appear more than once."""
+...
 ```
 
 ### Builds repeated characters and then converts to `set`, which destroys the required first-appearance order
@@ -246,15 +246,15 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `559e4d91521e484faf2fb6b7bf816c4f`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
-     l=list(s)
-     st=[]
-     for i in range(len(l)):
-         for j in range(len(l)):
-             if i!=j:
-                 if l[i]==l[j]:
-                     st.append(l[i])
-     str=list(set(st))
-     return str
+l = list(s)
+st = []
+for i in range(len(l)):
+    for j in range(len(l)):
+        if i != j:
+            if l[i] == l[j]:
+                st.append(l[i])
+str = list(set(st))
+return str
 ```
 
 ### Hard-codes sample outputs/examples instead of detecting repeated characters from arbitrary input
@@ -297,15 +297,15 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `6853ee16e23647bb924e2144676f2fd1`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    char_count={}
-    repeated_chars=[]
-    seen_repeated=set()
-    for char in s:
-        charcounts[char]=charcounts.get(char,0)+1
-        if char_counts[char]>1 and char not in seen_repeated:
-            repeated_chars.append(char)
-            seen_repeated.add(char)
-    return repeated_chars
+char_count = {}
+repeated_chars = []
+seen_repeated = set()
+for char in s:
+    charcounts[char] = charcounts.get(char, 0) + 1
+    if char_counts[char] > 1 and char not in seen_repeated:
+        repeated_chars.append(char)
+        seen_repeated.add(char)
+return repeated_chars
 ```
 
 ### Tracks repeats in the order of second appearance (`seen`/`repeated` sets), not the required first appearance order
@@ -320,18 +320,18 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `893505d5e44746be87b9a83d00ff6476`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    result=[]
-    seen=set()
-    repeated=set()
-    for ch in s:
-        if ch is seen:
-            repeated.add(ch)
-        else:
-              seen.add(ch)
-    for ch in s:
-        if ch in repeated and ch not in resut:
-           result.append(ch)
-    return result
+result = []
+seen = set()
+repeated = set()
+for ch in s:
+    if ch is seen:
+        repeated.add(ch)
+    else:
+        seen.add(ch)
+for ch in s:
+    if ch in repeated and ch not in resut:
+        result.append(ch)
+return result
 ```
 
 ### Second-appearance order bug (`seen`/`repeated` approach): output order is wrong on cases like `mississippi`
@@ -379,13 +379,13 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `ccbb63e610d94a89921140103d9a0894`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    repeated = []
-    for char in set(s):
-        if s.count(char)>1:
-            repeated.append(char)
-        return repeated
-    s = input()
-    print(repeated_characters(s))
+repeated = []
+for char in set(s):
+    if s.count(char) > 1:
+        repeated.append(char)
+    return repeated
+s = input()
+print(repeated_characters(s))
 ```
 
 ### Order-loss bug from using `set(...)`/`list(set(...))` (repeated characters found, but output order is unstable/incorrect)
@@ -400,17 +400,17 @@ def repeated_characters(s: str) -> list:
   - Variant `ns_25t3_py13_1/10`, Student ID `fe97ceea338c4b18bc9ad815c23c8244`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
-    list_s=list(s)
-    set_s=set(list_s)
-    mod_list=list(sorted(set_s))
-    output=[]
-    for x in list_s:
-        if x in list_s[list_s.index(x)+1:]:
-            output.append(x)
-            for y in list_s:
-                if y==x:
-                    list_s.remove(y)
-    return output
+list_s = list(s)
+set_s = set(list_s)
+mod_list = list(sorted(set_s))
+output = []
+for x in list_s:
+    if x in list_s[list_s.index(x) + 1 :]:
+        output.append(x)
+        for y in list_s:
+            if y == x:
+                list_s.remove(y)
+return output
 ```
 
 ### Lowercases the string, changing case-sensitive character identity and output order/values
@@ -460,16 +460,18 @@ def repeated_characters(s: str) -> list:
 
 ```python
 def repeated_characters(s: str) -> list:
-   """Finds characters that appear more than once."""
-s=""
-s1=[]
-l=len(s)
-i=0
-for i in range(0,l):
-    if s[i]==s[i+1]:
+    """Finds characters that appear more than once."""
+
+
+s = ""
+s1 = []
+l = len(s)
+i = 0
+for i in range(0, l):
+    if s[i] == s[i + 1]:
         s1.append(s[i])
-        i=i+1
-return (s1)
+        i = i + 1
+return s1
 ```
 
 ### Runtime IndexError from manual nested-index scans over the string
@@ -511,16 +513,16 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `ad2a9dd19d934d9fb3d48032b92e2ca8`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    list = []
-    new_list = []
-    for i in range(0,len(s)):
-        if s[i] in list:
-            new_list.append(s[i])
-        else :
-            list.append(s[i])
-    sorted.new_list
-    return new_list
+...
+list = []
+new_list = []
+for i in range(0, len(s)):
+    if s[i] in list:
+        new_list.append(s[i])
+    else:
+        list.append(s[i])
+sorted.new_list
+return new_list
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator function-call tests)
@@ -535,12 +537,12 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `f8c2b831bcea4c23b8427cdfbe255e7f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s= input()
-    for i in range(1,n+1):
-        repeated_characters=0
-        for j in range(1,n+1):
-            repeated_characters= (repeated_characters)+j
-    print(repeated_characters)
+s = input()
+for i in range(1, n + 1):
+    repeated_characters = 0
+    for j in range(1, n + 1):
+        repeated_characters = (repeated_characters) + j
+print(repeated_characters)
 ```
 
 ### Runtime RecursionError from accidental recursive `repeated_characters(...)` call
@@ -555,13 +557,13 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `28ddf89babfa4007889128d678232b5d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    count=0
-    for i in s:
-        if (i==s):
-            count+=1
-            list_of_character
-            return count
-    print(repeated_characters("programming"))
+count = 0
+for i in s:
+    if i == s:
+        count += 1
+        list_of_character
+        return count
+print(repeated_characters("programming"))
 ```
 
 ### Time Limit Exceeded
@@ -576,18 +578,18 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `798fd6a07b5e405588a481ed1ec4785e`, summary `Time Limit Exceeded`, score `0`, vector `000`
 
 ```python
-    L=[]
-    t=s
-    i=0
-    while i<len(s):
-        j=i+1
-        while j<len(t):
-            if s[i]==t[j]:
-               L=L+s[i]
-            j+=1
-    return(L)
-    """Finds characters that appear more than once."""
-    ...
+L = []
+t = s
+i = 0
+while i < len(s):
+    j = i + 1
+    while j < len(t):
+        if s[i] == t[j]:
+            L = L + s[i]
+        j += 1
+return L
+"""Finds characters that appear more than once."""
+...
 ```
 
 ### Runtime ValueError
@@ -602,13 +604,13 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `b4c1823ac2ac4b08921d4e99eb28931d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    l=[]
-    i=0
-    a=s.split('')
-    for i in a:
-        if i>=2:
-            l.append[i]
-            return l
+l = []
+i = 0
+a = s.split("")
+for i in a:
+    if i >= 2:
+        l.append[i]
+        return l
 ```
 
 ### Converts the input to a set first, losing duplicate counts before checking which characters repeat
@@ -623,11 +625,7 @@ return (s1)
   - Variant `ns_25t3_py13_1/10`, Student ID `cfc82ecc4ec541b68afa05fe091c2d6c`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    unique_chars = set(s)
-    result_list = [
-        (char)
-        for char in unique_chars
-        if s.count(char)>1
-        ]
-    return result_list
+unique_chars = set(s)
+result_list = [(char) for char in unique_chars if s.count(char) > 1]
+return result_list
 ```

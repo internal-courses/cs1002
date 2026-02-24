@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/6` (canonical) | 820 | 192 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/6` (canonical) |              820 |      192 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/6` | 820 | 628 | 192 | 116 | 76 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/6` |              820 |       628 |      192 |                116 |                     76 |
 
 ## Private Case Structure
 
@@ -44,24 +44,24 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/6` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 76 | 39.6% | 76 |
-| Incorrect email-username extraction logic (broad wrong-answer failure) | 26 | 13.5% | 26 |
-| No return / implicit `None` | 22 | 11.5% | 22 |
-| Hard-codes public sample usernames instead of extracting text before `@` | 11 | 5.7% | 11 |
-| Runtime NameError | 10 | 5.2% | 10 |
-| Returns the full email string instead of only the username | 10 | 5.2% | 10 |
-| Runtime error (parseable final submission) | 6 | 3.1% | 6 |
-| Uses fixed-length slicing (domain-length assumption) instead of splitting at `@` | 6 | 3.1% | 6 |
-| Runtime TypeError from mixing string/list values in email-username extraction logic | 6 | 3.1% | 6 |
-| Reads `input()` inside function (EOF under evaluator function-call tests) | 6 | 3.1% | 6 |
-| Runtime AttributeError | 5 | 2.6% | 5 |
-| Runtime RecursionError | 3 | 1.6% | 3 |
-| Returns the first character encountered in a loop instead of accumulating characters before `@` | 2 | 1.0% | 2 |
-| Extracts username then mutates it (`replace`/normalization), changing the required output | 1 | 0.5% | 1 |
-| Runtime AttributeError from string/list API misuse while extracting username | 1 | 0.5% | 1 |
-| Runtime TypeError | 1 | 0.5% | 1 |
+| Pattern                                                                                         | Cluster count | % of cluster non-full | `ns_25t2_py13_2/6` |
+| ----------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                         |            76 |                 39.6% |                 76 |
+| Incorrect email-username extraction logic (broad wrong-answer failure)                          |            26 |                 13.5% |                 26 |
+| No return / implicit `None`                                                                     |            22 |                 11.5% |                 22 |
+| Hard-codes public sample usernames instead of extracting text before `@`                        |            11 |                  5.7% |                 11 |
+| Runtime NameError                                                                               |            10 |                  5.2% |                 10 |
+| Returns the full email string instead of only the username                                      |            10 |                  5.2% |                 10 |
+| Runtime error (parseable final submission)                                                      |             6 |                  3.1% |                  6 |
+| Uses fixed-length slicing (domain-length assumption) instead of splitting at `@`                |             6 |                  3.1% |                  6 |
+| Runtime TypeError from mixing string/list values in email-username extraction logic             |             6 |                  3.1% |                  6 |
+| Reads `input()` inside function (EOF under evaluator function-call tests)                       |             6 |                  3.1% |                  6 |
+| Runtime AttributeError                                                                          |             5 |                  2.6% |                  5 |
+| Runtime RecursionError                                                                          |             3 |                  1.6% |                  3 |
+| Returns the first character encountered in a loop instead of accumulating characters before `@` |             2 |                  1.0% |                  2 |
+| Extracts username then mutates it (`replace`/normalization), changing the required output       |             1 |                  0.5% |                  1 |
+| Runtime AttributeError from string/list API misuse while extracting username                    |             1 |                  0.5% |                  1 |
+| Runtime TypeError                                                                               |             1 |                  0.5% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -111,21 +111,21 @@ def extract_email_username(email):
   - Variant `ns_25t2_py13_2/6`, Student ID `9b6c4fdfc8ee45a1ad1c60aaccf00e93`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    n = len(email)
-    remove = ''
-    for char in range(n):
-        if char == '@':
-            remove += char
-        else:
-            None
+n = len(email)
+remove = ""
+for char in range(n):
+    if char == "@":
+        remove += char
+    else:
+        None
+    continue
+final_email = ""
+for char in email:
+    if char in remove:
         continue
-    final_email = ''
-    for char in email:
-        if char in remove:
-            continue
-        else:
-            final_email += char
-    return final_email
+    else:
+        final_email += char
+return final_email
 ```
 
 ### No return / implicit `None`
@@ -229,13 +229,13 @@ def extract_email_username(email: str) -> str:
   - Variant `ns_25t2_py13_2/6`, Student ID `66be9395e3c843efb4ed33cc0bdcac15`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    """for i in range(len(email)):
-        username = []
-        while email[i] != "@" :
-         username = email[i]
-    return username"""
-    return email[:11:]
+...
+"""for i in range(len(email)):
+    username = []
+    while email[i] != "@" :
+     username = email[i]
+return username"""
+return email[:11:]
 ```
 
 ### Runtime error (parseable final submission)
@@ -250,13 +250,13 @@ def extract_email_username(email: str) -> str:
   - Variant `ns_25t2_py13_2/6`, Student ID `08d20a3c5e8341c6a2bcd16132a7401e`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-n=str(input('type your email id here:'))
-if (n in 'n has only one @'):
-    if(n in 'n is alpnum'):
-        if(n in 'n has symbols'):
-            print (n)
+n = str(input("type your email id here:"))
+if n in "n has only one @":
+    if n in "n is alpnum":
+        if n in "n has symbols":
+            print(n)
 else:
-    print('enter a valid email id')
+    print("enter a valid email id")
 ```
 
 ### Uses fixed-length slicing (domain-length assumption) instead of splitting at `@`
@@ -270,7 +270,7 @@ else:
   - Variant `ns_25t2_py13_2/6`, Student ID `1aa4af7b52b944b69ee5550bf9231cf1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return (f"{email[:11]}")
+return f"{email[:11]}"
 ```
 
 ### Runtime TypeError from mixing string/list values in email-username extraction logic
@@ -339,18 +339,18 @@ else:
   - Variant `ns_25t2_py13_2/6`, Student ID `3229b0f2292e4e0c91b1973ff048767a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    username = ""
-    for char in email:
+username = ""
+for char in email:
     #     username += email[i]
     #     if email[i] == '@:
     #         break
     #     username.del('@')
     # return str(username)
-        username = username + char
-        if char == "@":
-            break
-        username.remove("@")
-    return username
+    username = username + char
+    if char == "@":
+        break
+    username.remove("@")
+return username
 ```
 
 ### Runtime RecursionError
@@ -365,15 +365,15 @@ else:
   - Variant `ns_25t2_py13_2/6`, Student ID `3d6127e9d7ba41ce9c385f920760654f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    email1: "sneha.verma@infosys.com"
-    is_equal(extract_email_username("sneha.verma@infosys.com"),"sneha.verma")
-    return(sneha.verma)
-    email2: "arjun_k@tcs.co.in"
-    is_equal(extract_email_username("arjun_k@tcs.co.in"),"arjun_k")
-    return(arjun_k)
-    email3: "neeraj.m@iitb.ac.in"
-    is_equal(extract_email_username("neeraj.m@iitb.ac.in"),"neeraj.m")
-    return(neeraj.m)
+email1: "sneha.verma@infosys.com"
+is_equal(extract_email_username("sneha.verma@infosys.com"), "sneha.verma")
+return sneha.verma
+email2: "arjun_k@tcs.co.in"
+is_equal(extract_email_username("arjun_k@tcs.co.in"), "arjun_k")
+return arjun_k
+email3: "neeraj.m@iitb.ac.in"
+is_equal(extract_email_username("neeraj.m@iitb.ac.in"), "neeraj.m")
+return neeraj.m
 ```
 
 ### Returns the first character encountered in a loop instead of accumulating characters before `@`
@@ -387,12 +387,12 @@ else:
   - Variant `ns_25t2_py13_2/6`, Student ID `087db96b0d6d42ec976f8aef1d279861`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    username = str
-    for i in email:
-        if i == "@":
-            break
-        else:
-            return i
+username = str
+for i in email:
+    if i == "@":
+        break
+    else:
+        return i
 ```
 
 ### Extracts username then mutates it (`replace`/normalization), changing the required output
@@ -406,8 +406,8 @@ else:
   - Variant `ns_25t2_py13_2/6`, Student ID `64ae9a7776ba4b7baf9422e816883bad`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
-    username = email.split('@')[0]
-    return username.replace('_','')
+username = email.split("@")[0]
+return username.replace("_", "")
 ```
 
 ### Runtime AttributeError from string/list API misuse while extracting username
@@ -454,8 +454,8 @@ def extract_email_username (email: str) -> str:
   - Variant `ns_25t2_py13_2/6`, Student ID `a930f774eaca4c28b26700e87cc423b4`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    username = ''
-    n = email.index()
-    username = email[0:(n-1)]
-    return username
+username = ""
+n = email.index()
+username = email[0 : (n - 1)]
+return username
 ```

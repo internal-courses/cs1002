@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py22_1/17` (canonical) | 936 | 171 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py22_1/17` (canonical) |              936 |      171 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py22_1/17` | 936 | 765 | 171 | 139 | 32 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py22_1/17` |              936 |       765 |      171 |                139 |                     32 |
 
 ## Private Case Structure
 
@@ -44,32 +44,32 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py22_1/17` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 32 | 18.7% | 32 |
-| Runtime TypeError | 24 | 14.0% | 24 |
-| Squares elements but does not reverse the order | 21 | 12.3% | 21 |
-| Incorrect reversed-squares logic (broad wrong-answer failure) | 15 | 8.8% | 15 |
-| Hard-codes public sample outputs/cases instead of computing reversed squares | 14 | 8.2% | 14 |
-| Reverses the list but forgets to square the elements | 13 | 7.6% | 13 |
-| No return / implicit `None` | 11 | 6.4% | 11 |
-| Sorts squared values descending instead of preserving reversed input order | 8 | 4.7% | 8 |
-| Runtime NameError | 6 | 3.5% | 6 |
-| Runtime AttributeError | 4 | 2.3% | 4 |
-| Prints squared values instead of returning the transformed list | 3 | 1.8% | 3 |
-| Runtime RecursionError | 3 | 1.8% | 3 |
-| Runtime IndexError | 3 | 1.8% | 3 |
-| Runtime TypeError from misusing `.reverse()` result / in-place reverse API | 2 | 1.2% | 2 |
-| Returns from inside the build loop, producing only the first squared/reversed element | 2 | 1.2% | 2 |
-| Runtime AttributeError from wrong list method/attribute usage | 2 | 1.2% | 2 |
-| Uses in-place `.reverse()` incorrectly (returns/mutates list without producing squared reversed result) | 1 | 0.6% | 1 |
-| Attempts to square values, but ultimately returns only the reversed list (squares are not stored) | 1 | 0.6% | 1 |
-| Returns only one squared value wrapped in a list instead of the full reversed-squares list | 1 | 0.6% | 1 |
-| Partially correct list transformation (reverse-vs-sort order mistake on specific test groups) | 1 | 0.6% | 1 |
-| Runtime IndexError from invalid index while iterating transformed list | 1 | 0.6% | 1 |
-| Squares only the first two elements (length-specific partial implementation) | 1 | 0.6% | 1 |
-| Squares index/range values instead of squaring the list elements | 1 | 0.6% | 1 |
-| Sorts values instead of reversing the input order before squaring | 1 | 0.6% | 1 |
+| Pattern                                                                                                 | Cluster count | % of cluster non-full | `ns_25t2_py22_1/17` |
+| ------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                 |            32 |                 18.7% |                  32 |
+| Runtime TypeError                                                                                       |            24 |                 14.0% |                  24 |
+| Squares elements but does not reverse the order                                                         |            21 |                 12.3% |                  21 |
+| Incorrect reversed-squares logic (broad wrong-answer failure)                                           |            15 |                  8.8% |                  15 |
+| Hard-codes public sample outputs/cases instead of computing reversed squares                            |            14 |                  8.2% |                  14 |
+| Reverses the list but forgets to square the elements                                                    |            13 |                  7.6% |                  13 |
+| No return / implicit `None`                                                                             |            11 |                  6.4% |                  11 |
+| Sorts squared values descending instead of preserving reversed input order                              |             8 |                  4.7% |                   8 |
+| Runtime NameError                                                                                       |             6 |                  3.5% |                   6 |
+| Runtime AttributeError                                                                                  |             4 |                  2.3% |                   4 |
+| Prints squared values instead of returning the transformed list                                         |             3 |                  1.8% |                   3 |
+| Runtime RecursionError                                                                                  |             3 |                  1.8% |                   3 |
+| Runtime IndexError                                                                                      |             3 |                  1.8% |                   3 |
+| Runtime TypeError from misusing `.reverse()` result / in-place reverse API                              |             2 |                  1.2% |                   2 |
+| Returns from inside the build loop, producing only the first squared/reversed element                   |             2 |                  1.2% |                   2 |
+| Runtime AttributeError from wrong list method/attribute usage                                           |             2 |                  1.2% |                   2 |
+| Uses in-place `.reverse()` incorrectly (returns/mutates list without producing squared reversed result) |             1 |                  0.6% |                   1 |
+| Attempts to square values, but ultimately returns only the reversed list (squares are not stored)       |             1 |                  0.6% |                   1 |
+| Returns only one squared value wrapped in a list instead of the full reversed-squares list              |             1 |                  0.6% |                   1 |
+| Partially correct list transformation (reverse-vs-sort order mistake on specific test groups)           |             1 |                  0.6% |                   1 |
+| Runtime IndexError from invalid index while iterating transformed list                                  |             1 |                  0.6% |                   1 |
+| Squares only the first two elements (length-specific partial implementation)                            |             1 |                  0.6% |                   1 |
+| Squares index/range values instead of squaring the list elements                                        |             1 |                  0.6% |                   1 |
+| Sorts values instead of reversing the input order before squaring                                       |             1 |                  0.6% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -248,15 +248,15 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `0fdf6645bdc54e7da88566e0422fbda1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    x=str(l[1:-1])
-    nums=x.split(",")
-    n=len(nums)
-    numbers=[]
-    for num in range(1,n+3):
-            m=num
-            number=m*m
-            numbers.append(number)
-    return(numbers[::-1])
+x = str(l[1:-1])
+nums = x.split(",")
+n = len(nums)
+numbers = []
+for num in range(1, n + 3):
+    m = num
+    number = m * m
+    numbers.append(number)
+return numbers[::-1]
 ```
 
 ### No return / implicit `None`
@@ -303,22 +303,22 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `b7d6d40c20dd467a90278981d2302061`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    ...
-    new_l = []
-    if len(l) < 1:
-        return []
-    elif len(l) < 3:
-        new_l.append(l[1]**2)
-        new_l.append(l[0]**2)
-        return new_l
-    else:
-        for num in l:
-            if num is not None or str(num).isnumeric():
-                sq = num ** 2
-                # print(sq)
-                new_l.append(sq)
-    new_l2 = sorted(new_l, reverse=True)
-    return new_l2
+...
+new_l = []
+if len(l) < 1:
+    return []
+elif len(l) < 3:
+    new_l.append(l[1] ** 2)
+    new_l.append(l[0] ** 2)
+    return new_l
+else:
+    for num in l:
+        if num is not None or str(num).isnumeric():
+            sq = num**2
+            # print(sq)
+            new_l.append(sq)
+new_l2 = sorted(new_l, reverse=True)
+return new_l2
 ```
 
 ### Runtime NameError
@@ -366,14 +366,15 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `ea4030d43fba4474a17569dd9cdd0b55`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    import math
-    i=0
-    while (i<=0):
-        l[i]=pow.l[i]
-        print("l[i]",end=" ")
-        i+=1
-    return l[i]
+...
+import math
+
+i = 0
+while i <= 0:
+    l[i] = pow.l[i]
+    print("l[i]", end=" ")
+    i += 1
+return l[i]
 ```
 
 ### Prints squared values instead of returning the transformed list
@@ -387,14 +388,18 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `8c72b50b479647a1babde4c3e7d10bd8`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    import math
-    l=(int)
-    def k_the(a):
-        a== [l ** 2]
-        return(a)
-        def is_equal(S):
-            S=(reversed_square(l), k_the(a))
-            print(S)
+import math
+
+l = int
+
+
+def k_the(a):
+    a == [l**2]
+    return a
+
+    def is_equal(S):
+        S = (reversed_square(l), k_the(a))
+        print(S)
 ```
 
 ### Runtime RecursionError
@@ -409,8 +414,8 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `539ee244dbd241fdb69f4f375d982989`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    list = [2,3,4,5,6]
-    reversed_squares([2,3,4,5,6])
+list = [2, 3, 4, 5, 6]
+reversed_squares([2, 3, 4, 5, 6])
 ```
 
 ### Runtime IndexError
@@ -425,18 +430,18 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `a2a4a9f57a654579bd01bd3f6584e955`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    m=[]
-    a=l[0]**2
-    b=l[1]**2
-    c=l[2]**2
-    d=l[3]**2
-    e=l[4]**2
-    m.append(e)
-    m.append(d)
-    m.append(c)
-    m.append(b)
-    m.append(a)
-    return(m)
+m = []
+a = l[0] ** 2
+b = l[1] ** 2
+c = l[2] ** 2
+d = l[3] ** 2
+e = l[4] ** 2
+m.append(e)
+m.append(d)
+m.append(c)
+m.append(b)
+m.append(a)
+return m
 ```
 
 ### Runtime TypeError from misusing `.reverse()` result / in-place reverse API
@@ -450,10 +455,10 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `4fc370c459384de3ad74d7922d05cf43`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if len(l) == 0:
-        return l
-    new_list = [i*i for i in l.reverse()]
-    return new_list
+if len(l) == 0:
+    return l
+new_list = [i * i for i in l.reverse()]
+return new_list
 ```
 
 ### Returns from inside the build loop, producing only the first squared/reversed element
@@ -499,18 +504,18 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `be916a0787be4d9d8d77d763e5649c40`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    new_list= []
-    for i in range(len(l)):
-        new_list.appends(l[i]**2)
-    new_list= new_list[::-1]
-    return new_list
-    """
-    new_list =[]
-    for i in l:
-        new_list.appends(i**2)
-    new_list = new_list[::-1]
-    return new_list
-    """
+new_list = []
+for i in range(len(l)):
+    new_list.appends(l[i] ** 2)
+new_list = new_list[::-1]
+return new_list
+"""
+new_list =[]
+for i in l:
+    new_list.appends(i**2)
+new_list = new_list[::-1]
+return new_list
+"""
 ```
 
 ### Uses in-place `.reverse()` incorrectly (returns/mutates list without producing squared reversed result)
@@ -524,14 +529,14 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `2d505127c8fe42bcbf73a114ba3d8ce2`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    new_l=[]
-    new_2=[]
-    l1=[]
-    for num in l:
-        squares=num**2
-        l1.append(squares)
-        new_l=l1.reverse()
-    return l1
+new_l = []
+new_2 = []
+l1 = []
+for num in l:
+    squares = num**2
+    l1.append(squares)
+    new_l = l1.reverse()
+return l1
 ```
 
 ### Attempts to square values, but ultimately returns only the reversed list (squares are not stored)
@@ -545,11 +550,11 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `335f83dfe0424e30b628dbe794172c01`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    new_list=l[::-1]
-    for i in new_list:
-        new_list=i**2
-    return new_list
+...
+new_list = l[::-1]
+for i in new_list:
+    new_list = i**2
+return new_list
 ```
 
 ### Returns only one squared value wrapped in a list instead of the full reversed-squares list
@@ -563,12 +568,12 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `3b858e1e349a4384ae896b3b68993ea8`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    n = len(l)
-    i = n
-    for i in range(n):
-        new_list = l[i]*l[i]
-        i-=1
-    return [new_list]
+n = len(l)
+i = n
+for i in range(n):
+    new_list = l[i] * l[i]
+    i -= 1
+return [new_list]
 ```
 
 ### Partially correct list transformation (reverse-vs-sort order mistake on specific test groups)
@@ -582,9 +587,9 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `43c601b8441f4feb88918267d1f17335`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    for i in range(len(l)):
-        l[i] *= l[i]
-    return l[:len(l)+2]
+for i in range(len(l)):
+    l[i] *= l[i]
+return l[: len(l) + 2]
 ```
 
 ### Runtime IndexError from invalid index while iterating transformed list
@@ -598,12 +603,12 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `53ab1ed2ff82497197e849ebbe59ff59`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    list1 = l[-1]
-    list2 = l[-2]
-    list3 = l[-3]
-    list4 = l[-4]
-    list5 = l[-5]
-    return [list1 ** 2, list2 ** 2, list3 ** 2, list4 ** 2, list5 ** 2]
+list1 = l[-1]
+list2 = l[-2]
+list3 = l[-3]
+list4 = l[-4]
+list5 = l[-5]
+return [list1**2, list2**2, list3**2, list4**2, list5**2]
 ```
 
 ### Squares only the first two elements (length-specific partial implementation)
@@ -617,12 +622,12 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `b82e43893a9443ab814bc12dfc8ac620`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    a = []
-    for i in range(0,2):
-        b = l[i]**2
-        a.append(b)
-    a.reverse()
-    return a
+a = []
+for i in range(0, 2):
+    b = l[i] ** 2
+    a.append(b)
+a.reverse()
+return a
 ```
 
 ### Squares index/range values instead of squaring the list elements
@@ -636,10 +641,10 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `bd70f63de5fa463bbcbfe4b93d9f39aa`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    squares = [x**2 for x in range(1,len(l)+1)]
-    reversed_squares = squares[::-1]
-    return (reversed_squares)
-    ...
+squares = [x**2 for x in range(1, len(l) + 1)]
+reversed_squares = squares[::-1]
+return reversed_squares
+...
 ```
 
 ### Sorts values instead of reversing the input order before squaring
@@ -653,10 +658,10 @@ def reversed_squares(l):
   - Variant `ns_25t2_py22_1/17`, Student ID `fade59fa57ee40ad92e6204000f1b835`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    new_list = []
-    for elem in l:
-        sq = elem ** 2
-        new_list.append(sq)
-        new_list.sort()
-    return new_list
+new_list = []
+for elem in l:
+    sq = elem**2
+    new_list.append(sq)
+    new_list.sort()
+return new_list
 ```

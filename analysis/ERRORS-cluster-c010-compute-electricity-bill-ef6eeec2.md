@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/14` | 738 | 110 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/14` (canonical) | 760 | 116 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/14`             |              738 |      110 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/14` (canonical) |              760 |      116 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/14` | 738 | 628 | 110 | 77 | 33 |
-| `ns_25t2_py21_2/14` | 760 | 644 | 116 | 77 | 39 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/14` |              738 |       628 |      110 |                 77 |                     33 |
+| `ns_25t2_py21_2/14` |              760 |       644 |      116 |                 77 |                     39 |
 
 ## Private Case Structure
 
@@ -48,26 +48,26 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/14` | `ns_25t2_py21_2/14` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 72 | 31.9% | 33 | 39 |
-| Runtime NameError | 33 | 14.6% | 18 | 15 |
-| Uses separate `if` slabs (branch overwrite / wrong slab precedence) | 26 | 11.5% | 8 | 18 |
-| Runtime TypeError | 22 | 9.7% | 11 | 11 |
-| Low-slab-only mistake (lower slab cases fail; upper slabs often pass) | 19 | 8.4% | 10 | 9 |
-| Runtime error (parseable final submission) | 18 | 8.0% | 6 | 12 |
-| Middle slab formula missing fixed `+150` charge | 7 | 3.1% | 5 | 2 |
-| Ignores input parameter / uses hard-coded units | 7 | 3.1% | 5 | 2 |
-| Implements progressive-slab billing instead of flat slab + fixed charge | 5 | 2.2% | 2 | 3 |
-| Other wrong-answer logic pattern (residual) | 4 | 1.8% | 3 | 1 |
-| High-slab mistake (>400 formula/branch error) | 3 | 1.3% | 2 | 1 |
-| Runtime RecursionError | 2 | 0.9% | 1 | 1 |
-| Excludes the `400` boundary from middle slab (`< 400` vs `<= 400`) | 2 | 0.9% | 1 | 1 |
-| Middle-slab mistake (boundary/charge error in 200-400 range) | 2 | 0.9% | 2 | 0 |
-| Only high-slab case passes (low/mid branch logic broken) | 1 | 0.4% | 0 | 1 |
-| Returns tariff/rate expression instead of total bill | 1 | 0.4% | 1 | 0 |
-| Computes slab conditions but overwrites bill unconditionally | 1 | 0.4% | 1 | 0 |
-| High slab formula missing fixed `+300` charge | 1 | 0.4% | 1 | 0 |
+| Pattern                                                                 | Cluster count | % of cluster non-full | `ns_25t2_py21_1/14` | `ns_25t2_py21_2/14` |
+| ----------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Syntax / non-parseable final submission                                 |            72 |                 31.9% |                  33 |                  39 |
+| Runtime NameError                                                       |            33 |                 14.6% |                  18 |                  15 |
+| Uses separate `if` slabs (branch overwrite / wrong slab precedence)     |            26 |                 11.5% |                   8 |                  18 |
+| Runtime TypeError                                                       |            22 |                  9.7% |                  11 |                  11 |
+| Low-slab-only mistake (lower slab cases fail; upper slabs often pass)   |            19 |                  8.4% |                  10 |                   9 |
+| Runtime error (parseable final submission)                              |            18 |                  8.0% |                   6 |                  12 |
+| Middle slab formula missing fixed `+150` charge                         |             7 |                  3.1% |                   5 |                   2 |
+| Ignores input parameter / uses hard-coded units                         |             7 |                  3.1% |                   5 |                   2 |
+| Implements progressive-slab billing instead of flat slab + fixed charge |             5 |                  2.2% |                   2 |                   3 |
+| Other wrong-answer logic pattern (residual)                             |             4 |                  1.8% |                   3 |                   1 |
+| High-slab mistake (>400 formula/branch error)                           |             3 |                  1.3% |                   2 |                   1 |
+| Runtime RecursionError                                                  |             2 |                  0.9% |                   1 |                   1 |
+| Excludes the `400` boundary from middle slab (`< 400` vs `<= 400`)      |             2 |                  0.9% |                   1 |                   1 |
+| Middle-slab mistake (boundary/charge error in 200-400 range)            |             2 |                  0.9% |                   2 |                   0 |
+| Only high-slab case passes (low/mid branch logic broken)                |             1 |                  0.4% |                   0 |                   1 |
+| Returns tariff/rate expression instead of total bill                    |             1 |                  0.4% |                   1 |                   0 |
+| Computes slab conditions but overwrites bill unconditionally            |             1 |                  0.4% |                   1 |                   0 |
+| High slab formula missing fixed `+300` charge                           |             1 |                  0.4% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -106,7 +106,8 @@ Examples:
 compute_electricity_bill(210) -> `236.50`
 # ...
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `305ae25f40b54d55bf08169efd6df7e9`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `305ae25f40b54d55bf08169efd6df7e9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def compute_electricity_bill(units)
@@ -144,7 +145,7 @@ def compute_electricity_bill(units)
 
 ```python
 def compute_electricity_bill(units: int) -> float:
-    '''
+    """
     Return the bill amount to be paid:
     - less than or equal 200 units: 0.5 per unit
     - less than or equal to 400 units: 0.75 per unit + 150 extra
@@ -160,9 +161,10 @@ def compute_electricity_bill(units: int) -> float:
 
     Returns:
         float : The amount to be paid.
-    '''
+    """
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `0901623cd89e47da95fd58df3f93d6fe`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `0901623cd89e47da95fd58df3f93d6fe`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
@@ -202,14 +204,15 @@ cost = 0
 extra_charge = 150
 extra_charges = 300
 if units <= 200:
-        cost = units * 0.50
-if units <=400:
-        cost = units *0.75 + extra_charge
+    cost = units * 0.50
+if units <= 400:
+    cost = units * 0.75 + extra_charge
 if units > 400:
-        cost = 400 * 0.30 + extra_charges
+    cost = 400 * 0.30 + extra_charges
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `f117944261a74c7ba1b3689f96a4f104`, summary `Wrong Answer`, score `67`, vector `011`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `f117944261a74c7ba1b3689f96a4f104`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
 total = 0
@@ -247,7 +250,7 @@ return total
 
 ```python
 def compute_electricity_bill(units: int) -> float:
-    '''
+    """
     Return the bill amount to be paid:
     - less than or equal 200 units: 0.5 per unit
     - less than or equal to 400 units: 0.75 per unit + 150 extra
@@ -263,9 +266,10 @@ def compute_electricity_bill(units: int) -> float:
 
     Returns:
         float : The amount to be paid.
-    '''
+    """
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `a55af24eab08422d978328565d9d170b`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `a55af24eab08422d978328565d9d170b`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def compute_electricity_bill(units: int) -> float:
@@ -307,7 +311,8 @@ if units<=0:
             cost=round((units*0.90+300),2)
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `6edf98bfea0d4ea199bf70b8d947ec90`, summary `Wrong Answer`, score `67`, vector `011`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `6edf98bfea0d4ea199bf70b8d947ec90`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
 cost = 0
@@ -355,7 +360,8 @@ if units <200:
     compute_electricity_bill(412) -> `670.80`
 # ...
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `90cefd7c86b14ff5b44a77a3f84b8f6b`, summary `Runtime Error`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `90cefd7c86b14ff5b44a77a3f84b8f6b`, summary `Runtime Error`, score `33`, vector `100`
 
 ```python
 if units <=200:
@@ -400,7 +406,8 @@ if units <= 200:
     else:
         return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `19c09847848a4aa9a1f2353bf08bb73f`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `19c09847848a4aa9a1f2353bf08bb73f`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
 if units <= 200:
@@ -446,7 +453,8 @@ return cost
 
 # ...
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `519db619d18b48208779763dfee33f0c`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `519db619d18b48208779763dfee33f0c`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 unit = float(units)
@@ -481,7 +489,8 @@ if units <=200:
 return round(amount,2)
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `a79de7cd3c6b48c986ddd587499cd87e`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `a79de7cd3c6b48c986ddd587499cd87e`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 if units <= 200 :
@@ -532,7 +541,8 @@ if units <= 200:
         return cost
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `f6c85110cf974cfabdb1b871a47da140`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `f6c85110cf974cfabdb1b871a47da140`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
 cost = units * 0.75 + 150
@@ -559,7 +569,8 @@ if units<=200:
         cost=(units*0.90)+300.00
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `c99463e453ce42b2a2daec75fef52771`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `c99463e453ce42b2a2daec75fef52771`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 if units <=200:
@@ -589,15 +600,16 @@ return cost
 ```python
 ...
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `20f59052c1f746198f11a2bc78ad7c0c`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `20f59052c1f746198f11a2bc78ad7c0c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 units(
-       round(compute_electricity_bill(units), 2),
-    )
+    round(compute_electricity_bill(units), 2),
+)
 units(
-        round(compute_electricity_bill(units), 2),
-    )
+    round(compute_electricity_bill(units), 2),
+)
 return units
 ```
 
@@ -621,7 +633,8 @@ if units<=200:
         cost=units*0.90+ 300
 return cost
 ```
-  - Variant `ns_25t2_py21_2/14`, Student ID `ba875cb74de94f8689df2e733c78760e`, summary `Wrong Answer`, score `67`, vector `101`
+
+- Variant `ns_25t2_py21_2/14`, Student ID `ba875cb74de94f8689df2e733c78760e`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
 if units <= 200:
@@ -667,7 +680,7 @@ return float(cost)
 
 ```python
 units <= 200
-cost = units*(0.5)
+cost = units * (0.5)
 return cost
 ```
 
@@ -707,12 +720,12 @@ return cost
 ```python
 bill_cost = 0
 num_of_units = units
-is_num_of_units = (units <= 200)
-bill_cost = (0.5*units + 0)
-is_num_of_units = (200 < units <= 400)
-bill_cost = (0.75*units + 150)
-is_num_of_units = (400 < units )
-bill_cost = (0.90*units + 300)
+is_num_of_units = units <= 200
+bill_cost = 0.5 * units + 0
+is_num_of_units = 200 < units <= 400
+bill_cost = 0.75 * units + 150
+is_num_of_units = 400 < units
+bill_cost = 0.90 * units + 300
 return bill_cost
 ```
 

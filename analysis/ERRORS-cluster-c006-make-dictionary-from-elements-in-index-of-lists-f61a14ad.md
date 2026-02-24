@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py12_1/7` (canonical) | 474 | 124 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py12_1/7` (canonical) |              474 |      124 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,11 +33,11 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t1_py11_1/4` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t1_py_15_exe/7` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t2_py12_1/7` | 474 | 350 | 124 | 91 | 33 |
+| Variant               | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| --------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t1_py11_1/4`    |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t1_py_15_exe/7` |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t2_py12_1/7`    |              474 |       350 |      124 |                 91 |                     33 |
 
 ## Private Case Structure
 
@@ -48,27 +48,27 @@ Private-case vectors in this report are 2-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t1_py11_1/4` | `ns_25t1_py_15_exe/7` | `ns_25t2_py12_1/7` |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 33 | 26.6% | 0 | 0 | 33 |
-| Incorrect dictionary construction (ignores `index`, returns wrong shape/type, or uses sample-specific values) | 26 | 21.0% | 0 | 0 | 26 |
-| No return / implicit `None` | 17 | 13.7% | 0 | 0 | 17 |
-| Builds the dictionary with invalid syntax/types (tuple/set/string formatting instead of `{key: value}`) | 16 | 12.9% | 0 | 0 | 16 |
-| Negative-index handling bug: solution works for positive indices but treats valid negative indices incorrectly | 9 | 7.3% | 0 | 0 | 9 |
-| Returns the full `dict(zip(keys, values))` instead of a single key-value pair at the given index | 3 | 2.4% | 0 | 0 | 3 |
-| Runtime RecursionError | 3 | 2.4% | 0 | 0 | 3 |
-| Hard-codes public sample dictionaries instead of using the provided `keys`, `values`, and `index` | 3 | 2.4% | 0 | 0 | 3 |
-| Runtime NameError | 2 | 1.6% | 0 | 0 | 2 |
-| Treats valid negative indices as out-of-bounds (`0 <= index < ...`) instead of using Python indexing semantics | 2 | 1.6% | 0 | 0 | 2 |
-| Rejects negative indices with a non-negative bounds check (`0 <= index < ...`) | 2 | 1.6% | 0 | 0 | 2 |
-| Runtime ValueError | 1 | 0.8% | 0 | 0 | 1 |
-| Assumes `keys[index]` is always a string (`.strip(...)`), but hidden tests include integer keys | 1 | 0.8% | 0 | 0 | 1 |
-| Copies evaluator-style self-tests into the function and triggers recursive/self-test failures | 1 | 0.8% | 0 | 0 | 1 |
-| Runtime error (parseable final submission) | 1 | 0.8% | 0 | 0 | 1 |
-| Runtime KeyError | 1 | 0.8% | 0 | 0 | 1 |
-| Returns the first key-value pair from nested loops, ignoring the requested `index` | 1 | 0.8% | 0 | 0 | 1 |
-| Returns a formatted string (`"key, value"`) instead of a dictionary | 1 | 0.8% | 0 | 0 | 1 |
-| Builds a list of per-index dictionaries and returns `l[index]`, which fails hidden negative-index semantics | 1 | 0.8% | 0 | 0 | 1 |
+| Pattern                                                                                                        | Cluster count | % of cluster non-full | `ns_25t1_py11_1/4` | `ns_25t1_py_15_exe/7` | `ns_25t2_py12_1/7` |
+| -------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                        |            33 |                 26.6% |                  0 |                     0 |                 33 |
+| Incorrect dictionary construction (ignores `index`, returns wrong shape/type, or uses sample-specific values)  |            26 |                 21.0% |                  0 |                     0 |                 26 |
+| No return / implicit `None`                                                                                    |            17 |                 13.7% |                  0 |                     0 |                 17 |
+| Builds the dictionary with invalid syntax/types (tuple/set/string formatting instead of `{key: value}`)        |            16 |                 12.9% |                  0 |                     0 |                 16 |
+| Negative-index handling bug: solution works for positive indices but treats valid negative indices incorrectly |             9 |                  7.3% |                  0 |                     0 |                  9 |
+| Returns the full `dict(zip(keys, values))` instead of a single key-value pair at the given index               |             3 |                  2.4% |                  0 |                     0 |                  3 |
+| Runtime RecursionError                                                                                         |             3 |                  2.4% |                  0 |                     0 |                  3 |
+| Hard-codes public sample dictionaries instead of using the provided `keys`, `values`, and `index`              |             3 |                  2.4% |                  0 |                     0 |                  3 |
+| Runtime NameError                                                                                              |             2 |                  1.6% |                  0 |                     0 |                  2 |
+| Treats valid negative indices as out-of-bounds (`0 <= index < ...`) instead of using Python indexing semantics |             2 |                  1.6% |                  0 |                     0 |                  2 |
+| Rejects negative indices with a non-negative bounds check (`0 <= index < ...`)                                 |             2 |                  1.6% |                  0 |                     0 |                  2 |
+| Runtime ValueError                                                                                             |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Assumes `keys[index]` is always a string (`.strip(...)`), but hidden tests include integer keys                |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Copies evaluator-style self-tests into the function and triggers recursive/self-test failures                  |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Runtime error (parseable final submission)                                                                     |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Runtime KeyError                                                                                               |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Returns the first key-value pair from nested loops, ignoring the requested `index`                             |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Returns a formatted string (`"key, value"`) instead of a dictionary                                            |             1 |                  0.8% |                  0 |                     0 |                  1 |
+| Builds a list of per-index dictionaries and returns `l[index]`, which fails hidden negative-index semantics    |             1 |                  0.8% |                  0 |                     0 |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -225,17 +225,17 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `0e2e5f7cb7be4418baca296aa8b8975b`, summary `Wrong Answer`, score `50`, vector `10`
 
 ```python
-    d=dict()
-    if index>=0:
-        for i in range(len(keys)):
-            if i==index:
-                d[keys[i]]=values[i]
-        return(d)
-    if index>0:
-        for i in range(len(keys),-1):
-            if i==index:
-                d[keys[i]]=vlues[i]
-        return(d)
+d = dict()
+if index >= 0:
+    for i in range(len(keys)):
+        if i == index:
+            d[keys[i]] = values[i]
+    return d
+if index > 0:
+    for i in range(len(keys), -1):
+        if i == index:
+            d[keys[i]] = vlues[i]
+    return d
 ```
 
 ### Returns the full `dict(zip(keys, values))` instead of a single key-value pair at the given index
@@ -251,8 +251,8 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `15a1c7848d404ce2bc7e9cca246335cc`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    s = dict(zip(keys,values))
-    return s
+s = dict(zip(keys, values))
+return s
 ```
 
 ### Runtime RecursionError
@@ -269,17 +269,17 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `946dca1a03ba45acbbba4fee8538cc23`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    k=len(keys)
-    l=len(values)
-    i=0
-    if k>=l:
-        while (i<=l):
-             return make_dict_from_elems_in_index(keys,values,i)
-             i+=1
-    else:
-        while (i<=k):
-              return make_dict_from_elems_in_index(keys,values,i)
-              i+=1
+k = len(keys)
+l = len(values)
+i = 0
+if k >= l:
+    while i <= l:
+        return make_dict_from_elems_in_index(keys, values, i)
+        i += 1
+else:
+    while i <= k:
+        return make_dict_from_elems_in_index(keys, values, i)
+        i += 1
 ```
 
 ### Hard-codes public sample dictionaries instead of using the provided `keys`, `values`, and `index`
@@ -295,14 +295,14 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `284559937f79444aa795af1e4d633de7`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    if index == 1:
-        return({"age" : 25})
-    if index == 0:
-        return({"Country" : "India"})
-    if index == 2:
-        return({"city" : "New York"})
-    if index == -3:
-        return ({'apple' : 'yellow'})
+if index == 1:
+    return {"age": 25}
+if index == 0:
+    return {"Country": "India"}
+if index == 2:
+    return {"city": "New York"}
+if index == -3:
+    return {"apple": "yellow"}
 ```
 
 ### Runtime NameError
@@ -319,16 +319,10 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `2b3b47f75c1a4f319f9a51964eebb2d2`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    list1= ["name", "age" "city"]
-    list2 = ["Alice", 25, "New York"]
-    is_eqaul(
-        makke_dict_from_elems_in_index(list1, list2, 1),
-        {"age":25}
-    )
-    is_equal(
-        make_dict_from_elems_in_index(list1, list2, 2),
-        {"city": "New York"}
-    )
+list1 = ["name", "agecity"]
+list2 = ["Alice", 25, "New York"]
+is_eqaul(makke_dict_from_elems_in_index(list1, list2, 1), {"age": 25})
+is_equal(make_dict_from_elems_in_index(list1, list2, 2), {"city": "New York"})
 ```
 
 ### Treats valid negative indices as out-of-bounds (`0 <= index < ...`) instead of using Python indexing semantics
@@ -399,12 +393,12 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `10658a5ae5f24525b9b4c42425ab6174`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    i=index
-    ke = keys[i]
-    val=values[i]
-    dict1 = dict(f"{ke}")
-    dict2 = dict(f"{val}")
-    return (f"{dict1, dict2}")
+i = index
+ke = keys[i]
+val = values[i]
+dict1 = dict(f"{ke}")
+dict2 = dict(f"{val}")
+return f"{dict1, dict2}"
 ```
 
 ### Assumes `keys[index]` is always a string (`.strip(...)`), but hidden tests include integer keys
@@ -420,15 +414,15 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `485dbb37223342cfa0932fd8f2715abc`, summary `Runtime Error`, score `50`, vector `10`
 
 ```python
-    a = keys[index].strip("")
-    if type(values)=='str':
-        b = values[index].strip("")
-    else:
-        b = values[index]
-    if type(b) =='int':
-        return {f'{a}':b}
-    else:
-        return {f'{a}':b}
+a = keys[index].strip("")
+if type(values) == "str":
+    b = values[index].strip("")
+else:
+    b = values[index]
+if type(b) == "int":
+    return {f"{a}": b}
+else:
+    return {f"{a}": b}
 ```
 
 ### Copies evaluator-style self-tests into the function and triggers recursive/self-test failures
@@ -444,17 +438,11 @@ def make_dict_from_elems_in_index(keys, values, index:int)-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `941f9c347bff4e8cb0c230dbd5aaa0b7`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    key = ["apple", "banana", "cherry"]
-    value = [10, 20 ,30, 40]
-    is_equal(
-        make_dict_from_elems_in_index(key, values, 1),
-        {"banana: 20"}
-        )
-    is_equal(
-        make_dict_from_elems_in_index(key, values, 1),
-        {"cherry": 40}
-        )
-    return(is_equal(_))
+key = ["apple", "banana", "cherry"]
+value = [10, 20, 30, 40]
+is_equal(make_dict_from_elems_in_index(key, values, 1), {"banana: 20"})
+is_equal(make_dict_from_elems_in_index(key, values, 1), {"cherry": 40})
+return is_equal(_)
 ```
 
 ### Runtime error (parseable final submission)
@@ -506,14 +494,14 @@ def make_dict_from_elems_in_index(keys, values,i )-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `a4193fbd439f43b2a470cc3be4d21851`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    keys=['apple', 'banana', 'cherry']
-    values =[10, 20, 30, 40]
-    if index==1:
-    	dict = {"apple":10, "banana":20, "cherry":30}
-    	return dict[index]
-    else:
-    	dict = {"apple":20, "banana":30, "cherry":40}
-    	return dict[index]
+keys = ["apple", "banana", "cherry"]
+values = [10, 20, 30, 40]
+if index == 1:
+    dict = {"apple": 10, "banana": 20, "cherry": 30}
+    return dict[index]
+else:
+    dict = {"apple": 20, "banana": 30, "cherry": 40}
+    return dict[index]
 ```
 
 ### Returns the first key-value pair from nested loops, ignoring the requested `index`
@@ -529,11 +517,11 @@ def make_dict_from_elems_in_index(keys, values,i )-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `b05561e9bfd148deb83b97040fd00dd7`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    dict={}
-    for i in range(len(keys)):
-        for key in keys:
-            for value in values:
-                return {key:value}
+dict = {}
+for i in range(len(keys)):
+    for key in keys:
+        for value in values:
+            return {key: value}
 ```
 
 ### Returns a formatted string (`"key, value"`) instead of a dictionary
@@ -549,9 +537,9 @@ def make_dict_from_elems_in_index(keys, values,i )-> dict:
   - Variant `ns_25t2_py12_1/7`, Student ID `ea5e0b7e2c2240608421c3da13d359d1`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    key = keys[index]
-    value = values[index]
-    return f"{key}, {value}"
+key = keys[index]
+value = values[index]
+return f"{key}, {value}"
 ```
 
 ### Builds a list of per-index dictionaries and returns `l[index]`, which fails hidden negative-index semantics

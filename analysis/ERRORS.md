@@ -13,6 +13,7 @@ Definitions used here:
 - Multi-variant clusters (`>1` question): `76`
 
 <!-- BEGIN OVERALL_INSIGHTS -->
+
 ## Overall Insights So Far (ELI15)
 
 So far, detailed error-pattern reports exist for `60/163` clusters. That already covers `38683/42918` final submissions (`90.1%`) and `16402/19538` non-full finals (`83.9%`).
@@ -76,9 +77,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: incorrect deinterleaving logic (general logic failure), hard-codes sample outputs instead of deinterleaving the input string generically, and uses s.index(char) while iterating characters, so duplicate characters get the wrong parity/index. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/6` (canonical) | 578 | 108 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/6` (canonical) |              578 |      108 | `3/3`            | Exact duplicate problem JSON |
 
 ### C002 - Shuffle a Three Word Sentence
 
@@ -90,9 +91,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: hard-codes sample outputs/sentences instead of using the provided order tuple generically, joins shuffled words without spaces (''.join(...)) instead of returning a space-separated sentence, and incorrect word-order reconstruction or output formatting in the 3-word shuffle task. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/7` (canonical) | 518 | 212 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/7` (canonical) |              518 |      212 | `3/3`            | Exact duplicate problem JSON |
 
 ### C003 - Middle element from list
 
@@ -104,7 +105,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C004 - Check is even or divisible by 5
 
@@ -116,9 +117,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: partially correct boolean logic, but false cases are mishandled, incorrect even/divisible-by-5 logic (general logic failure), and uses division (/ or //) instead of modulus (%) in the divisibility test. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/5` (canonical) | 698 | 77 | `4/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/5` (canonical) |              698 |       77 | `4/3`            | Exact duplicate problem JSON |
 
 ### C005 - Counts unique even and odd numbers
 
@@ -130,9 +131,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: incorrect unique even/odd counting logic, uses floor-division (// 2) as a parity test instead of modulo (% 2), and reads input() inside function-type question. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/9` (canonical) | 556 | 174 | `4/2` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/9` (canonical) |              556 |      174 | `4/2`            | Exact duplicate problem JSON |
 
 ### C006 - Make dictionary from elements in index of lists
 
@@ -144,9 +145,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: incorrect dictionary construction, builds the dictionary with invalid syntax/types, and negative-index handling bug: solution works for positive indices but treats valid negative indices incorrectly. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/7` (canonical) | 474 | 124 | `3/2` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/7` (canonical) |              474 |      124 | `3/2`            | Exact duplicate problem JSON |
 
 ### C007 - Vowel count of words
 
@@ -158,9 +159,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: incorrect per-word vowel counting or output formatting (general logic failure), treats the entire input as one string and counts/prints globally instead of producing per-word outputs, and hard-codes sample outputs instead of formatting arbitrary input words with vowel counts. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/10` (canonical) | 398 | 219 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/10` (canonical) |              398 |      219 | `3/3`            | Exact duplicate problem JSON |
 
 ### C008 - Pattern Printing - W Pattern
 
@@ -172,9 +173,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 - Key error summary (analyzed): Common mistakes: incorrect W-pattern printing logic, row-spacing arithmetic is incorrect, and hard-codes small sample sizes (n=1/2/3/...) with if/elif branches instead of a general pattern loop. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/13` (canonical) | 367 | 180 | `4/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/13` (canonical) |              367 |      180 | `4/3`            | Exact duplicate problem JSON |
 
 ### C009 - Student Score Filter
 
@@ -185,9 +186,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py12_1/12`
 - Variant relationship: exact semantic fingerprint match with minor metadata differences
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py12_1/12` (canonical) | 295 | 223 | `4/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py12_1/12` (canonical) |              295 |      223 | `4/4`            | Exact duplicate problem JSON |
 
 ### C010 - Compute Electricity Bill
 
@@ -199,10 +200,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: uses separate if slabs, low-slab-only mistake, and middle slab formula missing fixed +150 charge. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/14` | 738 | 110 | `3/3` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/14` (canonical) | 760 | 116 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/14`             |              738 |      110 | `3/3`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/14` (canonical) |              760 |      116 | `3/3`            | Exact duplicate problem JSON |
 
 ### C011 - is_reverse_combined_palindrome
 
@@ -214,10 +215,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect construction/check of reversed+combined string, partial/incorrect reverse+combine logic, and checks palindrome on one string (or wrong intermediate) instead of reversed(s1)+s2. Also many syntax/empty code, unfinished template code, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/15` | 673 | 150 | `3/3` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/16` (canonical) | 695 | 147 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/15`             |              673 |      150 | `3/3`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/16` (canonical) |              695 |      147 | `3/3`            | Exact duplicate problem JSON |
 
 ### C012 - Check for Arithmetic Progression
 
@@ -229,10 +230,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: returns inside loop before completing full check/computation, incorrect AP logic (general logic failure), and partially correct AP check. Also many runtime crashes, syntax/empty code, and unfinished template code.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/17` | 677 | 264 | `3/3` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/20` (canonical) | 688 | 243 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/17`             |              677 |      264 | `3/3`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/20` (canonical) |              688 |      243 | `3/3`            | Exact duplicate problem JSON |
 
 ### C013 - Pangram Check
 
@@ -244,10 +245,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: returns inside the alphabet-check loop, hard-codes sample pangram strings/examples instead of checking letter coverage, and skeleton placeholder ... left in function.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/16` | 656 | 337 | `3/3` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/18` (canonical) | 675 | 328 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/16`             |              656 |      337 | `3/3`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/18` (canonical) |              675 |      328 | `3/3`            | Exact duplicate problem JSON |
 
 ### C014 - Book Data Analysis
 
@@ -259,10 +260,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: broad multi-function failure, returns from inside the loop, so only the first/partial language counts are produced, and implements earlier helper functions but leaves count_by_language / total_pages_in_genre_lang incomplete. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/19` | 383 | 212 | `5/5` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/24` (canonical) | 420 | 235 | `5/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/19`             |              383 |      212 | `5/5`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/24` (canonical) |              420 |      235 | `5/5`            | Exact duplicate problem JSON |
 
 ### C015 - Double if Even Else Square
 
@@ -274,9 +275,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-codes sample values/examples instead of using the input parameter n, reads input() inside function-type question, and uses division (n/2 == 0) instead of parity test (n % 2 == 0). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/9` (canonical) | 754 | 79 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/9` (canonical) |              754 |       79 | `3/3`            | Exact duplicate problem JSON |
 
 ### C016 - Check Divisibility by Last Two Digits
 
@@ -288,9 +289,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect divisibility-by-last-two-digits logic (general logic failure), returns after checking only part of the digits/conditions, and partially correct divisibility logic with operator/condition bug. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/7` (canonical) | 683 | 277 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/7` (canonical) |              683 |      277 | `3/3`            | Exact duplicate problem JSON |
 
 ### C017 - Rotate Matrix Clockwise 90 degree
 
@@ -302,10 +303,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-coded/fixed-size sample-matrix output, not general m x n rotation, likely correct rotation logic, but prints rows with print(*row), and empty final submission. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/18` | 276 | 213 | `3/4` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/22` (canonical) | 317 | 241 | `3/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/18`             |              276 |      213 | `3/4`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/22` (canonical) |              317 |      241 | `3/4`            | Exact duplicate problem JSON |
 
 ### C018 - Separate Outer Characters
 
@@ -317,9 +318,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect outer/inner slicing or wrong return shape (general logic failure), hard-codes the sample output ('proing', 'gramm') instead of computing from s and n, and reads input() inside function-type question. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/9` (canonical) | 589 | 130 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/9` (canonical) |              589 |      130 | `3/3`            | Exact duplicate problem JSON |
 
 ### C019 - Number of Unique letters present in exactly one of the two strings
 
@@ -331,9 +332,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect unique-letter counting logic, counts exclusive letters but forgets uniqueness, and uses set symmetric-difference logic without case normalization. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/8` (canonical) | 587 | 326 | `5/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/8` (canonical) |              587 |      326 | `5/3`            | Exact duplicate problem JSON |
 
 ### C020 - File Content Zig-Zag Shift
 
@@ -345,10 +346,10 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect pattern-generation logic for the evaluated task, solves a different file-based zig-zag-spacing question (filename I/O) instead of the evaluator’s alternate-number-sequence triangle task, and hard-codes outputs for specific values of n (sample-case branching) instead of generating the pattern. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py21_1/20` (canonical) | 363 | 220 | `4/3` | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/26` | 223 | 136 | `4/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py21_1/20` (canonical) |              363 |      220 | `4/3`            | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/26`             |              223 |      136 | `4/3`            | Exact duplicate problem JSON |
 
 ### C021 - Bold Nth Character
 
@@ -360,9 +361,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: only validates n and returns the original string; never inserts the <b>...</b> tags, incorrect nth-character bolding logic (general logic failure), and returns from inside a loop while building the bolded string. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/8` (canonical) | 581 | 210 | `5/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/8` (canonical) |              581 |      210 | `5/3`            | Exact duplicate problem JSON |
 
 ### C022 - Find Characters Appearing More Than Once
 
@@ -374,9 +375,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect repeated-character detection logic, uses split()/word-based logic, but the task is about repeated characters within a single string, and appends a character every time count(ch) > 1, so repeated characters appear multiple times in the output list. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/10` (canonical) | 564 | 317 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/10` (canonical) |              564 |      317 | `3/3`            | Exact duplicate problem JSON |
 
 ### C023 - Replace Spaces with Index
 
@@ -388,9 +389,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect space-replacement logic, uses str.replace(...) for all spaces at once, so per-space index substitutions are incorrect, and uses integer indices directly in string replacement/concatenation (str(i) cast missing). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/10` (canonical) | 548 | 239 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/10` (canonical) |              548 |      239 | `3/3`            | Exact duplicate problem JSON |
 
 ### C024 - Count Word Types by Length and Palindrome Property
 
@@ -402,9 +403,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: uses split(' ') instead of split(), so hidden trailing-space lines create empty-string tokens that are miscounted, incorrect multi-line word-category counting logic, and reads only one text line after n and ignores the remaining lines. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/11` (canonical) | 426 | 272 | `3/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/11` (canonical) |              426 |      272 | `3/5`            | Exact duplicate problem JSON |
 
 ### C025 - Add Pairs with Carry Over Above 100
 
@@ -416,9 +417,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect carry-simulation program logic, reads each pair value on separate lines (a=int(input()); b=int(input())), causing input parsing failure on a b lines, and prints constant sample output lines instead of reading input pairs and simulating carry. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/13` (canonical) | 395 | 214 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/13` (canonical) |              395 |      214 | `3/3`            | Exact duplicate problem JSON |
 
 ### C026 - Sales Records Analysis
 
@@ -430,9 +431,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: leaves template placeholders (...) in multiple required sales-analysis helper functions, early helpers are mostly correct, but region_with_max_sales(...) / steady_revenue_products(...) logic fails hidden cases, and leaves the template placeholder ... in steady_revenue_products(...). Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/11` (canonical) | 347 | 308 | `4/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/11` (canonical) |              347 |      308 | `4/5`            | Exact duplicate problem JSON |
 
 ### C027 - Sum Numbers Inside Square Brackets
 
@@ -443,9 +444,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py14_1/12`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py14_1/12` (canonical) | 283 | 191 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py14_1/12` (canonical) |              283 |      191 | `3/3`            | Exact duplicate problem JSON |
 
 ### C028 - Step Triangle Pattern
 
@@ -456,9 +457,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py13_1/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/13` (canonical) | 262 | 221 | `5/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/13` (canonical) |              262 |      221 | `5/5`            | Exact duplicate problem JSON |
 
 ### C029 - Word Filter by Criteria
 
@@ -469,9 +470,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py13_1/12`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py13_1/12` (canonical) | 242 | 205 | `5/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py13_1/12` (canonical) |              242 |      205 | `5/5`            | Exact duplicate problem JSON |
 
 ### C030 - Abbreviate Initials And Sort
 
@@ -483,7 +484,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C031 - Absolute Time Difference Between Two Times
 
@@ -495,7 +496,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C032 - Add average key with absolute difference value (in-place)
 
@@ -507,7 +508,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C033 - Analyze Sentences
 
@@ -519,7 +520,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C034 - Book Reading List Data Analysis
 
@@ -531,7 +532,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C035 - Capitalize nth Character
 
@@ -543,7 +544,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C036 - Check Even Number and Second Last Digit is Two
 
@@ -555,7 +556,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C038 - Check If a String has No Vowels in Even Indices
 
@@ -567,7 +568,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C043 - Check Palindrome - Advanced
 
@@ -579,7 +580,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C037 - Check if 2D Vectors are Orthogonal
 
@@ -591,7 +592,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C042 - Check if Either of Two Numbers is a Multiple of the Other
 
@@ -603,7 +604,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C039 - Check if a String Starts and Ends with the Same Vowel (Case Insensitive)
 
@@ -615,7 +616,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C040 - Check if a Triangle is Obtuse
 
@@ -627,7 +628,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C041 - Check if both numbers have the same sign
 
@@ -639,7 +640,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C044 - Column Totals in a Markdown Table (Numeric Columns Only)
 
@@ -651,7 +652,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C045 - Compute Running Average Skipping NaN
 
@@ -663,7 +664,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C046 - Count Strings with Length Divisible by Either 3 or 5
 
@@ -675,7 +676,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C047 - Count Words with Matching First/Last but Different Second/Second-Last Letters
 
@@ -687,7 +688,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C048 - Employee Task Analysis
 
@@ -699,7 +700,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C049 - Extract Border Elements from a List
 
@@ -711,7 +712,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C050 - Find Minimum Card of a Specific Suit in Hand
 
@@ -723,7 +724,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C051 - First Non-Repeating Character in a String
 
@@ -735,7 +736,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C052 - Get Next Roll Number
 
@@ -747,7 +748,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C053 - Hand Cricket Match Runs
 
@@ -759,7 +760,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C054 - Key Stroke Analysis
 
@@ -771,7 +772,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C055 - Markdown Image to HTML Image
 
@@ -783,7 +784,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C056 - Max Column sum and Max column sum index
 
@@ -795,7 +796,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C057 - Merge and Remove Duplicates
 
@@ -807,7 +808,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C059 - Pattern Printing - Diamond
 
@@ -819,7 +820,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C060 - Pattern Printing - Hexagon
 
@@ -831,7 +832,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C058 - Pattern printing - Centered Triangle Of Zeroes
 
@@ -843,7 +844,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C061 - Polygon Analysis
 
@@ -855,7 +856,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C062 - Railway Ticket Booking Analysis
 
@@ -867,7 +868,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C063 - Rearrange Even Length Tuple by Placing Middle Elements at Ends
 
@@ -879,7 +880,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C064 - Remainder Grouping Dictionary
 
@@ -891,7 +892,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C066 - Remove Second and Second-Last Character from String
 
@@ -903,7 +904,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C065 - Remove n Elements from the Given Index
 
@@ -915,7 +916,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C067 - Replace Vowels with Next Alphabet
 
@@ -927,7 +928,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C068 - Score Objective Questions
 
@@ -939,7 +940,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C069 - Simple Stemmer
 
@@ -951,7 +952,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C070 - String Rearrangement
 
@@ -963,7 +964,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C071 - Three-Digit Number with Digit-Sum Divisible by k
 
@@ -975,7 +976,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C072 - Thresholding a 2D Array and Printing with * and @
 
@@ -987,7 +988,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C073 - Time Series Analysis
 
@@ -999,7 +1000,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C074 - Total Size of Image Files
 
@@ -1011,7 +1012,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C075 - Transfer amount
 
@@ -1023,7 +1024,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C076 - Words with Consecutive Identical Letters
 
@@ -1035,7 +1036,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C077 - Check If Multiple of 5 Not 3
 
@@ -1047,9 +1048,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: uses num % 3 == 0 in the positive condition (accepts multiples of 15), handles only the num % 5 == 0 branch and forgets the non-multiple fallback case, and incorrect divisibility logic (general logic failure). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/14` (canonical) | 1011 | 121 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/14` (canonical) |             1011 |      121 | `3/3`            | Exact duplicate problem JSON |
 
 ### C078 - Check For Greeting Prefix
 
@@ -1061,9 +1062,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: checks Hello/Hi without requiring the trailing space, checks first token via split(), and partially correct greeting-prefix logic. Also many runtime crashes, syntax/empty code, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/15` (canonical) | 982 | 405 | `4/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/15` (canonical) |              982 |      405 | `4/3`            | Exact duplicate problem JSON |
 
 ### C079 - Position of a Point Relative to a Line
 
@@ -1075,9 +1076,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect point-position logic (general logic failure), computes a*x + b*y + c but returns that raw variable instead of sign-mapping to 1/-1/0, and returns raw line-expression value a*x + b*y + c instead of mapping to 1/-1/0. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/5` (canonical) | 980 | 195 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/5` (canonical) |              980 |      195 | `3/3`            | Exact duplicate problem JSON |
 
 ### C080 - Combine First and Last Two Chars of a string
 
@@ -1089,9 +1090,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: uses wrong minimum-length threshold, partially correct edge-combine logic: wrong length threshold for the 3-character edge case, and partially correct slicing but fails one or both short-string edge cases. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/16` (canonical) | 949 | 200 | `3/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/16` (canonical) |              949 |      200 | `3/4`            | Exact duplicate problem JSON |
 
 ### C081 - Reversed Squares of List Elements
 
@@ -1103,9 +1104,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: squares elements but does not reverse the order, incorrect reversed-squares logic (general logic failure), and hard-codes sample outputs/cases instead of computing reversed squares. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/17` (canonical) | 936 | 171 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/17` (canonical) |              936 |      171 | `3/3`            | Exact duplicate problem JSON |
 
 ### C082 - Check If a Number is a Decreasing 4-Digit Number
 
@@ -1117,9 +1118,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: returns after checking only the first digit comparison, partially correct decreasing-digit logic, and incorrect decreasing-number logic (general logic failure). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/5` (canonical) | 851 | 420 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/5` (canonical) |              851 |      420 | `3/3`            | Exact duplicate problem JSON |
 
 ### C083 - Double First and Last Elements in a List
 
@@ -1131,9 +1132,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect list-end duplication logic (general logic failure), sorts the list after adding duplicates, losing the required original order, and returns the original list unchanged instead of duplicating first/last elements. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/5` (canonical) | 821 | 307 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/5` (canonical) |              821 |      307 | `3/3`            | Exact duplicate problem JSON |
 
 ### C084 - Extract Email Username
 
@@ -1145,9 +1146,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect email-username extraction logic (general logic failure), hard-codes sample usernames instead of extracting text before @, and returns the full email string instead of only the username. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/6` (canonical) | 820 | 192 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/6` (canonical) |              820 |      192 | `3/3`            | Exact duplicate problem JSON |
 
 ### C085 - Expand Sum of Products
 
@@ -1159,9 +1160,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: single-character-only parser (fixed-position indexing) fails multi-character or multi-digit private cases, incorrect expression parsing/formatting logic (general logic failure), and hard-codes sample expressions/outputs instead of parsing and expanding arbitrary terms. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/6` (canonical) | 817 | 637 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/6` (canonical) |              817 |      637 | `3/3`            | Exact duplicate problem JSON |
 
 ### C086 - Repeat Second Half of a Tuple
 
@@ -1173,9 +1174,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect repeated-second-half tuple logic (general logic failure), near-correct tuple-slicing logic with midpoint off-by-one bug, and returns from inside the build loop before constructing the full repeated-half tuple. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/7` (canonical) | 766 | 291 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/7` (canonical) |              766 |      291 | `3/3`            | Exact duplicate problem JSON |
 
 ### C087 - Four Digit Shuffle
 
@@ -1187,9 +1188,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: reads input() inside function-type question, incorrect four-digit shuffle logic, and returns the original number unchanged instead of shuffling digits to order 2413. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/7` (canonical) | 751 | 176 | `2/2` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/7` (canonical) |              751 |      176 | `2/2`            | Exact duplicate problem JSON |
 
 ### C088 - Upper Case Even Index Words
 
@@ -1201,9 +1202,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect alternate-uppercase word transformation logic (general logic failure), returns from inside the loop after processing only the first word/index, and changes odd-index words too (lower()/swapcase()), but the task requires leaving them unchanged. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/9` (canonical) | 729 | 298 | `4/4` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/9` (canonical) |              729 |      298 | `4/4`            | Exact duplicate problem JSON |
 
 ### C089 - Check if a String Starts and Ends with the Same Vowel (Case Insensitive)
 
@@ -1215,9 +1216,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: equality-only endpoint check, incorrect same-vowel endpoint logic (general logic failure), and checks whether both ends are vowels, but not whether they are the same vowel. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/7` (canonical) | 653 | 361 | `4/3` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/7` (canonical) |              653 |      361 | `4/3`            | Exact duplicate problem JSON |
 
 ### C090 - Compute Polynomial Value
 
@@ -1229,9 +1230,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: returns from inside the coefficient loop, so only part of the polynomial is evaluated, incorrect polynomial evaluation logic (general logic failure), and hard-codes sample polynomial values instead of evaluating arbitrary coefficients. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/9` (canonical) | 634 | 249 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/9` (canonical) |              634 |      249 | `3/3`            | Exact duplicate problem JSON |
 
 ### C091 - Compare Last Digits
 
@@ -1243,9 +1244,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect last-digit comparison logic (general logic failure), compares the full numbers for equality instead of comparing only the last digits, and reads input() inside function-type question. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/8` (canonical) | 628 | 169 | `5/3` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/8` (canonical) |              628 |      169 | `5/3`            | Exact duplicate problem JSON |
 
 ### C092 - Describe Number Based on Divisibility
 
@@ -1257,9 +1258,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: returns wrong casing for fallback label, incorrect Fizz/Buzz/FizzBuzz labeling logic (general logic failure), and reads input() inside function-type question. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/5` (canonical) | 624 | 251 | `4/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/5` (canonical) |              624 |      251 | `4/3`            | Exact duplicate problem JSON |
 
 ### C093 - Reverse Vowel Order in a String
 
@@ -1271,9 +1272,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect program-level vowel-reversal logic, hard-codes sample output strings (e.g., HollE) instead of reversing vowels for arbitrary input, and processes only one line instead of reversing vowels globally across all input lines. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/10` (canonical) | 616 | 489 | `2/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/10` (canonical) |              616 |      489 | `2/3`            | Exact duplicate problem JSON |
 
 ### C094 - Make Word Using Last Characters of Words with Minimum Length and Starting Character
 
@@ -1285,9 +1286,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: prints a constant/sample output (or empty line) instead of computing from input, checks the starting character but forgets the minimum-length condition (len(word) >= l), and uses a trivial length check (len(word) >= 1) instead of threshold l. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/18` (canonical) | 614 | 208 | `3/8` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/18` (canonical) |              614 |      208 | `3/8`            | Exact duplicate problem JSON |
 
 ### C095 - Convert Excel Column Name to 1-Based Index
 
@@ -1299,9 +1300,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect Excel column-to-index conversion logic (general logic failure), hard-codes sample column names/indices instead of computing arbitrary Excel indices, and single-letter-only / partial conversion logic. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/9` (canonical) | 579 | 403 | `4/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/9` (canonical) |              579 |      403 | `4/3`            | Exact duplicate problem JSON |
 
 ### C096 - Sales Data Analysis
 
@@ -1313,9 +1314,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: implements only the total_revenue task branch; other required task branches are missing, computes average product price but does not round to 2 decimals, and implements only total_revenue + product_wise_total_units_and_revenue. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/19` (canonical) | 546 | 426 | `4/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/19` (canonical) |              546 |      426 | `4/4`            | Exact duplicate problem JSON |
 
 ### C097 - YouTube Video Engagement Analysis
 
@@ -1327,9 +1328,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: does not round engagement_rate to 2 decimals, zero-view handling is missing in one of the list-processing helpers, and treats video dicts/lists as callable objects (e.g., video('title')) in helper composition. Also many runtime crashes, syntax/empty code, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/12` (canonical) | 542 | 514 | `5/6` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/12` (canonical) |              542 |      514 | `5/6`            | Exact duplicate problem JSON |
 
 ### C098 - Divide Number Into Almost Equal Parts
 
@@ -1341,9 +1342,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-codes sample outputs or (n, k) cases instead of computing a general partition, incorrect partition construction, and sorts/reorders the result after construction, which breaks the required stable larger-first ordering. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/7` (canonical) | 525 | 368 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/7` (canonical) |              525 |      368 | `3/3`            | Exact duplicate problem JSON |
 
 ### C099 - Parse Equation and Solve for x
 
@@ -1355,9 +1356,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: parses only + forms (or mishandles -), causing ValueError on subtraction/negative cases, converts a missing/implied coefficient to int(...) (e.g., x + b = c), causing ValueError, and returns constant sample answers (3.0/4.0) instead of solving the given equation. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/6` (canonical) | 525 | 471 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/6` (canonical) |              525 |      471 | `3/3`            | Exact duplicate problem JSON |
 
 ### C100 - Create Username from First Name and User ID
 
@@ -1369,9 +1370,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-codes sample usernames/names instead of generating the username from arbitrary inputs, uses the first 3 characters but forgets to lowercase the name prefix, and username construction logic is broadly incorrect. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/6` (canonical) | 495 | 89 | `3/5` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/6` (canonical) |              495 |       89 | `3/5`            | Exact duplicate problem JSON |
 
 ### C101 - Remove Duplicate Characters from String
 
@@ -1383,9 +1384,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect character deduplication logic, uses set(...) + join(...), which loses the original first-appearance order of characters, and returns the original string unchanged. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/10` (canonical) | 485 | 184 | `3/3` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/10` (canonical) |              485 |      184 | `3/3`            | Exact duplicate problem JSON |
 
 ### C102 - Move Even Indices to End (Reversed)
 
@@ -1397,9 +1398,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-codes the public example tuple/output shape instead of processing arbitrary tuples, fixed-position indexing assumes longer tuples and fails on hidden small-tuple or slice-edge cases, and incorrect tuple slicing/reconstruction logic for moving even indices to the end in reversed order. Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/9` (canonical) | 464 | 189 | `2/3` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/9` (canonical) |              464 |      189 | `2/3`            | Exact duplicate problem JSON |
 
 ### C103 - Square the last three numbers in a list
 
@@ -1411,9 +1412,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect tail-squaring or in-place modification logic (general logic failure), computes/returns a transformed tail slice but does not write it back to l in place, and returns the input list unchanged. Also many runtime crashes, missing returns, and syntax/empty code.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/7` (canonical) | 432 | 111 | `3/4` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/7` (canonical) |              432 |      111 | `3/4`            | Exact duplicate problem JSON |
 
 ### C104 - Mirror Merge - Advanced
 
@@ -1425,9 +1426,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: mirror-indexing bug causes out-of-range access, incorrect mirror pairing / parity-rule application (general logic failure), and uses an or parity condition instead of checking same parity, so mixed-parity cases are added incorrectly. Also many syntax/empty code, runtime crashes, and missing returns.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/9` (canonical) | 400 | 122 | `3/3` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/9` (canonical) |              400 |      122 | `3/3`            | Exact duplicate problem JSON |
 
 ### C105 - Swap Diagonal Characters in a 2‑Line String
 
@@ -1439,9 +1440,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect 2-line string diagonal-swap logic, returns sample output ('dc\nba') as a constant instead of transforming the input, and returns the input string unchanged (no diagonal swap applied). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/5` (canonical) | 394 | 75 | `3/3` | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ---------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/5` (canonical) |              394 |       75 | `3/3`            | Exact duplicate problem JSON |
 
 ### C106 - Uppercase Every k-th Vowel and lower case other vowels in a File
 
@@ -1453,9 +1454,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: parses k from only the first character (read(1) / text[0]), which fails multi-digit k cases, incorrect file-based vowel transformation logic, and reads stdin (input()) instead of reading from the provided filename file. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py22_1/20` (canonical) | 386 | 246 | `4/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py22_1/20` (canonical) |              386 |      246 | `4/5`            | Exact duplicate problem JSON |
 
 ### C107 - Print Pieces Moved from Chess Notation string.
 
@@ -1467,9 +1468,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: outputs lowercase piece names (king) instead of title-case labels (King, Rook, ...), tokenizes by spaces but does not robustly filter move-number tokens before indexing piece letters, and incorrect chess-notation token parsing and piece-name emission logic (general logic failure). Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/10` (canonical) | 376 | 257 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/10` (canonical) |              376 |      257 | `3/3`            | Exact duplicate problem JSON |
 
 ### C108 - Batsman Performance Analysis
 
@@ -1481,9 +1482,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: leaves template placeholders (...) in multiple required helper functions, uses the sample variable data instead of the parameter batsman_data, and leaves the template placeholder ... in year_with_most_average_runs(...). Also many syntax/empty code, missing returns, and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/12` (canonical) | 362 | 339 | `5/5` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/12` (canonical) |              362 |      339 | `5/5`            | Exact duplicate problem JSON |
 
 ### C109 - Update Todo List Based on Given Indices
 
@@ -1495,9 +1496,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect todo-list update logic, parses indices as raw text/characters and uses substring membership, so multi-digit hidden indices are misread, and parses completed indices character-by-character / fixed positions, so multi-digit indices are split incorrectly. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/10` (canonical) | 362 | 248 | `3/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/10` (canonical) |              362 |      248 | `3/4`            | Exact duplicate problem JSON |
 
 ### C110 - Chess Game Analysis
 
@@ -1509,9 +1510,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: leaves template placeholders (...) in multiple required chess-analysis helper functions, misclassifies queenside castling (O-O-O) as a Queen move, and leaves the template placeholder ... in remaining_pieces(...).
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/12` (canonical) | 354 | 334 | `6/6` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/12` (canonical) |              354 |      334 | `6/6`            | Exact duplicate problem JSON |
 
 ### C111 - Unique Sum Pairs
 
@@ -1523,9 +1524,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: hard-codes sample pair set ({(1,3), (2,2)}) / sample inputs instead of general pair generation, returns inside loop before completing full check/computation, and incorrect unique-sum-pair logic. Also many syntax/empty code, runtime crashes, and unfinished template code.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/9` (canonical) | 336 | 262 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/9` (canonical) |              336 |      262 | `3/3`            | Exact duplicate problem JSON |
 
 ### C112 - Replace Consonants with Hash
 
@@ -1537,9 +1538,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 - Key error summary (analyzed): Common mistakes: incorrect consonant-to-# replacement logic, consonant replacement works on a simple single line, but multi-line formatting is broken, and hard-codes sample input strings and prints sample output, not processing arbitrary input. Also many syntax/empty code and runtime crashes.
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/10` (canonical) | 331 | 206 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/10` (canonical) |              331 |      206 | `3/3`            | Exact duplicate problem JSON |
 
 ### C113 - Visualize Pattern Lock
 
@@ -1550,9 +1551,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py14_1/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py14_1/13` (canonical) | 331 | 250 | `4/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py14_1/13` (canonical) |              331 |      250 | `4/4`            | Exact duplicate problem JSON |
 
 ### C114 - Format Tic-Tac-Toe Board
 
@@ -1563,9 +1564,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py13_2/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_2/13` (canonical) | 328 | 197 | `4/2` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_2/13` (canonical) |              328 |      197 | `4/2`            | Exact duplicate problem JSON |
 
 ### C115 - Horizontal Bar Chart
 
@@ -1576,9 +1577,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py13_1/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py13_1/13` (canonical) | 323 | 209 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py13_1/13` (canonical) |              323 |      209 | `3/3`            | Exact duplicate problem JSON |
 
 ### C116 - Bank Account Number Generator
 
@@ -1589,9 +1590,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py22/10`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/10` (canonical) | 314 | 197 | `4/4` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/10` (canonical) |              314 |      197 | `4/4`            | Exact duplicate problem JSON |
 
 ### C117 - Card to Value Tuple
 
@@ -1602,9 +1603,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py11_1/6`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/6` (canonical) | 276 | 227 | `2/2` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/6` (canonical) |              276 |      227 | `2/2`            | Exact duplicate problem JSON |
 
 ### C118 - Create Slug from String
 
@@ -1615,9 +1616,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py11/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/13` (canonical) | 234 | 189 | `3/3` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/13` (canonical) |              234 |      189 | `3/3`            | Exact duplicate problem JSON |
 
 ### C119 - Rotate Even Indices
 
@@ -1628,9 +1629,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py11_1/7`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/7` (canonical) | 232 | 180 | `3/3` | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------ | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/7` (canonical) |              232 |      180 | `3/3`            | Exact duplicate problem JSON |
 
 ### C120 - People Connection Analysis
 
@@ -1641,9 +1642,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py11/12`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/12` (canonical) | 230 | 202 | `5/4` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/12` (canonical) |              230 |      202 | `5/4`            | Exact duplicate problem JSON |
 
 ### C121 - University Course Enrollment Analysis
 
@@ -1654,9 +1655,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py22/12`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/12` (canonical) | 216 | 122 | `4/4` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/12` (canonical) |              216 |      122 | `4/4`            | Exact duplicate problem JSON |
 
 ### C122 - Text Frequency Analysis
 
@@ -1667,9 +1668,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py11_1/12`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/12` (canonical) | 188 | 174 | `4/4` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/12` (canonical) |              188 |      174 | `4/4`            | Exact duplicate problem JSON |
 
 ### C123 - Print Average of Every Two Non-Empty Values Until Stop
 
@@ -1680,9 +1681,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py11/11`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py11/11` (canonical) | 186 | 140 | `3/5` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py11/11` (canonical) |              186 |      140 | `3/5`            | Exact duplicate problem JSON |
 
 ### C124 - Draw Arrow Trail from Movement Deltas
 
@@ -1693,9 +1694,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t2_py11_1/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t2_py11_1/13` (canonical) | 153 | 134 | `3/3` | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ------------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t2_py11_1/13` (canonical) |              153 |      134 | `3/3`            | Exact duplicate problem JSON |
 
 ### C125 - Tap Code Decoder
 
@@ -1706,9 +1707,9 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Canonical variant: `ns_25t3_py22/13`
 - Variant relationship: all variants are exact duplicate problem JSONs
 
-| Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
-| `ns_25t3_py22/13` (canonical) | 142 | 75 | `4/4` | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical      |
+| ----------------------------- | ---------------: | -------: | ---------------- | ---------------------------- |
+| `ns_25t3_py22/13` (canonical) |              142 |       75 | `4/4`            | Exact duplicate problem JSON |
 
 ### C126 - Absolute difference between sum and sum of the squares.
 
@@ -1720,7 +1721,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C127 - Average of Negative Even Numbers
 
@@ -1732,7 +1733,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C128 - Average of Valid Positive Integers
 
@@ -1744,7 +1745,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C129 - Calculate Scholarship Implement a function calculateScholarship that calculates scholarship amount for students based on
 
@@ -1756,7 +1757,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C130 - Check First and Last Element are Same Integer (Type-Insensitive)
 
@@ -1768,7 +1769,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C131 - Check If a number divides two other numbers
 
@@ -1780,7 +1781,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C132 - Check String Rotation
 
@@ -1792,7 +1793,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C133 - Count Strings With More Vowels Than Consonants
 
@@ -1804,7 +1805,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C134 - Count the number of Leap years in a given range A leap year is a year that: ● is divisible by 4, ● but if it is divisibl
 
@@ -1816,7 +1817,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C135 - Department Project Analysis
 
@@ -1828,7 +1829,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C136 - Employee Data Analysis
 
@@ -1840,7 +1841,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C137 - Fill Blanks with Words from a List
 
@@ -1852,7 +1853,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C138 - Find LCM of Two Positive Integers Implement a function findLCM that returns the Least Common Multiple (LCM) of two posit
 
@@ -1864,7 +1865,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C139 - Find missing number in a range of numbers
 
@@ -1876,7 +1877,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C140 - Find the closest prime number Write a function closestPrime that accepts a positive integer n (where n &gt; 2) as parame
 
@@ -1888,7 +1889,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C141 - Find the length of concatenated dictionary values
 
@@ -1900,7 +1901,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C142 - Fizz-Buzz Implement a function fizzBuzz that takes a positive integer n as input and prints the Fizz-Buzz sequence from
 
@@ -1912,7 +1913,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C143 - Format Pairs of Integers as Product of Fractions
 
@@ -1924,7 +1925,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C144 - Get First and Last Characters Sorted
 
@@ -1936,7 +1937,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C145 - Hospital Patient Analytics
 
@@ -1948,7 +1949,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C146 - Identify Eligible Voters
 
@@ -1960,7 +1961,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C147 - Job Scheduling Analysis
 
@@ -1972,7 +1973,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C148 - Leaderboard List by Scores
 
@@ -1984,7 +1985,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C149 - Mask all characters of a password except the first two and last two
 
@@ -1996,7 +1997,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C150 - Merge two dictionaries and sum on conflicts
 
@@ -2008,7 +2009,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C151 - Most Frequent Numbers form the input
 
@@ -2020,7 +2021,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C152 - Number Line Marker
 
@@ -2032,7 +2033,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C153 - Pairwise Average of Lists
 
@@ -2044,7 +2045,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C154 - Pattern Printing - Z Pattern
 
@@ -2056,7 +2057,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C155 - Reverse Directional Connection
 
@@ -2068,7 +2069,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C156 - Reverse the digits of a number Write a C function reverseDigits that takes an positive integer n as parameter and return
 
@@ -2080,7 +2081,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C157 - Ride Booking Data Analysis
 
@@ -2092,7 +2093,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C158 - Rotate a Stacked‑Item Matrix 90° Clockwise
 
@@ -2104,7 +2105,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C159 - Spy Number - Advanced
 
@@ -2116,7 +2117,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C160 - Sum of Digit Sums from Words
 
@@ -2128,7 +2129,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C161 - Sum of Two Halves of an Even-Digit Number
 
@@ -2140,7 +2141,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C162 - Swap Signs of Two Integers
 
@@ -2152,7 +2153,7 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |
 
 ### C163 - Word Sandwich
 
@@ -2164,4 +2165,4 @@ In short: beginners often focus on the visible example. Experts focus on the **f
 - Variant relationship: all variants are exact duplicate problem JSONs
 
 | Variant | final_submitters | non_full | Tests (pub/priv) | Difference vs canonical |
-| --- | ---: | ---: | --- | --- |
+| ------- | ---------------: | -------: | ---------------- | ----------------------- |

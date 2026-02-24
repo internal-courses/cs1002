@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/10` (canonical) | 376 | 257 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/10` (canonical) |              376 |      257 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/10` | 376 | 119 | 257 | 216 | 41 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/10` |              376 |       119 |      257 |                216 |                     41 |
 
 ## Private Case Structure
 
@@ -44,33 +44,33 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/10` |
-| --- | ---: | ---: | ---: |
-| Empty/comment-only final submission | 45 | 17.5% | 45 |
-| Syntax / non-parseable final submission | 41 | 16.0% | 41 |
-| Outputs lowercase piece names (`king`) instead of the required title-case labels (`King`, `Rook`, ...) | 34 | 13.2% | 34 |
-| Tokenizes by spaces but does not robustly filter move-number tokens before indexing piece letters | 22 | 8.6% | 22 |
-| Incorrect chess-notation token parsing and piece-name emission logic (broad wrong-answer failure) | 21 | 8.2% | 21 |
-| Indexes `token[0]` without safely skipping move-number/empty tokens, causing `IndexError` | 19 | 7.4% | 19 |
-| Runtime NameError from undefined piece maps/counters in notation parsing logic | 14 | 5.4% | 14 |
-| Uses zeroes (`0-0`, `0-0-0`) instead of SAN castling tokens with letter O (`O-O`, `O-O-O`) | 10 | 3.9% | 10 |
-| Runtime TypeError from invalid `input()/map()` or dictionary API usage while parsing tokens | 8 | 3.1% | 8 |
-| Misclassifies queenside castling (`O-O-O`) as involving `Queen` instead of printing `King` and `Rook` | 7 | 2.7% | 7 |
-| Handles castling by printing only `King` and forgets the required second line `Rook` | 6 | 2.3% | 6 |
-| Uses square/file-prefix heuristics for specific sample moves (e.g., `startswith('e')`) instead of SAN piece parsing rules | 4 | 1.6% | 4 |
-| Runtime IndexError | 4 | 1.6% | 4 |
-| Reads multiple separate `input()` values (`move_number`, white move, black move) instead of one notation string line | 4 | 1.6% | 4 |
-| Parses only the first move pair (or a fixed number of tokens) instead of scanning the entire notation string | 3 | 1.2% | 3 |
-| Mutates the token list while iterating (`remove(...)`), which skips moves and loses output lines | 3 | 1.2% | 3 |
-| Uses a brittle move-number state flag / hard-coded `1.`..`10.` list and skips many tokens in longer games | 2 | 0.8% | 2 |
-| Prints a fixed piece-name sequence (sample output) instead of parsing the notation string | 2 | 0.8% | 2 |
-| Tries to read an integer move count first (`int(input())`) even though input is a single notation string | 2 | 0.8% | 2 |
-| Hard-codes public sample move-to-piece outputs instead of parsing arbitrary chess-notation tokens | 1 | 0.4% | 1 |
-| Partial SAN token filtering logic: some games pass, but move-number/capture/castling token handling fails on hidden cases | 1 | 0.4% | 1 |
-| Hard-codes exact public sample notation strings and corresponding outputs instead of parsing arbitrary games | 1 | 0.4% | 1 |
-| Misspells `.startswith(...)` as `.startwith(...)` while decoding piece tokens | 1 | 0.4% | 1 |
-| Runtime error (parseable final submission) | 1 | 0.4% | 1 |
-| Near-correct token parsing, but castling output formatting/mapping is wrong on hidden cases | 1 | 0.4% | 1 |
+| Pattern                                                                                                                   | Cluster count | % of cluster non-full | `ns_25t2_py13_2/10` |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Empty/comment-only final submission                                                                                       |            45 |                 17.5% |                  45 |
+| Syntax / non-parseable final submission                                                                                   |            41 |                 16.0% |                  41 |
+| Outputs lowercase piece names (`king`) instead of the required title-case labels (`King`, `Rook`, ...)                    |            34 |                 13.2% |                  34 |
+| Tokenizes by spaces but does not robustly filter move-number tokens before indexing piece letters                         |            22 |                  8.6% |                  22 |
+| Incorrect chess-notation token parsing and piece-name emission logic (broad wrong-answer failure)                         |            21 |                  8.2% |                  21 |
+| Indexes `token[0]` without safely skipping move-number/empty tokens, causing `IndexError`                                 |            19 |                  7.4% |                  19 |
+| Runtime NameError from undefined piece maps/counters in notation parsing logic                                            |            14 |                  5.4% |                  14 |
+| Uses zeroes (`0-0`, `0-0-0`) instead of SAN castling tokens with letter O (`O-O`, `O-O-O`)                                |            10 |                  3.9% |                  10 |
+| Runtime TypeError from invalid `input()/map()` or dictionary API usage while parsing tokens                               |             8 |                  3.1% |                   8 |
+| Misclassifies queenside castling (`O-O-O`) as involving `Queen` instead of printing `King` and `Rook`                     |             7 |                  2.7% |                   7 |
+| Handles castling by printing only `King` and forgets the required second line `Rook`                                      |             6 |                  2.3% |                   6 |
+| Uses square/file-prefix heuristics for specific sample moves (e.g., `startswith('e')`) instead of SAN piece parsing rules |             4 |                  1.6% |                   4 |
+| Runtime IndexError                                                                                                        |             4 |                  1.6% |                   4 |
+| Reads multiple separate `input()` values (`move_number`, white move, black move) instead of one notation string line      |             4 |                  1.6% |                   4 |
+| Parses only the first move pair (or a fixed number of tokens) instead of scanning the entire notation string              |             3 |                  1.2% |                   3 |
+| Mutates the token list while iterating (`remove(...)`), which skips moves and loses output lines                          |             3 |                  1.2% |                   3 |
+| Uses a brittle move-number state flag / hard-coded `1.`..`10.` list and skips many tokens in longer games                 |             2 |                  0.8% |                   2 |
+| Prints a fixed piece-name sequence (sample output) instead of parsing the notation string                                 |             2 |                  0.8% |                   2 |
+| Tries to read an integer move count first (`int(input())`) even though input is a single notation string                  |             2 |                  0.8% |                   2 |
+| Hard-codes public sample move-to-piece outputs instead of parsing arbitrary chess-notation tokens                         |             1 |                  0.4% |                   1 |
+| Partial SAN token filtering logic: some games pass, but move-number/capture/castling token handling fails on hidden cases |             1 |                  0.4% |                   1 |
+| Hard-codes exact public sample notation strings and corresponding outputs instead of parsing arbitrary games              |             1 |                  0.4% |                   1 |
+| Misspells `.startswith(...)` as `.startwith(...)` while decoding piece tokens                                             |             1 |                  0.4% |                   1 |
+| Runtime error (parseable final submission)                                                                                |             1 |                  0.4% |                   1 |
+| Near-correct token parsing, but castling output formatting/mapping is wrong on hidden cases                               |             1 |                  0.4% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -134,12 +134,12 @@ if mistakes:
   - Variant `ns_25t2_py13_2/10`, Student ID `2b74e135eee14b9389752ca5a73d399d`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-alpha='abcdefghijklmnopqrstuvwxyz'
+alpha = "abcdefghijklmnopqrstuvwxyz"
 # write your solution here
-a=input()
-moves=a.split(" ")
+a = input()
+moves = a.split(" ")
 for i in range(len(moves)):
-    move=moves[i]
+    move = moves[i]
     if move.startswith("N"):
         print("Knight")
     elif move.startswith("K"):
@@ -326,24 +326,24 @@ for move in notation:
   - Variant `ns_25t2_py13_2/10`, Student ID `8c9c1932b30a468bbf4658e922a7e0c9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-move=input()
-move_list=list(move)
-a=''.join(move_list)
+move = input()
+move_list = list(move)
+a = "".join(move_list)
 
 
 for i in move_list:
-    if i=='e' or i=='a':
-        print('Pawn')
-    elif i=='N':
-        print('Knight')
-    elif i=='B':
-        print('Bishop')
-    elif i=='Q':
-        print('Queen')
-    elif i=='K':
-        print('King')
-    elif i=='O':
-        a=move_list.index(i)
+    if i == "e" or i == "a":
+        print("Pawn")
+    elif i == "N":
+        print("Knight")
+    elif i == "B":
+        print("Bishop")
+    elif i == "Q":
+        print("Queen")
+    elif i == "K":
+        print("King")
+    elif i == "O":
+        a = move_list.index(i)
 # ...
 ```
 
@@ -359,23 +359,23 @@ for i in move_list:
 
 ```python
 # write your solution here
-a=input()
-x=['K','Q','R','B','N']
-if a[3]=="K":
-     print("King")
-elif a[3]=="Q":
-     print("Queen")
-elif a[3]=="R":
-     print("Rook")
-elif a[3]=="B":
-     print("Bishop")
-elif a[3]=="N":
-     print("Knight")
+a = input()
+x = ["K", "Q", "R", "B", "N"]
+if a[3] == "K":
+    print("King")
+elif a[3] == "Q":
+    print("Queen")
+elif a[3] == "R":
+    print("Rook")
+elif a[3] == "B":
+    print("Bishop")
+elif a[3] == "N":
+    print("Knight")
 elif a[3] not in x:
-     print("Pawn")
-elif a=="O-O":
-     print("King")
-     print("Rook")
+    print("Pawn")
+elif a == "O-O":
+    print("King")
+    print("Rook")
 # ...
 ```
 
@@ -392,22 +392,21 @@ elif a=="O-O":
 ```python
 # write your solution here
 
-move=input()
-k=list(move.split('.'))
-for i in range(1,len(k)):
-
-    if k[i][1] in 'abcdefghijklmnopqrstuvwxz':
-        print('Pawn')
-        if k[i][4] in 'abcdefghijklmnopqrstuvwxz':
-            print('Pawn')
-        elif k[i][4]=='K':
-            print('King')
-        elif k[i][4]=='Q':
-            print('Queen')
-        elif k[i][4]=='R':
-            print('Rook')
-        elif k[i][4]=='B':
-            print('Bishop')
+move = input()
+k = list(move.split("."))
+for i in range(1, len(k)):
+    if k[i][1] in "abcdefghijklmnopqrstuvwxz":
+        print("Pawn")
+        if k[i][4] in "abcdefghijklmnopqrstuvwxz":
+            print("Pawn")
+        elif k[i][4] == "K":
+            print("King")
+        elif k[i][4] == "Q":
+            print("Queen")
+        elif k[i][4] == "R":
+            print("Rook")
+        elif k[i][4] == "B":
+            print("Bishop")
 # ...
 ```
 
@@ -490,19 +489,19 @@ for i in range(len(chess)):
 move_number = input()
 white_move = input()
 black_move = input()
-if (white_move == "K"):
+if white_move == "K":
     print("King")
-elif  (white_move == "Q"):
+elif white_move == "Q":
     print("Queen")
-elif (white_move == "R"):
+elif white_move == "R":
     print("Rook")
-elif (white_move == "B"):
+elif white_move == "B":
     print("Bishop")
-elif (white_move == "N"):
+elif white_move == "N":
     print("Knight")
-elif (white_move == "O-O" or white_move == "O-O-O"):
-    print ("King")
-    print ("Rook")
+elif white_move == "O-O" or white_move == "O-O-O":
+    print("King")
+    print("Rook")
 else:
     print("Pawm")
 # ...
@@ -583,23 +582,34 @@ for i in range(len(lst)):
   - Variant `ns_25t2_py13_2/10`, Student ID `02f1750139f8412097a3443bbec378ee`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=input()
-m=n.split(' ')
-judge=0
+n = input()
+m = n.split(" ")
+judge = 0
 for i in range(len(m)):
-    if (m[i]=='1.' or m[i]=='2.' or m[i]=='3.' or m[i]=='4.' or m[i]=='5.' or m[i]=='6.' or m[i]=='7.' or m[i]=='8.' or m[i]=='9.' or m[i]=='10.') and judge==0:
-       judge+=1
-    elif judge==1:
-        if m[i][0] not in 'KQRBNO':
-            if m[i][1] in '12345678':
+    if (
+        m[i] == "1."
+        or m[i] == "2."
+        or m[i] == "3."
+        or m[i] == "4."
+        or m[i] == "5."
+        or m[i] == "6."
+        or m[i] == "7."
+        or m[i] == "8."
+        or m[i] == "9."
+        or m[i] == "10."
+    ) and judge == 0:
+        judge += 1
+    elif judge == 1:
+        if m[i][0] not in "KQRBNO":
+            if m[i][1] in "12345678":
                 print("Pawn")
-        elif m[i][0]=='K':
+        elif m[i][0] == "K":
             print("King")
-        elif m[i][0]=='Q':
+        elif m[i][0] == "Q":
             print("Queen")
-        elif m[i][0]=='R':
+        elif m[i][0] == "R":
             print("Rook")
-        elif m[i][0]=='B':
+        elif m[i][0] == "B":
             print("Bishop")
 # ...
 ```
@@ -631,20 +641,20 @@ print("Pawn\nPawn\nKnight\nKnight\nBishop\nPawn\nKing\nRook\nQueen\n")
   - Variant `ns_25t2_py13_2/10`, Student ID `b42e424cfdcd4c3e9db3acb7bed425e6`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if move in ['O-O','O-O-O']:
-        return ["King","Rook"]
-    elif move.startswith('K'):
-        return ("King")
-    elif move.startswith('Q'):
-        return ("Queen")
-    elif move.startswith('R'):
-        return("Rook")
-    elif move.startswith("B"):
-        return("Bishop")
-    elif move.startswith("N"):
-        return("Knight")
-    else:
-        return ("Pawn")
+if move in ["O-O", "O-O-O"]:
+    return ["King", "Rook"]
+elif move.startswith("K"):
+    return "King"
+elif move.startswith("Q"):
+    return "Queen"
+elif move.startswith("R"):
+    return "Rook"
+elif move.startswith("B"):
+    return "Bishop"
+elif move.startswith("N"):
+    return "Knight"
+else:
+    return "Pawn"
 ```
 
 ### Hard-codes public sample move-to-piece outputs instead of parsing arbitrary chess-notation tokens
@@ -659,15 +669,15 @@ print("Pawn\nPawn\nKnight\nKnight\nBishop\nPawn\nKing\nRook\nQueen\n")
 
 ```python
 # write your solution here
-e4 = 'Pawn'
-e5 = 'Knight'
-Nf3 = 'Bishop'
-Nc6 = 'King'
-Bb5 = 'Rook'
-a6 = 'Queen'
+e4 = "Pawn"
+e5 = "Knight"
+Nf3 = "Bishop"
+Nc6 = "King"
+Bb5 = "Rook"
+a6 = "Queen"
 
-print(e4 )
-print(e4 )
+print(e4)
+print(e4)
 print(e5)
 print(e5)
 print(Nf3)
@@ -690,19 +700,19 @@ print(a6)
 ```python
 # write your solution here
 
-d = {'K':'King', 'Q':'Queen', 'R':'Rook', 'B':'Bishop', 'N':'Knight'}
+d = {"K": "King", "Q": "Queen", "R": "Rook", "B": "Bishop", "N": "Knight"}
 
 s = input().split()
 move = [i for i in s if not i[0].isdigit()]
 
 for i in move:
-    if i[-1]!='O' and 1<=int(i[-1])<=8 and move.count('O-O')<3 and move.count('O-O-O')<3:
+    if i[-1] != "O" and 1 <= int(i[-1]) <= 8 and move.count("O-O") < 3 and move.count("O-O-O") < 3:
         if len(i) == 2:
-            print('Pawn')
+            print("Pawn")
         elif i[0] in d:
             print(d[i[0]])
-    elif i[-1]=='O':
-        print('King\nRook')
+    elif i[-1] == "O":
+        print("King\nRook")
     else:
         break
 ```
@@ -722,20 +732,20 @@ for i in move:
 
 inp = input()
 if inp == "e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. O-O Qc7":
-    print ('Pawn')
-    print ('Pawn')
-    print ('Knight')
-    print ('Knight')
-    print ('Bishop')
-    print ('pawn')
-    print ('King')
-    print ('Rook')
-    print ('Queen')
+    print("Pawn")
+    print("Pawn")
+    print("Knight")
+    print("Knight")
+    print("Bishop")
+    print("pawn")
+    print("King")
+    print("Rook")
+    print("Queen")
 if inp == "e4 e5 2. O-O O-O-O":
-    print ('Pawn')
-    print ('Pawn')
-    print ('King')
-    print ("Rook")
+    print("Pawn")
+    print("Pawn")
+    print("King")
+    print("Rook")
 # ...
 ```
 
@@ -750,22 +760,22 @@ if inp == "e4 e5 2. O-O O-O-O":
   - Variant `ns_25t2_py13_2/10`, Student ID `77972e7e1f8b421aa818bd5f238a5088`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if move.startswith("0-0-0"):
-        return["king","Rook"]
-    elif move.startswith("0-0"):
-        return["king","Rook"]
-    elif move.startwith("K"):
-        return ["king"]
-    elif move.startwith("Q"):
-        return ["Queen"]
-    elif move.startwith("R"):
-        return ["Rook"]
-    elif move.startwith("B"):
-        return ["Bishop"]
-    elif move.startwith("N"):
-        return["Knight"]
-    else:
-        return ["Pawn"]
+if move.startswith("0-0-0"):
+    return ["king", "Rook"]
+elif move.startswith("0-0"):
+    return ["king", "Rook"]
+elif move.startwith("K"):
+    return ["king"]
+elif move.startwith("Q"):
+    return ["Queen"]
+elif move.startwith("R"):
+    return ["Rook"]
+elif move.startwith("B"):
+    return ["Bishop"]
+elif move.startwith("N"):
+    return ["Knight"]
+else:
+    return ["Pawn"]
 ```
 
 ### Runtime error (parseable final submission)
@@ -782,18 +792,18 @@ if inp == "e4 e5 2. O-O O-O-O":
 ```python
 # write your solution here
 
-k= input()
-kn=input()
+k = input()
+kn = input()
 p = input()
-h= input()
-q=input()
-s=input()
+h = input()
+q = input()
+s = input()
 
-k- list.append(p,h,q,s)
-n=list.split(0)
-kn=split(q,p)
-p=k.split()
-k=split(l)
+k - list.append(p, h, q, s)
+n = list.split(0)
+kn = split(q, p)
+p = k.split()
+k = split(l)
 
 return k + kn
 return kn

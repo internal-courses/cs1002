@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/7` (canonical) | 766 | 291 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/7` (canonical) |              766 |      291 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/7` | 766 | 475 | 291 | 245 | 46 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/7` |              766 |       475 |      291 |                245 |                     46 |
 
 ## Private Case Structure
 
@@ -44,30 +44,30 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/7` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 46 | 15.8% | 46 |
-| Incorrect repeated-second-half tuple logic (broad wrong-answer failure) | 44 | 15.1% | 44 |
-| No return / implicit `None` | 40 | 13.7% | 40 |
-| Near-correct tuple-slicing logic with midpoint off-by-one bug (commonly `mid+1` suffix selection) | 34 | 11.7% | 34 |
-| Returns from inside the build loop before constructing the full repeated-half tuple | 28 | 9.6% | 28 |
-| Runtime TypeError | 23 | 7.9% | 23 |
-| Hard-codes public sample tuple outputs instead of repeating the second half generically | 13 | 4.5% | 13 |
-| Runtime NameError | 10 | 3.4% | 10 |
-| Runtime error (parseable final submission) | 10 | 3.4% | 10 |
-| Runtime TypeError from list/tuple concatenation shape mismatch while repeating the second half | 9 | 3.1% | 9 |
-| Runtime AttributeError | 6 | 2.1% | 6 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 5 | 1.7% | 5 |
-| Length-specific branch implementation (handles a few tuple sizes instead of a general midpoint rule) | 5 | 1.7% | 5 |
-| Runtime IndexError | 4 | 1.4% | 4 |
-| Returns the original tuple unchanged instead of appending a repeated second half | 3 | 1.0% | 3 |
-| Runtime AttributeError from list/string method misuse during tuple transformation | 3 | 1.0% | 3 |
-| Uses `round(len(t)/2)` for the split point, causing parity/off-by-one errors for odd/even tuples | 2 | 0.7% | 2 |
-| Parity/half-split bug (wrong midpoint rule for odd vs even tuple lengths) | 2 | 0.7% | 2 |
-| List-based reconstruction bug (wrong elements/order repeated before converting back to tuple) | 1 | 0.3% | 1 |
-| Runtime ValueError | 1 | 0.3% | 1 |
-| Runtime RecursionError | 1 | 0.3% | 1 |
-| Duplicates `t[mid:]`, so odd-length tuples wrongly repeat the middle element | 1 | 0.3% | 1 |
+| Pattern                                                                                              | Cluster count | % of cluster non-full | `ns_25t2_py14_1/7` |
+| ---------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                              |            46 |                 15.8% |                 46 |
+| Incorrect repeated-second-half tuple logic (broad wrong-answer failure)                              |            44 |                 15.1% |                 44 |
+| No return / implicit `None`                                                                          |            40 |                 13.7% |                 40 |
+| Near-correct tuple-slicing logic with midpoint off-by-one bug (commonly `mid+1` suffix selection)    |            34 |                 11.7% |                 34 |
+| Returns from inside the build loop before constructing the full repeated-half tuple                  |            28 |                  9.6% |                 28 |
+| Runtime TypeError                                                                                    |            23 |                  7.9% |                 23 |
+| Hard-codes public sample tuple outputs instead of repeating the second half generically              |            13 |                  4.5% |                 13 |
+| Runtime NameError                                                                                    |            10 |                  3.4% |                 10 |
+| Runtime error (parseable final submission)                                                           |            10 |                  3.4% |                 10 |
+| Runtime TypeError from list/tuple concatenation shape mismatch while repeating the second half       |             9 |                  3.1% |                  9 |
+| Runtime AttributeError                                                                               |             6 |                  2.1% |                  6 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                            |             5 |                  1.7% |                  5 |
+| Length-specific branch implementation (handles a few tuple sizes instead of a general midpoint rule) |             5 |                  1.7% |                  5 |
+| Runtime IndexError                                                                                   |             4 |                  1.4% |                  4 |
+| Returns the original tuple unchanged instead of appending a repeated second half                     |             3 |                  1.0% |                  3 |
+| Runtime AttributeError from list/string method misuse during tuple transformation                    |             3 |                  1.0% |                  3 |
+| Uses `round(len(t)/2)` for the split point, causing parity/off-by-one errors for odd/even tuples     |             2 |                  0.7% |                  2 |
+| Parity/half-split bug (wrong midpoint rule for odd vs even tuple lengths)                            |             2 |                  0.7% |                  2 |
+| List-based reconstruction bug (wrong elements/order repeated before converting back to tuple)        |             1 |                  0.3% |                  1 |
+| Runtime ValueError                                                                                   |             1 |                  0.3% |                  1 |
+| Runtime RecursionError                                                                               |             1 |                  0.3% |                  1 |
+| Duplicates `t[mid:]`, so odd-length tuples wrongly repeat the middle element                         |             1 |                  0.3% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -410,17 +410,17 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `2c41356dd8b947058b05e123dfc72faf`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    tu=tuple() #a new tuple
-    sec_half=tuple()
-    if len(t)%2 == 0:
-        m=len(t)/2
-        sec_half+=(t.value(index(m+1)),)
-    if len(t)%2 != 0:
-        m=(len(t)+1)/2
-        sec_half+=(t.value(index(m+1)),)
-    if len(t)>=2:
-            tu=tu+t+sec_half
-    return tu
+tu = tuple()  # a new tuple
+sec_half = tuple()
+if len(t) % 2 == 0:
+    m = len(t) / 2
+    sec_half += (t.value(index(m + 1)),)
+if len(t) % 2 != 0:
+    m = (len(t) + 1) / 2
+    sec_half += (t.value(index(m + 1)),)
+if len(t) >= 2:
+    tu = tu + t + sec_half
+return tu
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator tests)
@@ -434,15 +434,15 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `4ba275e80602423dbb4287c653130c3c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a = list(input())
-    if(len(a)%2==0):
-        b = a[len(a)/2:]
-        c = a.append(b)
-        print(c)
-    else:
-        b = a[(len(a)/2)+1:]
-        c = a.append(b)
-        print(c)
+a = list(input())
+if len(a) % 2 == 0:
+    b = a[len(a) / 2 :]
+    c = a.append(b)
+    print(c)
+else:
+    b = a[(len(a) / 2) + 1 :]
+    c = a.append(b)
+    print(c)
 ```
 
 ### Length-specific branch implementation (handles a few tuple sizes instead of a general midpoint rule)
@@ -518,13 +518,13 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `ce71db9df8444af3b20c8fe9fd47ee98`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    j=()
-    c =len(t)
-    b= c%2
-    d= c+1
-    if c ==0:
-         t.append(t[b:d])
-    return t
+j = ()
+c = len(t)
+b = c % 2
+d = c + 1
+if c == 0:
+    t.append(t[b:d])
+return t
 ```
 
 ### Runtime AttributeError from list/string method misuse during tuple transformation
@@ -538,11 +538,11 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `b0acba77861f4494b09bf149d811c27b`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    t1 = t[-1]
-    t2 = t[-2]
-    t.append(t2)
-    t.append(t1)
-    return t
+t1 = t[-1]
+t2 = t[-2]
+t.append(t2)
+t.append(t1)
+return t
 ```
 
 ### Uses `round(len(t)/2)` for the split point, causing parity/off-by-one errors for odd/even tuples
@@ -556,11 +556,11 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `46514d463c5041779e49c7b36305ca71`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if(len(t)>5):
-        tnew = t+t[-(round(len(t)/2)-1):]
-    else:
-        tnew = t+t[-(round(len(t)/2)):]
-    return tnew
+if len(t) > 5:
+    tnew = t + t[-(round(len(t) / 2) - 1) :]
+else:
+    tnew = t + t[-(round(len(t) / 2)) :]
+return tnew
 ```
 
 ### Parity/half-split bug (wrong midpoint rule for odd vs even tuple lengths)
@@ -601,17 +601,17 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `0852e5b565844e48b7d704ca6baa75b7`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if len(t)%2==0:
-        mid=(len(t)//2)-1
-    else:
-        mid=len(t)//2
-    tup=list(t)
-    tupe=list(t)
-    tu=list(t)
-    del(tu[mid+1:len(t)])
-    tu.append(tup[mid+1:len(t)])
-    tu.append(tupe[mid+1:len(t)])
-    return tuple(tu)
+if len(t) % 2 == 0:
+    mid = (len(t) // 2) - 1
+else:
+    mid = len(t) // 2
+tup = list(t)
+tupe = list(t)
+tu = list(t)
+del tu[mid + 1 : len(t)]
+tu.append(tup[mid + 1 : len(t)])
+tu.append(tupe[mid + 1 : len(t)])
+return tuple(tu)
 ```
 
 ### Runtime ValueError
@@ -658,10 +658,10 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `6fd46350c14746d89da27fcbee5ebcda`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    print("(4, 5, 6, 7, 8, 7, 8")
-    print("('x', 'y', 'z', 'a', 'z', 'a')")
-    print("(1, 2, 3, 4, 5, 6, 7, 5, 6, 7)")
-    repeat_second_half((4, 5, 6, 7, 8))
+print("(4, 5, 6, 7, 8, 7, 8")
+print("('x', 'y', 'z', 'a', 'z', 'a')")
+print("(1, 2, 3, 4, 5, 6, 7, 5, 6, 7)")
+repeat_second_half((4, 5, 6, 7, 8))
 ```
 
 ### Duplicates `t[mid:]`, so odd-length tuples wrongly repeat the middle element
@@ -675,7 +675,7 @@ def repeat_second_half(t: tuple) -> tuple:
   - Variant `ns_25t2_py14_1/7`, Student ID `8cce26f15c2b429e890b238a7f5a0b7b`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
-    if len(t) > 2:
-        mid = ((len(t) + 1)// 2)
-        return (t + t[mid:])
+if len(t) > 2:
+    mid = (len(t) + 1) // 2
+    return t + t[mid:]
 ```

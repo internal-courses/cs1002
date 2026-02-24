@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py14_1/13` (canonical) | 395 | 214 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py14_1/13` (canonical) |              395 |      214 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py14_1/13` | 395 | 181 | 214 | 175 | 39 |
-| `ns_25t3_py14_2/11` | 0 | 0 | 0 | 0 | 0 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py14_1/13` |              395 |       181 |      214 |                175 |                     39 |
+| `ns_25t3_py14_2/11` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,34 +47,34 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py14_1/13` | `ns_25t3_py14_2/11` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 39 | 18.2% | 39 | 0 |
-| Empty/comment-only final submission | 21 | 9.8% | 21 | 0 |
-| Incorrect carry-simulation program logic (input parsing, carry update, or output printing is broadly wrong) | 20 | 9.3% | 20 | 0 |
-| Reads each pair value on separate lines (`a=int(input()); b=int(input())`), causing input parsing failure on `a b` lines | 17 | 7.9% | 17 | 0 |
-| Prints constant sample output lines instead of reading input pairs and simulating carry | 13 | 6.1% | 13 | 0 |
-| Runtime TypeError from treating input strings/lists as numbers while computing carry | 12 | 5.6% | 12 | 0 |
-| Reinitializes carry inside the loop, so carry does not persist across pairs | 12 | 5.6% | 12 | 0 |
-| Processes each pair independently without maintaining a carry state across iterations | 11 | 5.1% | 11 | 0 |
-| Runtime ValueError from malformed pair parsing (`a b`) or incorrect integer conversion | 11 | 5.1% | 11 | 0 |
-| Runtime NameError from undefined variables (`pairs`, `a`, `b`, `carry`) in carry-update logic | 9 | 4.2% | 9 | 0 |
-| Accumulates carry with `carry += ...` instead of assigning the new carry (`carry = sum - 100`) | 7 | 3.3% | 7 | 0 |
-| Reads only `n` (or an incomplete prefix) and never processes the required `n` pairs | 6 | 2.8% | 6 | 0 |
-| Carry propagation/update bug: solution works on simpler steps but hidden multi-step carry behavior is wrong | 6 | 2.8% | 6 | 0 |
-| Runtime EOFError from wrong input protocol (extra `input()` calls or incorrect pair parsing) | 5 | 2.3% | 5 | 0 |
-| Ignores the previous carry when computing the next sum (`sum = a + b` instead of `a + b + carry`) | 5 | 2.3% | 5 | 0 |
-| Runtime error (parseable final submission) | 4 | 1.9% | 4 | 0 |
-| Computes carry as a digit/flag (`0/1`, `//10`, `%10`) instead of the required overflow amount `sum - 100` | 3 | 1.4% | 3 | 0 |
-| Writes a helper/function-style solution (expects `pairs` or returns a list) instead of the required input/output program | 3 | 1.4% | 3 | 0 |
-| Hard-codes the public sample carry outputs instead of simulating carry updates for arbitrary input pairs | 2 | 0.9% | 2 | 0 |
-| Parses `a b` using fixed string positions/line length instead of robust `split()` parsing (fails hidden widths like `200 0`) | 2 | 0.9% | 2 | 0 |
-| Prints the input pair values (`ai, bi`) instead of computing and printing carry outputs | 1 | 0.5% | 1 | 0 |
-| Processes each pair independently and never feeds the previous carry into the next step | 1 | 0.5% | 1 | 0 |
-| Stores all pairs and reprocesses them in a second loop, causing carry-order/reset mistakes | 1 | 0.5% | 1 | 0 |
-| Runtime AttributeError from string/list method misuse while parsing pairs | 1 | 0.5% | 1 | 0 |
-| Partial carry simulation bug on hidden edge cases (exact-100/reset or carry reuse ordering) | 1 | 0.5% | 1 | 0 |
-| Misses the exact-100 edge case (checks only `<100` and `>100` branches) | 1 | 0.5% | 1 | 0 |
+| Pattern                                                                                                                      | Cluster count | % of cluster non-full | `ns_25t3_py14_1/13` | `ns_25t3_py14_2/11` |
+| ---------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                                      |            39 |                 18.2% |                  39 |                   0 |
+| Empty/comment-only final submission                                                                                          |            21 |                  9.8% |                  21 |                   0 |
+| Incorrect carry-simulation program logic (input parsing, carry update, or output printing is broadly wrong)                  |            20 |                  9.3% |                  20 |                   0 |
+| Reads each pair value on separate lines (`a=int(input()); b=int(input())`), causing input parsing failure on `a b` lines     |            17 |                  7.9% |                  17 |                   0 |
+| Prints constant sample output lines instead of reading input pairs and simulating carry                                      |            13 |                  6.1% |                  13 |                   0 |
+| Runtime TypeError from treating input strings/lists as numbers while computing carry                                         |            12 |                  5.6% |                  12 |                   0 |
+| Reinitializes carry inside the loop, so carry does not persist across pairs                                                  |            12 |                  5.6% |                  12 |                   0 |
+| Processes each pair independently without maintaining a carry state across iterations                                        |            11 |                  5.1% |                  11 |                   0 |
+| Runtime ValueError from malformed pair parsing (`a b`) or incorrect integer conversion                                       |            11 |                  5.1% |                  11 |                   0 |
+| Runtime NameError from undefined variables (`pairs`, `a`, `b`, `carry`) in carry-update logic                                |             9 |                  4.2% |                   9 |                   0 |
+| Accumulates carry with `carry += ...` instead of assigning the new carry (`carry = sum - 100`)                               |             7 |                  3.3% |                   7 |                   0 |
+| Reads only `n` (or an incomplete prefix) and never processes the required `n` pairs                                          |             6 |                  2.8% |                   6 |                   0 |
+| Carry propagation/update bug: solution works on simpler steps but hidden multi-step carry behavior is wrong                  |             6 |                  2.8% |                   6 |                   0 |
+| Runtime EOFError from wrong input protocol (extra `input()` calls or incorrect pair parsing)                                 |             5 |                  2.3% |                   5 |                   0 |
+| Ignores the previous carry when computing the next sum (`sum = a + b` instead of `a + b + carry`)                            |             5 |                  2.3% |                   5 |                   0 |
+| Runtime error (parseable final submission)                                                                                   |             4 |                  1.9% |                   4 |                   0 |
+| Computes carry as a digit/flag (`0/1`, `//10`, `%10`) instead of the required overflow amount `sum - 100`                    |             3 |                  1.4% |                   3 |                   0 |
+| Writes a helper/function-style solution (expects `pairs` or returns a list) instead of the required input/output program     |             3 |                  1.4% |                   3 |                   0 |
+| Hard-codes the public sample carry outputs instead of simulating carry updates for arbitrary input pairs                     |             2 |                  0.9% |                   2 |                   0 |
+| Parses `a b` using fixed string positions/line length instead of robust `split()` parsing (fails hidden widths like `200 0`) |             2 |                  0.9% |                   2 |                   0 |
+| Prints the input pair values (`ai, bi`) instead of computing and printing carry outputs                                      |             1 |                  0.5% |                   1 |                   0 |
+| Processes each pair independently and never feeds the previous carry into the next step                                      |             1 |                  0.5% |                   1 |                   0 |
+| Stores all pairs and reprocesses them in a second loop, causing carry-order/reset mistakes                                   |             1 |                  0.5% |                   1 |                   0 |
+| Runtime AttributeError from string/list method misuse while parsing pairs                                                    |             1 |                  0.5% |                   1 |                   0 |
+| Partial carry simulation bug on hidden edge cases (exact-100/reset or carry reuse ordering)                                  |             1 |                  0.5% |                   1 |                   0 |
+| Misses the exact-100 edge case (checks only `<100` and `>100` branches)                                                      |             1 |                  0.5% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -155,23 +155,23 @@ def add_pairs_with_carry_over():
 
 ```python
 # Write your solution here
-n=1
-carry=0
-a1=90
-b1=10
-sum=a1+b1+carry
-sum==carry
-if sum>100:
-    carry=sum-100
+n = 1
+carry = 0
+a1 = 90
+b1 = 10
+sum = a1 + b1 + carry
+sum == carry
+if sum > 100:
+    carry = sum - 100
 else:
-    carry=0
+    carry = 0
 print(carry)
 
-n=2
-carry=0
-a2=80
-b2=30
-sum=a2+b2+carry
+n = 2
+carry = 0
+a2 = 80
+b2 = 30
+sum = a2 + b2 + carry
 # ...
 ```
 
@@ -189,19 +189,19 @@ sum=a2+b2+carry
 ```python
 # Write your solution here
 
-n=int(input())
-carry=0
-sum=0
+n = int(input())
+carry = 0
+sum = 0
 for _ in range(n):
-    a, b=int(input()), int(input())
+    a, b = int(input()), int(input())
     print(a)
-    if (int(a)+int(b))<=100:
-        carry=0
-        sum=a+b
+    if (int(a) + int(b)) <= 100:
+        carry = 0
+        sum = a + b
         print(carry)
     else:
-        carry+=100-(a+b)
-        sum=a+b+carry
+        carry += 100 - (a + b)
+        sum = a + b + carry
         print(carry)
 ```
 
@@ -252,22 +252,21 @@ if sum3>=100 :
 ```python
 # Write your solution here
 
-n=int(input())
-carry=0
-p=0
-while n!=0:
-    k=input()
-    j=list(k.split())
-    if int(j[0])+int(j[1])+carry<100:
+n = int(input())
+carry = 0
+p = 0
+while n != 0:
+    k = input()
+    j = list(k.split())
+    if int(j[0]) + int(j[1]) + carry < 100:
         print(0)
 
+    elif int(j[0]) + int(j[1]) >= 100:
+        l = 100 - int(j[0]) - int(j[1])
+        print(abs(l) + l)
+        carry = abs(100 - int(j[0]) - int(j[1]))
 
-    elif int(j[0])+int(j[1])>=100:
-        l=100-int(j[0])-int(j[1])
-        print(abs(l)+l)
-        carry=abs(100-int(j[0])-int(j[1]))
-
-    l=abs((j[0]+int(j[1]+carry-100)))
+    l = abs((j[0] + int(j[1] + carry - 100)))
 # ...
 ```
 
@@ -289,12 +288,12 @@ n = int(input())
 carry = 0
 for i in range(n):
     x = input()
-    a , b = map(int, x.split(" "))
+    a, b = map(int, x.split(" "))
     if a + b + carry < 100:
         carry = 0
         print(carry)
     elif a + b + carry > 100:
-        carry =(a+b+carry)-100
+        carry = (a + b + carry) - 100
         print(carry)
     elif a + b + carry <= 100:
         carry = 0
@@ -314,22 +313,21 @@ for i in range(n):
   - Variant `ns_25t3_py14_1/13`, Student ID `67217175654b46238df8e89497739220`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
-n=int(input())
-l=[]
+n = int(input())
+l = []
 for i in range(n):
-    s=(input())
+    s = input()
     l.append(s)
-count=0
-m=0
+count = 0
+m = 0
 for str in l:
-    if len(str)<=3 :
-        a=int(str[0])
-        b=int(str[2])
-
+    if len(str) <= 3:
+        a = int(str[0])
+        b = int(str[2])
 
     else:
-        a=int(str[0:2])
-        b=int(str[3:5])
+        a = int(str[0:2])
+        b = int(str[3:5])
 
 
 # ...
@@ -355,14 +353,14 @@ while n > 0:
     n1 = input("")
     x = [n1]
     a.append(x)
-    n-=1
+    n -= 1
 for i in a:
     for j in i:
         if len(j) == 5:
             if int(j[:3]) == 100:
                 print(1)
             elif len(j) == 5:
-                b = int(j[:2]) + int(j[2:])+c
+                b = int(j[:2]) + int(j[2:]) + c
                 if b <= 100:
                     print(0)
 # ...
@@ -420,17 +418,17 @@ jj = "jwfnbdvew. "
 
 for i in range(0, a):
     b = input()
-    b += '            '
+    b += "            "
     lines.append(b)
 carry = 0
 r = 0
 for i in lines:
     a = 0
     b = 0
-    if i[0] != ' ' and i[1] != ' ' and i[2] != ' ':
-        a = int(str(i[0])+str(i[1])+str(i[2]))
-    elif i[0] != ' ' and i[1] != ' ':
-        a = int(str(i[0])+str(i[1]))
+    if i[0] != " " and i[1] != " " and i[2] != " ":
+        a = int(str(i[0]) + str(i[1]) + str(i[2]))
+    elif i[0] != " " and i[1] != " ":
+        a = int(str(i[0]) + str(i[1]))
 # ...
 ```
 
@@ -446,18 +444,18 @@ for i in lines:
   - Variant `ns_25t3_py14_1/13`, Student ID `c208bfb67d3142779f9a58f3b9b3a060`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-if(n==5):
+n = int(input())
+if n == 5:
     print("0")
     print("10")
     print("10")
     print("15")
     print("0")
-if(n==3):
+if n == 3:
     print("10")
     print("20")
     print("20")
-if(n==4):
+if n == 4:
     print("1")
     print("0")
     print("1")
@@ -487,13 +485,13 @@ while n > 0:
     a = input()
 
     i = 0
-    q = len(a)-1
+    q = len(a) - 1
     while a[i] != " ":
         new_a = new_a + a[i]
-        i = i+1
+        i = i + 1
 
     while a[q] != " ":
-        new_b = a[q]+new_b
+        new_b = a[q] + new_b
 # ...
 ```
 
@@ -547,17 +545,17 @@ carry = 0
 diff = 0
 for i in range(n):
     stg = str(input())
-    a,b = map(int, stg.split(" "))
+    a, b = map(int, stg.split(" "))
     sum = a + b
     if sum > 100:
         diff = sum - 100
         carry = carry + diff
         print(carry)
     else:
-        if (sum+carry)>100:
-            print ((sum + carry)-100)
+        if (sum + carry) > 100:
+            print((sum + carry) - 100)
         else:
-            print (0)
+            print(0)
             carry = 0
 ```
 
@@ -575,15 +573,15 @@ for i in range(n):
 
 ```python
 # Write your solution here
-n= int(input())
-sum=0
-for i in (0,n):
-    en= input(a,b)
-    if a+b>100:
-        sum= sum-100
+n = int(input())
+sum = 0
+for i in (0, n):
+    en = input(a, b)
+    if a + b > 100:
+        sum = sum - 100
         return sum
     else:
-        sum=0
+        sum = 0
         return sum
 ```
 
@@ -600,14 +598,14 @@ for i in (0,n):
 
 ```python
 # Write your solution here
-n=int(input())
+n = int(input())
 for k in range(n):
-    c=input()
-    l=c.split()
-    d=(int(l[0]))+int(l[1])
-    if d>=100:
-        if d%10!=0 and d>104:
-            f= 10 +d%10
+    c = input()
+    l = c.split()
+    d = (int(l[0])) + int(l[1])
+    if d >= 100:
+        if d % 10 != 0 and d > 104:
+            f = 10 + d % 10
             print(f)
 
         else:
@@ -659,14 +657,14 @@ n = int(input())
 
 i = 0
 
-if(n==5):
+if n == 5:
     print(0)
     print(10)
     print(10)
     print(15)
     print(0)
 
-elif(n==3):
+elif n == 3:
     print(10)
     print(20)
     print(20)
@@ -719,8 +717,8 @@ for i in range(n):
   - Variant `ns_25t3_py14_1/13`, Student ID `0be95b2a0ecb411d8f81880b5a1edc67`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    for i in range(n):
-        print(ai,bi)
+for i in range(n):
+    print(ai, bi)
 ```
 
 ### Processes each pair independently and never feeds the previous carry into the next step
@@ -737,22 +735,22 @@ for i in range(n):
 ```python
 # Write your solution here
 
-n=int(input())
-l=[]
-m=[]
-carry=0
-sum_1=0
+n = int(input())
+l = []
+m = []
+carry = 0
+sum_1 = 0
 for i in range(n):
-    t=tuple(input())
-    l1=list(t)
+    t = tuple(input())
+    l1 = list(t)
     l.append(l1)
 
 for i in range(n):
-    sum_1=int(l[i][0]+l[i][1])
-    if(sum_1<=100):
+    sum_1 = int(l[i][0] + l[i][1])
+    if sum_1 <= 100:
         m.append(0)
-    if(sum_1>100):
-        carry=carry+(sum_1-100)
+    if sum_1 > 100:
+        carry = carry + (sum_1 - 100)
 # ...
 ```
 
@@ -770,7 +768,7 @@ for i in range(n):
 ```python
 n = int(input())
 
-lines=[]
+lines = []
 carry = 0
 
 for i in range(n):
@@ -778,11 +776,11 @@ for i in range(n):
     lines.append(line)
 
 for line in lines:
-    w=line.split(" ")
+    w = line.split(" ")
     sum = int(w[0]) + int(w[1]) + carry
-    if(sum>100):
-        carry =sum-100
-    if(sum<100):
+    if sum > 100:
+        carry = sum - 100
+    if sum < 100:
         carry = 0
     print(carry)
 ```
@@ -806,15 +804,15 @@ lst = []
 for i in range(n):
     lst.append(input)
 
-car=0
-car=int(car)
+car = 0
+car = int(car)
 
 for i in range(n):
-    addn=0
-    addn+=lst[i].append([car])
-    if addn>100:
-        car = addn-100
-        print (car)
+    addn = 0
+    addn += lst[i].append([car])
+    if addn > 100:
+        car = addn - 100
+        print(car)
 ```
 
 ### Partial carry simulation bug on hidden edge cases (exact-100/reset or carry reuse ordering)
@@ -832,19 +830,19 @@ for i in range(n):
 carry = 0
 
 n = int(input(""))
-i=1
+i = 1
 
-while i<=n:
+while i <= n:
     Given = input("")
     a = int(Given[0:2])
     b = int(Given[-2:])
     if (a + b + (carry)) >= 100:
-        carry = (a+b+(carry)-100)
+        carry = a + b + (carry) - 100
 
     else:
         carry = 0
     print(carry)
-    i = i+1
+    i = i + 1
 ```
 
 ### Misses the exact-100 edge case (checks only `<100` and `>100` branches)
@@ -859,18 +857,18 @@ while i<=n:
   - Variant `ns_25t3_py14_1/13`, Student ID `d0bdd7c331534291a148e6e63778b17d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-for i in range(0,n):
-    s=input()
-    a=s.split()
-    a1=int(a[0])
-    b1=int(a[1])
-    carry=0
-    sum=a1+b1+carry
-    if sum<100:
+n = int(input())
+for i in range(0, n):
+    s = input()
+    a = s.split()
+    a1 = int(a[0])
+    b1 = int(a[1])
+    carry = 0
+    sum = a1 + b1 + carry
+    if sum < 100:
         print(carry)
-    elif sum>100:
-        c=sum-100
-        sum=a1+b1+carry+c
+    elif sum > 100:
+        c = sum - 100
+        sum = a1 + b1 + carry + c
         print(c)
 ```

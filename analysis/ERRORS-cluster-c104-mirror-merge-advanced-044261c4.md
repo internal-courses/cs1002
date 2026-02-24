@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py22/9` (canonical) | 400 | 122 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py22/9` (canonical) |              400 |      122 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py22/9` | 400 | 278 | 122 | 97 | 25 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py22/9` |              400 |       278 |      122 |                 97 |                     25 |
 
 ## Private Case Structure
 
@@ -44,35 +44,35 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py22/9` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 25 | 20.5% | 25 |
-| Mirror-indexing bug (`b[-i]`, fixed positions, or length-specific indexing) causes out-of-range access | 19 | 15.6% | 19 |
-| Runtime TypeError from treating lists as scalars/indices while building the mirrored result | 12 | 9.8% | 12 |
-| Incorrect mirror pairing / parity-rule application (broad wrong-answer failure) | 11 | 9.0% | 11 |
-| No return / implicit `None` | 10 | 8.2% | 10 |
-| Uses an `or` parity condition instead of checking same parity, so mixed-parity cases are added incorrectly | 10 | 8.2% | 10 |
-| Runtime NameError from undefined temporaries (`lst`, `l`, `s`, etc.) in mirror-merge logic | 5 | 4.1% | 5 |
-| Runtime error (parseable final submission) | 3 | 2.5% | 3 |
-| Uses `b[-i]` instead of `b[-i-1]` for mirror indexing (`i=0` incorrectly selects `b[0]`) | 3 | 2.5% | 3 |
-| Uses nested loops over both lists (cross-product), producing too many pairings instead of one mirror pair per index | 2 | 1.6% | 2 |
-| Near-correct mirror pairing, but mixed-parity subtraction sign/parity condition is wrong on hidden cases | 2 | 1.6% | 2 |
-| Returns a constant list (`[]` or fixed values) instead of computing the mirror merge from `a` and `b` | 2 | 1.6% | 2 |
-| Mirror-index/pairing bug (wrong `b` index formula or partial pairing) causes one private group to fail | 2 | 1.6% | 2 |
-| Applies extra sign-flip/negation logic, producing the wrong sign for mixed-parity results | 2 | 1.6% | 2 |
-| Hard-codes public sample outputs / fixed lists instead of applying the mirror-merge rule generically | 2 | 1.6% | 2 |
-| Splits the lists into halves and combines them, but the task requires elementwise mirror pairing across the full lists | 1 | 0.8% | 1 |
-| Returns list concatenation (`a + b`) instead of elementwise mirror merge | 1 | 0.8% | 1 |
-| Uses XOR-based parity logic incorrectly, so same-parity vs mixed-parity add/subtract rules are inverted | 1 | 0.8% | 1 |
-| Destructive list-mutation pairing approach (`remove`/pop style) mishandles one hidden mirror case | 1 | 0.8% | 1 |
-| Uses bitwise `&` in parity checks (operator/precedence bug) instead of logical `and` | 1 | 0.8% | 1 |
-| Uses `.index(...)` to match mirrored elements, which breaks on duplicate values (first-occurrence index bug) | 1 | 0.8% | 1 |
-| Copies evaluator tests (`is_equal(mirror_merge(...))`) into the function and triggers recursive/self-test failures | 1 | 0.8% | 1 |
-| Interleaves raw elements from `a` and reversed `b` instead of computing one merged value per mirror pair | 1 | 0.8% | 1 |
-| Runtime AttributeError | 1 | 0.8% | 1 |
-| Length-specific manual implementation (fixed indices for length-3) instead of a loop-based general solution | 1 | 0.8% | 1 |
-| Converts the input lists to strings / tuple output instead of computing numeric mirror-merge results | 1 | 0.8% | 1 |
-| Subtracts in the wrong direction for mixed parity (`b_rev - a` instead of `a - b_rev`) | 1 | 0.8% | 1 |
+| Pattern                                                                                                                | Cluster count | % of cluster non-full | `ns_25t3_py22/9` |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Syntax / non-parseable final submission                                                                                |            25 |                 20.5% |               25 |
+| Mirror-indexing bug (`b[-i]`, fixed positions, or length-specific indexing) causes out-of-range access                 |            19 |                 15.6% |               19 |
+| Runtime TypeError from treating lists as scalars/indices while building the mirrored result                            |            12 |                  9.8% |               12 |
+| Incorrect mirror pairing / parity-rule application (broad wrong-answer failure)                                        |            11 |                  9.0% |               11 |
+| No return / implicit `None`                                                                                            |            10 |                  8.2% |               10 |
+| Uses an `or` parity condition instead of checking same parity, so mixed-parity cases are added incorrectly             |            10 |                  8.2% |               10 |
+| Runtime NameError from undefined temporaries (`lst`, `l`, `s`, etc.) in mirror-merge logic                             |             5 |                  4.1% |                5 |
+| Runtime error (parseable final submission)                                                                             |             3 |                  2.5% |                3 |
+| Uses `b[-i]` instead of `b[-i-1]` for mirror indexing (`i=0` incorrectly selects `b[0]`)                               |             3 |                  2.5% |                3 |
+| Uses nested loops over both lists (cross-product), producing too many pairings instead of one mirror pair per index    |             2 |                  1.6% |                2 |
+| Near-correct mirror pairing, but mixed-parity subtraction sign/parity condition is wrong on hidden cases               |             2 |                  1.6% |                2 |
+| Returns a constant list (`[]` or fixed values) instead of computing the mirror merge from `a` and `b`                  |             2 |                  1.6% |                2 |
+| Mirror-index/pairing bug (wrong `b` index formula or partial pairing) causes one private group to fail                 |             2 |                  1.6% |                2 |
+| Applies extra sign-flip/negation logic, producing the wrong sign for mixed-parity results                              |             2 |                  1.6% |                2 |
+| Hard-codes public sample outputs / fixed lists instead of applying the mirror-merge rule generically                   |             2 |                  1.6% |                2 |
+| Splits the lists into halves and combines them, but the task requires elementwise mirror pairing across the full lists |             1 |                  0.8% |                1 |
+| Returns list concatenation (`a + b`) instead of elementwise mirror merge                                               |             1 |                  0.8% |                1 |
+| Uses XOR-based parity logic incorrectly, so same-parity vs mixed-parity add/subtract rules are inverted                |             1 |                  0.8% |                1 |
+| Destructive list-mutation pairing approach (`remove`/pop style) mishandles one hidden mirror case                      |             1 |                  0.8% |                1 |
+| Uses bitwise `&` in parity checks (operator/precedence bug) instead of logical `and`                                   |             1 |                  0.8% |                1 |
+| Uses `.index(...)` to match mirrored elements, which breaks on duplicate values (first-occurrence index bug)           |             1 |                  0.8% |                1 |
+| Copies evaluator tests (`is_equal(mirror_merge(...))`) into the function and triggers recursive/self-test failures     |             1 |                  0.8% |                1 |
+| Interleaves raw elements from `a` and reversed `b` instead of computing one merged value per mirror pair               |             1 |                  0.8% |                1 |
+| Runtime AttributeError                                                                                                 |             1 |                  0.8% |                1 |
+| Length-specific manual implementation (fixed indices for length-3) instead of a loop-based general solution            |             1 |                  0.8% |                1 |
+| Converts the input lists to strings / tuple output instead of computing numeric mirror-merge results                   |             1 |                  0.8% |                1 |
+| Subtracts in the wrong direction for mixed parity (`b_rev - a` instead of `a - b_rev`)                                 |             1 |                  0.8% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -154,22 +154,22 @@ def mirror_merge(a: list, b: list) -> list:
   - Variant `ns_25t3_py22/9`, Student ID `0c796407724441a482dd8912fa4831c6`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    m = []
-    for i in range(a):
-        m.append(i)
-    for j in range(m):
-        if i % 2 == 1 :
-            m.insert(i , b[j])
-    new_lst = []
-    for i in lst:
-        if i % 2 == 0 :
-            if l[i] % 2 == 0 and i[i+1] == 0 or l[i] % 2 == 1 and l[i+1] % 2 == 1:
-                new_lst.append(l[i]+l[i+1])
-            else :
-                new_lst.append(l[i]-l[i-1])
-        else :
-            continue
-    return new_lst
+m = []
+for i in range(a):
+    m.append(i)
+for j in range(m):
+    if i % 2 == 1:
+        m.insert(i, b[j])
+new_lst = []
+for i in lst:
+    if i % 2 == 0:
+        if l[i] % 2 == 0 and i[i + 1] == 0 or l[i] % 2 == 1 and l[i + 1] % 2 == 1:
+            new_lst.append(l[i] + l[i + 1])
+        else:
+            new_lst.append(l[i] - l[i - 1])
+    else:
+        continue
+return new_lst
 ```
 
 ### Incorrect mirror pairing / parity-rule application (broad wrong-answer failure)
@@ -183,18 +183,18 @@ def mirror_merge(a: list, b: list) -> list:
   - Variant `ns_25t3_py22/9`, Student ID `754bdc34424d45fd88bd49fbb8cf5e34`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if len(list1)!=len(list2):
-        raise ValueError("Both lists must be of equal length")
-        result=[]
-        n=len(list1)
-        for i in range(n):
-            num1=list1[i]
-            num2=list2[n-i-1]
-            if(num1 %2==0 and num2 %2!=0):
-                result.append(num1+num2)
-            else:
-                result.append(num1-num2)
-            return result
+if len(list1) != len(list2):
+    raise ValueError("Both lists must be of equal length")
+    result = []
+    n = len(list1)
+    for i in range(n):
+        num1 = list1[i]
+        num2 = list2[n - i - 1]
+        if num1 % 2 == 0 and num2 % 2 != 0:
+            result.append(num1 + num2)
+        else:
+            result.append(num1 - num2)
+        return result
 ```
 
 ### No return / implicit `None`
@@ -210,7 +210,7 @@ def mirror_merge(a: list, b: list) -> list:
 
 ```python
 def mirror_merge(a: list, b: list) -> list:
-    '''
+    """
     Given two equal-length lists of numbers, pairs each element from the start
     of the first list with the corresponding element from the end of the second list,
     and applies the following rules:
@@ -224,7 +224,7 @@ def mirror_merge(a: list, b: list) -> list:
 
     Returns:
         list: List of computed values.
-    '''
+    """
 ```
 
 ### Uses an `or` parity condition instead of checking same parity, so mixed-parity cases are added incorrectly
@@ -270,20 +270,20 @@ def mirror_merge(a: list, b: list) -> list:
   - Variant `ns_25t3_py22/9`, Student ID `e2934fe7abfa421c8133d9534a20e429`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    p=len(b)
-    b=b[::-1]
-    j=0
-    d[p]=[0]
-    for i in range(len(a)):
-        for k in range(len(b)):
-            if (i==k):
-                if (((a[i]%2==0) and (b[k]%2==0)) or ((a[i]%2!=0) and (b[k]%2!=0))):
-                    d[j]=a[i]+b[k]
-                elif (((a[i]%2==0) and (b[k]%2!=0)) or ((a[i]%2!=0)and (b[k]%2==0))):
-                    d[j]=a[i]-b[k]
-        j=j+1
-    return d
-    ...
+p = len(b)
+b = b[::-1]
+j = 0
+d[p] = [0]
+for i in range(len(a)):
+    for k in range(len(b)):
+        if i == k:
+            if ((a[i] % 2 == 0) and (b[k] % 2 == 0)) or ((a[i] % 2 != 0) and (b[k] % 2 != 0)):
+                d[j] = a[i] + b[k]
+            elif ((a[i] % 2 == 0) and (b[k] % 2 != 0)) or ((a[i] % 2 != 0) and (b[k] % 2 == 0)):
+                d[j] = a[i] - b[k]
+    j = j + 1
+return d
+...
 ```
 
 ### Runtime error (parseable final submission)
@@ -299,7 +299,7 @@ def mirror_merge(a: list, b: list) -> list:
 
 ```python
 def mirror_merge(a: list, b: list) -> list:
-    '''
+    """
     Given two equal-length lists of numbers, pairs each element from the start
     of the first list with the corresponding element from the end of the second list,
     and applies the following rules:
@@ -313,7 +313,9 @@ def mirror_merge(a: list, b: list) -> list:
 
     Returns:
         list: List of computed values.
-    '''
+    """
+
+
 x = a[0]
 y = b[-1]
 # ...
@@ -426,7 +428,7 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `23e60230fa8d4fc4a377d5d386672d0a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return[-5, -3, 6]
+return [-5, -3, 6]
 ```
 
 ### Mirror-index/pairing bug (wrong `b` index formula or partial pairing) causes one private group to fail
@@ -440,21 +442,21 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `a42cbebc788f40d7a14acced46458100`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    b.reverse()
-    n=len(a)
-    l=[]
-    for i in (0,n-2,n-1):
-            if a[i]%2==0 and b[i]%2==0:
-                l.append(a[i]+b[i])
-            elif a[i]%2!=0 and b[i]%2!=0:
-                l.append(a[i]+b[i])
-            elif a[i]%2!=0 and b[i]%2==0:
-                l.append(a[i]-b[i])
-            else:
-                l.append(a[i]-b[i])
-    if l[1]==-11:
-            del l[1]
-    return l
+b.reverse()
+n = len(a)
+l = []
+for i in (0, n - 2, n - 1):
+    if a[i] % 2 == 0 and b[i] % 2 == 0:
+        l.append(a[i] + b[i])
+    elif a[i] % 2 != 0 and b[i] % 2 != 0:
+        l.append(a[i] + b[i])
+    elif a[i] % 2 != 0 and b[i] % 2 == 0:
+        l.append(a[i] - b[i])
+    else:
+        l.append(a[i] - b[i])
+if l[1] == -11:
+    del l[1]
+return l
 ```
 
 ### Applies extra sign-flip/negation logic, producing the wrong sign for mixed-parity results
@@ -500,18 +502,18 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `c8de21f233eb49b598e6fa9001e25ddc`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    l = []
-    for i in range(len(a)):
-        # c = b[-3]
-        if a[i]%2==0 and b[-(i+1)]%2==0:
-            # print(i)
-            # print(a[i],b[i])
-            l.append( (a[i]+b[i]) )
-        else:
-            # print(i)
-            # print(a[i],b[i])
-            l.append( (a[i]-b[-(i+1)]) )
-    return l
+l = []
+for i in range(len(a)):
+    # c = b[-3]
+    if a[i] % 2 == 0 and b[-(i + 1)] % 2 == 0:
+        # print(i)
+        # print(a[i],b[i])
+        l.append((a[i] + b[i]))
+    else:
+        # print(i)
+        # print(a[i],b[i])
+        l.append((a[i] - b[-(i + 1)]))
+return l
 ```
 
 ### Splits the lists into halves and combines them, but the task requires elementwise mirror pairing across the full lists
@@ -525,21 +527,21 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `003a9a69617049feb4d411a18548cc1a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    new_list = []
-    mid_point = len(a) // 2
-    mid_point_1 = len(b) // 2
-    first_half = a[:mid_point]
-    second_half = b[mid_point_1:]
-    y = second_half[::-1]
-    for i in first_half:
-        for j in y:
-            if (i % 2 == 0 and j % 2 == 0) or (i % 2 == 1 and j % 2 ==1):
-                y = int(i) + int(j)
-                new_list.append(y)
-            else:
-                x = int(i) - int(j)
-                new_list.append(x)
-    return new_list
+new_list = []
+mid_point = len(a) // 2
+mid_point_1 = len(b) // 2
+first_half = a[:mid_point]
+second_half = b[mid_point_1:]
+y = second_half[::-1]
+for i in first_half:
+    for j in y:
+        if (i % 2 == 0 and j % 2 == 0) or (i % 2 == 1 and j % 2 == 1):
+            y = int(i) + int(j)
+            new_list.append(y)
+        else:
+            x = int(i) - int(j)
+            new_list.append(x)
+return new_list
 ```
 
 ### Returns list concatenation (`a + b`) instead of elementwise mirror merge
@@ -583,11 +585,13 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `18da978a7ebe4fd2a8dcb1f7f44d7e8d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    x=[]
-    for i in range(len(a)):
-        if a[i]%2==0 ^ b[len(b)-i-1]%2==0:x.append(a[i]+b[len(b)-i-1])
-        else:x.append(a[i]-b[len(b)-i-1])
-    return x
+x = []
+for i in range(len(a)):
+    if a[i] % 2 == 0 ^ b[len(b) - i - 1] % 2 == 0:
+        x.append(a[i] + b[len(b) - i - 1])
+    else:
+        x.append(a[i] - b[len(b) - i - 1])
+return x
 ```
 
 ### Destructive list-mutation pairing approach (`remove`/pop style) mishandles one hidden mirror case
@@ -664,18 +668,18 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `73edef9e00984b2da790aab327c37755`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
-    ll=[]
-    bb=b[::-1]
-    for i in (a):
-        for j in (bb):
-            if a.index(i)== bb.index(j):
-                if i%2==0 and j%2==0:
-                    ll.append(i+j)
-                elif i%2!=0 and j%2!=0:
-                    ll.append(i+j)
-                else:
-                    ll.append(i-j)
-    return(ll)
+ll = []
+bb = b[::-1]
+for i in a:
+    for j in bb:
+        if a.index(i) == bb.index(j):
+            if i % 2 == 0 and j % 2 == 0:
+                ll.append(i + j)
+            elif i % 2 != 0 and j % 2 != 0:
+                ll.append(i + j)
+            else:
+                ll.append(i - j)
+return ll
 ```
 
 ### Copies evaluator tests (`is_equal(mirror_merge(...))`) into the function and triggers recursive/self-test failures
@@ -689,18 +693,9 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `93a166dcb2594bb58c52afb865e68937`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    is_equal(
-        mirror_merge([1,2,3],[4,5,6]),
-        [-5,-3,-1]
-    )
-    is_equal(
-        mirror_merge([10,11],[20,21]),
-        [-11,-9]
-    )
-    is_equal(
-        mirror_merge([7,8,9],[2,4,6]),
-        [1,12,7]
-    )
+is_equal(mirror_merge([1, 2, 3], [4, 5, 6]), [-5, -3, -1])
+is_equal(mirror_merge([10, 11], [20, 21]), [-11, -9])
+is_equal(mirror_merge([7, 8, 9], [2, 4, 6]), [1, 12, 7])
 ```
 
 ### Interleaves raw elements from `a` and reversed `b` instead of computing one merged value per mirror pair
@@ -747,12 +742,12 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `bc224336dcf6419cb54900c1a5b54042`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a = int(a.split())
-    b = int(b.split())
-    if a % 2 == 0 and b[:-1] % 2 == 0:
-        return a[i] + b[i]
-    else:
-        return a[i] - b[i]
+a = int(a.split())
+b = int(b.split())
+if a % 2 == 0 and b[:-1] % 2 == 0:
+    return a[i] + b[i]
+else:
+    return a[i] - b[i]
 ```
 
 ### Length-specific manual implementation (fixed indices for length-3) instead of a loop-based general solution
@@ -798,10 +793,10 @@ y = b[-1]
   - Variant `ns_25t3_py22/9`, Student ID `ea309c5e01454a809cfafdd268e91219`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    X = str(a)
-    Y = str(b)
-    return X, Y
-    ...
+X = str(a)
+Y = str(b)
+return X, Y
+...
 ```
 
 ### Subtracts in the wrong direction for mixed parity (`b_rev - a` instead of `a - b_rev`)

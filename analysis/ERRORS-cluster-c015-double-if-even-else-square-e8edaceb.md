@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py13_1/9` (canonical) | 754 | 79 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py13_1/9` (canonical) |              754 |       79 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py13_1/9` | 754 | 675 | 79 | 49 | 30 |
-| `ns_25t3_py13_2/9` | 0 | 0 | 0 | 0 | 0 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py13_1/9` |              754 |       675 |       79 |                 49 |                     30 |
+| `ns_25t3_py13_2/9` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,23 +47,23 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py13_1/9` | `ns_25t3_py13_2/9` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 30 | 38.0% | 30 | 0 |
-| Hard-codes sample values/examples instead of using the input parameter `n` | 11 | 13.9% | 11 | 0 |
-| No return / implicit `None` | 10 | 12.7% | 10 | 0 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 6 | 7.6% | 6 | 0 |
-| Runtime NameError | 5 | 6.3% | 5 | 0 |
-| Runtime TypeError from recursively/self-calling the function without the required argument | 4 | 5.1% | 4 | 0 |
-| Runtime RecursionError | 3 | 3.8% | 3 | 0 |
-| Runtime ValueError | 2 | 2.5% | 2 | 0 |
-| Runtime TypeError | 2 | 2.5% | 2 | 0 |
-| Uses division (`n/2 == 0`) instead of parity test (`n % 2 == 0`) | 1 | 1.3% | 1 | 0 |
-| Defines a nested/redeclared `double_if_even_else_square` inside the function, so the outer function returns `None` | 1 | 1.3% | 1 | 0 |
-| Uses `^2` (bitwise XOR) instead of squaring (`n ** 2`) | 1 | 1.3% | 1 | 0 |
-| Reassigns/reads `n` inside the function instead of using the evaluator-provided argument | 1 | 1.3% | 1 | 0 |
-| Runtime AttributeError | 1 | 1.3% | 1 | 0 |
-| Incorrect even-or-square branching logic (broad wrong-answer failure) | 1 | 1.3% | 1 | 0 |
+| Pattern                                                                                                            | Cluster count | % of cluster non-full | `ns_25t3_py13_1/9` | `ns_25t3_py13_2/9` |
+| ------------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | -----------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                            |            30 |                 38.0% |                 30 |                  0 |
+| Hard-codes sample values/examples instead of using the input parameter `n`                                         |            11 |                 13.9% |                 11 |                  0 |
+| No return / implicit `None`                                                                                        |            10 |                 12.7% |                 10 |                  0 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                          |             6 |                  7.6% |                  6 |                  0 |
+| Runtime NameError                                                                                                  |             5 |                  6.3% |                  5 |                  0 |
+| Runtime TypeError from recursively/self-calling the function without the required argument                         |             4 |                  5.1% |                  4 |                  0 |
+| Runtime RecursionError                                                                                             |             3 |                  3.8% |                  3 |                  0 |
+| Runtime ValueError                                                                                                 |             2 |                  2.5% |                  2 |                  0 |
+| Runtime TypeError                                                                                                  |             2 |                  2.5% |                  2 |                  0 |
+| Uses division (`n/2 == 0`) instead of parity test (`n % 2 == 0`)                                                   |             1 |                  1.3% |                  1 |                  0 |
+| Defines a nested/redeclared `double_if_even_else_square` inside the function, so the outer function returns `None` |             1 |                  1.3% |                  1 |                  0 |
+| Uses `^2` (bitwise XOR) instead of squaring (`n ** 2`)                                                             |             1 |                  1.3% |                  1 |                  0 |
+| Reassigns/reads `n` inside the function instead of using the evaluator-provided argument                           |             1 |                  1.3% |                  1 |                  0 |
+| Runtime AttributeError                                                                                             |             1 |                  1.3% |                  1 |                  0 |
+| Incorrect even-or-square branching logic (broad wrong-answer failure)                                              |             1 |                  1.3% |                  1 |                  0 |
 
 ## Re-clustered Pattern Details
 
@@ -83,7 +83,7 @@ Residual `Other` after second-pass re-clustering: `0/79` (`0.0%`)
 
 ```python
 def double_if_even_else_square(n):
-    '''
+    """
     Given an integer n, return:
       - 2 * n if n is even
       - n ** 2 if n is odd
@@ -99,7 +99,9 @@ def double_if_even_else_square(n):
 
     Returns:
         int: Result after applying the rule
-    '''
+    """
+
+
 # ...
 ```
 
@@ -115,12 +117,12 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `68d14093c1d54b4c933190107c7df890`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if (n % 2 == 0) or (n % 2 != 0 ):
-        return "even"
-    elif (n % 2 == 0) or (n % 2 != 0):
-        return "even"
-    else:
-        return "sqaure"
+if (n % 2 == 0) or (n % 2 != 0):
+    return "even"
+elif (n % 2 == 0) or (n % 2 != 0):
+    return "even"
+else:
+    return "sqaure"
 ```
 
 ### No return / implicit `None`
@@ -136,13 +138,13 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `ea2ebdc40749463db6d44f57ee11ea79`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if(n%2==0):
-        n = n*2
-        print(n)
-    else:
-        n = n*n
-        print(n)
-    ...
+if n % 2 == 0:
+    n = n * 2
+    print(n)
+else:
+    n = n * n
+    print(n)
+...
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator tests)
@@ -157,13 +159,13 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `d2b1588077474a168a5bdcf8607f4046`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    num=int(input("enter your number:"))
-    if num%2==0:
-        num=num*2
-        print("num is an even number")
-    else:
-        num=num**2
-        print("num is an odd number")
+num = int(input("enter your number:"))
+if num % 2 == 0:
+    num = num * 2
+    print("num is an even number")
+else:
+    num = num**2
+    print("num is an odd number")
 ```
 
 ### Runtime NameError
@@ -180,7 +182,7 @@ def double_if_even_else_square(n):
 
 ```python
 def double_if_even_else_square(n):
-    '''
+    """
     Given an integer n, return:
       - 2 * n if n is even
       - n ** 2 if n is odd
@@ -196,7 +198,9 @@ def double_if_even_else_square(n):
 
     Returns:
         int: Result after applying the rule
-    '''
+    """
+
+
 # ...
 ```
 
@@ -212,13 +216,13 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `611fbf7ee6d14639870c13c4d7232401`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    if(n%2==0):
-       print(int(2*n))
-    else:
-        print(int(n*n))
-    return double_if_even_else_square()
-    double_if_even_else_square()
+...
+if n % 2 == 0:
+    print(int(2 * n))
+else:
+    print(int(n * n))
+return double_if_even_else_square()
+double_if_even_else_square()
 ```
 
 ### Runtime RecursionError
@@ -234,12 +238,12 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `c9d181f26e7046889f38aee93ad55cd2`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    double_if_even_else_square(n);
-    if (n % 2==0):
-        return n*2
-    else:
-        return n ** 2
+...
+double_if_even_else_square(n)
+if n % 2 == 0:
+    return n * 2
+else:
+    return n**2
 ```
 
 ### Runtime ValueError
@@ -288,11 +292,11 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `822e21e19aca41ea9ea3e62b90c06467`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if n%2==0:
-        print(2 * n)
-    else:
-        print(n**2)
-    return int(double_if_even_else_square)
+if n % 2 == 0:
+    print(2 * n)
+else:
+    print(n**2)
+return int(double_if_even_else_square)
 ```
 
 ### Uses division (`n/2 == 0`) instead of parity test (`n % 2 == 0`)
@@ -327,11 +331,11 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `1f105eef6bfa4b998d5c6d9ee7beff5a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    def double_if_even_else_square(n):
-        if n%2==0:
-            return n*2
-        else:
-            return n**2
+def double_if_even_else_square(n):
+    if n % 2 == 0:
+        return n * 2
+    else:
+        return n**2
 ```
 
 ### Uses `^2` (bitwise XOR) instead of squaring (`n ** 2`)
@@ -346,12 +350,12 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `2f232cbc69ab477fa176bd942ea5fa5c`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    for i in range(n):
-         if i % 2 != 0:
-            i = n^2
-         else:
-            i = n*2
-         return(i)
+for i in range(n):
+    if i % 2 != 0:
+        i = n ^ 2
+    else:
+        i = n * 2
+    return i
 ```
 
 ### Reassigns/reads `n` inside the function instead of using the evaluator-provided argument
@@ -366,12 +370,12 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `51f12a0d213049aa94f107684855920b`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    result=0
-    if n%2:
-        result=n*2
-    else:
-        result=n**2
-    return result
+result = 0
+if n % 2:
+    result = n * 2
+else:
+    result = n**2
+return result
 ```
 
 ### Runtime AttributeError
@@ -387,12 +391,12 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `abb07dab98ce4160a6725b210bf19bc5`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    if n%2==0:
-        print(2*n)
-    else:
-        print(n**2)
-    return n.type()
+...
+if n % 2 == 0:
+    print(2 * n)
+else:
+    print(n**2)
+return n.type()
 ```
 
 ### Incorrect even-or-square branching logic (broad wrong-answer failure)
@@ -407,9 +411,9 @@ def double_if_even_else_square(n):
   - Variant `ns_25t3_py13_1/9`, Student ID `c633d8ec297b4cfc98dc9b1e37a5bd24`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if n // 2 != 0:
-        result = n*2
-    else:
-        result = n**2
-    return result
+if n // 2 != 0:
+    result = n * 2
+else:
+    result = n**2
+return result
 ```

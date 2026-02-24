@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/16` | 656 | 337 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/18` (canonical) | 675 | 328 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/16`             |              656 |      337 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/18` (canonical) |              675 |      328 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/16` | 656 | 319 | 337 | 304 | 33 |
-| `ns_25t2_py21_2/18` | 675 | 347 | 328 | 305 | 23 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/16` |              656 |       319 |      337 |                304 |                     33 |
+| `ns_25t2_py21_2/18` |              675 |       347 |      328 |                305 |                     23 |
 
 ## Private Case Structure
 
@@ -48,46 +48,46 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/16` | `ns_25t2_py21_2/18` |
-| --- | ---: | ---: | ---: | ---: |
-| Returns inside the alphabet-check loop (decides after first character/iteration) | 243 | 36.5% | 129 | 114 |
-| Hard-codes sample pangram strings/examples instead of checking letter coverage | 77 | 11.6% | 38 | 39 |
-| Syntax / non-parseable final submission | 56 | 8.4% | 33 | 23 |
-| Skeleton placeholder `...` left in function (no implementation; returns None) | 28 | 4.2% | 7 | 21 |
-| Alphabet-string/list membership confusion (`in`/substring check instead of coverage) | 27 | 4.1% | 13 | 14 |
-| Runtime error (parseable final submission) | 27 | 4.1% | 14 | 13 |
-| Always returns `True` (constant output) | 25 | 3.8% | 15 | 10 |
-| Other wrong-answer logic pattern (residual) | 23 | 3.5% | 12 | 11 |
-| Checks exact alphabet string order (`abcdefghijklmnopqrstuvwxyz`) instead of pangram coverage | 20 | 3.0% | 10 | 10 |
-| Runtime NameError (undefined variable/helper) | 17 | 2.6% | 10 | 7 |
-| Fails non-letter/digit-heavy private case despite passing others | 17 | 2.6% | 3 | 14 |
-| Alphabet-string equality/substring check instead of coverage | 17 | 2.6% | 10 | 7 |
-| Substring/membership confusion with alphabet string (`text in alphabet` / `alphabet in text`) | 14 | 2.1% | 9 | 5 |
-| Uses total string length ==/>= 26 as pangram test (counts spaces/digits/punctuation) | 12 | 1.8% | 3 | 9 |
-| Compares exact set(text) to alphabet set (rejects valid pangrams with extra chars/spaces) | 9 | 1.4% | 3 | 6 |
-| Uses `string.ascii_lowercase` without importing `string` (environment-dependent fail-all) | 6 | 0.9% | 4 | 2 |
-| Counts total alphabetic characters instead of distinct letters | 5 | 0.8% | 4 | 1 |
-| No return / implicit `None` | 4 | 0.6% | 1 | 3 |
-| Partial-score pangram logic bug (case/filtering/coverage edge case) | 4 | 0.6% | 2 | 2 |
-| Counts unique characters (or len(set(...)) == 26) instead of checking all letters | 3 | 0.5% | 2 | 1 |
-| Uses `text.isalpha()` as pangram test (alphabetic-only, not 26-letter coverage) | 3 | 0.5% | 1 | 2 |
-| Strips spaces only but not other non-letters; digit/punctuation cases still break logic | 3 | 0.5% | 2 | 1 |
-| Runtime KeyError (unexpected character handling) | 3 | 0.5% | 3 | 0 |
-| Incorrect boolean-chain membership checks for letters | 2 | 0.3% | 1 | 1 |
-| Fails short-negative/punctuation private case due boundary filtering mistake | 2 | 0.3% | 0 | 2 |
-| Uses input truthiness / non-empty-string check instead of pangram logic | 2 | 0.3% | 1 | 1 |
-| Uses method object truthiness (`text.isalpha` without `()`) | 2 | 0.3% | 1 | 1 |
-| Compares function object/name (`is_pangram`) with input text | 2 | 0.3% | 1 | 1 |
-| Always returns `False` (constant output) | 2 | 0.3% | 0 | 2 |
-| Incorrect boolean-chain membership test (`"a" or "b" in text` / `and` chain) | 2 | 0.3% | 1 | 1 |
-| Compares the return value of `.sort()` (None) while checking alphabet coverage | 1 | 0.2% | 0 | 1 |
-| Counts unique characters (dictionary/list length == 26) instead of checking all letters | 1 | 0.2% | 0 | 1 |
-| Checks truthiness of a constant/local variable instead of letter coverage | 1 | 0.2% | 0 | 1 |
-| Checks for duplicate characters (uniqueness) instead of pangram coverage | 1 | 0.2% | 0 | 1 |
-| Compares the input to the literal string `"text"` (placeholder-name confusion) | 1 | 0.2% | 1 | 0 |
-| Hard-codes a specific alphabet/pangram string and checks exact equality | 1 | 0.2% | 1 | 0 |
-| Uses `text.isalpha()` gate, rejecting valid pangrams that include spaces/punctuation/digits | 1 | 0.2% | 1 | 0 |
-| Impossible/always-false condition after counting characters (trivial constant decision) | 1 | 0.2% | 1 | 0 |
+| Pattern                                                                                       | Cluster count | % of cluster non-full | `ns_25t2_py21_1/16` | `ns_25t2_py21_2/18` |
+| --------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Returns inside the alphabet-check loop (decides after first character/iteration)              |           243 |                 36.5% |                 129 |                 114 |
+| Hard-codes sample pangram strings/examples instead of checking letter coverage                |            77 |                 11.6% |                  38 |                  39 |
+| Syntax / non-parseable final submission                                                       |            56 |                  8.4% |                  33 |                  23 |
+| Skeleton placeholder `...` left in function (no implementation; returns None)                 |            28 |                  4.2% |                   7 |                  21 |
+| Alphabet-string/list membership confusion (`in`/substring check instead of coverage)          |            27 |                  4.1% |                  13 |                  14 |
+| Runtime error (parseable final submission)                                                    |            27 |                  4.1% |                  14 |                  13 |
+| Always returns `True` (constant output)                                                       |            25 |                  3.8% |                  15 |                  10 |
+| Other wrong-answer logic pattern (residual)                                                   |            23 |                  3.5% |                  12 |                  11 |
+| Checks exact alphabet string order (`abcdefghijklmnopqrstuvwxyz`) instead of pangram coverage |            20 |                  3.0% |                  10 |                  10 |
+| Runtime NameError (undefined variable/helper)                                                 |            17 |                  2.6% |                  10 |                   7 |
+| Fails non-letter/digit-heavy private case despite passing others                              |            17 |                  2.6% |                   3 |                  14 |
+| Alphabet-string equality/substring check instead of coverage                                  |            17 |                  2.6% |                  10 |                   7 |
+| Substring/membership confusion with alphabet string (`text in alphabet` / `alphabet in text`) |            14 |                  2.1% |                   9 |                   5 |
+| Uses total string length ==/>= 26 as pangram test (counts spaces/digits/punctuation)          |            12 |                  1.8% |                   3 |                   9 |
+| Compares exact set(text) to alphabet set (rejects valid pangrams with extra chars/spaces)     |             9 |                  1.4% |                   3 |                   6 |
+| Uses `string.ascii_lowercase` without importing `string` (environment-dependent fail-all)     |             6 |                  0.9% |                   4 |                   2 |
+| Counts total alphabetic characters instead of distinct letters                                |             5 |                  0.8% |                   4 |                   1 |
+| No return / implicit `None`                                                                   |             4 |                  0.6% |                   1 |                   3 |
+| Partial-score pangram logic bug (case/filtering/coverage edge case)                           |             4 |                  0.6% |                   2 |                   2 |
+| Counts unique characters (or len(set(...)) == 26) instead of checking all letters             |             3 |                  0.5% |                   2 |                   1 |
+| Uses `text.isalpha()` as pangram test (alphabetic-only, not 26-letter coverage)               |             3 |                  0.5% |                   1 |                   2 |
+| Strips spaces only but not other non-letters; digit/punctuation cases still break logic       |             3 |                  0.5% |                   2 |                   1 |
+| Runtime KeyError (unexpected character handling)                                              |             3 |                  0.5% |                   3 |                   0 |
+| Incorrect boolean-chain membership checks for letters                                         |             2 |                  0.3% |                   1 |                   1 |
+| Fails short-negative/punctuation private case due boundary filtering mistake                  |             2 |                  0.3% |                   0 |                   2 |
+| Uses input truthiness / non-empty-string check instead of pangram logic                       |             2 |                  0.3% |                   1 |                   1 |
+| Uses method object truthiness (`text.isalpha` without `()`)                                   |             2 |                  0.3% |                   1 |                   1 |
+| Compares function object/name (`is_pangram`) with input text                                  |             2 |                  0.3% |                   1 |                   1 |
+| Always returns `False` (constant output)                                                      |             2 |                  0.3% |                   0 |                   2 |
+| Incorrect boolean-chain membership test (`"a" or "b" in text` / `and` chain)                  |             2 |                  0.3% |                   1 |                   1 |
+| Compares the return value of `.sort()` (None) while checking alphabet coverage                |             1 |                  0.2% |                   0 |                   1 |
+| Counts unique characters (dictionary/list length == 26) instead of checking all letters       |             1 |                  0.2% |                   0 |                   1 |
+| Checks truthiness of a constant/local variable instead of letter coverage                     |             1 |                  0.2% |                   0 |                   1 |
+| Checks for duplicate characters (uniqueness) instead of pangram coverage                      |             1 |                  0.2% |                   0 |                   1 |
+| Compares the input to the literal string `"text"` (placeholder-name confusion)                |             1 |                  0.2% |                   1 |                   0 |
+| Hard-codes a specific alphabet/pangram string and checks exact equality                       |             1 |                  0.2% |                   1 |                   0 |
+| Uses `text.isalpha()` gate, rejecting valid pangrams that include spaces/punctuation/digits   |             1 |                  0.2% |                   1 |                   0 |
+| Impossible/always-false condition after counting characters (trivial constant decision)       |             1 |                  0.2% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -125,27 +125,28 @@ for  i in t1 :
 
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `8d2c5337634240e29a28e245332e876c`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `8d2c5337634240e29a28e245332e876c`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-text= text.lower()
-count={}
-countl=[]
-digit='0123456789'
-alpha='abcdefghijklmnopqrstuvwxyz'
+text = text.lower()
+count = {}
+countl = []
+digit = "0123456789"
+alpha = "abcdefghijklmnopqrstuvwxyz"
 for char in text:
-        if char.isalpha:
-            if char in count:
-                count[char]+=1
-            else:
-                count[char]=1
-for k in count.keys():
-        countl.append(k)
-for char in alpha:
-        if char in count and char not in digit:
-            return True
+    if char.isalpha:
+        if char in count:
+            count[char] += 1
         else:
-            return False
+            count[char] = 1
+for k in count.keys():
+    countl.append(k)
+for char in alpha:
+    if char in count and char not in digit:
+        return True
+    else:
+        return False
 # ...
 ```
 
@@ -161,27 +162,55 @@ for char in alpha:
   - Variant `ns_25t2_py21_1/16`, Student ID `dc29a6ab709345c183e7dc066c409336`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-ca,cb,cc,cd,ce,cf,cg,ch,ci,cj,ck,cl,cm,cn,co,cp,cq,cr,cs,ct,cu,cv,cw,cx,cy,cz=0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+(
+    ca,
+    cb,
+    cc,
+    cd,
+    ce,
+    cf,
+    cg,
+    ch,
+    ci,
+    cj,
+    ck,
+    cl,
+    cm,
+    cn,
+    co,
+    cp,
+    cq,
+    cr,
+    cs,
+    ct,
+    cu,
+    cv,
+    cw,
+    cx,
+    cy,
+    cz,
+) = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 for x in text.lower():
-        if x in "aA":
-            ca+=1
-        elif x in "bB":
-            cb+=1
-        elif x in "cC":
-            cc+=1
-        elif x in "dD":
-            cd+=1
-        elif x in "eE":
-            ce=1
-        elif x in "fF":
-            cf=1
-        elif x in "gG":
-            cg=1
-        elif x in "hH":
-            ch=1
+    if x in "aA":
+        ca += 1
+    elif x in "bB":
+        cb += 1
+    elif x in "cC":
+        cc += 1
+    elif x in "dD":
+        cd += 1
+    elif x in "eE":
+        ce = 1
+    elif x in "fF":
+        cf = 1
+    elif x in "gG":
+        cg = 1
+    elif x in "hH":
+        ch = 1
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `4bb3d3e84cb34570af61e322a0f4b1bc`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `4bb3d3e84cb34570af61e322a0f4b1bc`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 s1="abcdefghijklmnopqrstuvwxyz"
@@ -238,7 +267,8 @@ def is_pangram(text: str) -> bool:
 
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `ed29672a878e4b17b7d96e8aa46874fd`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `ed29672a878e4b17b7d96e8aa46874fd`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def is_pangram("text: str") -> bool:
@@ -276,7 +306,8 @@ def is_pangram("text: str") -> bool:
 ```python
 ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `07a5cf895ccf4b1c97306f462f6aa45f`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `07a5cf895ccf4b1c97306f462f6aa45f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ...
@@ -305,7 +336,8 @@ if list2 in text:
     else:
         return True
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `1d10b59c709d44e399ae8dde05f25202`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `1d10b59c709d44e399ae8dde05f25202`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ch=("abcdefghijklmnopqrstuvwxyz")
@@ -336,41 +368,42 @@ if count:
   - Variant `ns_25t2_py21_1/16`, Student ID `ed8c93e034d44f1188c3ea3f93dde670`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-a=text.split()
+a = text.split()
 for i in range(len(a)):
-        for j in range(1,i+1):
-            if string.ascii_lowercase!=a[i[j]].lower():
-                return False
+    for j in range(1, i + 1):
+        if string.ascii_lowercase != a[i[j]].lower():
+            return False
 return True
-'''
+"""
     a=text.split()
     b=a.split()
     if string.ascii_lowercase!=b.lower():
         return False
     return True
-    '''
+    """
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `96743b60b9ab45259fd283585746a3b5`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `96743b60b9ab45259fd283585746a3b5`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-L1=[]
+L1 = []
 for i in text:
-        L1.append(i)
+    L1.append(i)
 while 1:
-        if 'a'in L1:
-            c=1
-        else:
-            break
-        if 'b'in L1:
-            c=1
-        else:
-            break
-        if 'c'in L1:
-            c=1
-        else:
-            break
-        if 'd'in L1:
-            c=1
+    if "a" in L1:
+        c = 1
+    else:
+        break
+    if "b" in L1:
+        c = 1
+    else:
+        break
+    if "c" in L1:
+        c = 1
+    else:
+        break
+    if "d" in L1:
+        c = 1
 # ...
 ```
 
@@ -407,7 +440,8 @@ if alphabet.issubset(set(string.ascii_lowercase)):
         text (str): The input string
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `13022dfb16ac408584dc0ce842e14241`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `13022dfb16ac408584dc0ce842e14241`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 return True
@@ -463,27 +497,28 @@ if "c" or "C" in text:
         if c==1:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `cdad58180f4442c8b0eb3c8afcdc429e`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `cdad58180f4442c8b0eb3c8afcdc429e`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-count=0
-text1=""
+count = 0
+text1 = ""
 for i in range(len(text)):
-        if text[i]==" ":
-            continue
-        else:
-            text1=text1+text[i]
-        i=i+1
-text1=text1.lower()
+    if text[i] == " ":
+        continue
+    else:
+        text1 = text1 + text[i]
+    i = i + 1
+text1 = text1.lower()
 for i in text1:
-        for j in range(len(text1)):
-            if i==text1[j]:
-                count=count+1
-            else:
-                continue
-            j=j+1
-if count==len(text1):
-        return True
+    for j in range(len(text1)):
+        if i == text1[j]:
+            count = count + 1
+        else:
+            continue
+        j = j + 1
+if count == len(text1):
+    return True
 # ...
 ```
 
@@ -499,46 +534,47 @@ if count==len(text1):
   - Variant `ns_25t2_py21_1/16`, Student ID `f53ac78539ca47a1887a752393568fc5`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-alpha=list(string.ascii_lowercase)
-new_alpha=[]
+alpha = list(string.ascii_lowercase)
+new_alpha = []
 for i in text:
-        if i!=' ':
-            if i.lower() not in new_alpha:
-                ch=i.lower()
-                new_alpha.append(ch)
-num=0
-flag='True'
-while num in range(0,len(new_alpha)):
-        if new_alpha[num] in alpha:
-            num+=1
-            continue
-        else:
-            new_alpha[num] not in alpha
-            flag='False'
-            break
-return (flag=='True')
+    if i != " ":
+        if i.lower() not in new_alpha:
+            ch = i.lower()
+            new_alpha.append(ch)
+num = 0
+flag = "True"
+while num in range(0, len(new_alpha)):
+    if new_alpha[num] in alpha:
+        num += 1
+        continue
+    else:
+        new_alpha[num] not in alpha
+        flag = "False"
+        break
+return flag == "True"
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `b820ef584b33428889a405c7bfc40459`, summary `Wrong Answer`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `b820ef584b33428889a405c7bfc40459`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-l_lower=string.ascii_lowercase
-l_text=[]
-l_text_st=''
-if text!='':
-        l_text=sorted(text.lower())
-        #print(l_text)
-        l_text_s=''.join(l_text)
+l_lower = string.ascii_lowercase
+l_text = []
+l_text_st = ""
+if text != "":
+    l_text = sorted(text.lower())
+    # print(l_text)
+    l_text_s = "".join(l_text)
 
-        for char in l_text_s:
-            if char!=' ':
-                if char not in l_text_st:
-                    l_text_st+=char
+    for char in l_text_s:
+        if char != " ":
+            if char not in l_text_st:
+                l_text_st += char
 
-        #print (l_text_st)
-        #print(l_text_f)
+    # print (l_text_st)
+    # print(l_text_f)
 
-        if l_lower==l_text_st:
-            return True
+    if l_lower == l_text_st:
+        return True
 # ...
 ```
 
@@ -572,7 +608,8 @@ if f==0:
     else:
         return True
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `121cc402713d4508bd5783968352c5b3`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `121cc402713d4508bd5783968352c5b3`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def is_pangram(text: str) -> bool:
@@ -627,7 +664,8 @@ if c >= 26:
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `3a799689719645f0b83b1137ec7f70d9`, summary `Wrong Answer`, score `67`, vector `101`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `3a799689719645f0b83b1137ec7f70d9`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
 if ('a'or'A') and ('b'or'B') and ('c'or'C') and ('d'or'D')and('e'or'E') and('f'or'F')and('g'or'G')and('h'or'H')and('i'or'I')and('j'or'J')and('k'or'K')and('l'or'L')and('m'or'M')and('n'or'N')and('O'or'O')and('p'or'P')and('q'or'Q')and('r'or'R')and('s'or'S')and('t'or'T')and('u'or'U')and('v'or'V')and('w'or'W')and('x'or'X')and('y'or'Y')and('z'or'Z') in text:
@@ -650,22 +688,23 @@ if ('a'or'A') and ('b'or'B') and ('c'or'C') and ('d'or'D')and('e'or'E') and('f'o
   - Variant `ns_25t2_py21_1/16`, Student ID `e630f84ed8e64c4899e1bbede6647941`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-alpha="abcdefghijklmnopqrstuvwxyz"
-text=text.lower()
+alpha = "abcdefghijklmnopqrstuvwxyz"
+text = text.lower()
 t = text.split()
-te=""
+te = ""
 for i in range(len(t)):
-        te=te+t[i]
+    te = te + t[i]
 flag = False
 for ch in te:
-        if ch in alpha:
-            flag =  True
-        else:
-            flag = False
-            break
+    if ch in alpha:
+        flag = True
+    else:
+        flag = False
+        break
 return flag
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `9d69e1b7725447f9ac219d3502c1ed02`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `9d69e1b7725447f9ac219d3502c1ed02`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 all_pangram='abcdefghijklmnopqrstuvwxyz'
@@ -700,7 +739,8 @@ if c>=26:
    elif c<26:
       return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `8bc7d985cd314cee9c8c8d4a2df21a90`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `8bc7d985cd314cee9c8c8d4a2df21a90`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 t=text.lower()
@@ -752,7 +792,8 @@ if len(flags)>=26:
     else :
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `35baa719b2594ed2a0f60e8dab7170c0`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `35baa719b2594ed2a0f60e8dab7170c0`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
 text=text.upper()
@@ -795,7 +836,8 @@ if sorted(set(set1))==sorted(set(set2)):
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `fd6d641b347d456fafc1d4cd1fe632ca`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `fd6d641b347d456fafc1d4cd1fe632ca`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 count = 0
@@ -830,15 +872,16 @@ flag = False
 text_new = text.lower().split()
 set_text = set(list(text.lower()))
 list_text = list(set_text)
-if ' ' in list_text:
-        list_text.remove(' ')
+if " " in list_text:
+    list_text.remove(" ")
 list_text.sort()
 comb_text = "".join(list_text)
 if comb_text in string.ascii_lowercase:
-        flag = True
+    flag = True
 return flag
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `172ea3c0403d412dadb26cf00dd355f3`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `172ea3c0403d412dadb26cf00dd355f3`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 s=text.lower()
@@ -884,18 +927,19 @@ for c in text1:
         elif c == 'h':
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `6f6656ed48884d3ab7b542372e04e052`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `6f6656ed48884d3ab7b542372e04e052`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-alphabet="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-count=0
+alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+count = 0
 for char in text:
-        if char in alphabet:
-            if char.lower() in string.ascii_lowercase:
-                count+=1
-        else:
-            count=count
-return count>=26
+    if char in alphabet:
+        if char.lower() in string.ascii_lowercase:
+            count += 1
+    else:
+        count = count
+return count >= 26
 ```
 
 ### No return / implicit `None`
@@ -931,7 +975,8 @@ def is_pangram(text: str) -> bool:
     Returns:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `2bb34e41d326441884ea4eacf5908f3d`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `2bb34e41d326441884ea4eacf5908f3d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 def is_pangram(text: str) -> bool:
@@ -980,27 +1025,28 @@ if txrt == alp:
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `8fd0c30cd8214bf48bf87a488c25c6c6`, summary `Wrong Answer`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `8fd0c30cd8214bf48bf87a488c25c6c6`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-a = 'a'
-b = 'b'
-c = 'c'
-d = 'd'
-e = 'e'
-f = 'f'
-g = 'g'
-h = 'h'
-aa = 'i'
-j = 'j'
-k = 'k'
-l = 'l'
-m = 'm'
-n= 'n'
-o = 'o'
-p ='p'
-q = 'q'
-r = 'r'
+a = "a"
+b = "b"
+c = "c"
+d = "d"
+e = "e"
+f = "f"
+g = "g"
+h = "h"
+aa = "i"
+j = "j"
+k = "k"
+l = "l"
+m = "m"
+n = "n"
+o = "o"
+p = "p"
+q = "q"
+r = "r"
 # ...
 ```
 
@@ -1022,7 +1068,8 @@ if len(string1)==26:
     else:
           return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `808f66a5b25e4d08860b576bef3323d3`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `808f66a5b25e4d08860b576bef3323d3`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 words=[]
@@ -1064,7 +1111,8 @@ if a=="":
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `c98dd2883c624e8284a9d934062ea98f`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `c98dd2883c624e8284a9d934062ea98f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 text_l = text.lower()
@@ -1099,10 +1147,11 @@ if L==A:
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `cf4836a3982648d4af6c5ae62ba22ff4`, summary `Wrong Answer`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `cf4836a3982648d4af6c5ae62ba22ff4`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-s = text.replace(' ','')
+s = text.replace(" ", "")
 t = set(s.lower())
 return len(t) == 26
 ```
@@ -1120,23 +1169,23 @@ return len(t) == 26
 
 ```python
 d = {}
-alpha_num = 'qwertyuiopasdfghjklzxcvbnm1234567890'
-alpha = 'qwertyuiopasdfghjklzxcvbnm'
+alpha_num = "qwertyuiopasdfghjklzxcvbnm1234567890"
+alpha = "qwertyuiopasdfghjklzxcvbnm"
 for i in alpha_num:
-        d[i] = 0
-text2= ''
-for i in text.split(' '):
-        text2 += i
+    d[i] = 0
+text2 = ""
+for i in text.split(" "):
+    text2 += i
 text = text2.lower()
 for letter in text:
-        d[letter] += 1
+    d[letter] += 1
 flag = True
 for i in alpha:
-        if d[i] == 0:
-            flag= False
-            break
+    if d[i] == 0:
+        flag = False
+        break
 if flag:
-        return True
+    return True
 # ...
 ```
 
@@ -1172,15 +1221,43 @@ if count>=26:
     else:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `057bdaab9b9b4553b1484efe5f75f553`, summary `Wrong Answer`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `057bdaab9b9b4553b1484efe5f75f553`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-l = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-k= []
-for ch in text.lower() :
-        if ch != " ":
-            ch.lower()
-            k.append(ch)
+l = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+]
+k = []
+for ch in text.lower():
+    if ch != " ":
+        ch.lower()
+        k.append(ch)
 r = set(k)
 m = list(r)
 m.sort()
@@ -1227,9 +1304,10 @@ if r==len(text2):
   - Variant `ns_25t2_py21_1/16`, Student ID `09d86f993c77482fa6efecce11551155`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-return str != ('')
+return str != ("")
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `20f59052c1f746198f11a2bc78ad7c0c`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `20f59052c1f746198f11a2bc78ad7c0c`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 if str:
@@ -1256,7 +1334,8 @@ if(x):
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `8ed2efc43df648acbfac2a24c5c22755`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `8ed2efc43df648acbfac2a24c5c22755`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 if text.isalpha:
@@ -1283,7 +1362,8 @@ if(is_pangram != text):
     elif(is_pangram == text):
         return True
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `91468d329f194f1fb92390d4de84e52a`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `91468d329f194f1fb92390d4de84e52a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 if text is is_pangram:
@@ -1305,13 +1385,40 @@ if text is is_pangram:
   - Variant `ns_25t2_py21_2/18`, Student ID `feb94a49970d4e16aad9df65afa8d354`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-alpha=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-for i in  range (len(text)):
-       # for j in range (alpha)
-        if text[i] not in (alpha):
-            return False
-        else:
-            True
+alpha = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+]
+for i in range(len(text)):
+    # for j in range (alpha)
+    if text[i] not in (alpha):
+        return False
+    else:
+        True
 ```
 
 ### Incorrect boolean-chain membership test (`"a" or "b" in text` / `and` chain)
@@ -1332,7 +1439,8 @@ if ascii == text :
         return True
 return False
 ```
-  - Variant `ns_25t2_py21_2/18`, Student ID `fbbd37d093eb4b94b728959d2881a780`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/18`, Student ID `fbbd37d093eb4b94b728959d2881a780`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
 if "a" and "b" and "c" and "d" and "e" and "f" and "g" and "h" and "i" and "j" and "k" and "l" and "m" and "n" and "o" and "p" and "q" and "r" and "s" and "t" and "u" and "v" and "w" and "x" and "y" and "z" and "A" and "B" and "C" and "D" and "E" and "F" and "G" and "H" and "I" and "J" and "K" and "L" and "M" and "N" and "O" and "P" and "Q" and "R" and "S" and "T" and "U" and "V" and "W" and "X" and "Y" and "Z" in text:
@@ -1424,12 +1532,12 @@ if vowels:
   - Variant `ns_25t2_py21_2/18`, Student ID `6ccec9f68114454c99fcf26c569d3d23`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-str_list=[]
+str_list = []
 for i in text:
-        if i!=" ":
-            str_list.append(i)
-new_set=set(str_list)
-return len(str_list)==len(new_set)
+    if i != " ":
+        str_list.append(i)
+new_set = set(str_list)
+return len(str_list) == len(new_set)
 ```
 
 ### Compares the input to the literal string `"text"` (placeholder-name confusion)

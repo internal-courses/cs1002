@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/5` (canonical) | 821 | 307 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/5` (canonical) |              821 |      307 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/5` | 821 | 514 | 307 | 240 | 67 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/5` |              821 |       514 |      307 |                240 |                     67 |
 
 ## Private Case Structure
 
@@ -44,30 +44,30 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/5` |
-| --- | ---: | ---: | ---: |
-| Incorrect list-end duplication logic (broad wrong-answer failure) | 67 | 21.8% | 67 |
-| Syntax / non-parseable final submission | 67 | 21.8% | 67 |
-| Runtime TypeError | 64 | 20.8% | 64 |
-| Sorts the list after adding duplicates, losing the required original order | 18 | 5.9% | 18 |
-| Runtime NameError | 16 | 5.2% | 16 |
-| No return / implicit `None` | 16 | 5.2% | 16 |
-| Runtime error (parseable final submission) | 7 | 2.3% | 7 |
-| Returns the original list unchanged instead of duplicating first/last elements | 7 | 2.3% | 7 |
-| Returns only duplicated ends and drops the middle elements of the original list | 5 | 1.6% | 5 |
-| Converts the list to a string and manipulates characters instead of duplicating list elements | 5 | 1.6% | 5 |
-| Runtime AttributeError | 5 | 1.6% | 5 |
-| Length-specific sample-case implementation (handles only a few list lengths like 2/3/5) | 5 | 1.6% | 5 |
-| Runtime TypeError from mixing multiplied element values with list concatenation | 4 | 1.3% | 4 |
-| Runtime RecursionError | 3 | 1.0% | 3 |
-| Mutates the input list by appending last then first (wrong order/position for duplicated ends) | 3 | 1.0% | 3 |
-| Runtime AttributeError from list-method misuse while building duplicated-ends output | 3 | 1.0% | 3 |
-| Reads `input()` inside function (EOF under evaluator function-call tests) | 3 | 1.0% | 3 |
-| Runtime TypeError from assigning `.append()` result (`None`) and then using it as a list | 3 | 1.0% | 3 |
-| Multiplies element values (`l[0]*2`, `l[-1]*2`) instead of duplicating list entries | 2 | 0.7% | 2 |
-| Runtime IndexError | 2 | 0.7% | 2 |
-| Hard-codes public sample outputs instead of duplicating list ends generically | 1 | 0.3% | 1 |
-| Runtime ValueError | 1 | 0.3% | 1 |
+| Pattern                                                                                        | Cluster count | % of cluster non-full | `ns_25t2_py13_2/5` |
+| ---------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Incorrect list-end duplication logic (broad wrong-answer failure)                              |            67 |                 21.8% |                 67 |
+| Syntax / non-parseable final submission                                                        |            67 |                 21.8% |                 67 |
+| Runtime TypeError                                                                              |            64 |                 20.8% |                 64 |
+| Sorts the list after adding duplicates, losing the required original order                     |            18 |                  5.9% |                 18 |
+| Runtime NameError                                                                              |            16 |                  5.2% |                 16 |
+| No return / implicit `None`                                                                    |            16 |                  5.2% |                 16 |
+| Runtime error (parseable final submission)                                                     |             7 |                  2.3% |                  7 |
+| Returns the original list unchanged instead of duplicating first/last elements                 |             7 |                  2.3% |                  7 |
+| Returns only duplicated ends and drops the middle elements of the original list                |             5 |                  1.6% |                  5 |
+| Converts the list to a string and manipulates characters instead of duplicating list elements  |             5 |                  1.6% |                  5 |
+| Runtime AttributeError                                                                         |             5 |                  1.6% |                  5 |
+| Length-specific sample-case implementation (handles only a few list lengths like 2/3/5)        |             5 |                  1.6% |                  5 |
+| Runtime TypeError from mixing multiplied element values with list concatenation                |             4 |                  1.3% |                  4 |
+| Runtime RecursionError                                                                         |             3 |                  1.0% |                  3 |
+| Mutates the input list by appending last then first (wrong order/position for duplicated ends) |             3 |                  1.0% |                  3 |
+| Runtime AttributeError from list-method misuse while building duplicated-ends output           |             3 |                  1.0% |                  3 |
+| Reads `input()` inside function (EOF under evaluator function-call tests)                      |             3 |                  1.0% |                  3 |
+| Runtime TypeError from assigning `.append()` result (`None`) and then using it as a list       |             3 |                  1.0% |                  3 |
+| Multiplies element values (`l[0]*2`, `l[-1]*2`) instead of duplicating list entries            |             2 |                  0.7% |                  2 |
+| Runtime IndexError                                                                             |             2 |                  0.7% |                  2 |
+| Hard-codes public sample outputs instead of duplicating list ends generically                  |             1 |                  0.3% |                  1 |
+| Runtime ValueError                                                                             |             1 |                  0.3% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -345,12 +345,12 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `50a9b053ea51456488590d0a4511144c`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    if len(l) == 3:
-        return [l [0] ,l[0], l[1], l [-1],l [-1]]
-    if len (l) == 2:
-        return [l[0],l[0],l[-1],l[-1]]
-    if len(l)== 5:
-        return [l[0],l[0],l[1],l[2],l[3],l[4],l[4]]
+if len(l) == 3:
+    return [l[0], l[0], l[1], l[-1], l[-1]]
+if len(l) == 2:
+    return [l[0], l[0], l[-1], l[-1]]
+if len(l) == 5:
+    return [l[0], l[0], l[1], l[2], l[3], l[4], l[4]]
 ```
 
 ### Converts the list to a string and manipulates characters instead of duplicating list elements
@@ -364,15 +364,15 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `20d24394523c440293ce5ad84512d57a`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    copy_list = []
-    i = 0
-    for _ in l:
-        i = i + 1
-    if (i < 2):
-        return None
-    for nums in l:
-        copy_list = [str(l[0]) + str(l)  + str(l[i-1])]
-    return copy_list
+copy_list = []
+i = 0
+for _ in l:
+    i = i + 1
+if i < 2:
+    return None
+for nums in l:
+    copy_list = [str(l[0]) + str(l) + str(l[i - 1])]
+return copy_list
 ```
 
 ### Runtime AttributeError
@@ -451,12 +451,12 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `cb200c2a437a4904b5f3f469f87bd159`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    n="".join(l)
-    k= n[0]*2 + n[1:-1] + n[-1]*2
-    m=n[0]*2 + n[1:-1] +n[-1]*2
-    return list(str(k)) or m
-    return f" {l[0]*2 +l[1::-1] + l[-1]*2}"
+...
+n = "".join(l)
+k = n[0] * 2 + n[1:-1] + n[-1] * 2
+m = n[0] * 2 + n[1:-1] + n[-1] * 2
+return list(str(k)) or m
+return f" {l[0] * 2 + l[1::-1] + l[-1] * 2}"
 ```
 
 ### Runtime RecursionError
@@ -471,10 +471,10 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `614b436020c543a5874200f8bf352ae2`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    for i in l:
-        double_ends([0,0,1,2,2,3,4,4,5,6,6])
-        list.append(double_ends)
+...
+for i in l:
+    double_ends([0, 0, 1, 2, 2, 3, 4, 4, 5, 6, 6])
+    list.append(double_ends)
 ```
 
 ### Mutates the input list by appending last then first (wrong order/position for duplicated ends)
@@ -488,13 +488,13 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `6af2700553604f52bbfd3acb087cbb70`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    l_new=[]
-    l_new.append(l[0])
-    l_new.append(l[0])
-    l_new.append(l[1:-1])
-    l_new.append(l[-1])
-    l_new.append(l[-1])
-    return l_new
+l_new = []
+l_new.append(l[0])
+l_new.append(l[0])
+l_new.append(l[1:-1])
+l_new.append(l[-1])
+l_new.append(l[-1])
+return l_new
 ```
 
 ### Runtime AttributeError from list-method misuse while building duplicated-ends output
@@ -540,16 +540,16 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `d27badb51aae4f91914b66058840e516`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    l = list(input())
-    list1 = list(l)
-    if len(l) >= 2:
-        a = list1[0]
-        b = list1[int(len(l))]
-        list1.add(0 , a)
-        list1.add(len(l) - 1 , b)
-        result = list1
-        return(result)
+...
+l = list(input())
+list1 = list(l)
+if len(l) >= 2:
+    a = list1[0]
+    b = list1[int(len(l))]
+    list1.add(0, a)
+    list1.add(len(l) - 1, b)
+    result = list1
+    return result
 ```
 
 ### Runtime TypeError from assigning `.append()` result (`None`) and then using it as a list
@@ -563,20 +563,20 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `f6c4043e0ba14603afcda2ccd4186ae2`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    new_list=[]
-    new_list.append(l[0])
-    '''string=""
-    for i in l:
-        for i in range(0,-1):
-            string=string,i
-        print (string)'''
-    for i in l:
-        new_list.append(l[i])
-    new_list.append(l[-1])
-    '''for i in l:
-        new_list=l.append(l[0])
-        new_list=l.append(l[-1])'''
-    return new_list
+new_list = []
+new_list.append(l[0])
+"""string=""
+for i in l:
+    for i in range(0,-1):
+        string=string,i
+    print (string)"""
+for i in l:
+    new_list.append(l[i])
+new_list.append(l[-1])
+"""for i in l:
+    new_list=l.append(l[0])
+    new_list=l.append(l[-1])"""
+return new_list
 ```
 
 ### Multiplies element values (`l[0]*2`, `l[-1]*2`) instead of duplicating list entries
@@ -590,11 +590,11 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `243c453fe02d4762aa4454ab69315171`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    new_l =[]
-    new_l.append(l)
-    for i in l:
-        new_l = [l[0]*2 , i,  l[-1]*2]
-    return new_l
+new_l = []
+new_l.append(l)
+for i in l:
+    new_l = [l[0] * 2, i, l[-1] * 2]
+return new_l
 ```
 
 ### Runtime IndexError
@@ -609,19 +609,19 @@ def double_ends(l: list) -> list:
   - Variant `ns_25t2_py13_2/5`, Student ID `c536134ab8e34018926f369f8c716f52`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    n = len(l)
-    num = []
-    if len(l)>=2 :
-        for i in range(0,n):
-            if i==0:
-                num[i] = l[i]
-            elif i ==n-1:
-                num[i+1] = l[i]
-            else:
-                num[i] = l[i]
-        return num
-    else:
-        return 0
+n = len(l)
+num = []
+if len(l) >= 2:
+    for i in range(0, n):
+        if i == 0:
+            num[i] = l[i]
+        elif i == n - 1:
+            num[i + 1] = l[i]
+        else:
+            num[i] = l[i]
+    return num
+else:
+    return 0
 ```
 
 ### Hard-codes public sample outputs instead of duplicating list ends generically

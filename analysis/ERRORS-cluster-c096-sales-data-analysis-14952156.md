@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py22_1/19` (canonical) | 546 | 426 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py22_1/19` (canonical) |              546 |      426 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py22_1/19` | 546 | 120 | 426 | 362 | 64 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py22_1/19` |              546 |       120 |      426 |                362 |                     64 |
 
 ## Private Case Structure
 
@@ -45,33 +45,33 @@ Private-case vectors in this report are 4-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py22_1/19` |
-| --- | ---: | ---: | ---: |
-| Implements only the `total_revenue` task branch; other required task branches are missing | 71 | 16.7% | 71 |
-| Syntax / non-parseable final submission | 64 | 15.0% | 64 |
-| Computes average product price but does not round to 2 decimals | 45 | 10.6% | 45 |
-| Implements only `total_revenue` + `product_wise_total_units_and_revenue` (top/average tasks missing) | 41 | 9.6% | 41 |
-| Omits the `average_product_price` branch after implementing other sales-analysis tasks | 34 | 8.0% | 34 |
-| No return / implicit `None` | 33 | 7.7% | 33 |
-| Only one task branch is reliable; other sales-analysis branches are incomplete or hidden-case specific | 28 | 6.6% | 28 |
-| Runtime NameError from misspelled helper/accumulator variables in task branches | 19 | 4.5% | 19 |
-| Task dispatch and sales aggregation logic are broadly incorrect across all required tasks | 12 | 2.8% | 12 |
-| Runtime TypeError | 11 | 2.6% | 11 |
-| Runtime error (parseable final submission) | 10 | 2.3% | 10 |
-| Task-dispatch string mismatch (branch names do not exactly match evaluator `task` values) | 9 | 2.1% | 9 |
-| A branch-name mismatch leaves one required task unreachable while others are implemented | 7 | 1.6% | 7 |
-| Runtime KeyError from wrong sales-record keys or malformed per-product summaries | 6 | 1.4% | 6 |
-| Runtime TypeError from inconsistent summary container types (tuple/list/set mixups) | 6 | 1.4% | 6 |
-| Aggregation helpers exist, but one advanced task (top-selling tie-break or average-price) is still wrong | 5 | 1.2% | 5 |
-| Hard-codes public-sample product IDs (`P101/P102/P103`) so hidden product IDs fail | 5 | 1.2% | 5 |
-| Average-price branch divides by zero because units are aggregated incorrectly for some products | 4 | 0.9% | 4 |
-| Hard-codes the public sample size/positions (`sales_data[0]..[3]`) instead of aggregating arbitrary input length | 3 | 0.7% | 3 |
-| Runtime ValueError | 3 | 0.7% | 3 |
-| First three tasks mostly work, but `average_product_price` is incorrect on hidden cases | 3 | 0.7% | 3 |
-| Runtime AttributeError | 2 | 0.5% | 2 |
-| Runtime IndexError | 2 | 0.5% | 2 |
-| Uses `set(product_id)` / fixed buckets for aggregation, leading to missing or unstable product summaries | 2 | 0.5% | 2 |
-| Other wrong-answer logic pattern (residual) | 1 | 0.2% | 1 |
+| Pattern                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py22_1/19` |
+| ---------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Implements only the `total_revenue` task branch; other required task branches are missing                        |            71 |                 16.7% |                  71 |
+| Syntax / non-parseable final submission                                                                          |            64 |                 15.0% |                  64 |
+| Computes average product price but does not round to 2 decimals                                                  |            45 |                 10.6% |                  45 |
+| Implements only `total_revenue` + `product_wise_total_units_and_revenue` (top/average tasks missing)             |            41 |                  9.6% |                  41 |
+| Omits the `average_product_price` branch after implementing other sales-analysis tasks                           |            34 |                  8.0% |                  34 |
+| No return / implicit `None`                                                                                      |            33 |                  7.7% |                  33 |
+| Only one task branch is reliable; other sales-analysis branches are incomplete or hidden-case specific           |            28 |                  6.6% |                  28 |
+| Runtime NameError from misspelled helper/accumulator variables in task branches                                  |            19 |                  4.5% |                  19 |
+| Task dispatch and sales aggregation logic are broadly incorrect across all required tasks                        |            12 |                  2.8% |                  12 |
+| Runtime TypeError                                                                                                |            11 |                  2.6% |                  11 |
+| Runtime error (parseable final submission)                                                                       |            10 |                  2.3% |                  10 |
+| Task-dispatch string mismatch (branch names do not exactly match evaluator `task` values)                        |             9 |                  2.1% |                   9 |
+| A branch-name mismatch leaves one required task unreachable while others are implemented                         |             7 |                  1.6% |                   7 |
+| Runtime KeyError from wrong sales-record keys or malformed per-product summaries                                 |             6 |                  1.4% |                   6 |
+| Runtime TypeError from inconsistent summary container types (tuple/list/set mixups)                              |             6 |                  1.4% |                   6 |
+| Aggregation helpers exist, but one advanced task (top-selling tie-break or average-price) is still wrong         |             5 |                  1.2% |                   5 |
+| Hard-codes public-sample product IDs (`P101/P102/P103`) so hidden product IDs fail                               |             5 |                  1.2% |                   5 |
+| Average-price branch divides by zero because units are aggregated incorrectly for some products                  |             4 |                  0.9% |                   4 |
+| Hard-codes the public sample size/positions (`sales_data[0]..[3]`) instead of aggregating arbitrary input length |             3 |                  0.7% |                   3 |
+| Runtime ValueError                                                                                               |             3 |                  0.7% |                   3 |
+| First three tasks mostly work, but `average_product_price` is incorrect on hidden cases                          |             3 |                  0.7% |                   3 |
+| Runtime AttributeError                                                                                           |             2 |                  0.5% |                   2 |
+| Runtime IndexError                                                                                               |             2 |                  0.5% |                   2 |
+| Uses `set(product_id)` / fixed buckets for aggregation, leading to missing or unstable product summaries         |             2 |                  0.5% |                   2 |
+| Other wrong-answer logic pattern (residual)                                                                      |             1 |                  0.2% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -397,22 +397,22 @@ def analyse_sales_data(sales_data, task):
   - Variant `ns_25t2_py22_1/19`, Student ID `52f1b2d7dc6b434d8b8d482ddfa400e4`, summary `Runtime Error`, score `25`, vector `0100`
 
 ```python
-    if task == 'total_revenue':
-        total=[]
-        for item in sales_data:
-            total.append(item['revenue'])
-    return sum(total)
-    if task=='top_selling_product':
-        assumed= sales_data[0]
-        for item in sales_data:
-            if item['units_sold']>assumed['units_sold']:
-                assumed=item
-        if len(assumed['product_id'])>4:
-            more_rev=assumed[0]
-            for item in assumed:
-                if item['revenue']>more_rev['revenue']:
-                    more_rev=item
-    return more_rev['product_id']
+if task == "total_revenue":
+    total = []
+    for item in sales_data:
+        total.append(item["revenue"])
+return sum(total)
+if task == "top_selling_product":
+    assumed = sales_data[0]
+    for item in sales_data:
+        if item["units_sold"] > assumed["units_sold"]:
+            assumed = item
+    if len(assumed["product_id"]) > 4:
+        more_rev = assumed[0]
+        for item in assumed:
+            if item["revenue"] > more_rev["revenue"]:
+                more_rev = item
+return more_rev["product_id"]
 ```
 
 ### Task-dispatch string mismatch (branch names do not exactly match evaluator `task` values)

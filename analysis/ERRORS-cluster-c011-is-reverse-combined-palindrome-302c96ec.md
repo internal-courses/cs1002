@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/15` | 673 | 150 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/16` (canonical) | 695 | 147 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/15`             |              673 |      150 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/16` (canonical) |              695 |      147 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/15` | 673 | 523 | 150 | 129 | 21 |
-| `ns_25t2_py21_2/16` | 695 | 548 | 147 | 125 | 22 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/15` |              673 |       523 |      150 |                129 |                     21 |
+| `ns_25t2_py21_2/16` |              695 |       548 |      147 |                125 |                     22 |
 
 ## Private Case Structure
 
@@ -48,33 +48,33 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/15` | `ns_25t2_py21_2/16` |
-| --- | ---: | ---: | ---: | ---: |
-| Incorrect construction/check of reversed+combined string (broad logic failure) | 56 | 18.9% | 27 | 29 |
-| Syntax / non-parseable final submission | 43 | 14.5% | 21 | 22 |
-| Partial/incorrect reverse+combine logic (close but wrong construction) | 20 | 6.7% | 12 | 8 |
-| Skeleton placeholder `...` left in function | 18 | 6.1% | 4 | 14 |
-| Runtime TypeError | 16 | 5.4% | 11 | 5 |
-| Checks palindrome on one string (or wrong intermediate) instead of reversed(s1)+s2 | 15 | 5.1% | 8 | 7 |
-| Hard-coded index/slice comparisons (works only for specific lengths) | 14 | 4.7% | 10 | 4 |
-| Runtime NameError | 14 | 4.7% | 8 | 6 |
-| Other wrong-answer logic pattern (residual) | 13 | 4.4% | 3 | 10 |
-| Returns inside loop before completing full check/computation | 12 | 4.0% | 7 | 5 |
-| Always returns `False` (constant output) | 11 | 3.7% | 5 | 6 |
-| Concatenates `s1 + s2` without reversing the first string | 10 | 3.4% | 4 | 6 |
-| Uses substring/membership check instead of palindrome equality | 8 | 2.7% | 2 | 6 |
-| Runtime AttributeError | 8 | 2.7% | 4 | 4 |
-| No return / implicit `None` | 7 | 2.4% | 4 | 3 |
-| Residual promoted: inverted palindrome condition (`!=`) | 6 | 2.0% | 2 | 4 |
-| Reverses first string but concatenates in wrong order (`s2 + reversed(s1)`) | 5 | 1.7% | 2 | 3 |
-| Prints output but does not return required value | 4 | 1.3% | 3 | 1 |
-| Compares only partial slices instead of full reversed+combined palindrome | 4 | 1.3% | 3 | 1 |
-| Inverts palindrome condition (`!=` instead of `==`) | 3 | 1.0% | 2 | 1 |
-| Always returns `True` (constant output) | 3 | 1.0% | 3 | 0 |
-| Returns string/text instead of boolean result | 2 | 0.7% | 1 | 1 |
-| Runtime IndexError | 2 | 0.7% | 1 | 1 |
-| Runtime error (parseable final submission) | 2 | 0.7% | 2 | 0 |
-| Time Limit Exceeded | 1 | 0.3% | 1 | 0 |
+| Pattern                                                                            | Cluster count | % of cluster non-full | `ns_25t2_py21_1/15` | `ns_25t2_py21_2/16` |
+| ---------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Incorrect construction/check of reversed+combined string (broad logic failure)     |            56 |                 18.9% |                  27 |                  29 |
+| Syntax / non-parseable final submission                                            |            43 |                 14.5% |                  21 |                  22 |
+| Partial/incorrect reverse+combine logic (close but wrong construction)             |            20 |                  6.7% |                  12 |                   8 |
+| Skeleton placeholder `...` left in function                                        |            18 |                  6.1% |                   4 |                  14 |
+| Runtime TypeError                                                                  |            16 |                  5.4% |                  11 |                   5 |
+| Checks palindrome on one string (or wrong intermediate) instead of reversed(s1)+s2 |            15 |                  5.1% |                   8 |                   7 |
+| Hard-coded index/slice comparisons (works only for specific lengths)               |            14 |                  4.7% |                  10 |                   4 |
+| Runtime NameError                                                                  |            14 |                  4.7% |                   8 |                   6 |
+| Other wrong-answer logic pattern (residual)                                        |            13 |                  4.4% |                   3 |                  10 |
+| Returns inside loop before completing full check/computation                       |            12 |                  4.0% |                   7 |                   5 |
+| Always returns `False` (constant output)                                           |            11 |                  3.7% |                   5 |                   6 |
+| Concatenates `s1 + s2` without reversing the first string                          |            10 |                  3.4% |                   4 |                   6 |
+| Uses substring/membership check instead of palindrome equality                     |             8 |                  2.7% |                   2 |                   6 |
+| Runtime AttributeError                                                             |             8 |                  2.7% |                   4 |                   4 |
+| No return / implicit `None`                                                        |             7 |                  2.4% |                   4 |                   3 |
+| Residual promoted: inverted palindrome condition (`!=`)                            |             6 |                  2.0% |                   2 |                   4 |
+| Reverses first string but concatenates in wrong order (`s2 + reversed(s1)`)        |             5 |                  1.7% |                   2 |                   3 |
+| Prints output but does not return required value                                   |             4 |                  1.3% |                   3 |                   1 |
+| Compares only partial slices instead of full reversed+combined palindrome          |             4 |                  1.3% |                   3 |                   1 |
+| Inverts palindrome condition (`!=` instead of `==`)                                |             3 |                  1.0% |                   2 |                   1 |
+| Always returns `True` (constant output)                                            |             3 |                  1.0% |                   3 |                   0 |
+| Returns string/text instead of boolean result                                      |             2 |                  0.7% |                   1 |                   1 |
+| Runtime IndexError                                                                 |             2 |                  0.7% |                   1 |                   1 |
+| Runtime error (parseable final submission)                                         |             2 |                  0.7% |                   2 |                   0 |
+| Time Limit Exceeded                                                                |             1 |                  0.3% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -93,17 +93,20 @@ Residual `Other` after second-pass re-clustering: `13/297` (`4.4%`)
 
 ```python
 def palindrome(s1):
-        if len(s1)  <= 1:
-            return True
-        elif s1[0] != s1[-1]:
-            return False
-        else:
-            return palindrome(s1[1:-1])
+    if len(s1) <= 1:
+        return True
+    elif s1[0] != s1[-1]:
+        return False
+    else:
+        return palindrome(s1[1:-1])
+
+
 def combined_palindrome(s1: str, s2: str) -> str:
-        # concatenation string with palindrome
-        return str(palindrome + s2)
+    # concatenation string with palindrome
+    return str(palindrome + s2)
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `bb885a8f7b8442f59098a8df0869c95f`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `bb885a8f7b8442f59098a8df0869c95f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 if s1=='mad'and s2=='am':
@@ -155,24 +158,25 @@ def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
     Returns:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `224f568bdc8140bd9ac55e1c97146e79`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `224f568bdc8140bd9ac55e1c97146e79`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 str(input(s1, s2))
 Reverses = s1
 Concatenates = Reverses(s1)
-s1 = 'mad'
-s2 = 'am'
+s1 = "mad"
+s2 = "am"
 Returns
 is_reverse_combined_palindrome("mad", "am")
 print(false)
-s1 ='dam'
-s2 = 'am'
+s1 = "dam"
+s2 = "am"
 Returns
 is_reverse_combined_palindrome("dam", "am")
 print(true)
-s1 = 'abc'
-s2 = 'cba'
+s1 = "abc"
+s2 = "cba"
 Returns
 is_reverse_combined_palindrome("abc", "cba")
 print(false)
@@ -211,7 +215,8 @@ if s1+s2[1:3:-1]== s1+s2 [1:3:-1]:
     Args:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `6ea8081d82e24fb2b6e26ef2e3617a92`, summary `Wrong Answer`, score `67`, vector `101`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `6ea8081d82e24fb2b6e26ef2e3617a92`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
 s=s1[::-1]+s2
@@ -243,7 +248,8 @@ if len(s1)%2==1 and len(s2)%2==1:
 ```python
 ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `0901623cd89e47da95fd58df3f93d6fe`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `0901623cd89e47da95fd58df3f93d6fe`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ...
@@ -282,7 +288,8 @@ def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
     Returns:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `cb0b301e588b4705ad103a31494b7e20`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `cb0b301e588b4705ad103a31494b7e20`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 s3=s1[-1::]
@@ -316,7 +323,8 @@ if result == is_reverse_combined_palindrome:
     else:
      return False
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `ed29672a878e4b17b7d96e8aa46874fd`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `ed29672a878e4b17b7d96e8aa46874fd`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 word1=s1[::-1]
@@ -360,7 +368,8 @@ if joinnewst[0]==joinnewst[-1]:
     Given two strings,
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `673556f1cb1e42c480f59fff2b1dada6`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `673556f1cb1e42c480f59fff2b1dada6`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 s3 = s1[-1:]
@@ -404,7 +413,8 @@ def is_pangram(text: str) -> bool:
     Returns:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `dda13d0f14144c329b3ca3bd892bef67`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `dda13d0f14144c329b3ca3bd892bef67`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 def is_pangram(text: str) -> bool:
@@ -443,20 +453,21 @@ def is_pangram(text: str) -> bool:
 s1 = s1.lower()
 s2 = s2.lower()
 if s1 == s2[::1]:
-        return True
+    return True
 if s2 == s1[::1]:
-        return True
+    return True
 return False
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `559b0076690f4dd89db5f119b163cb84`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `559b0076690f4dd89db5f119b163cb84`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-rev=""
+rev = ""
 for i in s1:
-        rev=i+rev
+    rev = i + rev
 if rev == s1:
-        if rev in s2:
-            return True
+    if rev in s2:
+        return True
 return False
 ```
 
@@ -493,7 +504,8 @@ for i in range(s):
     else:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `036aa43da5a44d268405a66d694cf08b`, summary `Wrong Answer`, score `33`, vector `100`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `036aa43da5a44d268405a66d694cf08b`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
 d = len(s1)
@@ -544,7 +556,8 @@ if a in s1:
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `55ffd102b58d42d3a0bd06345493b852`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `55ffd102b58d42d3a0bd06345493b852`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ...
@@ -594,7 +607,8 @@ if not len(s2)>len(s1):
             com = rev_s1 + s2
             return com == com[:-1]
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `30dd6be2052c4bbab60ec53ef584b20c`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `30dd6be2052c4bbab60ec53ef584b20c`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 a =[]
@@ -623,19 +637,20 @@ if (g == h):
   - Variant `ns_25t2_py21_1/15`, Student ID `ecc713ccbae3464ea681bf4d4e6f5372`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-str1=s1[::-1]
-comb=[]
+str1 = s1[::-1]
+comb = []
 for i in range(len(str1)):
-        if str1[i] in s2:
-            comb.append(str1[i])
+    if str1[i] in s2:
+        comb.append(str1[i])
 for i in range(len(comb)):
-        if comb[0]==comb[-1]:
-            r=True
-        else:
-            r=False
+    if comb[0] == comb[-1]:
+        r = True
+    else:
+        r = False
 return r
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `13022dfb16ac408584dc0ce842e14241`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `13022dfb16ac408584dc0ce842e14241`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
 s_1 = ""
@@ -679,19 +694,20 @@ reverse_combinded = s1_reverse.add("am")
 is_reverse_combined_palindrome = reverse_combinded.reversed("madam")
 return is_reverse_combined_palindrome
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `f0f0d05336f042cd82b580c8b121c274`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `f0f0d05336f042cd82b580c8b121c274`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 ...
-val=reversed(s1)
-final=val.join(s2)
-found=False
-temp=reversed(final)
-if(temp!=final):
-        found=True
+val = reversed(s1)
+final = val.join(s2)
+found = False
+temp = reversed(final)
+if temp != final:
+    found = True
 if found:
-        return 'False'
-return'True'
+    return "False"
+return "True"
 ```
 
 ### No return / implicit `None`
@@ -727,7 +743,8 @@ def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
     Returns:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `62700b5d6ef0416a88787cab610f3910`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `62700b5d6ef0416a88787cab610f3910`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
@@ -765,7 +782,8 @@ def is_reverse_combined_palindrome(s1: str, s2: str) -> str:
 ```python
 return s1 in s2 or s2 in s1
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `1a146deb52ff45f98e5e874c4ce232c6`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `1a146deb52ff45f98e5e874c4ce232c6`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 if s1 in s2:
@@ -794,7 +812,8 @@ if final_string== final_string[::-1]:
     else:
         return False
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `8c5fdf4f2e3549d293c7df05f1ccc301`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `8c5fdf4f2e3549d293c7df05f1ccc301`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
 ...
@@ -832,12 +851,13 @@ if( str(combined) == str(reverse_combined) ):
     else:
         print(False)
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `7944f38c89bd46308bf7d29766edd804`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `7944f38c89bd46308bf7d29766edd804`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-s1_new=list(s1)
-s1_rev=s1_new[::-1]
-s1_new_o=str(s1_rev)+s2
+s1_new = list(s1)
+s1_rev = s1_new[::-1]
+s1_new_o = str(s1_rev) + s2
 print(s1_new_o)
 ```
 
@@ -861,7 +881,8 @@ if fi==se:
     else:
         return True
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `f07265aa46c1447e9898a20d45291be1`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `f07265aa46c1447e9898a20d45291be1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 revese_str1 = s1[::-1]
@@ -884,15 +905,16 @@ if s2 == con_str1 or s2 == s1:
   - Variant `ns_25t2_py21_1/15`, Student ID `e943f7adcdde4195a98d2b9c3ff3e25d`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-s=((s1+s2).strip()).lower()
-return s!=s[::-1]
+s = ((s1 + s2).strip()).lower()
+return s != s[::-1]
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `f0501aa46e634cb9a92ea777b286b21e`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `f0501aa46e634cb9a92ea777b286b21e`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ...
 new = s1[:-1] + s2
-return len(new)% 2 == 0 and new != new[::-1]
+return len(new) % 2 == 0 and new != new[::-1]
 ```
 
 ### Always returns `True` (constant output)
@@ -941,9 +963,10 @@ for i in range(math.floor(n/2)):
   - Variant `ns_25t2_py21_1/15`, Student ID `0a0dc21d68ce4452b90287c3d5821f07`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-return f"{ s1[1:] + s2[1:2]}"
+return f"{s1[1:] + s2[1:2]}"
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `c677ab3638bb4ffc8aedd80396f80d8d`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `c677ab3638bb4ffc8aedd80396f80d8d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 reverse_s1 = s1[::-1]
@@ -967,33 +990,34 @@ if combined_string == combined_string [::-1]:
   - Variant `ns_25t2_py21_1/15`, Student ID `bee6eac0421a43c3bbad0423b13e6898`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-list1= list (s1)
-list2= list (s2)
-n1= len (list1)
-n2= len (list2)
-list3=[]
+list1 = list(s1)
+list2 = list(s2)
+n1 = len(list1)
+n2 = len(list2)
+list3 = []
 for i in range(n1):
-        list1[i] = list1[n1-i]
-        list3.append(s[i])
-list4= list3.append(list2)
-for i in range (n1+n2):
-        if list4[i]== list4[(n1+n2)-i]:
-            return True
-        else:
-            False
+    list1[i] = list1[n1 - i]
+    list3.append(s[i])
+list4 = list3.append(list2)
+for i in range(n1 + n2):
+    if list4[i] == list4[(n1 + n2) - i]:
+        return True
+    else:
+        False
 ```
-  - Variant `ns_25t2_py21_2/16`, Student ID `e3fb3b6c5f1744ecb50137390b4f05f9`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/16`, Student ID `e3fb3b6c5f1744ecb50137390b4f05f9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 ...
-new_s1 = s1[-1:: ]
+new_s1 = s1[-1::]
 s = new_s1 + s2
 n = len(s)
 for i in range(n):
-        if s[i] == s[n-i]:
-           print(True)
-        else:
-             print(False)
+    if s[i] == s[n - i]:
+        print(True)
+    else:
+        print(False)
 ```
 
 ### Runtime error (parseable final submission)
@@ -1009,11 +1033,11 @@ for i in range(n):
   - Variant `ns_25t2_py21_1/15`, Student ID `89bd731cfbff410aa35196f9d15a683c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-r1=s1.reverse()
-r2=r1+s2
-r3=r2.reverse()
-if(r2==r3):
-       return True
+r1 = s1.reverse()
+r2 = r1 + s2
+r3 = r2.reverse()
+if r2 == r3:
+    return True
 ```
 
 ### Time Limit Exceeded

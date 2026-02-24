@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py14_1/7` (canonical) | 683 | 277 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py14_1/7` (canonical) |              683 |      277 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py14_1/7` | 683 | 406 | 277 | 217 | 60 |
-| `ns_25t3_py14_2/7` | 0 | 0 | 0 | 0 | 0 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py14_1/7` |              683 |       406 |      277 |                217 |                     60 |
+| `ns_25t3_py14_2/7` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,34 +47,34 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py14_1/7` | `ns_25t3_py14_2/7` |
-| --- | ---: | ---: | ---: | ---: |
-| Incorrect divisibility-by-last-two-digits logic (broad wrong-answer failure) | 60 | 21.7% | 60 | 0 |
-| Syntax / non-parseable final submission | 60 | 21.7% | 60 | 0 |
-| Runtime ZeroDivisionError from checking divisibility before guarding against zero in the last two digits | 41 | 14.8% | 41 | 0 |
-| Runtime TypeError | 16 | 5.8% | 16 | 0 |
-| Runtime TypeError from treating `num` as a string/sequence (or mixing string and int arithmetic) | 15 | 5.4% | 15 | 0 |
-| Always returns `False` (constant output) | 13 | 4.7% | 13 | 0 |
-| No return / implicit `None` | 12 | 4.3% | 12 | 0 |
-| Runtime NameError | 11 | 4.0% | 11 | 0 |
-| Returns after checking only part of the digits/conditions (loop exits before completing the divisibility check) | 8 | 2.9% | 8 | 0 |
-| Always returns `True` (constant output) | 6 | 2.2% | 6 | 0 |
-| Runtime ValueError | 5 | 1.8% | 5 | 0 |
-| Partially correct divisibility logic with operator/condition bug (`or` vs `and`, wrong digit, or quotient truthiness) | 4 | 1.4% | 4 | 0 |
-| Last-digit extraction bug: one of the two divisibility checks uses the wrong digit/expression | 4 | 1.4% | 4 | 0 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 3 | 1.1% | 3 | 0 |
-| Runtime error (parseable final submission) | 3 | 1.1% | 3 | 0 |
-| Other wrong-answer logic pattern (residual) | 3 | 1.1% | 3 | 0 |
-| Uses bitwise `&` in the divisibility condition (operator/precedence bug) | 3 | 1.1% | 3 | 0 |
-| Checks the same digit twice instead of testing divisibility by both last digits | 2 | 0.7% | 2 | 0 |
-| Extracts the wrong digits (`%1000`/`//100`) and uses the hundreds digit instead of the tens digit | 1 | 0.4% | 1 | 0 |
-| Only checks whether the last two digits are non-zero, then returns `True` without testing actual divisibility | 1 | 0.4% | 1 | 0 |
-| Uses the first two digits of the string instead of the last two digits | 1 | 0.4% | 1 | 0 |
-| String extraction is correct, but divisibility is checked with quotient truthiness instead of `% ... == 0` | 1 | 0.4% | 1 | 0 |
-| Runtime IndexError from invalid indexing while extracting the last two digits | 1 | 0.4% | 1 | 0 |
-| Uses quotient truthiness (`num//a`, `num//b`) instead of remainder checks (`num % a == 0`) | 1 | 0.4% | 1 | 0 |
-| Runtime AttributeError | 1 | 0.4% | 1 | 0 |
-| Runtime IndexError | 1 | 0.4% | 1 | 0 |
+| Pattern                                                                                                               | Cluster count | % of cluster non-full | `ns_25t3_py14_1/7` | `ns_25t3_py14_2/7` |
+| --------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: | -----------------: |
+| Incorrect divisibility-by-last-two-digits logic (broad wrong-answer failure)                                          |            60 |                 21.7% |                 60 |                  0 |
+| Syntax / non-parseable final submission                                                                               |            60 |                 21.7% |                 60 |                  0 |
+| Runtime ZeroDivisionError from checking divisibility before guarding against zero in the last two digits              |            41 |                 14.8% |                 41 |                  0 |
+| Runtime TypeError                                                                                                     |            16 |                  5.8% |                 16 |                  0 |
+| Runtime TypeError from treating `num` as a string/sequence (or mixing string and int arithmetic)                      |            15 |                  5.4% |                 15 |                  0 |
+| Always returns `False` (constant output)                                                                              |            13 |                  4.7% |                 13 |                  0 |
+| No return / implicit `None`                                                                                           |            12 |                  4.3% |                 12 |                  0 |
+| Runtime NameError                                                                                                     |            11 |                  4.0% |                 11 |                  0 |
+| Returns after checking only part of the digits/conditions (loop exits before completing the divisibility check)       |             8 |                  2.9% |                  8 |                  0 |
+| Always returns `True` (constant output)                                                                               |             6 |                  2.2% |                  6 |                  0 |
+| Runtime ValueError                                                                                                    |             5 |                  1.8% |                  5 |                  0 |
+| Partially correct divisibility logic with operator/condition bug (`or` vs `and`, wrong digit, or quotient truthiness) |             4 |                  1.4% |                  4 |                  0 |
+| Last-digit extraction bug: one of the two divisibility checks uses the wrong digit/expression                         |             4 |                  1.4% |                  4 |                  0 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                             |             3 |                  1.1% |                  3 |                  0 |
+| Runtime error (parseable final submission)                                                                            |             3 |                  1.1% |                  3 |                  0 |
+| Other wrong-answer logic pattern (residual)                                                                           |             3 |                  1.1% |                  3 |                  0 |
+| Uses bitwise `&` in the divisibility condition (operator/precedence bug)                                              |             3 |                  1.1% |                  3 |                  0 |
+| Checks the same digit twice instead of testing divisibility by both last digits                                       |             2 |                  0.7% |                  2 |                  0 |
+| Extracts the wrong digits (`%1000`/`//100`) and uses the hundreds digit instead of the tens digit                     |             1 |                  0.4% |                  1 |                  0 |
+| Only checks whether the last two digits are non-zero, then returns `True` without testing actual divisibility         |             1 |                  0.4% |                  1 |                  0 |
+| Uses the first two digits of the string instead of the last two digits                                                |             1 |                  0.4% |                  1 |                  0 |
+| String extraction is correct, but divisibility is checked with quotient truthiness instead of `% ... == 0`            |             1 |                  0.4% |                  1 |                  0 |
+| Runtime IndexError from invalid indexing while extracting the last two digits                                         |             1 |                  0.4% |                  1 |                  0 |
+| Uses quotient truthiness (`num//a`, `num//b`) instead of remainder checks (`num % a == 0`)                            |             1 |                  0.4% |                  1 |                  0 |
+| Runtime AttributeError                                                                                                |             1 |                  0.4% |                  1 |                  0 |
+| Runtime IndexError                                                                                                    |             1 |                  0.4% |                  1 |                  0 |
 
 ## Re-clustered Pattern Details
 
@@ -205,12 +205,14 @@ def is_divisible_by_last_two_digits(num: int):
     Returns:
         bool: True if divisible by both last two digits, False otherwise.
     """
-is_divisible_by_last_two_digits=(1464)
-last_2=is_divisible_by_last_two_digits%100
-tens = last_2//10
-ones = last_2%10
+
+
+is_divisible_by_last_two_digits = 1464
+last_2 = is_divisible_by_last_two_digits % 100
+tens = last_2 // 10
+ones = last_2 % 10
 if tens == 0 or ones == 0:
-    print (False)
+    print(False)
 # ...
 ```
 
@@ -257,16 +259,16 @@ if tens == 0 or ones == 0:
   - Variant `ns_25t3_py14_1/7`, Student ID `758419b4835d43fba0522fc5237c4f46`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    num = ("str")
-    n = num.split()
-    last = num[::-1]
-    last2nd = num[::-2]
-    if len(num) >= 2:
-        if n[::-1] == 0:
-            return False
-        if n[::-2] == 0:
-            return False
-    return False
+num = "str"
+n = num.split()
+last = num[::-1]
+last2nd = num[::-2]
+if len(num) >= 2:
+    if n[::-1] == 0:
+        return False
+    if n[::-2] == 0:
+        return False
+return False
 ```
 
 ### No return / implicit `None`
@@ -361,9 +363,11 @@ def is_divisible_by_last_two_digits(num: int):
     Returns:
         bool: True if divisible by both last two digits, False otherwise.
     """
+
+
 def check_divisibility_by_last_two_digits(num):
-    digits=[int(d) for d in str(num)[-2:]]
-    d2=(num//10) % 10
+    digits = [int(d) for d in str(num)[-2:]]
+    d2 = (num // 10) % 10
     if d1 == 0 or d2 == 0:
         return False
     return num % d1 == 0 and num % d2 == 0
@@ -382,14 +386,14 @@ def check_divisibility_by_last_two_digits(num):
   - Variant `ns_25t3_py14_1/7`, Student ID `0fe1018ac97746cfae52a73a5c00a45d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    a=num%10
-    b=(num%100)-a
-    if(a*b==0):
-        return(False)
-    elif(num%a!=0 or num%b!=0):
-        return(False)
-    else:
-        return(True)
+a = num % 10
+b = (num % 100) - a
+if a * b == 0:
+    return False
+elif num % a != 0 or num % b != 0:
+    return False
+else:
+    return True
 ```
 
 ### Runtime ValueError
@@ -437,21 +441,21 @@ if (num1 != 0 and num3 != 0):
   - Variant `ns_25t3_py14_1/7`, Student ID `e195b88c29214a53b0866870be98f49d`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    n= num % 10
-    ln= n % 10
-    if num !=0:
-        if (n == 0) :
-           return False
-        if (ln == 0):
-            return 0
-        if num % n !=0:
-            return False
-        if num % ln != 0:
-            return False
-        elif(num %n ==0):
-            return True
-        elif(num % ln ==0):
-            return True
+n = num % 10
+ln = n % 10
+if num != 0:
+    if n == 0:
+        return False
+    if ln == 0:
+        return 0
+    if num % n != 0:
+        return False
+    if num % ln != 0:
+        return False
+    elif num % n == 0:
+        return True
+    elif num % ln == 0:
+        return True
 ```
 
 ### Last-digit extraction bug: one of the two divisibility checks uses the wrong digit/expression
@@ -499,14 +503,14 @@ if (num1 != 0 and num3 != 0):
   - Variant `ns_25t3_py14_1/7`, Student ID `f82977150c354d5387b7e84b97c7cdc7`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    num = int(input("Enter a number(Atleast 2 digits):"))
-    if(num % num[-1] == 0):
-        if(num % num[-2] == 0):
-            print("is_divisible_by_last_two_digits","True")
-        else:
-            print("False")
+num = int(input("Enter a number(Atleast 2 digits):"))
+if num % num[-1] == 0:
+    if num % num[-2] == 0:
+        print("is_divisible_by_last_two_digits", "True")
     else:
         print("False")
+else:
+    print("False")
 ```
 
 ### Runtime error (parseable final submission)
@@ -612,13 +616,14 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `4d51d1b34d304517aea154a4237dadd6`, summary `Wrong Answer`, score `67`, vector `101`
 
 ```python
-    'eturn False if any of the last two digits is 0.'
-    last_two=num%100
-    last_digit=num%100
-    second_last_digit=(num//10)%10
-    if last_digit==0 or second_last_digit==0:
-        return False
-    return (num % second_last_digit==0) and (num%second_last_digit==0)
+"eturn False if any of the last two digits is 0."
+
+last_two = num % 100
+last_digit = num % 100
+second_last_digit = (num // 10) % 10
+if last_digit == 0 or second_last_digit == 0:
+    return False
+return (num % second_last_digit == 0) and (num % second_last_digit == 0)
 ```
 
 ### Extracts the wrong digits (`%1000`/`//100`) and uses the hundreds digit instead of the tens digit
@@ -633,12 +638,12 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `05917bc18ff94dd5a89c93ac33c01ca1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    last_two= num%1000
-    tens= last_two//100
-    ones= last_two % 10
-    if tens == 0 or ones == 0 :
-        return (False)
-    return num % tens == 0 and num % ones == 0
+last_two = num % 1000
+tens = last_two // 100
+ones = last_two % 10
+if tens == 0 or ones == 0:
+    return False
+return num % tens == 0 and num % ones == 0
 ```
 
 ### Only checks whether the last two digits are non-zero, then returns `True` without testing actual divisibility
@@ -653,10 +658,10 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `0c8ee15a4aef41c081959ed7aa5c6e60`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if num%100==0 or num%10==0:
-        return False
-    else:
-        return True
+if num % 100 == 0 or num % 10 == 0:
+    return False
+else:
+    return True
 ```
 
 ### Uses the first two digits of the string instead of the last two digits
@@ -671,16 +676,16 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `1ee14c301c0f4071aefcec5372a320c3`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    p = str(num)
-    rev = p[::-1]
-    rev1 = p[0]
-    rev2 = p[1]
-    digit1 = int(rev1)
-    digit2 = int(rev2)
-    if (num % digit1 == 0 and num % digit2 == 0):
-        return True
-    else:
-        return False
+p = str(num)
+rev = p[::-1]
+rev1 = p[0]
+rev2 = p[1]
+digit1 = int(rev1)
+digit2 = int(rev2)
+if num % digit1 == 0 and num % digit2 == 0:
+    return True
+else:
+    return False
 ```
 
 ### String extraction is correct, but divisibility is checked with quotient truthiness instead of `% ... == 0`
@@ -728,13 +733,13 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `5e08a0dbd73e4dbaa3f458c17caa705b`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    int = str(num)
-    for i in int :
-      if num % i[-2] and num % i[-1] :
+int = str(num)
+for i in int:
+    if num % i[-2] and num % i[-1]:
         return True
-      if i[-2]==0 or int[-1]==0 :
+    if i[-2] == 0 or int[-1] == 0:
         return False
-    return False
+return False
 ```
 
 ### Uses quotient truthiness (`num//a`, `num//b`) instead of remainder checks (`num % a == 0`)
@@ -780,7 +785,7 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `f51d9adce3854d69a63b99458e2d8ba5`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    return(num /num.digits(-1) and num /num.digits(-2))
+return num / num.digits(-1) and num / num.digits(-2)
 ```
 
 ### Runtime IndexError
@@ -796,13 +801,13 @@ return
   - Variant `ns_25t3_py14_1/7`, Student ID `fabc9f0d2eee4e629a3823c03acb908b`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    num = [str(num)]
-    n = len(num)
-    for _ in range(len(num)):
-        if (num % num[len(num)] == 0 and num % num[len(num)-1] == 0):
-            return True
-        if(num%num[n]==0 or num%num[n-1]==0):
-            return False
-        if (num[n]==0):
-            return False
+num = [str(num)]
+n = len(num)
+for _ in range(len(num)):
+    if num % num[len(num)] == 0 and num % num[len(num) - 1] == 0:
+        return True
+    if num % num[n] == 0 or num % num[n - 1] == 0:
+        return False
+    if num[n] == 0:
+        return False
 ```

@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py12_1/10` (canonical) | 398 | 219 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py12_1/10` (canonical) |              398 |      219 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,11 +33,11 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t1_py11_1/7` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t1_py_15_exe/10` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t2_py12_1/10` | 398 | 179 | 219 | 170 | 49 |
+| Variant                | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t1_py11_1/7`     |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t1_py_15_exe/10` |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t2_py12_1/10`    |              398 |       179 |      219 |                170 |                     49 |
 
 ## Private Case Structure
 
@@ -49,35 +49,35 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t1_py11_1/7` | `ns_25t1_py_15_exe/10` | `ns_25t2_py12_1/10` |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 49 | 22.4% | 0 | 0 | 49 |
-| Incorrect per-word vowel counting or output formatting (broad wrong-answer failure) | 40 | 18.3% | 0 | 0 | 40 |
-| Treats the entire input as one string and counts/prints globally instead of producing per-word outputs | 20 | 9.1% | 0 | 0 | 20 |
-| Runtime NameError from undefined variables (`line`, `word`, `char`, counters) in vowel-count formatting logic | 16 | 7.3% | 0 | 0 | 16 |
-| Hard-codes public sample outputs instead of formatting arbitrary input words with vowel counts | 16 | 7.3% | 0 | 0 | 16 |
-| Empty/comment-only final submission | 13 | 5.9% | 0 | 0 | 13 |
-| Runtime TypeError from indexing strings by characters/values or malformed `print`/join construction | 10 | 4.6% | 0 | 0 | 10 |
-| Uses function-style `return` in an I/O question (should read input and print the formatted output line) | 8 | 3.7% | 0 | 0 | 8 |
-| Runtime error (parseable final submission) | 7 | 3.2% | 0 | 0 | 7 |
-| Counts vowels across the whole input string and prints the sentence plus one total count (not per-word `word(count)` output) | 6 | 2.7% | 0 | 0 | 6 |
-| Checks whole words against the vowel set/string (`if word in vowels`) instead of counting vowel characters inside each word | 4 | 1.8% | 0 | 0 | 4 |
-| Compares characters/words to the entire vowel string (`== vowels`) instead of using membership checks (`in vowels`) | 4 | 1.8% | 0 | 0 | 4 |
-| Runtime AttributeError from string/list method misuse (`spit`, `split('')`, etc.) | 3 | 1.4% | 0 | 0 | 3 |
-| Builds a list/dict representation and prints it (or iterates dict keys), causing wrong format and repeated-word handling bugs | 3 | 1.4% | 0 | 0 | 3 |
-| Per-word loop is present, but counts accumulate across words (counter reset bug) | 3 | 1.4% | 0 | 0 | 3 |
-| Per-word vowel counting is present, but output formatting is wrong (`word count` formatting/spacing instead of `word(count)`) | 3 | 1.4% | 0 | 0 | 3 |
-| Calls the vowel-count helper on the whole word list (`count_vowels(words)`) instead of each word | 2 | 0.9% | 0 | 0 | 2 |
-| Prints one `word(count)` per line inside the loop instead of a single space-separated output line | 2 | 0.9% | 0 | 0 | 2 |
-| Does not reset the vowel counter per word, so counts accumulate across words | 2 | 0.9% | 0 | 0 | 2 |
-| Splits the sentence on the wrong delimiter (`'_'` instead of spaces) | 1 | 0.5% | 0 | 0 | 1 |
-| Runtime ValueError from invalid `split('')` / input parsing misuse | 1 | 0.5% | 0 | 0 | 1 |
-| Runtime IndexError from fixed-position word/character indexing assumptions | 1 | 0.5% | 0 | 0 | 1 |
-| Inefficient/infinite-loop vowel counting (Time Limit Exceeded) | 1 | 0.5% | 0 | 0 | 1 |
-| Mostly correct per-word counting, but hidden repeated-word/format bug remains (commonly dict-key dedup or wrong character loop variable) | 1 | 0.5% | 0 | 0 | 1 |
-| Runtime EOFError from incorrect input usage / extra `input()` calls in this single-line I/O task | 1 | 0.5% | 0 | 0 | 1 |
-| Uses an always-truthy boolean chain for vowel checks (`'a' or 'e' or ...`) | 1 | 0.5% | 0 | 0 | 1 |
-| Submits only a helper/count-return function and omits the required input-reading + formatted output program | 1 | 0.5% | 0 | 0 | 1 |
+| Pattern                                                                                                                                  | Cluster count | % of cluster non-full | `ns_25t1_py11_1/7` | `ns_25t1_py_15_exe/10` | `ns_25t2_py12_1/10` |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: | ---------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                                                  |            49 |                 22.4% |                  0 |                      0 |                  49 |
+| Incorrect per-word vowel counting or output formatting (broad wrong-answer failure)                                                      |            40 |                 18.3% |                  0 |                      0 |                  40 |
+| Treats the entire input as one string and counts/prints globally instead of producing per-word outputs                                   |            20 |                  9.1% |                  0 |                      0 |                  20 |
+| Runtime NameError from undefined variables (`line`, `word`, `char`, counters) in vowel-count formatting logic                            |            16 |                  7.3% |                  0 |                      0 |                  16 |
+| Hard-codes public sample outputs instead of formatting arbitrary input words with vowel counts                                           |            16 |                  7.3% |                  0 |                      0 |                  16 |
+| Empty/comment-only final submission                                                                                                      |            13 |                  5.9% |                  0 |                      0 |                  13 |
+| Runtime TypeError from indexing strings by characters/values or malformed `print`/join construction                                      |            10 |                  4.6% |                  0 |                      0 |                  10 |
+| Uses function-style `return` in an I/O question (should read input and print the formatted output line)                                  |             8 |                  3.7% |                  0 |                      0 |                   8 |
+| Runtime error (parseable final submission)                                                                                               |             7 |                  3.2% |                  0 |                      0 |                   7 |
+| Counts vowels across the whole input string and prints the sentence plus one total count (not per-word `word(count)` output)             |             6 |                  2.7% |                  0 |                      0 |                   6 |
+| Checks whole words against the vowel set/string (`if word in vowels`) instead of counting vowel characters inside each word              |             4 |                  1.8% |                  0 |                      0 |                   4 |
+| Compares characters/words to the entire vowel string (`== vowels`) instead of using membership checks (`in vowels`)                      |             4 |                  1.8% |                  0 |                      0 |                   4 |
+| Runtime AttributeError from string/list method misuse (`spit`, `split('')`, etc.)                                                        |             3 |                  1.4% |                  0 |                      0 |                   3 |
+| Builds a list/dict representation and prints it (or iterates dict keys), causing wrong format and repeated-word handling bugs            |             3 |                  1.4% |                  0 |                      0 |                   3 |
+| Per-word loop is present, but counts accumulate across words (counter reset bug)                                                         |             3 |                  1.4% |                  0 |                      0 |                   3 |
+| Per-word vowel counting is present, but output formatting is wrong (`word count` formatting/spacing instead of `word(count)`)            |             3 |                  1.4% |                  0 |                      0 |                   3 |
+| Calls the vowel-count helper on the whole word list (`count_vowels(words)`) instead of each word                                         |             2 |                  0.9% |                  0 |                      0 |                   2 |
+| Prints one `word(count)` per line inside the loop instead of a single space-separated output line                                        |             2 |                  0.9% |                  0 |                      0 |                   2 |
+| Does not reset the vowel counter per word, so counts accumulate across words                                                             |             2 |                  0.9% |                  0 |                      0 |                   2 |
+| Splits the sentence on the wrong delimiter (`'_'` instead of spaces)                                                                     |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Runtime ValueError from invalid `split('')` / input parsing misuse                                                                       |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Runtime IndexError from fixed-position word/character indexing assumptions                                                               |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Inefficient/infinite-loop vowel counting (Time Limit Exceeded)                                                                           |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Mostly correct per-word counting, but hidden repeated-word/format bug remains (commonly dict-key dedup or wrong character loop variable) |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Runtime EOFError from incorrect input usage / extra `input()` calls in this single-line I/O task                                         |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Uses an always-truthy boolean chain for vowel checks (`'a' or 'e' or ...`)                                                               |             1 |                  0.5% |                  0 |                      0 |                   1 |
+| Submits only a helper/count-return function and omits the required input-reading + formatted output program                              |             1 |                  0.5% |                  0 |                      0 |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -282,16 +282,16 @@ for word in words:
 ```python
 # Write your code here to read the input and print the output
 
-sentence=input()
+sentence = input()
 
-split_sentence=sentence.split() #["mathys","gym"]
-vowels_="AEIOUaeiou"
-count_vowels=0
+split_sentence = sentence.split()  # ["mathys","gym"]
+vowels_ = "AEIOUaeiou"
+count_vowels = 0
 
 for word in split_sentence:
     for letter in word:
         if letter in vowels_:
-            count_vowels+=1
+            count_vowels += 1
 
     print(sentence(count_vowels))
 ```
@@ -309,22 +309,22 @@ for word in split_sentence:
   - Variant `ns_25t2_py12_1/10`, Student ID `ff6ddad42ac74cfcafb2848e55d5d606`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    vowels=set('aeiouAEIOU')
-    result = []
-    word = ''
-    for char in text:
-        if char == ' ':
-           if word:
-             vowel_count = sum(1 for c in words if c in vowels)
-             result.append(f"{words}({vowel_count})")
-             word = ''
-             result.append('')
-        else:
-         word += char
-    if word:
-        vowel_count=sum(1 for c in word if c in vowels)
-        result.append(f"{word}({vowel_count})")
-    return ''.join(result)
+vowels = set("aeiouAEIOU")
+result = []
+word = ""
+for char in text:
+    if char == " ":
+        if word:
+            vowel_count = sum(1 for c in words if c in vowels)
+            result.append(f"{words}({vowel_count})")
+            word = ""
+            result.append("")
+    else:
+        word += char
+if word:
+    vowel_count = sum(1 for c in word if c in vowels)
+    result.append(f"{word}({vowel_count})")
+return "".join(result)
 ```
 
 ### Runtime error (parseable final submission)
@@ -342,10 +342,10 @@ for word in split_sentence:
 
 ```python
 # Write your code here to read the input and print the output
-s= str(input())
-vowel = ("aeiouAEIOU")
+s = str(input())
+vowel = "aeiouAEIOU"
 c = s[0]
-l = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+l = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 new_s = ""
 i = 0
 if l in vowel:
@@ -403,16 +403,16 @@ print(count)
 ```python
 # Write your code here to read the input and print the output
 
-line=str(input())
-vowels=list('AEIOUaeiou')
-words=list(line.split())
-k=''
+line = str(input())
+vowels = list("AEIOUaeiou")
+words = list(line.split())
+k = ""
 for i in words:
-    count=0
+    count = 0
     for char in i:
         if i in vowels:
-            count=count+1
-    k=k+i+'('+str(count)+') '
+            count = count + 1
+    k = k + i + "(" + str(count) + ") "
 
 print(k)
 ```
@@ -439,10 +439,10 @@ n = n.split()
 for word in n:
     for chars in word:
         if chars == vowel:
-            count = count+1
+            count = count + 1
     print(count)
 
-    #print(word,(count), end = ' ')
+    # print(word,(count), end = ' ')
 ```
 
 ### Runtime AttributeError from string/list method misuse (`spit`, `split('')`, etc.)
@@ -458,16 +458,16 @@ for word in n:
   - Variant `ns_25t2_py12_1/10`, Student ID `dbd5508306664bb4993000aa3b341175`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-s=input()
+s = input()
 # Write your code here to read the input and print the output
-words=s.split(' ')
-parts={ }
+words = s.split(" ")
+parts = {}
 for word in words:
-    vowels=0
-for c in 'aeiouAEIOU':
-    vowels=vowels+1
-    parts.add(f'{0},{1}'.format(word,vowels))
-    result=' '.join(parts)
+    vowels = 0
+for c in "aeiouAEIOU":
+    vowels = vowels + 1
+    parts.add(f"{0},{1}".format(word, vowels))
+    result = " ".join(parts)
 
 
 print(result)
@@ -490,16 +490,22 @@ print(result)
 
 sentence = input()
 new_list = sentence.split(" ")
-vowel = {"a","e","i","o","u"}
+vowel = {"a", "e", "i", "o", "u"}
 D = {}
 for i in range(len(new_list)):
     D[new_list[i]] = 0
 for word in D.keys():
     for i in range(len(word)):
-        if word[i].lower() == "a" or word[i].lower()=="e" or word[i].lower()=="i" or word[i].lower()=="o" or word[i].lower() == "u":
+        if (
+            word[i].lower() == "a"
+            or word[i].lower() == "e"
+            or word[i].lower() == "i"
+            or word[i].lower() == "o"
+            or word[i].lower() == "u"
+        ):
             D[word] += 1
-for key,value in D.items():
-    print(f"{key}({value}) ", end = "")
+for key, value in D.items():
+    print(f"{key}({value}) ", end="")
 ```
 
 ### Per-word loop is present, but counts accumulate across words (counter reset bug)
@@ -519,19 +525,19 @@ vowel = "AEIOUaeiou"
 n = str(input())
 n += " "
 le = len(n)
-st=""
+st = ""
 
 for i in range(le):
     count = 0
-    x=""
-    y=""
+    x = ""
+    y = ""
     for j in vowel:
-        if n[i]==j:
-            count+=1
+        if n[i] == j:
+            count += 1
 
-    x=str(count)
-    if(n[i]==" "):
-        y="("+x+")"+" "
+    x = str(count)
+    if n[i] == " ":
+        y = "(" + x + ")" + " "
 
 # ...
 ```
@@ -550,13 +556,24 @@ for i in range(le):
 
 ```python
 # Write your code here to read the input and print the output
-vowel_count=0
-strings=input().split()
+vowel_count = 0
+strings = input().split()
 for i in strings:
     for j in i:
-        if j=='a'or  j=='e'or j=='i' or j=='o' or j=='u' or j== 'A' or j=='E' or j=='I' or j=='O' or j=='U':
-            vowel_count+=1
-    print(i + '('+ str(vowel_count) + ')',end=' ')
+        if (
+            j == "a"
+            or j == "e"
+            or j == "i"
+            or j == "o"
+            or j == "u"
+            or j == "A"
+            or j == "E"
+            or j == "I"
+            or j == "O"
+            or j == "U"
+        ):
+            vowel_count += 1
+    print(i + "(" + str(vowel_count) + ")", end=" ")
 ```
 
 ### Calls the vowel-count helper on the whole word list (`count_vowels(words)`) instead of each word
@@ -572,19 +589,19 @@ for i in strings:
   - Variant `ns_25t2_py12_1/10`, Student ID `1d5a1d2b4f0e4c7fa43b4e06190135a1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    vowels = "aeiouAEIOU"
-    count = 0
-    for char in word:
-        if char in vowels:
-            count += 1
-    return count
-    sentence = input().strip()
-    words = sentence.split()
-    result = []
-    for word in words:
-        vowel_count = count_vowels(words)
-        result.append(f"{word}({vowel_count})")
-    print(" ".join(result))
+vowels = "aeiouAEIOU"
+count = 0
+for char in word:
+    if char in vowels:
+        count += 1
+return count
+sentence = input().strip()
+words = sentence.split()
+result = []
+for word in words:
+    vowel_count = count_vowels(words)
+    result.append(f"{word}({vowel_count})")
+print(" ".join(result))
 ```
 
 ### Prints one `word(count)` per line inside the loop instead of a single space-separated output line
@@ -601,11 +618,11 @@ for i in strings:
 
 ```python
 # Write your code here to read the input and print the output
-line=input().split()
+line = input().split()
 
 for word in line:
-    output=[]
-    vc=len([1 for c in word if c in 'aeiouAEIOU'])
+    output = []
+    vc = len([1 for c in word if c in "aeiouAEIOU"])
     print(f"{word}({vc})")
 ```
 
@@ -625,14 +642,14 @@ for word in line:
 # Write your code here to read the input and print the output
 
 string = input()
-vowels = ["a","e","i","o","u","A","E","I","O","U"]
+vowels = ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"]
 words = string.split()
 count = 0
 for word in words:
     for char in word:
         if char in vowels:
             count += 1
-    print(f"{word}({count})", end = " ")
+    print(f"{word}({count})", end=" ")
 ```
 
 ### Splits the sentence on the wrong delimiter (`'_'` instead of spaces)
@@ -649,8 +666,8 @@ for word in words:
 
 ```python
 # Write your code here to read the input and print the output
-words = input().split('_')
-vowels ="aeiouAEIOU"
+words = input().split("_")
+vowels = "aeiouAEIOU"
 frq = 0
 for word in words:
     for i in word:
@@ -677,9 +694,9 @@ print(f"{word}({frq})")
 # Write your code here to read the input and print the output
 
 n = int(input())
-while i <n:
+while i < n:
     for _ in range(n):
-        if i+1<n:
+        if i + 1 < n:
             print()
 ```
 
@@ -698,17 +715,17 @@ while i <n:
 ```python
 # Write your code here to read the input and print the output
 
-s=input()
-vowels="aeiouAEIOU"
-words=s.split()
-t=""
+s = input()
+vowels = "aeiouAEIOU"
+words = s.split()
+t = ""
 for i in range(len(words)):
-   for j in range(i):
+    for j in range(i):
         vowel_count = 0
         if words[i][j] in vowels:
-            vowel_count+=1
-        t+=words[i]+"("+str(vowel_count)+")"
-        print(t,end=" ")
+            vowel_count += 1
+        t += words[i] + "(" + str(vowel_count) + ")"
+        print(t, end=" ")
 ```
 
 ### Inefficient/infinite-loop vowel counting (Time Limit Exceeded)
@@ -724,21 +741,21 @@ for i in range(len(words)):
   - Variant `ns_25t2_py12_1/10`, Student ID `905567705d934c0bb9fa8efb101048b5`, summary `Time Limit Exceeded`, score `0`, vector `000`
 
 ```python
-tring=input()
-vowels='aeiouAEIOU'
-word=''
-count=0
-i=0
-while i<len(tring):
-    char=tring[i]
-    if char=='':
-        count=0
+tring = input()
+vowels = "aeiouAEIOU"
+word = ""
+count = 0
+i = 0
+while i < len(tring):
+    char = tring[i]
+    if char == "":
+        count = 0
     elif char in vowels:
-        count+=1
+        count += 1
     else:
-        count=0
+        count = 0
 
-print(f'{char}({count})')
+print(f"{char}({count})")
 ```
 
 ### Mostly correct per-word counting, but hidden repeated-word/format bug remains (commonly dict-key dedup or wrong character loop variable)
@@ -766,7 +783,7 @@ for char in line:
             count_vowel += 1
         else:
             continue
-    new_str += char+f"({count_vowel})"+ " "
+    new_str += char + f"({count_vowel})" + " "
 
 print(new_str)
 ```
@@ -786,11 +803,11 @@ print(new_str)
 ```python
 # Write your code here to read the input and print the output
 
-n= input()
-vowels= 'aeiouAEIOU'
+n = input()
+vowels = "aeiouAEIOU"
 for ch in vowels:
-    a,b=map(int,input().split(','), end=' ')
-    print (word + "(" +str(count)+")")
+    a, b = map(int, input().split(","), end=" ")
+    print(word + "(" + str(count) + ")")
 ```
 
 ### Uses an always-truthy boolean chain for vowel checks (`'a' or 'e' or ...`)
@@ -808,15 +825,15 @@ for ch in vowels:
 ```python
 # Write your code here to read the input and print the output
 
-a=str(input())
-b=a.lower()
-words=list(b)
-vowel_count=0
+a = str(input())
+b = a.lower()
+words = list(b)
+vowel_count = 0
 for i in words:
-    if i=="a" or "e" or "i" or "o" or "u":
-        vowel_count+=1
-c=str(words)
-finalform=c+c[vowel_count]
+    if i == "a" or "e" or "i" or "o" or "u":
+        vowel_count += 1
+c = str(words)
+finalform = c + c[vowel_count]
 print(c)
 ```
 
@@ -833,13 +850,13 @@ print(c)
   - Variant `ns_25t2_py12_1/10`, Student ID `ef1f36b9db0e4f5cac838b252e0d319e`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    vowels = 'aeiouAEIOU'
-    return sum(1 for ch in word if ch in vowels)
-    input_str = input()
-    word = input_str.split(' ')
-    result = []
-    for word in word:
-        count = count_vowels(word)
-        result.append(f"{word}({count})")
-        return (' '.join(result))
+vowels = "aeiouAEIOU"
+return sum(1 for ch in word if ch in vowels)
+input_str = input()
+word = input_str.split(" ")
+result = []
+for word in word:
+    count = count_vowels(word)
+    result.append(f"{word}({count})")
+    return " ".join(result)
 ```

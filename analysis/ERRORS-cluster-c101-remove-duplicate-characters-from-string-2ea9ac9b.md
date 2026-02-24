@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py11/10` (canonical) | 485 | 184 | Exact duplicate problem JSON |
+| Variant                       | final_submitters | non_full | Relationship                 |
+| ----------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py11/10` (canonical) |              485 |      184 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py11/10` | 485 | 301 | 184 | 147 | 37 |
+| Variant           | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ----------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py11/10` |              485 |       301 |      184 |                147 |                     37 |
 
 ## Private Case Structure
 
@@ -44,26 +44,26 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py11/10` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 37 | 20.1% | 37 |
-| No return / implicit `None` | 32 | 17.4% | 32 |
-| Incorrect character deduplication logic (order preservation and/or duplicate handling is wrong) | 31 | 16.8% | 31 |
-| Uses `set(...)` + `join(...)`, which loses the original first-appearance order of characters | 17 | 9.2% | 17 |
-| Runtime NameError from undefined loop/frequency variables in duplicate-removal logic | 16 | 8.7% | 16 |
-| Returns the original string unchanged (duplicates are not removed) | 15 | 8.2% | 15 |
-| Hard-codes sample strings/outputs (`banana`, `hello`, `abc`) instead of removing duplicates generically | 6 | 3.3% | 6 |
-| Uses `split()`/word-based logic, but the task requires character-level deduplication | 5 | 2.7% | 5 |
-| Runtime TypeError | 5 | 2.7% | 5 |
-| Runtime error (parseable final submission) | 5 | 2.7% | 5 |
-| Runtime IndexError | 4 | 2.2% | 4 |
-| Copies `is_equal(remove_duplicates(...))` tests into the function and triggers recursive self-calls | 3 | 1.6% | 3 |
-| Uses list/string mutation APIs incorrectly (`remove`) while trying to edit a string in place | 3 | 1.6% | 3 |
-| Frequency-dictionary lookup bug (`freq[...]`) without safe access while building output | 1 | 0.5% | 1 |
-| Converts the input to a set before processing, destroying order and duplicate information | 1 | 0.5% | 1 |
-| Runtime AttributeError | 1 | 0.5% | 1 |
-| Reads `input()` in a function-type question instead of using the string parameter `s` | 1 | 0.5% | 1 |
-| Runtime RecursionError | 1 | 0.5% | 1 |
+| Pattern                                                                                                 | Cluster count | % of cluster non-full | `ns_25t3_py11/10` |
+| ------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ----------------: |
+| Syntax / non-parseable final submission                                                                 |            37 |                 20.1% |                37 |
+| No return / implicit `None`                                                                             |            32 |                 17.4% |                32 |
+| Incorrect character deduplication logic (order preservation and/or duplicate handling is wrong)         |            31 |                 16.8% |                31 |
+| Uses `set(...)` + `join(...)`, which loses the original first-appearance order of characters            |            17 |                  9.2% |                17 |
+| Runtime NameError from undefined loop/frequency variables in duplicate-removal logic                    |            16 |                  8.7% |                16 |
+| Returns the original string unchanged (duplicates are not removed)                                      |            15 |                  8.2% |                15 |
+| Hard-codes sample strings/outputs (`banana`, `hello`, `abc`) instead of removing duplicates generically |             6 |                  3.3% |                 6 |
+| Uses `split()`/word-based logic, but the task requires character-level deduplication                    |             5 |                  2.7% |                 5 |
+| Runtime TypeError                                                                                       |             5 |                  2.7% |                 5 |
+| Runtime error (parseable final submission)                                                              |             5 |                  2.7% |                 5 |
+| Runtime IndexError                                                                                      |             4 |                  2.2% |                 4 |
+| Copies `is_equal(remove_duplicates(...))` tests into the function and triggers recursive self-calls     |             3 |                  1.6% |                 3 |
+| Uses list/string mutation APIs incorrectly (`remove`) while trying to edit a string in place            |             3 |                  1.6% |                 3 |
+| Frequency-dictionary lookup bug (`freq[...]`) without safe access while building output                 |             1 |                  0.5% |                 1 |
+| Converts the input to a set before processing, destroying order and duplicate information               |             1 |                  0.5% |                 1 |
+| Runtime AttributeError                                                                                  |             1 |                  0.5% |                 1 |
+| Reads `input()` in a function-type question instead of using the string parameter `s`                   |             1 |                  0.5% |                 1 |
+| Runtime RecursionError                                                                                  |             1 |                  0.5% |                 1 |
 
 ## Re-clustered Pattern Details
 
@@ -116,9 +116,9 @@ str >>>>> remove_duplicates(s)
 ```python
 def remove_duplicates(s: str) -> str:
     """Removes duplicate characters, keeping the first occurrence."""
-    #1.dict.fromkeys(s) creates a dictionary where unique characters are keys,
+    # 1.dict.fromkeys(s) creates a dictionary where unique characters are keys,
     # in order of 1st appearance.
-    #2. .keys() gets the unique characters (keys)
+    # 2. .keys() gets the unique characters (keys)
 ```
 
 ### Incorrect character deduplication logic (order preservation and/or duplicate handling is wrong)
@@ -162,21 +162,21 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `28a098793bf24849b481bbfd72dcd796`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    x=set(s)
-    y=list(x)
-    c=len(y)
-    lin=[]
-    n=-1
-    for i in range(c):
-        m=s.index(y[i])
-        if(m<n):
-            lin=list(y[i])+lin
-            n=m
-        else:
-            lin=lin+list(y[i])
-            n=m
-    z=''.join(lin)
-    return z
+x = set(s)
+y = list(x)
+c = len(y)
+lin = []
+n = -1
+for i in range(c):
+    m = s.index(y[i])
+    if m < n:
+        lin = list(y[i]) + lin
+        n = m
+    else:
+        lin = lin + list(y[i])
+        n = m
+z = "".join(lin)
+return z
 ```
 
 ### Runtime NameError from undefined loop/frequency variables in duplicate-removal logic
@@ -190,13 +190,13 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `c49157c0bab24e17bf7da58cd8a27337`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a= set(s)
-    alpha= 'abcdefghijklmnopqrstuvwxyz'
-    remove_duplicates= ''
-    for char in a:
-        if letter in alpha:
-            remove_duplicates+= letter
-    return remove_duplicates
+a = set(s)
+alpha = "abcdefghijklmnopqrstuvwxyz"
+remove_duplicates = ""
+for char in a:
+    if letter in alpha:
+        remove_duplicates += letter
+return remove_duplicates
 ```
 
 ### Returns the original string unchanged (duplicates are not removed)
@@ -210,14 +210,14 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `61038108614147ea8842e331a6afcad1`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    s = s.lower().split()
-    result = ""
-    if not s:
-        return s
-    for ch in s[1:]:
-        if ch != result[-1]:
-            result.append(ch)
-    return " ".join(result)
+s = s.lower().split()
+result = ""
+if not s:
+    return s
+for ch in s[1:]:
+    if ch != result[-1]:
+        result.append(ch)
+return " ".join(result)
 ```
 
 ### Hard-codes sample strings/outputs (`banana`, `hello`, `abc`) instead of removing duplicates generically
@@ -231,18 +231,18 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `3d6f6d72d5c546a091659808509c4fce`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if (s == "banana"):
-        return "ban"
-    if (s == "hello"):
-        return "helo"
-    if (s == "abc"):
-        return "abc"
-    if (s == "python"):
-        return "python"
-    if (s == "apple"):
-        return "aple"
-    if (s == "world"):
-        return "world"
+if s == "banana":
+    return "ban"
+if s == "hello":
+    return "helo"
+if s == "abc":
+    return "abc"
+if s == "python":
+    return "python"
+if s == "apple":
+    return "aple"
+if s == "world":
+    return "world"
 ```
 
 ### Uses `split()`/word-based logic, but the task requires character-level deduplication
@@ -256,16 +256,16 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `d863584c1d954bc181e654049e154321`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    lis = s.split()
-    result = ""
-    i = 0
-    while(i<len(lis)-1):
-        if(lis[i] in lis[i+1:]):
-            result += lis[i]
-            lis.remove(lis[i])
-        else:
-            result += lis[i]
-    return result
+lis = s.split()
+result = ""
+i = 0
+while i < len(lis) - 1:
+    if lis[i] in lis[i + 1 :]:
+        result += lis[i]
+        lis.remove(lis[i])
+    else:
+        result += lis[i]
+return result
 ```
 
 ### Runtime TypeError
@@ -280,15 +280,15 @@ def remove_duplicates(s: str) -> str:
   - Variant `ns_25t3_py11/10`, Student ID `d5d2c561dd74491ba612da07356e9494`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    word = s.split()
-    b = list(word)
-    freq = []
-    for ch in b:
-        if ch in b:
-            freq.append()
-        else:
-            freq
-    return str(freq)
+word = s.split()
+b = list(word)
+freq = []
+for ch in b:
+    if ch in b:
+        freq.append()
+    else:
+        freq
+return str(freq)
 ```
 
 ### Runtime error (parseable final submission)
@@ -306,11 +306,12 @@ def remove_duplicates(s: str) -> str:
 def remove_duplicates(s: str) -> str:
     """Removes duplicate characters, keeping the first occurrence."""
 
+
 newstr = ""
 alpha = "abcdefghijklmnopqrstuvwxyz"
 while i in str[i]:
     while j in str[j]:
-        if str[i]!=str[j]:
+        if str[i] != str[j]:
             newstr = newstr + str[i] + str[j]
         else:
             newstr = newstr + str[i]
@@ -362,12 +363,12 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `fc56cb38062a4a42846ec5151fedd9be`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s = "banana"
-    is_equal(remove_duplicates("banana"), "ban")
-    s = "hello"
-    is_equal(remove_duplicates("hello"), "helo")
-    s = "abc"
-    is_equal(remove_duplicates("abc"), "abc")
+s = "banana"
+is_equal(remove_duplicates("banana"), "ban")
+s = "hello"
+is_equal(remove_duplicates("hello"), "helo")
+s = "abc"
+is_equal(remove_duplicates("abc"), "abc")
 ```
 
 ### Uses list/string mutation APIs incorrectly (`remove`) while trying to edit a string in place
@@ -381,11 +382,11 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `f8773ac5b3f04022ace9c4953bebdca5`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    n = len(s)
-    for i in range(0,n):
-        for j in range(i+1,n):
-            if(s[i:i+1] == s[j:j+1]):
-                s.remove(s(j))
+n = len(s)
+for i in range(0, n):
+    for j in range(i + 1, n):
+        if s[i : i + 1] == s[j : j + 1]:
+            s.remove(s(j))
 ```
 
 ### Frequency-dictionary lookup bug (`freq[...]`) without safe access while building output
@@ -399,12 +400,12 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `0da3068accb9422f8fe095961db2da4f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    freq={}
-    for ch in s:
-        if s.count(ch)>=2:
-            freq[ch]=freq.get(ch,0)+1
-    for keys in freq.items():
-        return (freq[keys])
+freq = {}
+for ch in s:
+    if s.count(ch) >= 2:
+        freq[ch] = freq.get(ch, 0) + 1
+for keys in freq.items():
+    return freq[keys]
 ```
 
 ### Converts the input to a set before processing, destroying order and duplicate information
@@ -418,10 +419,10 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `359a2156033e4a6dbfe002996cf6034f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ss=set(s)
-    fi=sorted(ss)
-    fg=str(fi)
-    return fg
+ss = set(s)
+fi = sorted(ss)
+fg = str(fi)
+return fg
 ```
 
 ### Runtime AttributeError
@@ -436,9 +437,9 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `48d57a4688904833ab58327c04f8e7b2`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    s_unique=s.set()
-    return s_unique
+...
+s_unique = s.set()
+return s_unique
 ```
 
 ### Reads `input()` in a function-type question instead of using the string parameter `s`
@@ -452,11 +453,11 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `9ab6d2c5fd49449ba92ac9e7aa82d76d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s = str(input())
-    if(s.duplicate in s):
-        return s.remove_duplicates
-    else:
-        return s
+s = str(input())
+if s.duplicate in s:
+    return s.remove_duplicates
+else:
+    return s
 ```
 
 ### Runtime RecursionError
@@ -471,11 +472,11 @@ while i in str[i]:
   - Variant `ns_25t3_py11/10`, Student ID `ee5d624ebc32408ea840b798b4d88c35`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s = "banana"
-    remove_duplicates(s)
-    s = "hello"
-    remove_duplicates(s)
-    s = "abc"
-    remove_duplicates(s)
-    print(s)
+s = "banana"
+remove_duplicates(s)
+s = "hello"
+remove_duplicates(s)
+s = "abc"
+remove_duplicates(s)
+print(s)
 ```

@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py12_1/9` (canonical) | 556 | 174 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py12_1/9` (canonical) |              556 |      174 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,11 +33,11 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t1_py11_1/6` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t1_py_15_exe/9` | 0 | 0 | 0 | 0 | 0 |
-| `ns_25t2_py12_1/9` | 556 | 382 | 174 | 125 | 49 |
+| Variant               | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| --------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t1_py11_1/6`    |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t1_py_15_exe/9` |                0 |         0 |        0 |                  0 |                      0 |
+| `ns_25t2_py12_1/9`    |              556 |       382 |      174 |                125 |                     49 |
 
 ## Private Case Structure
 
@@ -48,26 +48,26 @@ Private-case vectors in this report are 2-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t1_py11_1/6` | `ns_25t1_py_15_exe/9` | `ns_25t2_py12_1/9` |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 49 | 28.2% | 0 | 0 | 49 |
-| Incorrect unique even/odd counting logic (placeholder, occurrence-counting, or wrong parity test) | 42 | 24.1% | 0 | 0 | 42 |
-| Runtime TypeError from invalid list/dict operations while counting unique even/odd values | 24 | 13.8% | 0 | 0 | 24 |
-| Runtime NameError from undefined counters/keys in the even/odd count dictionary logic | 19 | 10.9% | 0 | 0 | 19 |
-| No return / implicit `None` | 16 | 9.2% | 0 | 0 | 16 |
-| Runtime error (parseable final submission) | 4 | 2.3% | 0 | 0 | 4 |
-| Runtime RecursionError from accidental recursive call in `count_unique_even_odd` | 3 | 1.7% | 0 | 0 | 3 |
-| Runtime KeyError from incrementing dict keys without initializing `'even'`/`'odd'` | 3 | 1.7% | 0 | 0 | 3 |
-| Runtime IndexError from using list values as indices (e.g., `l[i]` inside `for i in l`) | 2 | 1.1% | 0 | 0 | 2 |
-| Uses floor-division (`// 2`) as a parity test instead of modulo (`% 2`) | 2 | 1.1% | 0 | 0 | 2 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 2 | 1.1% | 0 | 0 | 2 |
-| Counts all even/odd occurrences without deduplicating the input values first | 2 | 1.1% | 0 | 0 | 2 |
-| Adds odd numbers to the even set in both branches, leaving the odd set empty | 1 | 0.6% | 0 | 0 | 1 |
-| Runtime AttributeError | 1 | 0.6% | 0 | 0 | 1 |
-| Runtime ValueError | 1 | 0.6% | 0 | 0 | 1 |
-| Deduplicates values but then counts parity of indices (`range(len(set(l)))`) instead of parity of values | 1 | 0.6% | 0 | 0 | 1 |
-| Deduplicates values with `set(...)` but still counts index parity, not value parity | 1 | 0.6% | 0 | 0 | 1 |
-| Returns a non-dictionary value instead of `{'even': ..., 'odd': ...}` | 1 | 0.6% | 0 | 0 | 1 |
+| Pattern                                                                                                  | Cluster count | % of cluster non-full | `ns_25t1_py11_1/6` | `ns_25t1_py_15_exe/9` | `ns_25t2_py12_1/9` |
+| -------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                  |            49 |                 28.2% |                  0 |                     0 |                 49 |
+| Incorrect unique even/odd counting logic (placeholder, occurrence-counting, or wrong parity test)        |            42 |                 24.1% |                  0 |                     0 |                 42 |
+| Runtime TypeError from invalid list/dict operations while counting unique even/odd values                |            24 |                 13.8% |                  0 |                     0 |                 24 |
+| Runtime NameError from undefined counters/keys in the even/odd count dictionary logic                    |            19 |                 10.9% |                  0 |                     0 |                 19 |
+| No return / implicit `None`                                                                              |            16 |                  9.2% |                  0 |                     0 |                 16 |
+| Runtime error (parseable final submission)                                                               |             4 |                  2.3% |                  0 |                     0 |                  4 |
+| Runtime RecursionError from accidental recursive call in `count_unique_even_odd`                         |             3 |                  1.7% |                  0 |                     0 |                  3 |
+| Runtime KeyError from incrementing dict keys without initializing `'even'`/`'odd'`                       |             3 |                  1.7% |                  0 |                     0 |                  3 |
+| Runtime IndexError from using list values as indices (e.g., `l[i]` inside `for i in l`)                  |             2 |                  1.1% |                  0 |                     0 |                  2 |
+| Uses floor-division (`// 2`) as a parity test instead of modulo (`% 2`)                                  |             2 |                  1.1% |                  0 |                     0 |                  2 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)                  |             2 |                  1.1% |                  0 |                     0 |                  2 |
+| Counts all even/odd occurrences without deduplicating the input values first                             |             2 |                  1.1% |                  0 |                     0 |                  2 |
+| Adds odd numbers to the even set in both branches, leaving the odd set empty                             |             1 |                  0.6% |                  0 |                     0 |                  1 |
+| Runtime AttributeError                                                                                   |             1 |                  0.6% |                  0 |                     0 |                  1 |
+| Runtime ValueError                                                                                       |             1 |                  0.6% |                  0 |                     0 |                  1 |
+| Deduplicates values but then counts parity of indices (`range(len(set(l)))`) instead of parity of values |             1 |                  0.6% |                  0 |                     0 |                  1 |
+| Deduplicates values with `set(...)` but still counts index parity, not value parity                      |             1 |                  0.6% |                  0 |                     0 |                  1 |
+| Returns a non-dictionary value instead of `{'even': ..., 'odd': ...}`                                    |             1 |                  0.6% |                  0 |                     0 |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -225,8 +225,10 @@ def count_unique_even_odd(l: list)-> dict:
 
 ```python
 from typing import List, Any
-def count_unique_even_odd(l: list)-> dict:
-    '''Returns a dict with the count of unique even and odd numbers in the list.
+
+
+def count_unique_even_odd(l: list) -> dict:
+    """Returns a dict with the count of unique even and odd numbers in the list.
 
     Eg.
     >>>l = [1, 2, 2, 3, 4, 5, 5, 6]
@@ -238,7 +240,7 @@ def count_unique_even_odd(l: list)-> dict:
 
     Returns:
         dict: a dict with the count of unique even and odd numbers in the list.
-    '''
+    """
 ```
 
 ### Runtime error (parseable final submission)
@@ -255,8 +257,8 @@ def count_unique_even_odd(l: list)-> dict:
   - Variant `ns_25t2_py12_1/9`, Student ID `2c31a4020a7d471e816c2e864802b4a4`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-def count_unique_even_odd(l: list)-> dict:
-    '''Returns a dict with the count of unique even and odd numbers in the list.
+def count_unique_even_odd(l: list) -> dict:
+    """Returns a dict with the count of unique even and odd numbers in the list.
 
     Eg.
     >>>l = [1, 2, 2, 3, 4, 5, 5, 6]
@@ -268,7 +270,7 @@ def count_unique_even_odd(l: list)-> dict:
 
     Returns:
         dict: a dict with the count of unique even and odd numbers in the list.
-    '''
+    """
 
 
 even_numbers = set()
@@ -289,12 +291,9 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `941f9c347bff4e8cb0c230dbd5aaa0b7`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    l = [1, 2, 2, 3, 4, 5, 5, 6]
-    is_equal(
-       count_unique_even_odd([]),
-       {"even": 3, "odd": 4}
-       )
-    return(count_unique_even_odd(l))
+l = [1, 2, 2, 3, 4, 5, 5, 6]
+is_equal(count_unique_even_odd([]), {"even": 3, "odd": 4})
+return count_unique_even_odd(l)
 ```
 
 ### Runtime KeyError from incrementing dict keys without initializing `'even'`/`'odd'`
@@ -310,15 +309,15 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `9495254eb5264f0bac6ddbc20ebb6c8c`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    dict = {'even': 0 , 'odd': 0}
-    for x in l:
-        if x%2 == 0:
-            #even += {1}
-            dict[0] += 1
-        elif x%2 == 1:
-            #odd += {1}
-            dict[1] += 1
-    return dict
+dict = {"even": 0, "odd": 0}
+for x in l:
+    if x % 2 == 0:
+        # even += {1}
+        dict[0] += 1
+    elif x % 2 == 1:
+        # odd += {1}
+        dict[1] += 1
+return dict
 ```
 
 ### Runtime IndexError from using list values as indices (e.g., `l[i]` inside `for i in l`)
@@ -402,16 +401,16 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `2b145ef9c4ab4ed584e7340bb2f9595d`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    l= []
-    l = input()
-    num = l.split(",")
-    even=0
-    odd=0
-    for i in num:
-        if num % 2 == 0:
-            even +=1
-            if num % 2 == 1:
-                odd += 1
+l = []
+l = input()
+num = l.split(",")
+even = 0
+odd = 0
+for i in num:
+    if num % 2 == 0:
+        even += 1
+        if num % 2 == 1:
+            odd += 1
 ```
 
 ### Counts all even/odd occurrences without deduplicating the input values first
@@ -461,14 +460,14 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `0ea006a053f44339ab969e531fc584fb`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    unique_even = set()
-    unique_odd = set()
-    for number in l :
-        if number % 2 == 0:
-            unique_even.add(number)
-        else:
-            unique_even.add(number)
-    return{"even": len(unique_even),"odd":len(unique_odd)}
+unique_even = set()
+unique_odd = set()
+for number in l:
+    if number % 2 == 0:
+        unique_even.add(number)
+    else:
+        unique_even.add(number)
+return {"even": len(unique_even), "odd": len(unique_odd)}
 ```
 
 ### Runtime AttributeError
@@ -485,21 +484,21 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `5ae92d5eb96a4382be5e0a9242bb9276`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    e = []
-    o = []
-    n = len(l)
-    c1 = []
-    c2 = []
-    d = dict()
-    for i in range(0,n):
-        for j in range (0,n):
-            if l[i] % 2 == 0 and not l[i] == l[j] :
-               l[i].appeand(c1)
-            elif l[i] % 3 == 0 and not l[i] == l[j]:
-                l[i].appeand(c2)
-    d['even'] = len(c1)
-    d['odd'] = len(c2)
-    return(d)
+e = []
+o = []
+n = len(l)
+c1 = []
+c2 = []
+d = dict()
+for i in range(0, n):
+    for j in range(0, n):
+        if l[i] % 2 == 0 and not l[i] == l[j]:
+            l[i].appeand(c1)
+        elif l[i] % 3 == 0 and not l[i] == l[j]:
+            l[i].appeand(c2)
+d["even"] = len(c1)
+d["odd"] = len(c2)
+return d
 ```
 
 ### Runtime ValueError
@@ -515,15 +514,15 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `5fac3f47b04c4e0c9619bc074b3c53f0`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    count = {'even': 0, 'odd' : 0}
-    for elem in l:
-        for key, value in count:
-            if elem % 2 == 0:
-                key[even] += 1
-            else:
-                if elem % 2 != 0:
-                    key[odd] +=1
-    return count
+count = {"even": 0, "odd": 0}
+for elem in l:
+    for key, value in count:
+        if elem % 2 == 0:
+            key[even] += 1
+        else:
+            if elem % 2 != 0:
+                key[odd] += 1
+return count
 ```
 
 ### Deduplicates values but then counts parity of indices (`range(len(set(l)))`) instead of parity of values
@@ -539,16 +538,16 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `6a0d70b1adb8417a851c5d3246526356`, summary `Wrong Answer`, score `50`, vector `01`
 
 ```python
-    d={}
-    s=set(l)
-    evenc=0
-    oddc=0
-    for i in range(len(s)):
-        if (i%2==0):
-            evenc+=1
-        else:
-            oddc+=1
-    return{"even":evenc,"odd":oddc}
+d = {}
+s = set(l)
+evenc = 0
+oddc = 0
+for i in range(len(s)):
+    if i % 2 == 0:
+        evenc += 1
+    else:
+        oddc += 1
+return {"even": evenc, "odd": oddc}
 ```
 
 ### Deduplicates values with `set(...)` but still counts index parity, not value parity
@@ -598,12 +597,12 @@ odd_numbers = set()
   - Variant `ns_25t2_py12_1/9`, Student ID `fade59fa57ee40ad92e6204000f1b835`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    nums = set(l)
-    D = []
-    for num in nums:
-        if num%2 == 0:
-            D.append(num)
-        else:
-            D.append(num)
-    return D
+nums = set(l)
+D = []
+for num in nums:
+    if num % 2 == 0:
+        D.append(num)
+    else:
+        D.append(num)
+return D
 ```

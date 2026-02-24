@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/18` | 276 | 213 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/22` (canonical) | 317 | 241 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/18`             |              276 |      213 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/22` (canonical) |              317 |      241 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/18` | 276 | 63 | 213 | 172 | 41 |
-| `ns_25t2_py21_2/22` | 317 | 76 | 241 | 202 | 39 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/18` |              276 |        63 |      213 |                172 |                     41 |
+| `ns_25t2_py21_2/22` |              317 |        76 |      241 |                202 |                     39 |
 
 ## Private Case Structure
 
@@ -49,28 +49,28 @@ Private-case vectors in this report are 4-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/18` | `ns_25t2_py21_2/22` |
-| --- | ---: | ---: | ---: | ---: |
-| Residual promoted: hard-coded/fixed-size sample-matrix output instead of general `m x n` rotation | 103 | 22.7% | 48 | 55 |
-| Likely correct rotation logic, but prints rows with `print(*row)` (evaluator appears to expect different spacing/trailing-space formatting) | 86 | 18.9% | 38 | 48 |
-| Syntax / non-parseable final submission | 80 | 17.6% | 41 | 39 |
-| Runtime ValueError from parsing matrix dimensions/elements with the wrong input format | 36 | 7.9% | 18 | 18 |
-| Empty final submission | 33 | 7.3% | 14 | 19 |
-| Other wrong-answer logic pattern (residual) | 21 | 4.6% | 11 | 10 |
-| Runtime IndexError from square-matrix assumptions or swapped row/column indexing on rectangular matrices | 21 | 4.6% | 9 | 12 |
-| Runtime NameError from undefined matrix/dimension variables (`m`, `n`, `a`, etc.) | 16 | 3.5% | 8 | 8 |
-| Implements a function-only solution (or helper) without producing the required printed output | 10 | 2.2% | 5 | 5 |
-| Runtime TypeError from treating dimensions/data as the wrong type while building/rotating the matrix | 10 | 2.2% | 8 | 2 |
-| Runtime error (parseable final submission) | 9 | 2.0% | 2 | 7 |
-| Runtime EOFError from fixed-size input assumptions (e.g., hard-coded 3x3 reads) or wrong input format parsing | 8 | 1.8% | 4 | 4 |
-| Hard-codes the public sample rotated matrix output instead of rotating arbitrary input matrices | 8 | 1.8% | 1 | 7 |
-| Runtime AttributeError from list/string API misuse while reading or rotating the matrix | 4 | 0.9% | 2 | 2 |
-| Adds debug prints (`print(order)` / dimension prints), causing output-format mismatch | 2 | 0.4% | 0 | 2 |
-| Not able to run | 2 | 0.4% | 1 | 1 |
-| Hard-codes sample rotated-matrix lines instead of computing the rotation from input | 2 | 0.4% | 1 | 1 |
-| Runtime KeyError | 1 | 0.2% | 0 | 1 |
-| Assumes a fixed-size sample matrix (e.g., hard-coded 3x3 input) instead of handling general `m x n` matrices | 1 | 0.2% | 1 | 0 |
-| Returns a rotated matrix from a helper function but does not print it (I/O question requires explicit output) | 1 | 0.2% | 1 | 0 |
+| Pattern                                                                                                                                     | Cluster count | % of cluster non-full | `ns_25t2_py21_1/18` | `ns_25t2_py21_2/22` |
+| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Residual promoted: hard-coded/fixed-size sample-matrix output instead of general `m x n` rotation                                           |           103 |                 22.7% |                  48 |                  55 |
+| Likely correct rotation logic, but prints rows with `print(*row)` (evaluator appears to expect different spacing/trailing-space formatting) |            86 |                 18.9% |                  38 |                  48 |
+| Syntax / non-parseable final submission                                                                                                     |            80 |                 17.6% |                  41 |                  39 |
+| Runtime ValueError from parsing matrix dimensions/elements with the wrong input format                                                      |            36 |                  7.9% |                  18 |                  18 |
+| Empty final submission                                                                                                                      |            33 |                  7.3% |                  14 |                  19 |
+| Other wrong-answer logic pattern (residual)                                                                                                 |            21 |                  4.6% |                  11 |                  10 |
+| Runtime IndexError from square-matrix assumptions or swapped row/column indexing on rectangular matrices                                    |            21 |                  4.6% |                   9 |                  12 |
+| Runtime NameError from undefined matrix/dimension variables (`m`, `n`, `a`, etc.)                                                           |            16 |                  3.5% |                   8 |                   8 |
+| Implements a function-only solution (or helper) without producing the required printed output                                               |            10 |                  2.2% |                   5 |                   5 |
+| Runtime TypeError from treating dimensions/data as the wrong type while building/rotating the matrix                                        |            10 |                  2.2% |                   8 |                   2 |
+| Runtime error (parseable final submission)                                                                                                  |             9 |                  2.0% |                   2 |                   7 |
+| Runtime EOFError from fixed-size input assumptions (e.g., hard-coded 3x3 reads) or wrong input format parsing                               |             8 |                  1.8% |                   4 |                   4 |
+| Hard-codes the public sample rotated matrix output instead of rotating arbitrary input matrices                                             |             8 |                  1.8% |                   1 |                   7 |
+| Runtime AttributeError from list/string API misuse while reading or rotating the matrix                                                     |             4 |                  0.9% |                   2 |                   2 |
+| Adds debug prints (`print(order)` / dimension prints), causing output-format mismatch                                                       |             2 |                  0.4% |                   0 |                   2 |
+| Not able to run                                                                                                                             |             2 |                  0.4% |                   1 |                   1 |
+| Hard-codes sample rotated-matrix lines instead of computing the rotation from input                                                         |             2 |                  0.4% |                   1 |                   1 |
+| Runtime KeyError                                                                                                                            |             1 |                  0.2% |                   0 |                   1 |
+| Assumes a fixed-size sample matrix (e.g., hard-coded 3x3 input) instead of handling general `m x n` matrices                                |             1 |                  0.2% |                   1 |                   0 |
+| Returns a rotated matrix from a helper function but does not print it (I/O question requires explicit output)                               |             1 |                  0.2% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -93,22 +93,23 @@ arr = []
 for _ in range(int(a[0])):
     arr.append(input())
 arr = arr[::-1]
-qwer= ""
+qwer = ""
 for i in range(len(arr)):
     for j in range(len(arr[i])):
-        if(j%2 == 0):
-            qwer = qwer+arr[i][j]
+        if j % 2 == 0:
+            qwer = qwer + arr[i][j]
 asd = ""
 zxc = ""
 mnb = ""
 fgh = ""
 for i in range(len(qwer)):
-    if(i%int(a[1]) == 0):
-        if(asd!=""):
-            asd = asd +" "+ qwer[i]
+    if i % int(a[1]) == 0:
+        if asd != "":
+            asd = asd + " " + qwer[i]
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `784db00abffd4a6b9bd6de8febb9409c`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `784db00abffd4a6b9bd6de8febb9409c`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
 size = input()
@@ -164,7 +165,8 @@ MY DETAILS :
 Username: SHRESTH KASERA
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `1250d50bbd384f0da4b2a2ae2313142b`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `1250d50bbd384f0da4b2a2ae2313142b`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
 # # def rotate_matrix(matrix,m,n):
@@ -221,7 +223,8 @@ def is_arithmetic_progression(sequence: list) -> bool:
     is_arithmetic_progression([1, 2, 4, 8, 16])
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `76d78eedef7d4c6ebd8989c4e981fdc9`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `76d78eedef7d4c6ebd8989c4e981fdc9`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
 def rotate_matrix_clockwise(matrix):
@@ -257,44 +260,45 @@ def main():
   - Variant `ns_25t2_py21_1/18`, Student ID `4f48bdf894fc455291000ac4c07c34ea`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-m,n=str(input()).split()
+m, n = str(input()).split()
 
-M=[]
+M = []
 for i in range(int(m)):
-    row=[]
+    row = []
     for j in range(int(n)):
-        x,y,z=str(input()).split()
+        x, y, z = str(input()).split()
         row.append(int(x))
         row.append(int(y))
         row.append(int(z))
     M.append(row)
-R=[]
+R = []
 for i in range(int(n)):
-    row=[]
+    row = []
     for j in range(int(m)):
-        R[i][j]=M[m-j-1][i]
+        R[i][j] = M[m - j - 1][i]
         row.append(R[i][j])
     R.append(row)
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `d7c2a7d1d3d14616b921bd1f494035c5`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `d7c2a7d1d3d14616b921bd1f494035c5`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-m=int(input())
-n=int(input())
-print ("m,n, end=''")
+m = int(input())
+n = int(input())
+print("m,n, end=''")
 # to rotate a matrix to 90 degrees we have to change the positions of its digits.
 # a31 will be a11, a21 will be a12, a11 will be a 13 and so on.
 
-print ('pos"a31" at "a11"')
-print ('pos"a21" at "a12"')
-print ('pos"a11" at "a13"')
-print ('pos"a32" at "a21"')
-print ('pos "a22" at "a22"')
-print ('pos "a12" at "a23"')
-print ('pos "a33" at "a31"')
-print ('pos "a23" at "a32"')
-print ('pos "a13" at "a33"')
+print('pos"a31" at "a11"')
+print('pos"a21" at "a12"')
+print('pos"a11" at "a13"')
+print('pos"a32" at "a21"')
+print('pos "a22" at "a22"')
+print('pos "a12" at "a23"')
+print('pos "a33" at "a31"')
+print('pos "a23" at "a32"')
+print('pos "a13" at "a33"')
 ```
 
 ### Empty final submission
@@ -309,12 +313,11 @@ print ('pos "a13" at "a33"')
   - Variant `ns_25t2_py21_1/18`, Student ID `117ecf9bb7804b1b9fb5f84311eeb917`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `224f568bdc8140bd9ac55e1c97146e79`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `224f568bdc8140bd9ac55e1c97146e79`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -349,7 +352,8 @@ lt = list()
 for i in range(len(rmatrx)):
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `15673188f9e1405eb03f1c85350b0795`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `15673188f9e1405eb03f1c85350b0795`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
 '''M,N=map(int, input().split() )
@@ -405,25 +409,27 @@ for i in range(m):
         elif j==0:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `c6121db846024850ac5bd52aab0ee0a9`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `c6121db846024850ac5bd52aab0ee0a9`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
 # In this program we'll convert matrices to 90 degrees,
 # which is basically taking transpose of the matrix
 # and then interchanging the first and last columns
 import numpy as np
-orde = input()
-order = orde.split(' ')
 
-i=0
+orde = input()
+order = orde.split(" ")
+
+i = 0
 matrix = []
 while i < int(order[0]):
     row = input()
-    rowl = row.split(' ')
+    rowl = row.split(" ")
     # rowl.reverse()
     matrix.append(rowl)
     # matrix.reverse()
-    i+=1
+    i += 1
 
 
 # ...
@@ -461,7 +467,8 @@ if(n>=m):
     for i in range(n):
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `2d6a399f03ad4ffb93b8bd766502ce42`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `2d6a399f03ad4ffb93b8bd766502ce42`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
 x,y=map(int,input().split())
@@ -497,29 +504,30 @@ for i in range(y+t):
   - Variant `ns_25t2_py21_1/18`, Student ID `29fabe2017354e42896d76d503bbb88d`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    if not matrix or not matrix[0]:
-        return []
-    rows = len(matrix)
-    column = len(matrix[0])
-    rotated_matrix = [[0 for _ in range(rows)] for _ in range(column)]
-    for i in range(rows):
-        for j in range(column):
-            rotated_matrix[j][rows - 1 - i] = mat[i][j]
-    return rotated_matrix
+if not matrix or not matrix[0]:
+    return []
+rows = len(matrix)
+column = len(matrix[0])
+rotated_matrix = [[0 for _ in range(rows)] for _ in range(column)]
+for i in range(rows):
+    for j in range(column):
+        rotated_matrix[j][rows - 1 - i] = mat[i][j]
+return rotated_matrix
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `1535d22d1cb147ebbdf929be44d7ca75`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `1535d22d1cb147ebbdf929be44d7ca75`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    if not matrix:
-        return[]
-    rows=len(matrix)
-    cols=len(matrix[0])
-    rorated_matrix=[[0 for _ in range(rows)] for _ in range(cols)]
-    for i in range(rows):
-        for j in rows(cols):
-            rotate_matrix[j][rows-1-i]=matrix[i][j]
-        return rotated_matrix
-    return rotate_matrix_cloclwise(rotated_matrix(matrix))
+if not matrix:
+    return []
+rows = len(matrix)
+cols = len(matrix[0])
+rorated_matrix = [[0 for _ in range(rows)] for _ in range(cols)]
+for i in range(rows):
+    for j in rows(cols):
+        rotate_matrix[j][rows - 1 - i] = matrix[i][j]
+    return rotated_matrix
+return rotate_matrix_cloclwise(rotated_matrix(matrix))
 ```
 
 ### Runtime TypeError from treating dimensions/data as the wrong type while building/rotating the matrix
@@ -554,14 +562,15 @@ for i in range(n):
         y = x[i]
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `ae46d18eb74e4a7fa14ade7c82ce2009`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `ae46d18eb74e4a7fa14ade7c82ce2009`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    rotated_matrix=[[0]*m for i in range(n)]
-    for i in range (m):
-        for j in range(n-1,-1,-1):
-            rotated_matrix[i][j]=m[i][n-1-j]
-    return rotated_matrix
+rotated_matrix = [[0] * m for i in range(n)]
+for i in range(m):
+    for j in range(n - 1, -1, -1):
+        rotated_matrix[i][j] = m[i][n - 1 - j]
+return rotated_matrix
 ```
 
 ### Runtime error (parseable final submission)
@@ -579,24 +588,25 @@ for i in range(n):
 ```python
 n = int(input())
 m = int(input())
-for i in range(0,n):
-    for j in range(0,m):
-        a[i,j] = input()
-for j in range(0,n):
-    for i in range(0,m):
-        b[j,i] = a[i,j]
-result = b[n,m]
+for i in range(0, n):
+    for j in range(0, m):
+        a[i, j] = input()
+for j in range(0, n):
+    for i in range(0, m):
+        b[j, i] = a[i, j]
+result = b[n, m]
 return result
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `b0602c705d4d4150a3bacec5f72fd3f5`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `b0602c705d4d4150a3bacec5f72fd3f5`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    m, n = len(matrix), len(matrix[0])
-    rotated = [[0] * m for _ in range(n)]
-    for i in range(m):
-        for j in range(n):
-            rotated[j][m - 1 - i] = matrix[i][j]
-    return rotated
+m, n = len(matrix), len(matrix[0])
+rotated = [[0] * m for _ in range(n)]
+for i in range(m):
+    for j in range(n):
+        rotated[j][m - 1 - i] = matrix[i][j]
+return rotated
 ```
 
 ### Runtime EOFError from fixed-size input assumptions (e.g., hard-coded 3x3 reads) or wrong input format parsing
@@ -617,11 +627,12 @@ matrix2 = input()
 matrix3 = input()
 length_of_each, total_lists = size.split()
 length_of_each, total_lists = int(length_of_each), int(total_lists)
-print(matrix3[0],matrix2[0],matrix1[0]+' ')
-print(matrix3[2],matrix2[2],matrix1[2]+' ')
-print(matrix3[4],matrix2[4],matrix1[4]+' ')
+print(matrix3[0], matrix2[0], matrix1[0] + " ")
+print(matrix3[2], matrix2[2], matrix1[2] + " ")
+print(matrix3[4], matrix2[4], matrix1[4] + " ")
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `6d3d1b01e07b4b01947d39c60df5bdb3`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `6d3d1b01e07b4b01947d39c60df5bdb3`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
 nm=input()
@@ -657,11 +668,12 @@ for i in range (row):
   - Variant `ns_25t2_py21_1/18`, Student ID `997950a3c2f648b99fb96fa09570725a`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-print(7,4,1)
-print(8,5,2)
-print(9,6,3)
+print(7, 4, 1)
+print(8, 5, 2)
+print(9, 6, 3)
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `84cadb6a693241bf89a658609b9f7229`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `84cadb6a693241bf89a658609b9f7229`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
 in_put = input().split()
@@ -697,35 +709,36 @@ for i in range(len(new_matrix)):
   - Variant `ns_25t2_py21_1/18`, Student ID `ccd7ec367e81430b8d02a57b08082f12`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-m,n= map(int,input().split())
+m, n = map(int, input().split())
 matrix = []
 for i in range(m):
-    row=list(map(int,input.split()))
+    row = list(map(int, input.split()))
     matrix.append(row)
 rotated = []
 for j in range(n):
-    new_row=[]
-    for i in range (m-1, -1, -1):
+    new_row = []
+    for i in range(m - 1, -1, -1):
         new_row.append(matrix[i][j])
     rotated.append(new_row)
 for row in rotated:
     for val in rotated:
-        print(val,row)
+        print(val, row)
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `c8472f5d0cb44df3b2ed8d33f0cd5cbe`, summary `Runtime Error`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `c8472f5d0cb44df3b2ed8d33f0cd5cbe`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-m,n=map(input.split())
+m, n = map(input.split())
 
-matrix=[]
+matrix = []
 print("Enter matrix elements")
 for _ in range(m):
-    row=list(map(int,input().split()))
+    row = list(map(int, input().split()))
     matrix.append(row)
-rotated=[[0]*m for _ in range(n)]
+rotated = [[0] * m for _ in range(n)]
 for i in range(m):
     for j in range(n):
-        rotated[j][m-1-i]=matrix[i][j]
+        rotated[j][m - 1 - i] = matrix[i][j]
 for tow in rotated:
     print(*row)
 ```
@@ -742,24 +755,23 @@ for tow in rotated:
   - Variant `ns_25t2_py21_2/22`, Student ID `d3d8e14efc344d5ba5b136ef97552739`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-line=[]
-result=[]
-m,n=map(int,(input().split()))
-#print(m,n)
-#print(type(m),type(n))
+line = []
+result = []
+m, n = map(int, (input().split()))
+# print(m,n)
+# print(type(m),type(n))
 for row in range(m):
     line.append([input().strip()])
 print(line)
-result=line[::-1]
+result = line[::-1]
 print(result)
-for i in range(m-1):
+for i in range(m - 1):
     result.append(result[i][0])
 print(result)
 
 
-
-#for i in line:
- #   print(line)
+# for i in line:
+#   print(line)
 ```
 
 ### Not able to run
@@ -794,17 +806,18 @@ for col in range(n):
 for row in rotated:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `7a213b2882464ba680ddbbcf140e9041`, summary `Not able to run`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `7a213b2882464ba680ddbbcf140e9041`, summary `Not able to run`, score `0`, vector `0000`
 
 ```python
-    if not matrix or not matrix[0]:
-        return []
-    rows, cols = len(matrix), len(matrix[0])
-    rotated = [[0] * rows for _ in range(cols)]
-    for i in range(rows):
-        for j in range(cols):
-            rotated[j][rows - 1 - i] = matrix[i][j]
-    return rotated
+if not matrix or not matrix[0]:
+    return []
+rows, cols = len(matrix), len(matrix[0])
+rotated = [[0] * rows for _ in range(cols)]
+for i in range(rows):
+    for j in range(cols):
+        rotated[j][rows - 1 - i] = matrix[i][j]
+return rotated
 ```
 
 ### Hard-codes sample rotated-matrix lines instead of computing the rotation from input
@@ -822,7 +835,8 @@ for row in rotated:
 print("5 3 1")
 print("6 4 2")
 ```
-  - Variant `ns_25t2_py21_2/22`, Student ID `8050e0f59a44408eb909701d7cdde1a6`, summary `Wrong Answer`, score `0`, vector `0000`
+
+- Variant `ns_25t2_py21_2/22`, Student ID `8050e0f59a44408eb909701d7cdde1a6`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
 print("5 3 1\n6 4 2")
@@ -848,7 +862,7 @@ matrix = []
 for i in range(m):
     matrix.append(input().split())
 n_m = matrix
-mdict = {0:[],1:[],2:[]}
+mdict = {0: [], 1: [], 2: []}
 for i in matrix[::-1]:
     for j in range(m):
         mdict[j].append(i[j])
@@ -901,5 +915,5 @@ for i in range(len(a)):
   - Variant `ns_25t2_py21_1/18`, Student ID `25eefece568d403baeebe051f2f00e1b`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    return [list(row)for row in zip(*matrix)[::-1]]
+return [list(row) for row in zip(*matrix)[::-1]]
 ```

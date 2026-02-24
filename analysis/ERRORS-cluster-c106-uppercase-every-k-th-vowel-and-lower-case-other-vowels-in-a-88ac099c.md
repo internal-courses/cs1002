@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py22_1/20` (canonical) | 386 | 246 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py22_1/20` (canonical) |              386 |      246 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py22_1/20` | 386 | 140 | 246 | 203 | 43 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py22_1/20` |              386 |       140 |      246 |                203 |                     43 |
 
 ## Private Case Structure
 
@@ -46,35 +46,35 @@ Private-case vectors in this report are 5-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py22_1/20` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 43 | 17.5% | 43 |
-| Empty/comment-only final submission | 37 | 15.0% | 37 |
-| Parses `k` from only the first character (`read(1)` / `text[0]`), which fails multi-digit `k` cases | 31 | 12.6% | 31 |
-| Incorrect file-based vowel transformation logic (input source, cumulative counting, or exact output formatting is broadly wrong) | 28 | 11.4% | 28 |
-| Reads stdin (`input()`) instead of reading from the provided `filename` file | 27 | 11.0% | 27 |
-| Runtime error (parseable final submission) | 11 | 4.5% | 11 |
-| Prints hard-coded public sample output text instead of reading and transforming `filename` | 10 | 4.1% | 10 |
-| Runtime TypeError from mixing list/string/file-handle values while rebuilding transformed lines | 8 | 3.3% | 8 |
-| Uppercases every k-th vowel but does not lowercase the other vowels as required | 7 | 2.8% | 7 |
-| Prints a public sample output directly instead of transforming the contents of `filename` | 6 | 2.4% | 6 |
-| Runtime IndexError from fragile line/character indexing while reconstructing file content | 5 | 2.0% | 5 |
-| Runtime NameError from undefined counters/output buffers in file vowel-transform logic | 5 | 2.0% | 5 |
-| Iterates over whole lines but checks `if line in vowels`, so vowel detection happens at the wrong granularity | 3 | 1.2% | 3 |
-| Pastes logic/output from a different string-transformation problem instead of the file-vowel task | 3 | 1.2% | 3 |
-| Line-splitting reconstruction changes formatting (strips lines / inserts extra newlines) instead of preserving file text exactly | 3 | 1.2% | 3 |
-| Uses read/write (`r+`) file mode and manual whole-file mutation, often combined with fragile first-character `k` parsing | 3 | 1.2% | 3 |
-| Mostly correct transformation logic, but hidden formatting/`k` parsing edge cases fail (commonly first-char `k` parsing or newline stripping) | 3 | 1.2% | 3 |
-| Runtime AttributeError from string/file API misuse (`indexof`, wrong file/string methods) in vowel processing | 2 | 0.8% | 2 |
-| Opens a hard-coded filename/path (e.g., `filename.txt`) instead of using the provided `filename` | 2 | 0.8% | 2 |
-| Runtime ValueError while parsing `k` from the file (malformed first-line handling) | 2 | 0.8% | 2 |
-| Boolean-precedence bug in vowel checks (`... or ... and count % k == 0`) uppercases the wrong characters | 1 | 0.4% | 1 |
-| Resets the vowel counter inside the per-line loop (`ctr/counter = 0`), breaking cumulative counting across the file | 1 | 0.4% | 1 |
-| Runtime KeyError from dictionary-based vowel mapping logic missing some cases | 1 | 0.4% | 1 |
-| Writes the transformed result to an `output.txt` file (and re-reads it) instead of printing directly to stdout | 1 | 0.4% | 1 |
-| Builds a helper that returns transformed text/list but never prints the required final output | 1 | 0.4% | 1 |
-| Infinite/inefficient file-read loop (e.g., `while` loop over `read(1)` without proper progress update) | 1 | 0.4% | 1 |
-| Uses `strip().split()` word tokenization, which collapses spaces/newlines and breaks exact file formatting | 1 | 0.4% | 1 |
+| Pattern                                                                                                                                       | Cluster count | % of cluster non-full | `ns_25t2_py22_1/20` |
+| --------------------------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                                                       |            43 |                 17.5% |                  43 |
+| Empty/comment-only final submission                                                                                                           |            37 |                 15.0% |                  37 |
+| Parses `k` from only the first character (`read(1)` / `text[0]`), which fails multi-digit `k` cases                                           |            31 |                 12.6% |                  31 |
+| Incorrect file-based vowel transformation logic (input source, cumulative counting, or exact output formatting is broadly wrong)              |            28 |                 11.4% |                  28 |
+| Reads stdin (`input()`) instead of reading from the provided `filename` file                                                                  |            27 |                 11.0% |                  27 |
+| Runtime error (parseable final submission)                                                                                                    |            11 |                  4.5% |                  11 |
+| Prints hard-coded public sample output text instead of reading and transforming `filename`                                                    |            10 |                  4.1% |                  10 |
+| Runtime TypeError from mixing list/string/file-handle values while rebuilding transformed lines                                               |             8 |                  3.3% |                   8 |
+| Uppercases every k-th vowel but does not lowercase the other vowels as required                                                               |             7 |                  2.8% |                   7 |
+| Prints a public sample output directly instead of transforming the contents of `filename`                                                     |             6 |                  2.4% |                   6 |
+| Runtime IndexError from fragile line/character indexing while reconstructing file content                                                     |             5 |                  2.0% |                   5 |
+| Runtime NameError from undefined counters/output buffers in file vowel-transform logic                                                        |             5 |                  2.0% |                   5 |
+| Iterates over whole lines but checks `if line in vowels`, so vowel detection happens at the wrong granularity                                 |             3 |                  1.2% |                   3 |
+| Pastes logic/output from a different string-transformation problem instead of the file-vowel task                                             |             3 |                  1.2% |                   3 |
+| Line-splitting reconstruction changes formatting (strips lines / inserts extra newlines) instead of preserving file text exactly              |             3 |                  1.2% |                   3 |
+| Uses read/write (`r+`) file mode and manual whole-file mutation, often combined with fragile first-character `k` parsing                      |             3 |                  1.2% |                   3 |
+| Mostly correct transformation logic, but hidden formatting/`k` parsing edge cases fail (commonly first-char `k` parsing or newline stripping) |             3 |                  1.2% |                   3 |
+| Runtime AttributeError from string/file API misuse (`indexof`, wrong file/string methods) in vowel processing                                 |             2 |                  0.8% |                   2 |
+| Opens a hard-coded filename/path (e.g., `filename.txt`) instead of using the provided `filename`                                              |             2 |                  0.8% |                   2 |
+| Runtime ValueError while parsing `k` from the file (malformed first-line handling)                                                            |             2 |                  0.8% |                   2 |
+| Boolean-precedence bug in vowel checks (`... or ... and count % k == 0`) uppercases the wrong characters                                      |             1 |                  0.4% |                   1 |
+| Resets the vowel counter inside the per-line loop (`ctr/counter = 0`), breaking cumulative counting across the file                           |             1 |                  0.4% |                   1 |
+| Runtime KeyError from dictionary-based vowel mapping logic missing some cases                                                                 |             1 |                  0.4% |                   1 |
+| Writes the transformed result to an `output.txt` file (and re-reads it) instead of printing directly to stdout                                |             1 |                  0.4% |                   1 |
+| Builds a helper that returns transformed text/list but never prints the required final output                                                 |             1 |                  0.4% |                   1 |
+| Infinite/inefficient file-read loop (e.g., `while` loop over `read(1)` without proper progress update)                                        |             1 |                  0.4% |                   1 |
+| Uses `strip().split()` word tokenization, which collapses spaces/newlines and breaks exact file formatting                                    |             1 |                  0.4% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -141,22 +141,22 @@ with open(filename,'w') as f:
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-with open(filename, 'r') as f:
+with open(filename, "r") as f:
     lines = f.read().splitlines()
-vowels = {"a","e","i","o","u"}
+vowels = {"a", "e", "i", "o", "u"}
 num = int(lines[0])
 text = lines[1:]
 for line in text:
-    count =0
+    count = 0
     for letter in line:
         if letter in vowels:
-            count+=1
-            if letter =="a":
+            count += 1
+            if letter == "a":
                 letter = chr(65)
                 print(letter)
                 continue
-            elif letter =="e":
-                letter=chr(65)
+            elif letter == "e":
+                letter = chr(65)
 # ...
 ```
 
@@ -173,17 +173,17 @@ for line in text:
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-with open(filename,'r') as file:
+with open(filename, "r") as file:
     file.readlines()
-    vowels = 'aeiou'
+    vowels = "aeiou"
     vowels_count = 0
-    result = ''
+    result = ""
     for lines in file:
         n = int(lines[0].strip())
         for word in lines[1:]:
             if vowels in word.lower():
                 vowels_count += 1
-                if vowels_count == n or vowels_count%n == 0:
+                if vowels_count == n or vowels_count % n == 0:
                     for ch in word:
                         if ch in vowels:
                             result = ch.upper()
@@ -240,18 +240,17 @@ with open(filename,'r') as file:
 # use the variable filename for the name of the file.
 
 
+vowels = "aeiou"
 
-vowels="aeiou"
 
+with open(filename, "r") as f:
+    row = f.read(1)
+    row1 = int(row)
 
-with open(filename,"r")as f:
-    row=f.read(1)
-    row1=int(row)
+    # print(row)
+    rows = f.read()
 
-    #print(row)
-    rows=f.read()
-
-    l=len(rows)
+    l = len(rows)
     print(l)
 
 # ...
@@ -290,12 +289,12 @@ if "5":
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-with open(filename, 'r') as f:
+with open(filename, "r") as f:
     lines = f.readlines()
-    for i in range[1:len(lines)]:
+    for i in range[1 : len(lines)]:
         s_lines.append(lines[i])
     print(s_lines)
-    '''n = int(lines[0])
+    """n = int(lines[0])
     count = 0
     vow = []
     vowels = "aeiouAEIOU"
@@ -305,7 +304,7 @@ with open(filename, 'r') as f:
                 v_count += 1
                 if count%n == 0:
                     line[i].upper()
-    print(lines[1:])'''
+    print(lines[1:])"""
 # ...
 ```
 
@@ -354,7 +353,7 @@ with open(filename,'r') as f:
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the
-if 2==2:
+if 2 == 2:
     print("MAkE All vOwEls UppErcAsE.")
 ```
 
@@ -406,18 +405,18 @@ if 2==2:
 import tempfile
 import sys
 
-filename = tempfile.mkstemp(prefix='case')[1]
-with open(filename, 'w') as f:
+filename = tempfile.mkstemp(prefix="case")[1]
+with open(filename, "w") as f:
     f.write(sys.stdin.read())
 
-vowels = 'aeiouAEIOU'
+vowels = "aeiouAEIOU"
 k_count = 0
 
-with open(filename, 'r') as f:
+with open(filename, "r") as f:
     lines = f.readlines()
 if lines:
     k = int(lines[0])
-    text = ''.join(lines[1:])
+    text = "".join(lines[1:])
 result = []
 # ...
 ```
@@ -433,22 +432,22 @@ result = []
   - Variant `ns_25t2_py22_1/20`, Student ID `1f4aac34637a484398db846573e355a9`, summary `Wrong Answer`, score `0`, vector `00000`
 
 ```python
-    vowels = "aeiouAEIOU"
-    result = []
-    vowel_count = 0
-    for line in lines:
-        new_line = ""
-        for ch in line:
-            if ch in vowels:
-                vowel_count += 1
-                if vowel_count % k == 0 :
-                    new_line += ch.upper()
-                else:
-                    new_line += ch
+vowels = "aeiouAEIOU"
+result = []
+vowel_count = 0
+for line in lines:
+    new_line = ""
+    for ch in line:
+        if ch in vowels:
+            vowel_count += 1
+            if vowel_count % k == 0:
+                new_line += ch.upper()
             else:
                 new_line += ch
-        result.append(new_line)
-    return result
+        else:
+            new_line += ch
+    result.append(new_line)
+return result
 ```
 
 ### Pastes logic/output from a different string-transformation problem instead of the file-vowel task
@@ -462,19 +461,19 @@ result = []
   - Variant `ns_25t2_py22_1/20`, Student ID `1276359249284d419f0429d99ecafc6a`, summary `Wrong Answer`, score `0`, vector `00000`
 
 ```python
-    vowels="aeiou"
-    result=[]
-    vowel_count=0
-    for char in text_content:
-        if char.lower() in vowels:
-            vowel_count +=1
-            if vowel_count%2 !=0:
-                result.append("ub"+char)
-            else:
-                result.append("dub"+char)
+vowels = "aeiou"
+result = []
+vowel_count = 0
+for char in text_content:
+    if char.lower() in vowels:
+        vowel_count += 1
+        if vowel_count % 2 != 0:
+            result.append("ub" + char)
         else:
-            result.append(char)
-    return"join(result)"
+            result.append("dub" + char)
+    else:
+        result.append(char)
+return "join(result)"
 ```
 
 ### Line-splitting reconstruction changes formatting (strips lines / inserts extra newlines) instead of preserving file text exactly
@@ -522,18 +521,18 @@ result = []
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-with open(filename,'r') as f:
-    g=f.read()
-    g=g.split('\n')
-    for i in range(1,len(g)-2):
+with open(filename, "r") as f:
+    g = f.read()
+    g = g.split("\n")
+    for i in range(1, len(g) - 2):
         counter = 0
-        for j in range(0,len(g)):
-            if g[i][j] in 'aeiouAEIOU':
-                counter=counter+1
-                g[i].replace(g[i][j],g[i][j].lower())
-            if counter==3 and g[i][j] in 'aeiouAEIOU':
-                g[i].replace(g[i][j],g[i][j].upper())
-                counter=0
+        for j in range(0, len(g)):
+            if g[i][j] in "aeiouAEIOU":
+                counter = counter + 1
+                g[i].replace(g[i][j], g[i][j].lower())
+            if counter == 3 and g[i][j] in "aeiouAEIOU":
+                g[i].replace(g[i][j], g[i][j].upper())
+                counter = 0
         print(g[i])
 ```
 
@@ -614,8 +613,8 @@ with open(filename, 'r') as f:
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-with open('filename.txt') as file:
-    f.read('filename.txt','r')
+with open("filename.txt") as file:
+    f.read("filename.txt", "r")
 ```
 
 ### Runtime ValueError while parsing `k` from the file (malformed first-line handling)
@@ -632,12 +631,12 @@ with open('filename.txt') as file:
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
 
-with open(filename, 'r') as f1:
-    text=f.read()
-    count=0
+with open(filename, "r") as f1:
+    text = f.read()
+    count = 0
     for i in text:
-        if i in 'AEIOUaeiou':
-            count+=1
+        if i in "AEIOUaeiou":
+            count += 1
 ```
 
 ### Boolean-precedence bug in vowel checks (`... or ... and count % k == 0`) uppercases the wrong characters
@@ -750,11 +749,11 @@ with open(filename) as f:
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
 
-with open(filename,"r") as file1:
+with open(filename, "r") as file1:
     counter = 1
     vowels = "aeiouAEIOU"
-    with open("output.txt","w") as file2:
-        num =  int(file1.readline())
+    with open("output.txt", "w") as file2:
+        num = int(file1.readline())
         for line in file1.readlines():
             new_line = line
             # vowels= "aeiouAEIOU"
@@ -763,7 +762,7 @@ with open(filename,"r") as file1:
                 if char in vowels:
                     if counter == num:
                         file2.write(char.upper())
-                        counter =1
+                        counter = 1
 
 # ...
 ```
@@ -807,12 +806,12 @@ with open(filename,"r") as file1:
 ```python
 # Write your code to read the file and print the result.
 # use the variable filename for the name of the file.
-x=open(filename,'r')
-y=x.readline(0)
-z=x.read(1)
-while z!='':
+x = open(filename, "r")
+y = x.readline(0)
+z = x.read(1)
+while z != "":
     for char in z:
-        if char in 'aeiou':
+        if char in "aeiou":
             v.append(char)
 ```
 

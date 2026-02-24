@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/7` (canonical) | 751 | 176 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/7` (canonical) |              751 |      176 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/7` | 751 | 575 | 176 | 126 | 50 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/7` |              751 |       575 |      176 |                126 |                     50 |
 
 ## Private Case Structure
 
@@ -43,25 +43,25 @@ Private-case vectors in this report are 2-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/7` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 50 | 28.4% | 50 |
-| Runtime TypeError from treating integer input `num` as a sequence/function during digit shuffling | 29 | 16.5% | 29 |
-| No return / implicit `None` | 26 | 14.8% | 26 |
-| Runtime NameError | 12 | 6.8% | 12 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 11 | 6.2% | 11 |
-| Incorrect four-digit shuffle logic (fails hidden cycles; often hard-coded, no-return, or wrong digit extraction) | 11 | 6.2% | 11 |
-| Runtime TypeError | 7 | 4.0% | 7 |
-| Returns the original number unchanged instead of shuffling digits to order `2413` | 5 | 2.8% | 5 |
-| Hard-codes public example shuffle cycles instead of computing the `2413` digit permutation | 5 | 2.8% | 5 |
-| Defines a nested/redeclared `shuffle_digits` inside the function, so the outer function returns `None` | 5 | 2.8% | 5 |
-| Runtime IndexError from invalid list/string indexing while reordering the four digits | 4 | 2.3% | 4 |
-| Time Limit Exceeded | 2 | 1.1% | 2 |
-| Runtime TypeError from broken string-digit reconstruction / type mixing in shuffle output | 2 | 1.1% | 2 |
-| Runtime RecursionError | 2 | 1.1% | 2 |
-| Runtime error (parseable final submission) | 2 | 1.1% | 2 |
-| Builds the correct-looking reordered digits as a string but returns a string instead of an integer | 2 | 1.1% | 2 |
-| Extracts one digit and returns too early (never reconstructs the 4-digit shuffled result) | 1 | 0.6% | 1 |
+| Pattern                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py13_2/7` |
+| ---------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                          |            50 |                 28.4% |                 50 |
+| Runtime TypeError from treating integer input `num` as a sequence/function during digit shuffling                |            29 |                 16.5% |                 29 |
+| No return / implicit `None`                                                                                      |            26 |                 14.8% |                 26 |
+| Runtime NameError                                                                                                |            12 |                  6.8% |                 12 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                        |            11 |                  6.2% |                 11 |
+| Incorrect four-digit shuffle logic (fails hidden cycles; often hard-coded, no-return, or wrong digit extraction) |            11 |                  6.2% |                 11 |
+| Runtime TypeError                                                                                                |             7 |                  4.0% |                  7 |
+| Returns the original number unchanged instead of shuffling digits to order `2413`                                |             5 |                  2.8% |                  5 |
+| Hard-codes public example shuffle cycles instead of computing the `2413` digit permutation                       |             5 |                  2.8% |                  5 |
+| Defines a nested/redeclared `shuffle_digits` inside the function, so the outer function returns `None`           |             5 |                  2.8% |                  5 |
+| Runtime IndexError from invalid list/string indexing while reordering the four digits                            |             4 |                  2.3% |                  4 |
+| Time Limit Exceeded                                                                                              |             2 |                  1.1% |                  2 |
+| Runtime TypeError from broken string-digit reconstruction / type mixing in shuffle output                        |             2 |                  1.1% |                  2 |
+| Runtime RecursionError                                                                                           |             2 |                  1.1% |                  2 |
+| Runtime error (parseable final submission)                                                                       |             2 |                  1.1% |                  2 |
+| Builds the correct-looking reordered digits as a string but returns a string instead of an integer               |             2 |                  1.1% |                  2 |
+| Extracts one digit and returns too early (never reconstructs the 4-digit shuffled result)                        |             1 |                  0.6% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -144,15 +144,15 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `a529a2786ceb48a0b613ef637bd59938`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    count=num
-    for i in range (0,4):
-        j=4
-        count=num/10
-        r=count//10
-        f=r
-        f=f+f*j
-        j=j-1
-    print (f)
+count = num
+for i in range(0, 4):
+    j = 4
+    count = num / 10
+    r = count // 10
+    f = r
+    f = f + f * j
+    j = j - 1
+print(f)
 ```
 
 ### Runtime NameError
@@ -199,13 +199,13 @@ def shuffle_digits(w,x,y,z):
   - Variant `ns_25t2_py13_2/7`, Student ID `e4d0042a411b4eeba91349f6523b7db8`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    shuffle_digits = int(input('Enter a 4 digit number'))
-    shuffle_digits[0] = shuffle_digits[2]
-    shuffle_digits[1] = shuffle_digits[0]
-    shuffle_digits[3] = shuffle_digits[1]
-    shuffle_digits[2] = shuffle_digits[3]
-    return shuffle_digits
-    ...
+shuffle_digits = int(input("Enter a 4 digit number"))
+shuffle_digits[0] = shuffle_digits[2]
+shuffle_digits[1] = shuffle_digits[0]
+shuffle_digits[3] = shuffle_digits[1]
+shuffle_digits[2] = shuffle_digits[3]
+return shuffle_digits
+...
 ```
 
 ### Incorrect four-digit shuffle logic (fails hidden cycles; often hard-coded, no-return, or wrong digit extraction)
@@ -284,16 +284,16 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `8bbc7935034d40c2ad7471df8d4f7a0f`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    ...
-    listnum = str(num).split()
-    result = ""
-    for i in str(num):
-        if i in listnum:
-            i[0] = i[2]
-            i[1] = i[0]
-            i[2] = i[3]
-            i[3] = i[1]
-    return num
+...
+listnum = str(num).split()
+result = ""
+for i in str(num):
+    if i in listnum:
+        i[0] = i[2]
+        i[1] = i[0]
+        i[2] = i[3]
+        i[3] = i[1]
+return num
 ```
 
 ### Hard-codes public example shuffle cycles instead of computing the `2413` digit permutation
@@ -307,22 +307,22 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `50a9b053ea51456488590d0a4511144c`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    if num == 1234:
-        return (2413)
-    if num == 2413:
-        return (4321)
-    if num == 4321:
-        return (3142)
-    if num == 3142:
-        return (1234)
-    if num == 5678:
-        return (6857)
-    if num == 6857:
-        return (8765)
-    if num == 8765:
-        return (7586)
-    if num == 7586:
-        return (5678)
+if num == 1234:
+    return 2413
+if num == 2413:
+    return 4321
+if num == 4321:
+    return 3142
+if num == 3142:
+    return 1234
+if num == 5678:
+    return 6857
+if num == 6857:
+    return 8765
+if num == 8765:
+    return 7586
+if num == 7586:
+    return 5678
 ```
 
 ### Defines a nested/redeclared `shuffle_digits` inside the function, so the outer function returns `None`
@@ -368,15 +368,15 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `fa681042497049d687d63401ee2abb96`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    ...
-    num=(" ")
-    digits_num=num.split(" ")
-    shuffle_num=[]
-    shuffle_num[0]=digits_num[1]
-    shuffle_num[1]=digits_num[3]
-    shuffle_num[2]=digits_num[0]
-    shuffle_num[3]=digits_num[2]
-    return shuffle_num
+...
+num = " "
+digits_num = num.split(" ")
+shuffle_num = []
+shuffle_num[0] = digits_num[1]
+shuffle_num[1] = digits_num[3]
+shuffle_num[2] = digits_num[0]
+shuffle_num[3] = digits_num[2]
+return shuffle_num
 ```
 
 ### Time Limit Exceeded
@@ -390,13 +390,13 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `0d778020785b44d6a38a70444495b53c`, summary `Time Limit Exceeded`, score `0`, vector `00`
 
 ```python
-    while (num!=0):
-        fd=num//1000
-        ld=num%10
-        sd=num//100-fd*10
-        td=num//10-(num//100*10)
-    nnum=1000*sd+100*ld+10*fd+td
-    return nnum
+while num != 0:
+    fd = num // 1000
+    ld = num % 10
+    sd = num // 100 - fd * 10
+    td = num // 10 - (num // 100 * 10)
+nnum = 1000 * sd + 100 * ld + 10 * fd + td
+return nnum
 ```
 
 ### Runtime TypeError from broken string-digit reconstruction / type mixing in shuffle output
@@ -410,9 +410,9 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `c8472f5d0cb44df3b2ed8d33f0cd5cbe`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    ...
-    digits=int(num)
-    return int(digits[1]+digits[3]+digits[0],digits[2])
+...
+digits = int(num)
+return int(digits[1] + digits[3] + digits[0], digits[2])
 ```
 
 ### Runtime RecursionError
@@ -427,10 +427,10 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `1691a5c1e7444db5b54c803439538174`, summary `Runtime Error`, score `0`, vector `00`
 
 ```python
-    is_equal(shuffle_digits(1234),2413)
-    is_equal(shuffle_digits(2413),4321)
-    is_equal(shuffle_digits(4321),3142)
-    is_equal(shuffle_digits(3142),1234)
+is_equal(shuffle_digits(1234), 2413)
+is_equal(shuffle_digits(2413), 4321)
+is_equal(shuffle_digits(4321), 3142)
+is_equal(shuffle_digits(3142), 1234)
 ```
 
 ### Runtime error (parseable final submission)
@@ -477,10 +477,10 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `f7f6eafcceab429ca88e5642658b1aff`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    ...
-    lis = str(num)
-    mis = lis.split(",")
-    return(mis[1::2]+mis[0::2])
+...
+lis = str(num)
+mis = lis.split(",")
+return mis[1::2] + mis[0::2]
 ```
 
 ### Extracts one digit and returns too early (never reconstructs the 4-digit shuffled result)
@@ -494,18 +494,18 @@ def shuffle_digits(num: int) -> int:
   - Variant `ns_25t2_py13_2/7`, Student ID `06bea7c0d9c9426e9646ccc40b9780ca`, summary `Wrong Answer`, score `0`, vector `00`
 
 ```python
-    n = 0
-    while True:
-        if n == 0:
-            return (num%1000 - num%100)//100
-            pass
-        if n == 1:
-            return num%10
-            pass
-        if n == 2:
-            return (num%100 - num%10)//10
-            pass
-        if n == 3:
-            return (num - num%1000)//1000
-            break
+n = 0
+while True:
+    if n == 0:
+        return (num % 1000 - num % 100) // 100
+        pass
+    if n == 1:
+        return num % 10
+        pass
+    if n == 2:
+        return (num % 100 - num % 10) // 10
+        pass
+    if n == 3:
+        return (num - num % 1000) // 1000
+        break
 ```

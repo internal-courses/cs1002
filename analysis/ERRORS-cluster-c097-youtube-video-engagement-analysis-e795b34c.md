@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/12` (canonical) | 542 | 514 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/12` (canonical) |              542 |      514 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/12` | 542 | 28 | 514 | 450 | 64 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/12` |              542 |        28 |      514 |                450 |                     64 |
 
 ## Private Case Structure
 
@@ -47,32 +47,32 @@ Private-case vectors in this report are 6-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/12` |
-| --- | ---: | ---: | ---: |
-| Does not round `engagement_rate` to 2 decimals | 103 | 20.0% | 103 |
-| Zero-view handling is missing in one of the list-processing helpers (`most_engaging`, threshold, or average) | 95 | 18.5% | 95 |
-| Runtime NameError from misspelled helper variables across the multi-function solution | 59 | 11.5% | 59 |
-| Treats video dicts/lists as callable objects (e.g., `video('title')`) in helper composition | 52 | 10.1% | 52 |
-| Syntax / non-parseable final submission | 51 | 9.9% | 51 |
-| No return / implicit `None` | 43 | 8.4% | 43 |
-| Does not round `average_engagement_rate` to 2 decimals | 19 | 3.7% | 19 |
-| Uses `>= threshold` instead of strict `> threshold` in `videos_with_engagement_rate_above_threshold` | 13 | 2.5% | 13 |
-| Runtime error (parseable final submission) | 11 | 2.1% | 11 |
-| Runtime AttributeError | 10 | 1.9% | 10 |
-| Hard-codes public sample video titles/results instead of computing engagement metrics | 10 | 1.9% | 10 |
-| Most helper functions are present, but hidden edge-case handling (especially zero-view/average behavior) remains wrong | 10 | 1.9% | 10 |
-| Leaves one or more required functions undefined or incomplete in the multi-function template | 7 | 1.4% | 7 |
-| Returns a video record/index instead of the video title in `most_engaging_video` | 4 | 0.8% | 4 |
-| Runtime IndexError | 4 | 0.8% | 4 |
-| Runtime KeyError | 4 | 0.8% | 4 |
-| Uses undefined placeholder/typo variables in engagement helper functions | 3 | 0.6% | 3 |
-| List-processing helpers are partially correct but fail hidden tie/order/zero-view edge cases | 3 | 0.6% | 3 |
-| Runtime ValueError | 3 | 0.6% | 3 |
-| Copies test cases / `is_equal(...)` checks into the submission instead of implementing helper functions | 3 | 0.6% | 3 |
-| Averages over all videos (`len(videos)`) instead of only non-zero-view videos | 2 | 0.4% | 2 |
-| Partially correct helper set: hidden threshold/tie/average semantics are still incorrect | 2 | 0.4% | 2 |
-| Reads `input()` in function definitions (interactive script approach causes EOF under evaluator) | 2 | 0.4% | 2 |
-| Runtime RecursionError | 1 | 0.2% | 1 |
+| Pattern                                                                                                                | Cluster count | % of cluster non-full | `ns_25t2_py13_2/12` |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Does not round `engagement_rate` to 2 decimals                                                                         |           103 |                 20.0% |                 103 |
+| Zero-view handling is missing in one of the list-processing helpers (`most_engaging`, threshold, or average)           |            95 |                 18.5% |                  95 |
+| Runtime NameError from misspelled helper variables across the multi-function solution                                  |            59 |                 11.5% |                  59 |
+| Treats video dicts/lists as callable objects (e.g., `video('title')`) in helper composition                            |            52 |                 10.1% |                  52 |
+| Syntax / non-parseable final submission                                                                                |            51 |                  9.9% |                  51 |
+| No return / implicit `None`                                                                                            |            43 |                  8.4% |                  43 |
+| Does not round `average_engagement_rate` to 2 decimals                                                                 |            19 |                  3.7% |                  19 |
+| Uses `>= threshold` instead of strict `> threshold` in `videos_with_engagement_rate_above_threshold`                   |            13 |                  2.5% |                  13 |
+| Runtime error (parseable final submission)                                                                             |            11 |                  2.1% |                  11 |
+| Runtime AttributeError                                                                                                 |            10 |                  1.9% |                  10 |
+| Hard-codes public sample video titles/results instead of computing engagement metrics                                  |            10 |                  1.9% |                  10 |
+| Most helper functions are present, but hidden edge-case handling (especially zero-view/average behavior) remains wrong |            10 |                  1.9% |                  10 |
+| Leaves one or more required functions undefined or incomplete in the multi-function template                           |             7 |                  1.4% |                   7 |
+| Returns a video record/index instead of the video title in `most_engaging_video`                                       |             4 |                  0.8% |                   4 |
+| Runtime IndexError                                                                                                     |             4 |                  0.8% |                   4 |
+| Runtime KeyError                                                                                                       |             4 |                  0.8% |                   4 |
+| Uses undefined placeholder/typo variables in engagement helper functions                                               |             3 |                  0.6% |                   3 |
+| List-processing helpers are partially correct but fail hidden tie/order/zero-view edge cases                           |             3 |                  0.6% |                   3 |
+| Runtime ValueError                                                                                                     |             3 |                  0.6% |                   3 |
+| Copies test cases / `is_equal(...)` checks into the submission instead of implementing helper functions                |             3 |                  0.6% |                   3 |
+| Averages over all videos (`len(videos)`) instead of only non-zero-view videos                                          |             2 |                  0.4% |                   2 |
+| Partially correct helper set: hidden threshold/tie/average semantics are still incorrect                               |             2 |                  0.4% |                   2 |
+| Reads `input()` in function definitions (interactive script approach causes EOF under evaluator)                       |             2 |                  0.4% |                   2 |
+| Runtime RecursionError                                                                                                 |             1 |                  0.2% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -90,23 +90,24 @@ Residual `Other` after second-pass re-clustering: `0/514` (`0.0%`)
 
 ```python
 def total_engagement(video: dict) -> int:
-    title=[]
+    title = []
     for i in videos:
         for j in i:
-            if j=='title':
+            if j == "title":
                 title.append(i[j])
 
-
-    views=[]
+    views = []
     for i in videos:
         for j in i:
-            if j=='views':
+            if j == "views":
                 views.append(str(i[j]))
-    likes=[]
+    likes = []
     for i in videos:
         for j in i:
-            if j=='likes':
+            if j == "likes":
                 likes.append(str(i[j]))
+
+
 # ...
 ```
 
@@ -123,22 +124,26 @@ def total_engagement(video: dict) -> int:
 ```python
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
-    video[total_engagement]=video['likes']+video['comments']
+    video[total_engagement] = video["likes"] + video["comments"]
     return video[total_engagement]
-
 
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
-    if(video['views']==0):
+    if video["views"] == 0:
         return 0.0
-    video[engagement_rate]=((float(video['likes'])+float(video['comments']))/float(video['views']))*100
+    video[engagement_rate] = (
+        (float(video["likes"]) + float(video["comments"])) / float(video["views"])
+    ) * 100
     return video[engagement_rate]
 
+
 def most_engaging_video(videos: list) -> str:
-   for i in range(len(videos)):
-       if(videos[i]['views']==0):
-           videos[i][engagement_rate]=0
+    for i in range(len(videos)):
+        if videos[i]["views"] == 0:
+            videos[i][engagement_rate] = 0
+
+
 # ...
 ```
 
@@ -155,22 +160,24 @@ def most_engaging_video(videos: list) -> str:
 ```python
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
-    return video.get('likes',0) + video.get('comments',0)
+    return video.get("likes", 0) + video.get("comments", 0)
 
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
-    views = video.get('views', 0)
+    views = video.get("views", 0)
     if views == 0:
         return 0.0
-    total_engagement_rate= get_total_engagement(video)
+    total_engagement_rate = get_total_engagement(video)
     return round(total_engagement / views, 2)
 
 
 def most_engaging_video(videos: list) -> str:
     """Returns the title of the video with the highest engagement rate. Returns the first in case of tie."""
     if not videos:
-        return""
+        return ""
+
+
 # ...
 ```
 
@@ -221,21 +228,22 @@ def engagement_rate(video: dict) -> float:
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
 
-t=str(input(title))
-v=int(input(views))
-l=int(input(likes))
-c=int(input(comments))
-TE= l+c
-print("The total engagement is",TE) # this is the totla views of a given video
 
+t = str(input(title))
+v = int(input(views))
+l = int(input(likes))
+c = int(input(comments))
+TE = l + c
+print("The total engagement is", TE)  # this is the totla views of a given video
 
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
 
-t=str(input(title))
-v=int(input(views))
-l=int(input(likes))
+
+t = str(input(title))
+v = int(input(views))
+l = int(input(likes))
 # ...
 ```
 
@@ -317,7 +325,7 @@ def engagement_rate(video: dict) -> float:
 ```python
 def total_engagement(video: dict) -> int:
     total_engagement = 0
-    for values,keys in video.items():
+    for values, keys in video.items():
         if values == "likes":
             total_engagement = total_engagement + keys
         elif values == "comments":
@@ -329,10 +337,12 @@ def total_engagement(video: dict) -> int:
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     engagement = total_engagement(video)
-    for values,keys in video.items():
+    for values, keys in video.items():
         if values == "views":
             if keys == 0:
                 return 0.0
+
+
 # ...
 ```
 
@@ -351,21 +361,25 @@ def engagement_rate(video: dict) -> float:
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
     for keys in video:
-        sum =video['likes'] + video['comments']
+        sum = video["likes"] + video["comments"]
         return sum
+
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     for keys in video:
-        if video['views']==0:
+        if video["views"] == 0:
             return 0.0
         else:
-            engagement_rate = ((video['likes']+video['comments'])/video['views'])*100
-            return round(engagement_rate,2)
+            engagement_rate = ((video["likes"] + video["comments"]) / video["views"]) * 100
+            return round(engagement_rate, 2)
+
 
 def most_engaging_video(videos: list) -> str:
     """Returns the title of the video with the highest engagement rate. Returns the first in case of tie."""
-    max =0
+    max = 0
+
+
 # ...
 ```
 
@@ -384,21 +398,23 @@ def most_engaging_video(videos: list) -> str:
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
     ...
-    return video["likes"]+video["comments"]
+    return video["likes"] + video["comments"]
+
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     ...
-    if video["views"]==0:
+    if video["views"] == 0:
         return 0.0
-    average=((video["likes"]+video["comments"])/video["views"])*100
-    rounded_average=round(average,2)
+    average = ((video["likes"] + video["comments"]) / video["views"]) * 100
+    rounded_average = round(average, 2)
     return rounded_average
-
 
 
 def most_engaging_video(videos: list) -> str:
     """Returns the title of the video with the highest engagement rate. Returns the first in case of tie."""
+
+
 # ...
 ```
 
@@ -447,20 +463,20 @@ def most_engaging_video(videos: list) -> str:
 ```python
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
-    likes=video['likes']
-    comments=video['comments']
-    return likes+comments
+    likes = video["likes"]
+    comments = video["comments"]
+    return likes + comments
 
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
-    engagement=video['likes']+video['comments']
-    views=video['views']
-    if(views>0):
-        engagement_rate=(engagement/views)*100
-    if(views==0):
-        engagement_rate=0.0
-    return round(engagement_rate,2)
+    engagement = video["likes"] + video["comments"]
+    views = video["views"]
+    if views > 0:
+        engagement_rate = (engagement / views) * 100
+    if views == 0:
+        engagement_rate = 0.0
+    return round(engagement_rate, 2)
 
 
 # ...
@@ -577,19 +593,19 @@ def most_engaging_video(videos: list) -> str:
 ```python
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
-    s=video["likes"]+video["comments"]
+    s = video["likes"] + video["comments"]
     return s
 
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
-    if video["views"]==0:
+    if video["views"] == 0:
         return 0.0
     else:
-        c=video["likes"]+video["comments"]
-        a=video["views"]
-        er=(c/a)*100
-        e=round(er,2)
+        c = video["likes"] + video["comments"]
+        a = video["views"]
+        er = (c / a) * 100
+        e = round(er, 2)
         return e
 
 
@@ -608,18 +624,17 @@ def engagement_rate(video: dict) -> float:
 
 ```python
 def total_engagement(video: dict) -> int:
-    return video.get('likes',0)+video.get('comments',0)
+    return video.get("likes", 0) + video.get("comments", 0)
     """Returns the total engagement (likes + comments) of a given video."""
     ...
 
 
 def engagement_rate(video: dict) -> float:
-    views = video.get('views', 0)
-    if views==0:
+    views = video.get("views", 0)
+    if views == 0:
         return 0.0
     engagement = total_engagement(video)
-    return round(engagement/views,2)
-
+    return round(engagement / views, 2)
 
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     ...
@@ -644,6 +659,7 @@ def total_engagement(video: dict) -> int:
     total_engagement_video = video["likes"] + video["comments"]
     return total_engagement_video
 
+
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     total_engagement_video = video["likes"] + video["comments"]
@@ -657,6 +673,8 @@ def engagement_rate(video: dict) -> float:
 
 def most_engaging_video(videos: list) -> str:
     """Returns the title of the video with the highest engagement rate. Returns the first in case of tie."""
+
+
 # ...
 ```
 
@@ -672,21 +690,18 @@ def most_engaging_video(videos: list) -> str:
 
 ```python
 def total_engagement(video: dict) -> int:
-    return (video['likes']+video['comments'])
+    return video["likes"] + video["comments"]
     """Returns the total engagement (likes + comments) of a given video."""
 
 
-
 def engagement_rate(video: dict) -> float:
-    if video['views']==0:
+    if video["views"] == 0:
         return 0.0
     else:
-        rate=((video['likes']+video['comments'])/video['views'])*100
+        rate = ((video["likes"] + video["comments"]) / video["views"]) * 100
         return rate
 
-
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
-
 
 
 # ...
@@ -738,21 +753,25 @@ def engagement_rate(video: dict) -> float:
 def total_engagement(video: dict) -> int:
     """Returns the total engagement (likes + comments) of a given video."""
     ...
-    return video['likes'] + video['comments']
+    return video["likes"] + video["comments"]
+
 
 def engagement_rate(video: dict) -> float:
     """Returns the engagement rate ((likes + comments) / views) * 100 rounded to 2 decimals. Returns 0.0 if views == 0."""
     ...
-    if video['views']== 0:
+    if video["views"] == 0:
         return 0.0
-    rate = (video['likes'] + video['comments'])/ video['views']*100
-    return round(rate,2)
+    rate = (video["likes"] + video["comments"]) / video["views"] * 100
+    return round(rate, 2)
+
 
 def most_engaging_video(videos: list) -> str:
     """Returns the title of the video with the highest engagement rate. Returns the first in case of tie."""
     ...
-    if not videos :
+    if not videos:
         return ""
+
+
 # ...
 ```
 
@@ -814,8 +833,9 @@ def engagement_rate(video: dict) -> float:
     x = int(input(likes))
     y = int(input(comments))
     z = int(input(views))
-    engagement_rate = ((x+ y) / z) * 100
+    engagement_rate = ((x + y) / z) * 100
     print(engagement_rate)
+
 
 # ...
 ```

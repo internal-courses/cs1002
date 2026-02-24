@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py14_1/8` (canonical) | 581 | 210 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py14_1/8` (canonical) |              581 |      210 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py14_1/8` | 581 | 371 | 210 | 164 | 46 |
-| `ns_25t3_py14_2/8` | 0 | 0 | 0 | 0 | 0 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py14_1/8` |              581 |       371 |      210 |                164 |                     46 |
+| `ns_25t3_py14_2/8` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,34 +47,34 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py14_1/8` | `ns_25t3_py14_2/8` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 46 | 21.9% | 46 | 0 |
-| Runtime IndexError from indexing `text[n]`/`text[n-1]` without validating `n` against string bounds | 26 | 12.4% | 26 | 0 |
-| No return / implicit `None` | 23 | 11.0% | 23 | 0 |
-| Only validates `n` and returns the original string; never inserts the `<b>...</b>` tags | 22 | 10.5% | 22 | 0 |
-| Incorrect nth-character bolding logic (broad wrong-answer failure) | 17 | 8.1% | 17 | 0 |
-| Returns from inside a loop while building the bolded string (partial output / premature return) | 14 | 6.7% | 14 | 0 |
-| Runtime TypeError | 12 | 5.7% | 12 | 0 |
-| Runtime error (parseable final submission) | 6 | 2.9% | 6 | 0 |
-| Runtime NameError from typoed variables while constructing the bolded string | 6 | 2.9% | 6 | 0 |
-| Runtime IndexError | 5 | 2.4% | 5 | 0 |
-| Hard-codes sample strings/outputs instead of bolding the nth character generically | 4 | 1.9% | 4 | 0 |
-| Boundary bug: valid `n == len(text)` is rejected (strict `< len(text)` check) | 4 | 1.9% | 4 | 0 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 3 | 1.4% | 3 | 0 |
-| Runtime AttributeError | 3 | 1.4% | 3 | 0 |
-| Length/index-specific branching (special-cases `n == 1/2/...`) instead of one general slicing formula | 3 | 1.4% | 3 | 0 |
-| Wraps a slice/prefix in `<b>` tags instead of exactly one nth character | 2 | 1.0% | 2 | 0 |
-| Runtime TypeError from invalid string/list concatenation or malformed slicing/index calls | 2 | 1.0% | 2 | 0 |
-| Runtime RecursionError | 2 | 1.0% | 2 | 0 |
-| Time Limit Exceeded | 2 | 1.0% | 2 | 0 |
-| Runtime NameError | 2 | 1.0% | 2 | 0 |
-| Uses `text[:-n]` for the suffix after the bolded character, truncating the string incorrectly | 1 | 0.5% | 1 | 0 |
-| Uses `n < len(text)` instead of allowing `n == len(text)`, so the last character cannot be bolded | 1 | 0.5% | 1 | 0 |
-| Uses `text.replace(...)`, which replaces the first/all matching character values instead of the nth position | 1 | 0.5% | 1 | 0 |
-| Uses `text.index(...)` while iterating, so duplicate characters use the first occurrence index and are bolded incorrectly | 1 | 0.5% | 1 | 0 |
-| Boundary/position bug around `n == 1` or duplicate characters (rejects first-char case or uses value-based `replace/index`) | 1 | 0.5% | 1 | 0 |
-| Builds the bolded prefix and character but omits the suffix after the nth character | 1 | 0.5% | 1 | 0 |
+| Pattern                                                                                                                     | Cluster count | % of cluster non-full | `ns_25t3_py14_1/8` | `ns_25t3_py14_2/8` |
+| --------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                                     |            46 |                 21.9% |                 46 |                  0 |
+| Runtime IndexError from indexing `text[n]`/`text[n-1]` without validating `n` against string bounds                         |            26 |                 12.4% |                 26 |                  0 |
+| No return / implicit `None`                                                                                                 |            23 |                 11.0% |                 23 |                  0 |
+| Only validates `n` and returns the original string; never inserts the `<b>...</b>` tags                                     |            22 |                 10.5% |                 22 |                  0 |
+| Incorrect nth-character bolding logic (broad wrong-answer failure)                                                          |            17 |                  8.1% |                 17 |                  0 |
+| Returns from inside a loop while building the bolded string (partial output / premature return)                             |            14 |                  6.7% |                 14 |                  0 |
+| Runtime TypeError                                                                                                           |            12 |                  5.7% |                 12 |                  0 |
+| Runtime error (parseable final submission)                                                                                  |             6 |                  2.9% |                  6 |                  0 |
+| Runtime NameError from typoed variables while constructing the bolded string                                                |             6 |                  2.9% |                  6 |                  0 |
+| Runtime IndexError                                                                                                          |             5 |                  2.4% |                  5 |                  0 |
+| Hard-codes sample strings/outputs instead of bolding the nth character generically                                          |             4 |                  1.9% |                  4 |                  0 |
+| Boundary bug: valid `n == len(text)` is rejected (strict `< len(text)` check)                                               |             4 |                  1.9% |                  4 |                  0 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)                                     |             3 |                  1.4% |                  3 |                  0 |
+| Runtime AttributeError                                                                                                      |             3 |                  1.4% |                  3 |                  0 |
+| Length/index-specific branching (special-cases `n == 1/2/...`) instead of one general slicing formula                       |             3 |                  1.4% |                  3 |                  0 |
+| Wraps a slice/prefix in `<b>` tags instead of exactly one nth character                                                     |             2 |                  1.0% |                  2 |                  0 |
+| Runtime TypeError from invalid string/list concatenation or malformed slicing/index calls                                   |             2 |                  1.0% |                  2 |                  0 |
+| Runtime RecursionError                                                                                                      |             2 |                  1.0% |                  2 |                  0 |
+| Time Limit Exceeded                                                                                                         |             2 |                  1.0% |                  2 |                  0 |
+| Runtime NameError                                                                                                           |             2 |                  1.0% |                  2 |                  0 |
+| Uses `text[:-n]` for the suffix after the bolded character, truncating the string incorrectly                               |             1 |                  0.5% |                  1 |                  0 |
+| Uses `n < len(text)` instead of allowing `n == len(text)`, so the last character cannot be bolded                           |             1 |                  0.5% |                  1 |                  0 |
+| Uses `text.replace(...)`, which replaces the first/all matching character values instead of the nth position                |             1 |                  0.5% |                  1 |                  0 |
+| Uses `text.index(...)` while iterating, so duplicate characters use the first occurrence index and are bolded incorrectly   |             1 |                  0.5% |                  1 |                  0 |
+| Boundary/position bug around `n == 1` or duplicate characters (rejects first-char case or uses value-based `replace/index`) |             1 |                  0.5% |                  1 |                  0 |
+| Builds the bolded prefix and character but omits the suffix after the nth character                                         |             1 |                  0.5% |                  1 |                  0 |
 
 ## Re-clustered Pattern Details
 
@@ -94,23 +94,25 @@ Residual `Other` after second-pass re-clustering: `0/210` (`0.0%`)
 
 ```python
 def bold_nth_character(text: str, n: int) -> str:
-    '''
+    """
     Returns a string where the nth character is wrapped in <b></b> tags.
     If n is invalid, returns the original string unchanged.
-    '''
-    if n < 1 or n >len(text):
+    """
+    if n < 1 or n > len(text):
         print("invalid")
 
-    result=[]
-    first=text[:n-2]
-    mid = text[n-1]
+    result = []
+    first = text[: n - 2]
+    mid = text[n - 1]
     last = text[n:]
     result[0] = first
-    result[1]="<b>"
+    result[1] = "<b>"
     result[2] = mid
     result[3] = "</b>"
     result[2] = last
     print(str(result))
+
+
 # ...
 ```
 
@@ -126,24 +128,24 @@ def bold_nth_character(text: str, n: int) -> str:
   - Variant `ns_25t3_py14_1/8`, Student ID `a06d21a49cb54484919c05bad9e613a6`, summary `Runtime Error`, score `33`, vector `100`
 
 ```python
-    result =""
-    if n == 0:
-        return text
-    else:
-        for i in (text) :
-            if i == text[n -1]:
-                result += "<b>"
-                result += text[n-1]
-            elif i == text[n]:
-                result += "</b>"
-                result += text[n]
-            else:
-                result += i
-    return result
-    '''
-    Returns a string where the nth character is wrapped in <b></b> tags.
-    If n is invalid, returns the original string unchanged.
-    '''
+result = ""
+if n == 0:
+    return text
+else:
+    for i in text:
+        if i == text[n - 1]:
+            result += "<b>"
+            result += text[n - 1]
+        elif i == text[n]:
+            result += "</b>"
+            result += text[n]
+        else:
+            result += i
+return result
+"""
+Returns a string where the nth character is wrapped in <b></b> tags.
+If n is invalid, returns the original string unchanged.
+"""
 ```
 
 ### No return / implicit `None`
@@ -160,10 +162,10 @@ def bold_nth_character(text: str, n: int) -> str:
 
 ```python
 def bold_nth_character(text: str, n: int) -> str:
-    '''
+    """
     Returns a string where the nth character is wrapped in <b></b> tags.
     If n is invalid, returns the original string unchanged.
-    '''
+    """
 ```
 
 ### Only validates `n` and returns the original string; never inserts the `<b>...</b>` tags
@@ -178,15 +180,15 @@ def bold_nth_character(text: str, n: int) -> str:
   - Variant `ns_25t3_py14_1/8`, Student ID `3498c7fa9be0408e8c99a272a2e86edb`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    text_length=len(text)
-    if n<1 or n>text_length:
-        return text
-    idx=n-1
-    char_to_bold=text[idx]
-    before=text[:idx]
-    bolded_char=f"<b>{char_to_bold}<b/>"
-    after=text[idx+1:]
-    return before + bolded_char +after
+text_length = len(text)
+if n < 1 or n > text_length:
+    return text
+idx = n - 1
+char_to_bold = text[idx]
+before = text[:idx]
+bolded_char = f"<b>{char_to_bold}<b/>"
+after = text[idx + 1 :]
+return before + bolded_char + after
 ```
 
 ### Incorrect nth-character bolding logic (broad wrong-answer failure)
@@ -201,21 +203,21 @@ def bold_nth_character(text: str, n: int) -> str:
   - Variant `ns_25t3_py14_1/8`, Student ID `2ac263f83e2a4a91b92e5f031e83dae8`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if (n<1 or n>len(text)):
-        return(text)
-    else:
-        t=""
-        for i in range(len(text)):
-            if text[i]==text[n-1]:
-                t=t+ '<b>text[i]</b>'
-            else:
-                t=t+text[i]
-        return(t)
-    '''
-    Returns a string where the nth character is wrapped in <b></b> tags.
-    If n is invalid, returns the original string unchanged.
-    '''
-    ...
+if n < 1 or n > len(text):
+    return text
+else:
+    t = ""
+    for i in range(len(text)):
+        if text[i] == text[n - 1]:
+            t = t + "<b>text[i]</b>"
+        else:
+            t = t + text[i]
+    return t
+"""
+Returns a string where the nth character is wrapped in <b></b> tags.
+If n is invalid, returns the original string unchanged.
+"""
+...
 ```
 
 ### Returns from inside a loop while building the bolded string (partial output / premature return)
@@ -298,21 +300,21 @@ def bold_nth_character(text: str, n: int) -> str:
   - Variant `ns_25t3_py14_1/8`, Student ID `336780807c1c47cb8a75910f265b7dcc`, summary `Runtime Error`, score `67`, vector `101`
 
 ```python
-    ...
-    if n<1 or n>len(text) :
-        return text
-    index=n-1
-    a=""
-    for i in range(index):
-        a=a+(text[i])
-        last=i
-    a=a+("<b>")
-    a=a+(text[last+1])
-    a=a+("</b>")
-    while n< len(text):
-        a=a+(text[n])
-        n+=1
-    return a
+...
+if n < 1 or n > len(text):
+    return text
+index = n - 1
+a = ""
+for i in range(index):
+    a = a + (text[i])
+    last = i
+a = a + ("<b>")
+a = a + (text[last + 1])
+a = a + ("</b>")
+while n < len(text):
+    a = a + (text[n])
+    n += 1
+return a
 ```
 
 ### Runtime NameError from typoed variables while constructing the bolded string
@@ -328,10 +330,12 @@ def bold_nth_character(text: str, n: int) -> str:
 
 ```python
 def bold_nth_character(text: str, n: int) -> str:
-    '''
+    """
     Returns a string where the nth character is wrapped in <b></b> tags.
     If n is invalid, returns the original string unchanged.
-    '''
+    """
+
+
 is_equal(bold_nth_character("mango", 2), "m<b>a</b>ngo")
 is_equal(bold_nth_character("pizza", 1), "<b>p</b>izza")
 is_equal(bold_nth_character("pasta", 5), "past<b>a</b>")
@@ -411,15 +415,15 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `50f7c0b50f6b41c7bcbdbca1712d4a2d`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
-    new_str = text
-    after = new_str[:n-1]
-    before = new_str [n:]
-    at_n = "<b>"+new_str[n-1:n]+"</b>"
-    newest_str = after+at_n+before
-    if n>0:
-         return(newest_str)
-    else:
-        return(new_str)
+new_str = text
+after = new_str[: n - 1]
+before = new_str[n:]
+at_n = "<b>" + new_str[n - 1 : n] + "</b>"
+newest_str = after + at_n + before
+if n > 0:
+    return newest_str
+else:
+    return new_str
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator function-call tests)
@@ -434,14 +438,14 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `f82977150c354d5387b7e84b97c7cdc7`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    text = str(input("Enter a text:"))
-    print("Enter which letter you want to make bold:")
-    n = int(input())
-    if (n > 0):
-        x=(text.bold(n))
-        print(x)
-    else:
-        print(text)
+text = str(input("Enter a text:"))
+print("Enter which letter you want to make bold:")
+n = int(input())
+if n > 0:
+    x = text.bold(n)
+    print(x)
+else:
+    print(text)
 ```
 
 ### Runtime AttributeError
@@ -457,12 +461,12 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `513584c59caf4455bd6b5907548321fc`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if n < 1 or len(text) < n:
-        return text
-    else:
-        text[i + n - 1] = float(text.append("<b>"))
-        text[i + n + 1] = text.append("<b>")
+if n < 1 or len(text) < n:
     return text
+else:
+    text[i + n - 1] = float(text.append("<b>"))
+    text[i + n + 1] = text.append("<b>")
+return text
 ```
 
 ### Length/index-specific branching (special-cases `n == 1/2/...`) instead of one general slicing formula
@@ -510,14 +514,14 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `0e13f5cd8e274e31aab5edd5399a2ecf`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    if 1<n<len(text):
-        return f"{text[:n-1]}<b>{text[n-1:2]}</b>{text[n:]}"
-    if n<0 or n>len(text) or  n==0:
-        return f"{text}"
-    if n==len(text):
-        return f"{text[:n-1]}<b>{text[n-1:]}</b>"
-    if n ==1:
-        return f"<b>{text[:1]}</b>{text[1:]}"
+if 1 < n < len(text):
+    return f"{text[: n - 1]}<b>{text[n - 1 : 2]}</b>{text[n:]}"
+if n < 0 or n > len(text) or n == 0:
+    return f"{text}"
+if n == len(text):
+    return f"{text[: n - 1]}<b>{text[n - 1 :]}</b>"
+if n == 1:
+    return f"<b>{text[:1]}</b>{text[1:]}"
 ```
 
 ### Runtime TypeError from invalid string/list concatenation or malformed slicing/index calls
@@ -558,8 +562,8 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `2878acfc02764c87a4b3646221cfee83`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-   is_equal(bold_nth_character("mango",2),"m<b>a</b>ngo")
-   print(" 'm<b>a</b>ngo'")
+is_equal(bold_nth_character("mango", 2), "m<b>a</b>ngo")
+print(" 'm<b>a</b>ngo'")
 ```
 
 ### Time Limit Exceeded
@@ -600,9 +604,9 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `6e7b19c177a74dea950988be7fbae45c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    str1=()
-    str2=()
-    st1== str2
+str1 = ()
+str2 = ()
+st1 == str2
 ```
 
 ### Uses `text[:-n]` for the suffix after the bolded character, truncating the string incorrectly
@@ -617,11 +621,11 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `058872f5d6fd4fae96b0dabf5ab7e9a8`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if n<1 or n>len(text):
-        return text
-    else:
-        new_string=(text[0:n-1]+'<b>'+text[n-1]+'</b>'+text[:-n])
-        return new_string
+if n < 1 or n > len(text):
+    return text
+else:
+    new_string = text[0 : n - 1] + "<b>" + text[n - 1] + "</b>" + text[:-n]
+    return new_string
 ```
 
 ### Uses `n < len(text)` instead of allowing `n == len(text)`, so the last character cannot be bolded
@@ -636,18 +640,18 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `28e37d8582bd4855a088d0a2181c41d6`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
-    if n>0:
-        if n<len(text):
-            block_1 = text[:n-1]
-            block_2 = '<b>'
-            block_3 = text[n-1]
-            block_4 = '</b>'
-            block_5 = text[n:]
-            return block_1+'<b>'+block_3+'</b>'+block_5
-        else:
-            return text
+if n > 0:
+    if n < len(text):
+        block_1 = text[: n - 1]
+        block_2 = "<b>"
+        block_3 = text[n - 1]
+        block_4 = "</b>"
+        block_5 = text[n:]
+        return block_1 + "<b>" + block_3 + "</b>" + block_5
     else:
         return text
+else:
+    return text
 ```
 
 ### Uses `text.replace(...)`, which replaces the first/all matching character values instead of the nth position
@@ -662,12 +666,12 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `47f5d9b425f545e3a88709f97d4f75a6`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    a='<b>text[:n]</b>'
-    new=text.replace(text[:n],a)
-    if n<1 or n>len(text):
-        return text
-    else:
-        return new
+a = "<b>text[:n]</b>"
+new = text.replace(text[:n], a)
+if n < 1 or n > len(text):
+    return text
+else:
+    return new
 ```
 
 ### Uses `text.index(...)` while iterating, so duplicate characters use the first occurrence index and are bolded incorrectly
@@ -744,8 +748,8 @@ is_equal(bold_nth_character("tea", -1), "tea")
   - Variant `ns_25t3_py14_1/8`, Student ID `e11e0a815be74dc4bd069115d6cbaf21`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if n<1 or n>len(text):
-        return text
-    index = n-1
-    return text[:index]+ f"<b>{text[index]}</b>"
+if n < 1 or n > len(text):
+    return text
+index = n - 1
+return text[:index] + f"<b>{text[index]}</b>"
 ```

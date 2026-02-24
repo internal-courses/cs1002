@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py14_1/10` (canonical) | 548 | 239 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py14_1/10` (canonical) |              548 |      239 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -32,10 +32,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py14_1/10` | 548 | 309 | 239 | 187 | 52 |
-| `ns_25t3_py14_2/10` | 0 | 0 | 0 | 0 | 0 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py14_1/10` |              548 |       309 |      239 |                187 |                     52 |
+| `ns_25t3_py14_2/10` |                0 |         0 |        0 |                  0 |                      0 |
 
 ## Private Case Structure
 
@@ -47,26 +47,26 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py14_1/10` | `ns_25t3_py14_2/10` |
-| --- | ---: | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 52 | 21.8% | 52 | 0 |
-| Incorrect space-replacement logic (wrong index counting, mutation, or output assembly) | 49 | 20.5% | 49 | 0 |
-| Uses `str.replace(...)` for all spaces at once, so per-space index substitutions are incorrect | 41 | 17.2% | 41 | 0 |
-| Uses integer indices directly in string replacement/concatenation (`str(i)` cast missing) | 21 | 8.8% | 21 | 0 |
-| Hard-codes public sample strings/outputs instead of replacing spaces generically | 20 | 8.4% | 20 | 0 |
-| No return / implicit `None` | 13 | 5.4% | 13 | 0 |
-| Runtime NameError from undefined index/result variables in space-replacement logic | 11 | 4.6% | 11 | 0 |
-| Runtime TypeError | 7 | 2.9% | 7 | 0 |
-| Whitespace/index-counting bug: partially works but fails hidden spacing/multi-digit-index cases | 5 | 2.1% | 5 | 0 |
-| Uses `s.index(...)` while constructing output, which breaks on repeated-space handling | 4 | 1.7% | 4 | 0 |
-| Runtime AttributeError | 3 | 1.3% | 3 | 0 |
-| Runtime error (parseable final submission) | 3 | 1.3% | 3 | 0 |
-| Uses `split()`-based word logic, collapsing/trimming spaces instead of preserving exact positions | 2 | 0.8% | 2 | 0 |
-| Strips the input before processing, so leading/trailing spaces and their indices are lost | 2 | 0.8% | 2 | 0 |
-| Reads `input()` inside function-type question (EOF under evaluator function-call tests) | 2 | 0.8% | 2 | 0 |
-| Time Limit Exceeded | 2 | 0.8% | 2 | 0 |
-| Runtime ValueError | 1 | 0.4% | 1 | 0 |
-| Handles only a simpler space pattern and fails longer/multi-space hidden cases | 1 | 0.4% | 1 | 0 |
+| Pattern                                                                                           | Cluster count | % of cluster non-full | `ns_25t3_py14_1/10` | `ns_25t3_py14_2/10` |
+| ------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                           |            52 |                 21.8% |                  52 |                   0 |
+| Incorrect space-replacement logic (wrong index counting, mutation, or output assembly)            |            49 |                 20.5% |                  49 |                   0 |
+| Uses `str.replace(...)` for all spaces at once, so per-space index substitutions are incorrect    |            41 |                 17.2% |                  41 |                   0 |
+| Uses integer indices directly in string replacement/concatenation (`str(i)` cast missing)         |            21 |                  8.8% |                  21 |                   0 |
+| Hard-codes public sample strings/outputs instead of replacing spaces generically                  |            20 |                  8.4% |                  20 |                   0 |
+| No return / implicit `None`                                                                       |            13 |                  5.4% |                  13 |                   0 |
+| Runtime NameError from undefined index/result variables in space-replacement logic                |            11 |                  4.6% |                  11 |                   0 |
+| Runtime TypeError                                                                                 |             7 |                  2.9% |                   7 |                   0 |
+| Whitespace/index-counting bug: partially works but fails hidden spacing/multi-digit-index cases   |             5 |                  2.1% |                   5 |                   0 |
+| Uses `s.index(...)` while constructing output, which breaks on repeated-space handling            |             4 |                  1.7% |                   4 |                   0 |
+| Runtime AttributeError                                                                            |             3 |                  1.3% |                   3 |                   0 |
+| Runtime error (parseable final submission)                                                        |             3 |                  1.3% |                   3 |                   0 |
+| Uses `split()`-based word logic, collapsing/trimming spaces instead of preserving exact positions |             2 |                  0.8% |                   2 |                   0 |
+| Strips the input before processing, so leading/trailing spaces and their indices are lost         |             2 |                  0.8% |                   2 |                   0 |
+| Reads `input()` inside function-type question (EOF under evaluator function-call tests)           |             2 |                  0.8% |                   2 |                   0 |
+| Time Limit Exceeded                                                                               |             2 |                  0.8% |                   2 |                   0 |
+| Runtime ValueError                                                                                |             1 |                  0.4% |                   1 |                   0 |
+| Handles only a simpler space pattern and fails longer/multi-space hidden cases                    |             1 |                  0.4% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -86,7 +86,7 @@ Residual `Other` after second-pass re-clustering: `0/239` (`0.0%`)
 
 ```python
 def replace_spaces_with_index(s):
-    '''
+    """
     Given a string s, replace each space (' ') with its index position in the string.
 
     Example:
@@ -98,11 +98,13 @@ def replace_spaces_with_index(s):
 
     Returns:
         str: A new string where each space is replaced with its index.
-    '''
+    """
     ...
-    s = 'a b c'
-    s1 = 'a'
-    s2 = 'b'
+    s = "a b c"
+    s1 = "a"
+    s2 = "b"
+
+
 # ...
 ```
 
@@ -217,20 +219,20 @@ def replace_spaces_with_index(s):
   - Variant `ns_25t3_py14_1/10`, Student ID `c536134ab8e34018926f369f8c716f52`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    p = []
-    n = len(s)
-    text = s
-    for i in range(0,n):
-        if s[i] != ' ':
-            p.append(s[i])
-        else:
-            p.append(i)
-    if len(s) == 5:
-        return 'a1b3c'
-    if len(s) == 11:
-        return 'hello5world'
-    if len(s)==13:
-        return 'i1love6python'
+p = []
+n = len(s)
+text = s
+for i in range(0, n):
+    if s[i] != " ":
+        p.append(s[i])
+    else:
+        p.append(i)
+if len(s) == 5:
+    return "a1b3c"
+if len(s) == 11:
+    return "hello5world"
+if len(s) == 13:
+    return "i1love6python"
 ```
 
 ### No return / implicit `None`
@@ -280,7 +282,7 @@ def replace_spaces_with_index(s):
 
 ```python
 def replace_spaces_with_index(s):
-    '''
+    """
     Given a string s, replace each space (' ') with its index position in the string.
 
     Example:
@@ -292,9 +294,11 @@ def replace_spaces_with_index(s):
 
     Returns:
         str: A new string where each space is replaced with its index.
-    '''
+    """
+
+
 for ch in s:
-    if(ch==' '):
+    if ch == " ":
         ch = ch.index()
 print(str + ch)
 ```
@@ -312,8 +316,8 @@ print(str + ch)
   - Variant `ns_25t3_py14_1/10`, Student ID `f10f880902c04b51b59465059bbdf8f9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-def replace_spaces_with_index(s:str,i:int):
-    '''
+def replace_spaces_with_index(s: str, i: int):
+    """
     Given a string s, replace each space (' ') with its index position in the string.
 
     Example:
@@ -325,7 +329,9 @@ def replace_spaces_with_index(s:str,i:int):
 
     Returns:
         str: A new string where each space is replaced with its index.
-    '''
+    """
+
+
 print("'a1b3c'")
 ```
 
@@ -374,15 +380,15 @@ print("'a1b3c'")
   - Variant `ns_25t3_py14_1/10`, Student ID `85be6cdf98df4573a2e22c2d57c39f84`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    s1=""
-    for i in s:
-        if i ==" ":
-            i=s.index(i,len(s1))
-            s1=s1+str(i)
-        else:
-            s1=s1+str(i)
-    return s1
+...
+s1 = ""
+for i in s:
+    if i == " ":
+        i = s.index(i, len(s1))
+        s1 = s1 + str(i)
+    else:
+        s1 = s1 + str(i)
+return s1
 ```
 
 ### Runtime AttributeError
@@ -430,7 +436,7 @@ print("'a1b3c'")
 
 ```python
 def replace_spaces_with_index(s):
-    '''
+    """
     Given a string s, replace each space (' ') with its index position in the string.
 
     Example:
@@ -441,11 +447,12 @@ def replace_spaces_with_index(s):
         s (str): Input string.
 
     Returns:
-        str: A new string where each space is replaced with its index.'''
+        str: A new string where each space is replaced with its index."""
+
 
 for i in s:
-    if s== ' ':
-        s[i]== i
+    if s == " ":
+        s[i] == i
 
 # ...
 ```
@@ -462,12 +469,12 @@ for i in s:
   - Variant `ns_25t3_py14_1/10`, Student ID `0be95b2a0ecb411d8f81880b5a1edc67`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    x = s.split()
-    for i in range(len(x)):
-        if x[i] == ' ':
-            x=x.replace(x[i],len(x[i]))
-            y = x.join()
-            return y
+x = s.split()
+for i in range(len(x)):
+    if x[i] == " ":
+        x = x.replace(x[i], len(x[i]))
+        y = x.join()
+        return y
 ```
 
 ### Strips the input before processing, so leading/trailing spaces and their indices are lost
@@ -482,17 +489,17 @@ for i in s:
   - Variant `ns_25t3_py14_1/10`, Student ID `1b80651d8d264cbebe9d23883927a949`, summary `Wrong Answer`, score `67`, vector `011`
 
 ```python
-    s1=s.strip()
-    i=0
-    new_s=""
-    for ch in s1:
-        if ch==' ':
-            new_s=new_s+str(i)
-            i=i+1
-        else:
-            new_s=new_s +ch
-            i=i+1
-    return(new_s)
+s1 = s.strip()
+i = 0
+new_s = ""
+for ch in s1:
+    if ch == " ":
+        new_s = new_s + str(i)
+        i = i + 1
+    else:
+        new_s = new_s + ch
+        i = i + 1
+return new_s
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator function-call tests)
@@ -507,9 +514,9 @@ for i in s:
   - Variant `ns_25t3_py14_1/10`, Student ID `f82977150c354d5387b7e84b97c7cdc7`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s = str(input("Enter a sentence:"))
-    s=replace(" ",index)
-    print(s)
+s = str(input("Enter a sentence:"))
+s = replace(" ", index)
+print(s)
 ```
 
 ### Time Limit Exceeded
@@ -524,18 +531,18 @@ for i in s:
   - Variant `ns_25t3_py14_1/10`, Student ID `3c61a1c4ae0e4db1944ec9013d8e919d`, summary `Time Limit Exceeded`, score `0`, vector `000`
 
 ```python
-      str2=""
-      n=len(s)
-      i=0
-      while i<n and i>=0:
-          str1=s[i:i+1]
-          for char in str1:
-              if(char==' '):
-                  str2=str2+"i"
-              else:
-                  str2=str2+"char"
-      i=i+1
-      return str2
+str2 = ""
+n = len(s)
+i = 0
+while i < n and i >= 0:
+    str1 = s[i : i + 1]
+    for char in str1:
+        if char == " ":
+            str2 = str2 + "i"
+        else:
+            str2 = str2 + "char"
+i = i + 1
+return str2
 ```
 
 ### Runtime ValueError
@@ -550,8 +557,8 @@ for i in s:
   - Variant `ns_25t3_py14_1/10`, Student ID `30879c31e1814aacb4963a508afc73ce`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    num=int(str(s))
-    new_str=str.replace(" ",num)
+num = int(str(s))
+new_str = str.replace(" ", num)
 ```
 
 ### Handles only a simpler space pattern and fails longer/multi-space hidden cases

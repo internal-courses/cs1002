@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py13_2/9` (canonical) | 729 | 298 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py13_2/9` (canonical) |              729 |      298 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py13_2/9` | 729 | 431 | 298 | 231 | 67 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py13_2/9` |              729 |       431 |      298 |                231 |                     67 |
 
 ## Private Case Structure
 
@@ -45,34 +45,34 @@ Private-case vectors in this report are 4-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py13_2/9` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 67 | 22.5% | 67 |
-| Incorrect alternate-uppercase word transformation logic (broad wrong-answer failure) | 40 | 13.4% | 40 |
-| Runtime TypeError | 35 | 11.7% | 35 |
-| Runtime NameError | 30 | 10.1% | 30 |
-| No return / implicit `None` | 22 | 7.4% | 22 |
-| Returns from inside the loop after processing only the first word/index | 19 | 6.4% | 19 |
-| Runtime AttributeError from string/list method misuse while transforming alternate words | 14 | 4.7% | 14 |
-| Changes odd-index words too (`lower()`/`swapcase()`), but the task requires leaving them unchanged | 10 | 3.4% | 10 |
-| Runtime error (parseable final submission) | 7 | 2.3% | 7 |
-| Hard-codes sample output lists instead of transforming the input sentence | 7 | 2.3% | 7 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 7 | 2.3% | 7 |
-| Runtime ValueError | 5 | 1.7% | 5 |
-| Uses `list.index(...)` to infer word position, which is wrong when words repeat (duplicate-word index bug) | 5 | 1.7% | 5 |
-| Uses `.upper` without calling it (`.upper()`), so words are not converted to uppercase | 5 | 1.7% | 5 |
-| Partial list transformation (often all-words uppercase or early return), so only some sentence patterns match | 4 | 1.3% | 4 |
-| Runtime TypeError from treating string data as numeric (or calling APIs with wrong argument types) | 4 | 1.3% | 4 |
-| Indexing-by-value bug (`list.index(...)` / mutation while iterating) causes wrong parity handling on some inputs | 2 | 0.7% | 2 |
-| Returns a string (or concatenated string) instead of the required list of words | 2 | 0.7% | 2 |
-| Runtime AttributeError | 2 | 0.7% | 2 |
-| Other wrong-answer logic pattern (residual) | 2 | 0.7% | 2 |
-| Uses an always-truthy boolean-chain (`words[0] or words[2] ...`), so the branch logic is incorrect | 2 | 0.7% | 2 |
-| Time Limit Exceeded | 2 | 0.7% | 2 |
-| Runtime IndexError | 2 | 0.7% | 2 |
-| Over-normalizes output by changing odd-index words too (`lower()`/`swapcase()`) | 1 | 0.3% | 1 |
-| Runtime RecursionError | 1 | 0.3% | 1 |
-| Runtime IndexError from invalid list indexing while iterating words | 1 | 0.3% | 1 |
+| Pattern                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py13_2/9` |
+| ---------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | -----------------: |
+| Syntax / non-parseable final submission                                                                          |            67 |                 22.5% |                 67 |
+| Incorrect alternate-uppercase word transformation logic (broad wrong-answer failure)                             |            40 |                 13.4% |                 40 |
+| Runtime TypeError                                                                                                |            35 |                 11.7% |                 35 |
+| Runtime NameError                                                                                                |            30 |                 10.1% |                 30 |
+| No return / implicit `None`                                                                                      |            22 |                  7.4% |                 22 |
+| Returns from inside the loop after processing only the first word/index                                          |            19 |                  6.4% |                 19 |
+| Runtime AttributeError from string/list method misuse while transforming alternate words                         |            14 |                  4.7% |                 14 |
+| Changes odd-index words too (`lower()`/`swapcase()`), but the task requires leaving them unchanged               |            10 |                  3.4% |                 10 |
+| Runtime error (parseable final submission)                                                                       |             7 |                  2.3% |                  7 |
+| Hard-codes sample output lists instead of transforming the input sentence                                        |             7 |                  2.3% |                  7 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                        |             7 |                  2.3% |                  7 |
+| Runtime ValueError                                                                                               |             5 |                  1.7% |                  5 |
+| Uses `list.index(...)` to infer word position, which is wrong when words repeat (duplicate-word index bug)       |             5 |                  1.7% |                  5 |
+| Uses `.upper` without calling it (`.upper()`), so words are not converted to uppercase                           |             5 |                  1.7% |                  5 |
+| Partial list transformation (often all-words uppercase or early return), so only some sentence patterns match    |             4 |                  1.3% |                  4 |
+| Runtime TypeError from treating string data as numeric (or calling APIs with wrong argument types)               |             4 |                  1.3% |                  4 |
+| Indexing-by-value bug (`list.index(...)` / mutation while iterating) causes wrong parity handling on some inputs |             2 |                  0.7% |                  2 |
+| Returns a string (or concatenated string) instead of the required list of words                                  |             2 |                  0.7% |                  2 |
+| Runtime AttributeError                                                                                           |             2 |                  0.7% |                  2 |
+| Other wrong-answer logic pattern (residual)                                                                      |             2 |                  0.7% |                  2 |
+| Uses an always-truthy boolean-chain (`words[0] or words[2] ...`), so the branch logic is incorrect               |             2 |                  0.7% |                  2 |
+| Time Limit Exceeded                                                                                              |             2 |                  0.7% |                  2 |
+| Runtime IndexError                                                                                               |             2 |                  0.7% |                  2 |
+| Over-normalizes output by changing odd-index words too (`lower()`/`swapcase()`)                                  |             1 |                  0.3% |                  1 |
+| Runtime RecursionError                                                                                           |             1 |                  0.3% |                  1 |
+| Runtime IndexError from invalid list indexing while iterating words                                              |             1 |                  0.3% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -155,18 +155,45 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `374057d888be4d75aee138958412d97a`, summary `Runtime Error`, score `75`, vector `0101`
 
 ```python
-    words=sentence.split()
-    dic = {'a':'A','b':'B','c':'C','d':'D','e':'E','f':'F','g':'G','h':'H','i':'I','j':"J",'k':'K','l':'L','m':'M','n':'N','o':'O','p':'P','q':'Q','r':'R','s':'S','t':'T','u':'U','v':'V','w':'W','x':'X','y':'Y','z':'Z'}
-    count=0
-    for word in words:
-        count=count+1
-    for i in range(count):
-        if(i%2==0):
-            newWord=''
-            for j in words[i]:
-                newWord =newWord+dic.get(j)
-            words[i]=newWord
-    return words
+words = sentence.split()
+dic = {
+    "a": "A",
+    "b": "B",
+    "c": "C",
+    "d": "D",
+    "e": "E",
+    "f": "F",
+    "g": "G",
+    "h": "H",
+    "i": "I",
+    "j": "J",
+    "k": "K",
+    "l": "L",
+    "m": "M",
+    "n": "N",
+    "o": "O",
+    "p": "P",
+    "q": "Q",
+    "r": "R",
+    "s": "S",
+    "t": "T",
+    "u": "U",
+    "v": "V",
+    "w": "W",
+    "x": "X",
+    "y": "Y",
+    "z": "Z",
+}
+count = 0
+for word in words:
+    count = count + 1
+for i in range(count):
+    if i % 2 == 0:
+        newWord = ""
+        for j in words[i]:
+            newWord = newWord + dic.get(j)
+        words[i] = newWord
+return words
 ```
 
 ### Runtime NameError
@@ -273,24 +300,24 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `4fc334802d6f4f9eb934c69f59eafe7f`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    ...
-    sentence = list(sentence)
-    new_l = []
-    word = ''
-    for i in range(2):
-        for i in sentence:
-            if i == ' ':
-                a = int(sentence.index(i))
-                for i in range(a):
-                    word = word+sentence[i]
-                    sentence.pop(i)
-                new_l.append(word)
-    for i in range(len(new_l)):
-        if i%2 == 0:
-            new_l.uppercase(new_l[i])
-        else:
-            pass
-    return list(new_l)
+...
+sentence = list(sentence)
+new_l = []
+word = ""
+for i in range(2):
+    for i in sentence:
+        if i == " ":
+            a = int(sentence.index(i))
+            for i in range(a):
+                word = word + sentence[i]
+                sentence.pop(i)
+            new_l.append(word)
+for i in range(len(new_l)):
+    if i % 2 == 0:
+        new_l.uppercase(new_l[i])
+    else:
+        pass
+return list(new_l)
 ```
 
 ### Changes odd-index words too (`lower()`/`swapcase()`), but the task requires leaving them unchanged
@@ -420,16 +447,16 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `3a7472bdf95948cdb8aa47f835014249`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    help(str)
-    sentence=sentence.split(sep=" ")
-    n=len(sentence)
-    for i in range(n-1):
-        if i%2==0:
-            sentence[i]=sentence.upper
-            my_list=list(sentence)
-        else:
-            sentence[i]=sentence.lower
-            my_list=list(sentence)
+help(str)
+sentence = sentence.split(sep=" ")
+n = len(sentence)
+for i in range(n - 1):
+    if i % 2 == 0:
+        sentence[i] = sentence.upper
+        my_list = list(sentence)
+    else:
+        sentence[i] = sentence.lower
+        my_list = list(sentence)
 ```
 
 ### Uses `list.index(...)` to infer word position, which is wrong when words repeat (duplicate-word index bug)
@@ -443,18 +470,18 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `ecd7be88a2a042d386f5378b86ce1b56`, summary `Wrong Answer`, score `75`, vector `0111`
 
 ```python
-    snt = []
-    words = sentence.split(' ')
-    for word in words:
-        wrd = ""
-        if words.index(word) % 2 == 0:
-            for char in word:
-                wrd += char.upper()
-        else:
-            for char in word:
-                wrd += char
-        snt.append(wrd)
-    return snt
+snt = []
+words = sentence.split(" ")
+for word in words:
+    wrd = ""
+    if words.index(word) % 2 == 0:
+        for char in word:
+            wrd += char.upper()
+    else:
+        for char in word:
+            wrd += char
+    snt.append(wrd)
+return snt
 ```
 
 ### Uses `.upper` without calling it (`.upper()`), so words are not converted to uppercase
@@ -468,21 +495,21 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `ed6b8bd9be99499f84199ba5ebaac7be`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    ...
-    n = len(sentence)
-    res = [sentence[0]]
-    cnt =0
-    strs = ""
-    for ch in sentence:
-        if (ch==''):
-            if cnt%2==0:
-                res = [strs.upper]
-            else:
-                res += strs
+...
+n = len(sentence)
+res = [sentence[0]]
+cnt = 0
+strs = ""
+for ch in sentence:
+    if ch == "":
+        if cnt % 2 == 0:
+            res = [strs.upper]
         else:
-            strs = strs + ch
-        cnt+=1
-    return res
+            res += strs
+    else:
+        strs = strs + ch
+    cnt += 1
+return res
 ```
 
 ### Partial list transformation (often all-words uppercase or early return), so only some sentence patterns match
@@ -525,19 +552,19 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `1ee5ad5ba3124430ad141d439b8a691d`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    ...
-    c = 0
-    liSt = []
-    L = []
-    ki = len(sentence)
-    liSt = sentence[0:" ":ki]
-    k = len(liSt)
-    for i in range (k):
-        if i % 2 == 0:
-            L.append(liSt[i].upper())
-        else:
-            L.append(liSt[i])
-    return L
+...
+c = 0
+liSt = []
+L = []
+ki = len(sentence)
+liSt = sentence[0:" ":ki]
+k = len(liSt)
+for i in range(k):
+    if i % 2 == 0:
+        L.append(liSt[i].upper())
+    else:
+        L.append(liSt[i])
+return L
 ```
 
 ### Indexing-by-value bug (`list.index(...)` / mutation while iterating) causes wrong parity handling on some inputs
@@ -551,14 +578,14 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `1b20f43bd2bb42bcacdf43c97c3e9cfc`, summary `Wrong Answer`, score `75`, vector `0111`
 
 ```python
-    ...
-    my_list=sentence.split()
-    for i in range(len(my_list)):
-        if i%2==0:
-            new_letter=my_list[i].upper()
-            my_list.remove(my_list[i])
-            my_list.insert(i,new_letter)
-    return my_list
+...
+my_list = sentence.split()
+for i in range(len(my_list)):
+    if i % 2 == 0:
+        new_letter = my_list[i].upper()
+        my_list.remove(my_list[i])
+        my_list.insert(i, new_letter)
+return my_list
 ```
 
 ### Returns a string (or concatenated string) instead of the required list of words
@@ -572,9 +599,9 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `10749cac29474e4b829cd3ae86263a81`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    ...
-    sentence = sentence.upper()
-    return sentence
+...
+sentence = sentence.upper()
+return sentence
 ```
 
 ### Runtime AttributeError
@@ -589,17 +616,17 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `17e497c0264e4c809e394db3506d81d7`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    L1: list
-    L1=[sentence]
-    l=len(L1)
-    L2: list
-    L2=[]
-    for i in range (l):
-        if (i%2==0):
-            L2=L2+L1.toUpperCase(i)
-        else:
-            L2=L2+L1[i]
-    return(L2)
+L1: list
+L1 = [sentence]
+l = len(L1)
+L2: list
+L2 = []
+for i in range(l):
+    if i % 2 == 0:
+        L2 = L2 + L1.toUpperCase(i)
+    else:
+        L2 = L2 + L1[i]
+return L2
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -613,14 +640,14 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `d915407612f94067b714dae9955a16c9`, summary `Wrong Answer`, score `50`, vector `0110`
 
 ```python
-    ...
-    list=sentence.split(' ')
-    if(len(list)<=2):
-        list[0]=list[0].upper()
-    else:
-        for i in(0,len(list)-1,2):
-            list[i]=list[i].upper()
-    return list
+...
+list = sentence.split(" ")
+if len(list) <= 2:
+    list[0] = list[0].upper()
+else:
+    for i in (0, len(list) - 1, 2):
+        list[i] = list[i].upper()
+return list
 ```
 
 ### Uses an always-truthy boolean-chain (`words[0] or words[2] ...`), so the branch logic is incorrect
@@ -634,16 +661,16 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `7cba8575b5c54d6bb9808d62ae520070`, summary `Wrong Answer`, score `25`, vector `0010`
 
 ```python
-    words = sentence.split(' ')
-    wordsn = []
-    n=len(words)
-    for word in words:
-        if words[0] or words[2] or words[4]:
-            wordu=word.upper()
-            wordsn.append(wordu)
-        else:
-            wordsn.append(word)
-    return wordsn
+words = sentence.split(" ")
+wordsn = []
+n = len(words)
+for word in words:
+    if words[0] or words[2] or words[4]:
+        wordu = word.upper()
+        wordsn.append(wordu)
+    else:
+        wordsn.append(word)
+return wordsn
 ```
 
 ### Time Limit Exceeded
@@ -683,20 +710,20 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `eae35d267eb14e2a8ae2901a5946f548`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    my_list=[]
-    st=''
-    x=0
-    new_list=[]
-    new_list=sentence.split(" ")
-    l=len(new_list)
-    while x<=l :
-        if(x%2==0):
-           st= new_list[x]
-           st.upper()
-        my_list[x]=st
-        st=''
-        x+=1
-    return my_list
+my_list = []
+st = ""
+x = 0
+new_list = []
+new_list = sentence.split(" ")
+l = len(new_list)
+while x <= l:
+    if x % 2 == 0:
+        st = new_list[x]
+        st.upper()
+    my_list[x] = st
+    st = ""
+    x += 1
+return my_list
 ```
 
 ### Over-normalizes output by changing odd-index words too (`lower()`/`swapcase()`)
@@ -739,8 +766,8 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `77d36c55a016499eac5129293936c94c`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    alternate_upper("hello world"),
-    ["HELLO", "world"]
+(alternate_upper("hello world"),)
+["HELLO", "world"]
 ```
 
 ### Runtime IndexError from invalid list indexing while iterating words
@@ -754,22 +781,23 @@ def alternate_upper(sentence: str) -> list:
   - Variant `ns_25t2_py13_2/9`, Student ID `cc3ae97c7faa489b965820a14aee5119`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    '''for i,s in sentence enumerate(sentence):
-        if i%2==0:
-            l.append(s.uppercase())
-        else:
-            l.append(s)
-    return l'''
-    n=len(sentence)
-    sentence=(sentence)
-    new=[]
-    for i in range(n-1):
-        if i%2==0:
-            new[i]=sentence[i].upper()
-        else:
-            new[i]=sentence[i]
-    return new
-    '''for words in sentence:
-        words[i%2==0]=words.uppercase()
-        wrods[i%2!=0]=words.lowercase()'''
+"""for i,s in sentence enumerate(sentence):
+    if i%2==0:
+        l.append(s.uppercase())
+    else:
+        l.append(s)
+return l"""
+
+n = len(sentence)
+sentence = sentence
+new = []
+for i in range(n - 1):
+    if i % 2 == 0:
+        new[i] = sentence[i].upper()
+    else:
+        new[i] = sentence[i]
+return new
+"""for words in sentence:
+    words[i%2==0]=words.uppercase()
+    wrods[i%2!=0]=words.lowercase()"""
 ```

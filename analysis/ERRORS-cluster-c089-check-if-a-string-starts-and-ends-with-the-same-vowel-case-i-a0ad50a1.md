@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t3_py11/7` (canonical) | 653 | 361 | Exact duplicate problem JSON |
+| Variant                      | final_submitters | non_full | Relationship                 |
+| ---------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t3_py11/7` (canonical) |              653 |      361 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t3_py11/7` | 653 | 292 | 361 | 294 | 67 |
+| Variant          | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ---------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t3_py11/7` |              653 |       292 |      361 |                294 |                     67 |
 
 ## Private Case Structure
 
@@ -44,32 +44,32 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t3_py11/7` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 67 | 18.6% | 67 |
-| Equality-only endpoint check (forgets to ensure the matching endpoint letter is a vowel) | 54 | 15.0% | 54 |
-| Incorrect same-vowel endpoint logic (broad wrong-answer failure) | 39 | 10.8% | 39 |
-| Checks whether both ends are vowels, but not whether they are the same vowel | 37 | 10.2% | 37 |
-| Returns inside vowel loop before checking both conditions completely (premature loop exit) | 31 | 8.6% | 31 |
-| Checks first/last character equality only, but forgets to require vowels | 27 | 7.5% | 27 |
-| Runtime NameError | 18 | 5.0% | 18 |
-| No return / implicit `None` | 12 | 3.3% | 12 |
-| Case-insensitive same-vowel check bug (method call / boolean-chain / endpoint comparison mistake) | 12 | 3.3% | 12 |
-| Always returns `False` (constant output) | 9 | 2.5% | 9 |
-| Uses `.lower` without calling it (`.lower()`), so case-insensitive comparison is broken | 8 | 2.2% | 8 |
-| Runtime TypeError from invalid membership/prefix API usage in vowel check | 7 | 1.9% | 7 |
-| Vowel-at-both-ends check without same-vowel equality comparison | 7 | 1.9% | 7 |
-| Runtime AttributeError from string-method misuse while checking first/last vowels | 5 | 1.4% | 5 |
-| Hard-codes sample strings/examples instead of checking endpoints generically | 5 | 1.4% | 5 |
-| Uses `startswith`/`endswith` incorrectly for vowel-equality logic (prefix/suffix test, not same-endpoint vowel comparison) | 4 | 1.1% | 4 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 3 | 0.8% | 3 |
-| Runtime RecursionError | 3 | 0.8% | 3 |
-| Runtime TypeError | 3 | 0.8% | 3 |
-| Runtime error (parseable final submission) | 3 | 0.8% | 3 |
-| Always returns `True` (constant output) | 3 | 0.8% | 3 |
-| Uses always-truthy boolean chain for vowel checks/comparison (`... == 'a' or 'A' ...`) | 2 | 0.6% | 2 |
-| Runtime IndexError from indexing first/last character without handling empty string | 1 | 0.3% | 1 |
-| Runtime AttributeError | 1 | 0.3% | 1 |
+| Pattern                                                                                                                    | Cluster count | % of cluster non-full | `ns_25t3_py11/7` |
+| -------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ---------------: |
+| Syntax / non-parseable final submission                                                                                    |            67 |                 18.6% |               67 |
+| Equality-only endpoint check (forgets to ensure the matching endpoint letter is a vowel)                                   |            54 |                 15.0% |               54 |
+| Incorrect same-vowel endpoint logic (broad wrong-answer failure)                                                           |            39 |                 10.8% |               39 |
+| Checks whether both ends are vowels, but not whether they are the same vowel                                               |            37 |                 10.2% |               37 |
+| Returns inside vowel loop before checking both conditions completely (premature loop exit)                                 |            31 |                  8.6% |               31 |
+| Checks first/last character equality only, but forgets to require vowels                                                   |            27 |                  7.5% |               27 |
+| Runtime NameError                                                                                                          |            18 |                  5.0% |               18 |
+| No return / implicit `None`                                                                                                |            12 |                  3.3% |               12 |
+| Case-insensitive same-vowel check bug (method call / boolean-chain / endpoint comparison mistake)                          |            12 |                  3.3% |               12 |
+| Always returns `False` (constant output)                                                                                   |             9 |                  2.5% |                9 |
+| Uses `.lower` without calling it (`.lower()`), so case-insensitive comparison is broken                                    |             8 |                  2.2% |                8 |
+| Runtime TypeError from invalid membership/prefix API usage in vowel check                                                  |             7 |                  1.9% |                7 |
+| Vowel-at-both-ends check without same-vowel equality comparison                                                            |             7 |                  1.9% |                7 |
+| Runtime AttributeError from string-method misuse while checking first/last vowels                                          |             5 |                  1.4% |                5 |
+| Hard-codes sample strings/examples instead of checking endpoints generically                                               |             5 |                  1.4% |                5 |
+| Uses `startswith`/`endswith` incorrectly for vowel-equality logic (prefix/suffix test, not same-endpoint vowel comparison) |             4 |                  1.1% |                4 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                                  |             3 |                  0.8% |                3 |
+| Runtime RecursionError                                                                                                     |             3 |                  0.8% |                3 |
+| Runtime TypeError                                                                                                          |             3 |                  0.8% |                3 |
+| Runtime error (parseable final submission)                                                                                 |             3 |                  0.8% |                3 |
+| Always returns `True` (constant output)                                                                                    |             3 |                  0.8% |                3 |
+| Uses always-truthy boolean chain for vowel checks/comparison (`... == 'a' or 'A' ...`)                                     |             2 |                  0.6% |                2 |
+| Runtime IndexError from indexing first/last character without handling empty string                                        |             1 |                  0.3% |                1 |
+| Runtime AttributeError                                                                                                     |             1 |                  0.3% |                1 |
 
 ## Re-clustered Pattern Details
 
@@ -119,18 +119,18 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `49696b06549c44688cbe339f1aee39bd`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    r=False
-    if s.startswith("A" or "a") and s.endswith("A" or "a"):
-        r=True
-    elif s.startswith("E" or "e") and s.endswith("E" or "e"):
-        r=True
-    elif s.startswith("I" or "i") and s.endswith("I" or "i"):
-        r=True
-    elif s.startswith("O" or "o") and s.endswith("O" or "o"):
-        r=True
-    elif s.startswith("U" or "u") and s.endswith("U" or "u"):
-        r=True
-    return r
+r = False
+if s.startswith("A" or "a") and s.endswith("A" or "a"):
+    r = True
+elif s.startswith("E" or "e") and s.endswith("E" or "e"):
+    r = True
+elif s.startswith("I" or "i") and s.endswith("I" or "i"):
+    r = True
+elif s.startswith("O" or "o") and s.endswith("O" or "o"):
+    r = True
+elif s.startswith("U" or "u") and s.endswith("U" or "u"):
+    r = True
+return r
 ```
 
 ### Incorrect same-vowel endpoint logic (broad wrong-answer failure)
@@ -144,11 +144,18 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `f43d56b77ebd4ab5846d4242fcfe49e2`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    ...
-    if (s.startswith("a" or "A") and s.endswith("a" or "A")) or (s.startswith("e" or "E") and s.endswith("e" or "E")) or (s.startswith("i" or "I") and s.endswith("i" or "I")) or (s.startswith("o" or "O") and s.endswith("o" or "O")) or (s.startswith("u" or "U") and s.endswith("u" or "U")) or (s.startswith("a") and s.endswith("a")):
-        return True
-    else :
-        return False
+...
+if (
+    (s.startswith("a" or "A") and s.endswith("a" or "A"))
+    or (s.startswith("e" or "E") and s.endswith("e" or "E"))
+    or (s.startswith("i" or "I") and s.endswith("i" or "I"))
+    or (s.startswith("o" or "O") and s.endswith("o" or "O"))
+    or (s.startswith("u" or "U") and s.endswith("u" or "U"))
+    or (s.startswith("a") and s.endswith("a"))
+):
+    return True
+else:
+    return False
 ```
 
 ### Checks whether both ends are vowels, but not whether they are the same vowel
@@ -162,18 +169,18 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `60517129ab0f43b3937f1a64f8944205`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    if starts_and_ends_with_same_vowel=="A" and "a":
-        return "True"
-    elif starts_and_ends_with_same_vowel=="e" and "E":
-        return "True"
-    elif starts_and_ends_with_same_vowel=="i" and "I":
-        return "True"
-    elif starts_and_ends_with_same_vowel=="o" and "O":
-        return "True"
-    elif starts_and_ends_with_same_vowel=="u" and "U":
-        return "True"
-    else:
-        return "False"
+if starts_and_ends_with_same_vowel == "A" and "a":
+    return "True"
+elif starts_and_ends_with_same_vowel == "e" and "E":
+    return "True"
+elif starts_and_ends_with_same_vowel == "i" and "I":
+    return "True"
+elif starts_and_ends_with_same_vowel == "o" and "O":
+    return "True"
+elif starts_and_ends_with_same_vowel == "u" and "U":
+    return "True"
+else:
+    return "False"
 ```
 
 ### Returns inside vowel loop before checking both conditions completely (premature loop exit)
@@ -275,7 +282,7 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
 
 ```python
 def starts_and_ends_with_same_vowel(s: str) -> bool:
-    '''
+    """
     Given a string, check if it starts and ends with the same vowel (case insensitive).
 
     Eg.
@@ -291,7 +298,7 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
 
     Returns:
         bool: "True" if the string starts and ends with the same vowel, else False.
-    '''
+    """
 ```
 
 ### Case-insensitive same-vowel check bug (method call / boolean-chain / endpoint comparison mistake)
@@ -364,11 +371,11 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `676356dd7e344315b95a1e5d967c32c0`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    vowel = 'a', 'e', 'i', 'o', 'u', 'A', 'I', 'E', 'O', 'U'
-    if (s[0].lower in vowel and s[-1].lower in vowel) and (s[0].lower == s[-1].lower):
-        return True
-    else:
-        return False
+vowel = "a", "e", "i", "o", "u", "A", "I", "E", "O", "U"
+if (s[0].lower in vowel and s[-1].lower in vowel) and (s[0].lower == s[-1].lower):
+    return True
+else:
+    return False
 ```
 
 ### Runtime TypeError from invalid membership/prefix API usage in vowel check
@@ -382,19 +389,19 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `27c36b98d9f54a00880744cc81ef826d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    s=''
-    char=s.split()
-    vowel='aeiouAEIOU'
-    rev=s[::-1]
-    new=''
-    answer=''
-    if char in vowel:
-        if char==rev:
-            new=new.append(rev)
-            answer= True
-    else:
-        answer= False
-    return starts_and_ends_with_same_vowel(answer)
+s = ""
+char = s.split()
+vowel = "aeiouAEIOU"
+rev = s[::-1]
+new = ""
+answer = ""
+if char in vowel:
+    if char == rev:
+        new = new.append(rev)
+        answer = True
+else:
+    answer = False
+return starts_and_ends_with_same_vowel(answer)
 ```
 
 ### Vowel-at-both-ends check without same-vowel equality comparison
@@ -440,14 +447,14 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `ee3f62cea14745178d127dc29454151e`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
-    vowel='aeiouAEIOU'
-    s_0=s.lower()
-    for char in s:
-        if starts_and_ends_with_same_vowel(s_0[0] == s_0[-1]):
-            return True
-        else:
-            return False
+...
+vowel = "aeiouAEIOU"
+s_0 = s.lower()
+for char in s:
+    if starts_and_ends_with_same_vowel(s_0[0] == s_0[-1]):
+        return True
+    else:
+        return False
 ```
 
 ### Hard-codes sample strings/examples instead of checking endpoints generically
@@ -493,13 +500,13 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `d69349853d084a2c872545d70d3bbf86`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    s1 = s.lower()
-    vowel = 'aeiouAEIOU'
-    if s1.startswith(vowel) and s1.endswith(vowel):
-        if s1.startswith(vowel) == s1.endswith(vowel):
-            return True
-    else:
-        return False
+s1 = s.lower()
+vowel = "aeiouAEIOU"
+if s1.startswith(vowel) and s1.endswith(vowel):
+    if s1.startswith(vowel) == s1.endswith(vowel):
+        return True
+else:
+    return False
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator tests)
@@ -513,21 +520,21 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `9528eb692051434a95d170e6d59c188e`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    a=str(input())
-    if(a=="Atta"):
-        print("True")
-    if(a=="atta"):
-        print("True")
-    if(a=="Tart"):
-        print("False")
-    if(a=="TART"):
-        print("False")
-    if(a=="Lioness"):
-        print("False")
-    if(a=="Atrocity"):
-        print("False")
-    if(a=="Achoo"):
-        print("False")
+a = str(input())
+if a == "Atta":
+    print("True")
+if a == "atta":
+    print("True")
+if a == "Tart":
+    print("False")
+if a == "TART":
+    print("False")
+if a == "Lioness":
+    print("False")
+if a == "Atrocity":
+    print("False")
+if a == "Achoo":
+    print("False")
 ```
 
 ### Runtime RecursionError
@@ -542,15 +549,17 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `372917b6d91b45a7a18d591ecbbf2827`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    def start_and_ends_with_same_vowel(s):
-        vowels='aeiouAEIOU'
-        if len(s)==0:
-            return False
-        return s[0] in vowels and s[-1] in vowels and s[0].lower()==s[-1].lower()
-    print(start_and_ends_with_same_vowel("Apple"))
-    print(starts_and_ends_with_same_vowel("Atta"))
-    print(starts_and_ends_with_same_vowel("Tart"))
-    print(start_and_ends_with_same_vowel("umbrella"))
+def start_and_ends_with_same_vowel(s):
+    vowels = "aeiouAEIOU"
+    if len(s) == 0:
+        return False
+    return s[0] in vowels and s[-1] in vowels and s[0].lower() == s[-1].lower()
+
+
+print(start_and_ends_with_same_vowel("Apple"))
+print(starts_and_ends_with_same_vowel("Atta"))
+print(starts_and_ends_with_same_vowel("Tart"))
+print(start_and_ends_with_same_vowel("umbrella"))
 ```
 
 ### Runtime TypeError
@@ -565,13 +574,13 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `fc56cb38062a4a42846ec5151fedd9be`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    str = ("Atta")
-    if str('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u'):
-        return("True")
-    if ends('A', 'E', 'I', 'O', 'U', 'a', 'e', 'i', 'o', 'u'):
-        return("True")
-    else:
-        return("False")
+str = "Atta"
+if str("A", "E", "I", "O", "U", "a", "e", "i", "o", "u"):
+    return "True"
+if ends("A", "E", "I", "O", "U", "a", "e", "i", "o", "u"):
+    return "True"
+else:
+    return "False"
 ```
 
 ### Runtime error (parseable final submission)
@@ -586,7 +595,7 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `4e3cc8bfa6d04f06bfca9c2678400ce3`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-  user_input=input("enter a string:")
+user_input = input("enter a string:")
 ```
 
 ### Always returns `True` (constant output)
@@ -601,10 +610,11 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `59b21123f9b240b09b653a669f714b45`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    text = s.lower()
-    if text[0] == text[-1]:
-        return True
-    else: return False
+text = s.lower()
+if text[0] == text[-1]:
+    return True
+else:
+    return False
 ```
 
 ### Uses always-truthy boolean chain for vowel checks/comparison (`... == 'a' or 'A' ...`)
@@ -618,20 +628,20 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `e94a77201eb34cee96b4be209a887797`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-    vowel = 'aeiouAEIOU'
-    if s[0] not in vowel or s[-1] not in vowel:
-        return False
-    elif s[0] == s[-1]== 'a' or 'A':
-        return True
-    elif s[0] == s[-1] == 'e' or 'E':
-        return True
-    elif s[0] == s[-1] == 'i' or 'I':
-        return True
-    elif s[0] == s[-1] == 'o' or 'O':
-        return True
-    elif s[0] == s[-1] == 'u' or 'U':
-        return True
+vowel = "aeiouAEIOU"
+if s[0] not in vowel or s[-1] not in vowel:
     return False
+elif s[0] == s[-1] == "a" or "A":
+    return True
+elif s[0] == s[-1] == "e" or "E":
+    return True
+elif s[0] == s[-1] == "i" or "I":
+    return True
+elif s[0] == s[-1] == "o" or "O":
+    return True
+elif s[0] == s[-1] == "u" or "U":
+    return True
+return False
 ```
 
 ### Runtime IndexError from indexing first/last character without handling empty string
@@ -645,10 +655,10 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `0a22558766824afaba2f3cf408e19339`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    vowels = 'aeiouAEIOU'
-    b=s[0]
-    e=s[3]
-    return s[0] == vowels and b == e
+vowels = "aeiouAEIOU"
+b = s[0]
+e = s[3]
+return s[0] == vowels and b == e
 ```
 
 ### Runtime AttributeError
@@ -663,5 +673,5 @@ def starts_and_ends_with_same_vowel(s: str) -> bool:
   - Variant `ns_25t3_py11/7`, Student ID `1e621c6eddd84452b42008ef3b33d426`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    return(s.starts(a,e)==s.ends())
+return s.starts(a, e) == s.ends()
 ```

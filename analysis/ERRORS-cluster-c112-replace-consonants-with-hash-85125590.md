@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py11_1/10` (canonical) | 331 | 206 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py11_1/10` (canonical) |              331 |      206 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py11_1/10` | 331 | 125 | 206 | 131 | 75 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py11_1/10` |              331 |       125 |      206 |                131 |                     75 |
 
 ## Private Case Structure
 
@@ -44,25 +44,25 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py11_1/10` |
-| --- | ---: | ---: | ---: |
-| Syntax / non-parseable final submission | 75 | 36.4% | 75 |
-| Incorrect consonant-to-`#` replacement logic (I/O flow, vowel detection, or formatting is broadly wrong) | 39 | 18.9% | 39 |
-| Consonant replacement works on a simple single line, but multi-line formatting is broken (line collapse / last-line-only output) | 23 | 11.2% | 23 |
-| Runtime error (parseable final submission) | 11 | 5.3% | 11 |
-| Empty/comment-only final submission | 10 | 4.9% | 10 |
-| Runtime NameError from undefined variables (`vowels`, loop indices, output buffers) in consonant-replacement logic | 9 | 4.4% | 9 |
-| Hard-codes sample input strings and prints sample output instead of processing arbitrary input | 7 | 3.4% | 7 |
-| Runtime TypeError from wrong string/list operations while rebuilding output lines | 7 | 3.4% | 7 |
-| Prints hard-coded public sample output instead of transforming the given lines | 6 | 2.9% | 6 |
-| Defines a helper that returns transformed text but never prints the required script output | 5 | 2.4% | 5 |
-| Runtime AttributeError from invalid string/list API usage (`append` on string, method misuse) | 4 | 1.9% | 4 |
-| Uses a lowercase-only vowel set, so uppercase vowels are incorrectly replaced with `#` | 3 | 1.5% | 3 |
-| Reads `n` but processes only one line (ignores the required multi-line input loop) | 2 | 1.0% | 2 |
-| Uses `split()` tokenization and collapses spaces/newlines, so exact line formatting is lost | 2 | 1.0% | 2 |
-| Processes multiple lines but prints only the last line after the loop | 1 | 0.5% | 1 |
-| Merges multiple input lines into one output string instead of preserving line boundaries | 1 | 0.5% | 1 |
-| Mostly correct consonant replacement, but uppercase-vowel handling is wrong (incomplete vowel set / case handling) | 1 | 0.5% | 1 |
+| Pattern                                                                                                                          | Cluster count | % of cluster non-full | `ns_25t2_py11_1/10` |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Syntax / non-parseable final submission                                                                                          |            75 |                 36.4% |                  75 |
+| Incorrect consonant-to-`#` replacement logic (I/O flow, vowel detection, or formatting is broadly wrong)                         |            39 |                 18.9% |                  39 |
+| Consonant replacement works on a simple single line, but multi-line formatting is broken (line collapse / last-line-only output) |            23 |                 11.2% |                  23 |
+| Runtime error (parseable final submission)                                                                                       |            11 |                  5.3% |                  11 |
+| Empty/comment-only final submission                                                                                              |            10 |                  4.9% |                  10 |
+| Runtime NameError from undefined variables (`vowels`, loop indices, output buffers) in consonant-replacement logic               |             9 |                  4.4% |                   9 |
+| Hard-codes sample input strings and prints sample output instead of processing arbitrary input                                   |             7 |                  3.4% |                   7 |
+| Runtime TypeError from wrong string/list operations while rebuilding output lines                                                |             7 |                  3.4% |                   7 |
+| Prints hard-coded public sample output instead of transforming the given lines                                                   |             6 |                  2.9% |                   6 |
+| Defines a helper that returns transformed text but never prints the required script output                                       |             5 |                  2.4% |                   5 |
+| Runtime AttributeError from invalid string/list API usage (`append` on string, method misuse)                                    |             4 |                  1.9% |                   4 |
+| Uses a lowercase-only vowel set, so uppercase vowels are incorrectly replaced with `#`                                           |             3 |                  1.5% |                   3 |
+| Reads `n` but processes only one line (ignores the required multi-line input loop)                                               |             2 |                  1.0% |                   2 |
+| Uses `split()` tokenization and collapses spaces/newlines, so exact line formatting is lost                                      |             2 |                  1.0% |                   2 |
+| Processes multiple lines but prints only the last line after the loop                                                            |             1 |                  0.5% |                   1 |
+| Merges multiple input lines into one output string instead of preserving line boundaries                                         |             1 |                  0.5% |                   1 |
+| Mostly correct consonant replacement, but uppercase-vowel handling is wrong (incomplete vowel set / case handling)               |             1 |                  0.5% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -151,14 +151,14 @@ final_word = " "
 
 
 for i in range(n):
-    line = input( )
+    line = input()
     for char in line:
         for x in char:
             if x in vowels:
                 final_word = final_word + x
 
             elif x == " ":
-                final_word = final_word+x
+                final_word = final_word + x
 
             else:
                 char = "#"
@@ -180,11 +180,11 @@ for i in range(n):
 n = int(input())
 lines = []
 for i in range(n):
-    line= input()
+    line = input()
     lines.append(line)
-vowels= ("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
+vowels = ("a", "e", "i", "o", "u", "A", "E", "I", "O", "U")
 for line in lines:
-    new_line= ''
+    new_line = ""
     for char in line:
         if char.isalpha():
             if char in vowels:
@@ -207,7 +207,6 @@ for line in lines:
   - Variant `ns_25t2_py11_1/10`, Student ID `401f7e72a4f44cc0a05a9e4754cd7336`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-
 ```
 
 ### Runtime NameError from undefined variables (`vowels`, loop indices, output buffers) in consonant-replacement logic
@@ -224,8 +223,29 @@ for line in lines:
 n = int(input())
 sentence = str(input())
 sentence.isalpha
-vowels= vowels.isalpha
-consonants = "b" or "c" or"d" or 'f'or 'g' or 'h'or 'k'or 'l' or 'm' or 'n' or 'p' or 'q'or  'r' or 's' or 't' or 'v' or'w' or'x' or'y' or'z'
+vowels = vowels.isalpha
+consonants = (
+    "b"
+    or "c"
+    or "d"
+    or "f"
+    or "g"
+    or "h"
+    or "k"
+    or "l"
+    or "m"
+    or "n"
+    or "p"
+    or "q"
+    or "r"
+    or "s"
+    or "t"
+    or "v"
+    or "w"
+    or "x"
+    or "y"
+    or "z"
+)
 
 consonants = consonants.replace("#")
 sentence = consonants + vowels
@@ -243,16 +263,16 @@ print(sentence)
   - Variant `ns_25t2_py11_1/10`, Student ID `865283010a9b4d088ab2c6a02e05917f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-a=input()
-x=input()
+a = input()
+x = input()
 
-if(x=='hello WORLD'):
+if x == "hello WORLD":
     print("#e##o #O###")
-elif(x=='gOoD mornING'):
-    print('#Oo# #o##I##')
+elif x == "gOoD mornING":
+    print("#Oo# #o##I##")
     print("#a#e a #i#e #a#")
-elif(x=='the quick brown fox'):
-    print('##e #ui## ##o## #o#')
+elif x == "the quick brown fox":
+    print("##e #ui## ##o## #o#")
 ```
 
 ### Runtime TypeError from wrong string/list operations while rebuilding output lines
@@ -268,12 +288,12 @@ elif(x=='the quick brown fox'):
 ```python
 n = int(input("enter number of lines: "))
 vowels = "aeiouAEIOU"
-consonants = 'bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQURSTVWXYZ'
+consonants = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQURSTVWXYZ"
 lines = str(input())
 for words in lines:
     for char in words:
         if char in consonants:
-            char = char.replace('#')
+            char = char.replace("#")
         else:
             char = char
 print(lines)
@@ -296,9 +316,9 @@ print(lines)
 "have a nice day"
 1
 "the quick brown fox"
-print ("#e##o #0###")
-#0o# #o##I##
-#a#e a #i#e #a#
+print("#e##o #0###")
+# 0o# #o##I##
+# a#e a #i#e #a#
 ##e #ui## ##o## #o#
 ```
 
@@ -313,17 +333,17 @@ print ("#e##o #0###")
   - Variant `ns_25t2_py11_1/10`, Student ID `60836f27bd5e4a87811c0f792547c252`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    n=int(input())
-    vowels=("aeiouAEIOU")
-    b=()
-    for i in range (len(a)):
-        if a[i]!=vowels:
-            a[i]="#"
-            b.append=b
-        else:
-            a[i]=a[i]
-            b.append=b
-    return b
+n = int(input())
+vowels = "aeiouAEIOU"
+b = ()
+for i in range(len(a)):
+    if a[i] != vowels:
+        a[i] = "#"
+        b.append = b
+    else:
+        a[i] = a[i]
+        b.append = b
+return b
 ```
 
 ### Runtime AttributeError from invalid string/list API usage (`append` on string, method misuse)
@@ -339,7 +359,7 @@ print ("#e##o #0###")
 ```python
 n = int(input())
 
-vowles = { "a" , "e" , "i" , "o" , "u" , "A" , "E" , "I" , "O" , "U" }
+vowles = {"a", "e", "i", "o", "u", "A", "E", "I", "O", "U"}
 
 for _ in range(n):
     line = input()
@@ -363,7 +383,7 @@ print(result_line)
   - Variant `ns_25t2_py11_1/10`, Student ID `66909b4c483c4573bd3ea59b51ee90a7`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-n=int(input())
+n = int(input())
 for i in range(n):
     string = ""
     line = input()
@@ -371,10 +391,10 @@ for i in range(n):
         for char in word:
             if char != " ":
                 if char.lower() not in "aeiou":
-                    string+="#"
+                    string += "#"
                 else:
-                    string+=char
-    print(string,sep=" ",end=" ")
+                    string += char
+    print(string, sep=" ", end=" ")
 ```
 
 ### Reads `n` but processes only one line (ignores the required multi-line input loop)
@@ -388,8 +408,8 @@ for i in range(n):
   - Variant `ns_25t2_py11_1/10`, Student ID `38b49e7eeb094babb8d09e0cc823de59`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-l=[]
+n = int(input())
+l = []
 ```
 
 ### Uses `split()` tokenization and collapses spaces/newlines, so exact line formatting is lost
@@ -403,23 +423,23 @@ l=[]
   - Variant `ns_25t2_py11_1/10`, Student ID `18b6cedbe9924bb2b977c2cb5a3c962c`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-n= int(input())
-passage=[]
+n = int(input())
+passage = []
 for i in range(n):
-    words= input().strip().split()
+    words = input().strip().split()
     passage.append(words)
 
-new_word=''
-vowels="aeiouAEIOU"
+new_word = ""
+vowels = "aeiouAEIOU"
 for word in passage:
     for letter in word:
         if letter.isalpha():
             if letter not in vowels:
-                n_letter='#'
-                new_word+=n_letter
+                n_letter = "#"
+                new_word += n_letter
             else:
-                n_letter= letter
-                new_word+=n_letter
+                n_letter = letter
+                new_word += n_letter
 print(new_word)
 ```
 
@@ -443,7 +463,7 @@ for i in range(n):
         for ch in word:
             if ch.isalpha():
                 if ch not in vowels:
-                    line = line.replace(ch,"#")
+                    line = line.replace(ch, "#")
 print(line)
 ```
 
@@ -458,21 +478,19 @@ print(line)
   - Variant `ns_25t2_py11_1/10`, Student ID `211bc0c7b9de48b994308134fc1b4086`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
-n=int(input())
-rp=""
+n = int(input())
+rp = ""
 for i in range(n):
-    p=input()
-    rp=rp+p
-v=["A","E","I","O","U","a","e","i","o","u"," "]
-rp=list(rp)
+    p = input()
+    rp = rp + p
+v = ["A", "E", "I", "O", "U", "a", "e", "i", "o", "u", " "]
+rp = list(rp)
 for i in range(len(rp)):
-
     if rp[i] not in v:
-
-        rp[i]="#"
-k=""
+        rp[i] = "#"
+k = ""
 for i in rp:
-    k=k+i
+    k = k + i
 
 print(k)
 ```

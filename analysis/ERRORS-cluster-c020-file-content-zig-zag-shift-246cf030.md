@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/20` (canonical) | 363 | 220 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/26` | 223 | 136 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/20` (canonical) |              363 |      220 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/26`             |              223 |      136 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/20` | 363 | 143 | 220 | 191 | 29 |
-| `ns_25t2_py21_2/26` | 223 | 87 | 136 | 124 | 12 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/20` |              363 |       143 |      220 |                191 |                     29 |
+| `ns_25t2_py21_2/26` |              223 |        87 |      136 |                124 |                     12 |
 
 ## Private Case Structure
 
@@ -48,25 +48,25 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/20` | `ns_25t2_py21_2/26` |
-| --- | ---: | ---: | ---: | ---: |
-| Incorrect pattern-generation logic for the evaluated task (often wrong pattern type, sample hard-coding, or missing alternating reversal) | 115 | 32.3% | 111 | 4 |
-| Solves a different file-based zig-zag-spacing question (`filename` I/O) instead of the evaluator’s alternate-number-sequence triangle task | 89 | 25.0% | 0 | 89 |
-| Syntax / non-parseable final submission | 41 | 11.5% | 29 | 12 |
-| Hard-codes outputs for specific values of `n` (sample-case branching) instead of generating the pattern | 24 | 6.7% | 24 | 0 |
-| Prints a row-number triangle pattern (`i`, `i+1`, etc.) instead of consecutive numbers with alternating row direction | 17 | 4.8% | 17 | 0 |
-| Empty final submission | 15 | 4.2% | 15 | 0 |
-| Runtime file-I/O mismatch: attempts a `filename`-based file solution, but the evaluator behavior for this cluster uses standard input | 12 | 3.4% | 0 | 12 |
-| Runtime NameError from undefined counters/variables in triangle-generation logic | 9 | 2.5% | 5 | 4 |
-| Runtime EOFError from reading the wrong input shape / extra lines for the actual evaluator task | 8 | 2.2% | 2 | 6 |
-| Defines a helper pattern function but does not integrate it with the expected input/output flow | 6 | 1.7% | 6 | 0 |
-| Runtime AttributeError from list/string method misuse while building/printing rows | 6 | 1.7% | 4 | 2 |
-| Runtime error (parseable final submission) | 4 | 1.1% | 2 | 2 |
-| Runtime TypeError from mixing strings/ints or malformed `print`/list operations in pattern generation | 4 | 1.1% | 4 | 0 |
-| Runtime IndexError from row-list indexing mistakes in generated pattern rows | 3 | 0.8% | 0 | 3 |
-| Builds consecutive rows but forgets to reverse the even-numbered rows (alternating direction missing) | 1 | 0.3% | 1 | 0 |
-| Inefficient/infinite-loop pattern generation (Time Limit Exceeded) | 1 | 0.3% | 0 | 1 |
-| Runtime ValueError from malformed numeric input parsing | 1 | 0.3% | 0 | 1 |
+| Pattern                                                                                                                                    | Cluster count | % of cluster non-full | `ns_25t2_py21_1/20` | `ns_25t2_py21_2/26` |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | ------------------: | ------------------: |
+| Incorrect pattern-generation logic for the evaluated task (often wrong pattern type, sample hard-coding, or missing alternating reversal)  |           115 |                 32.3% |                 111 |                   4 |
+| Solves a different file-based zig-zag-spacing question (`filename` I/O) instead of the evaluator’s alternate-number-sequence triangle task |            89 |                 25.0% |                   0 |                  89 |
+| Syntax / non-parseable final submission                                                                                                    |            41 |                 11.5% |                  29 |                  12 |
+| Hard-codes outputs for specific values of `n` (sample-case branching) instead of generating the pattern                                    |            24 |                  6.7% |                  24 |                   0 |
+| Prints a row-number triangle pattern (`i`, `i+1`, etc.) instead of consecutive numbers with alternating row direction                      |            17 |                  4.8% |                  17 |                   0 |
+| Empty final submission                                                                                                                     |            15 |                  4.2% |                  15 |                   0 |
+| Runtime file-I/O mismatch: attempts a `filename`-based file solution, but the evaluator behavior for this cluster uses standard input      |            12 |                  3.4% |                   0 |                  12 |
+| Runtime NameError from undefined counters/variables in triangle-generation logic                                                           |             9 |                  2.5% |                   5 |                   4 |
+| Runtime EOFError from reading the wrong input shape / extra lines for the actual evaluator task                                            |             8 |                  2.2% |                   2 |                   6 |
+| Defines a helper pattern function but does not integrate it with the expected input/output flow                                            |             6 |                  1.7% |                   6 |                   0 |
+| Runtime AttributeError from list/string method misuse while building/printing rows                                                         |             6 |                  1.7% |                   4 |                   2 |
+| Runtime error (parseable final submission)                                                                                                 |             4 |                  1.1% |                   2 |                   2 |
+| Runtime TypeError from mixing strings/ints or malformed `print`/list operations in pattern generation                                      |             4 |                  1.1% |                   4 |                   0 |
+| Runtime IndexError from row-list indexing mistakes in generated pattern rows                                                               |             3 |                  0.8% |                   0 |                   3 |
+| Builds consecutive rows but forgets to reverse the even-numbered rows (alternating direction missing)                                      |             1 |                  0.3% |                   1 |                   0 |
+| Inefficient/infinite-loop pattern generation (Time Limit Exceeded)                                                                         |             1 |                  0.3% |                   0 |                   1 |
+| Runtime ValueError from malformed numeric input parsing                                                                                    |             1 |                  0.3% |                   0 |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -92,19 +92,51 @@ elif n == 1:
     print(1)
 
 elif n == 2:
-    print(1,'\n',3,' ',2, sep = '')
+    print(1, "\n", 3, " ", 2, sep="")
 
 elif n == 3:
-    print(1,'\n',3,' ',2,'\n',4,' ',5,' ',6, sep = '')
+    print(1, "\n", 3, " ", 2, "\n", 4, " ", 5, " ", 6, sep="")
 
 elif n == 4:
-    print(1,'\n',3,' ',2,'\n',4,' ',5,' ',6,'\n',10,' ',9,' ',8,' ',7, sep = '')
+    print(1, "\n", 3, " ", 2, "\n", 4, " ", 5, " ", 6, "\n", 10, " ", 9, " ", 8, " ", 7, sep="")
 
 elif n == 5:
-    print(1,'\n',3,' ',2,'\n',4,' ',5,' ',6,'\n',10,' ',9,' ',8,' ',7,'\n',11,' ',12,' ',13,' ',14,' ',15, sep = '')
+    print(
+        1,
+        "\n",
+        3,
+        " ",
+        2,
+        "\n",
+        4,
+        " ",
+        5,
+        " ",
+        6,
+        "\n",
+        10,
+        " ",
+        9,
+        " ",
+        8,
+        " ",
+        7,
+        "\n",
+        11,
+        " ",
+        12,
+        " ",
+        13,
+        " ",
+        14,
+        " ",
+        15,
+        sep="",
+    )
 # ...
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `9aac9f01fe574622882841285be1359d`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `9aac9f01fe574622882841285be1359d`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
     import sys
@@ -143,11 +175,11 @@ elif n == 5:
 # Read the file using the variable filename, and print the result in the output.
 
 
-with open(filename,'r') as f:
+with open(filename, "r") as f:
     z = f.readline()
     print(f.readline().strip())
-    print(" "+f.readline().strip())
-    print("  "+ f.readline().strip())
+    print(" " + f.readline().strip())
+    print("  " + f.readline().strip())
     print(" " + f.readline().strip())
     print("" + f.readline().strip())
     print(" " + f.readline().strip())
@@ -194,7 +226,8 @@ def get_pages_by_isbn(book_data:list, isbn: str) -> int:
     if get_pages_by_isbn >500:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `4e17a6099d014f5f80dfcf340f0bafee`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `4e17a6099d014f5f80dfcf340f0bafee`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
         for chr in l[1:]:
@@ -230,22 +263,22 @@ def get_pages_by_isbn(book_data:list, isbn: str) -> int:
   - Variant `ns_25t2_py21_1/20`, Student ID `7c07b97a83de4d4a8aaf7daabd58e031`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-if n==1:
-    print('1')
-elif n==2:
+n = int(input())
+if n == 1:
+    print("1")
+elif n == 2:
     print("1")
     print("3 2")
-elif n==3:
+elif n == 3:
     print("1")
     print("3 2")
     print("4 5 6")
-elif n==4:
+elif n == 4:
     print("1")
     print("3 2")
     print("4 5 6")
     print("10 9 8 7")
-elif n==5:
+elif n == 5:
     print("1")
     print("3 2")
 # ...
@@ -263,24 +296,24 @@ elif n==5:
   - Variant `ns_25t2_py21_1/20`, Student ID `09589d9136d84e33acd1ebab527c91ec`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-for i in range(1,n+1):
-    c=(n*(i+1))//n
-    if i==1:
-        print(i,end='\n')
+n = int(input())
+for i in range(1, n + 1):
+    c = (n * (i + 1)) // n
+    if i == 1:
+        print(i, end="\n")
     else:
-        if i%2==0 and i<4:
-            for j in range(c,i-1,-1):
-                print(j,end=' ')
-            print(end='\n')
-        elif i%2==0 and i>=4:
-            for j in range((c)*2,i+2,-1):
-                print(j,end=' ')
-            print(end='\n')
-        elif i>=4:
-            for j in range(i*2+1,i*3+1):
-                print(j,end=' ')
-            print('\n')
+        if i % 2 == 0 and i < 4:
+            for j in range(c, i - 1, -1):
+                print(j, end=" ")
+            print(end="\n")
+        elif i % 2 == 0 and i >= 4:
+            for j in range((c) * 2, i + 2, -1):
+                print(j, end=" ")
+            print(end="\n")
+        elif i >= 4:
+            for j in range(i * 2 + 1, i * 3 + 1):
+                print(j, end=" ")
+            print("\n")
 # ...
 ```
 
@@ -296,7 +329,6 @@ for i in range(1,n+1):
   - Variant `ns_25t2_py21_1/20`, Student ID `117ecf9bb7804b1b9fb5f84311eeb917`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-
 ```
 
 ### Runtime file-I/O mismatch: attempts a `filename`-based file solution, but the evaluator behavior for this cluster uses standard input
@@ -346,31 +378,32 @@ for i in range(1,n+1):
 ```python
 n = int(input())
 
-num = [1,2,3,4,5,6,7,8,9,10]
+num = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-if(n==1):
+if n == 1:
     print(num[0])
-elif(n==2):
+elif n == 2:
     print(num[0])
     print(num[2], num[1])
-elif(n==3):
+elif n == 3:
     print(num[0])
     print(num[2], num[1])
     print(num[3], num[4], num[5])
-elif(n==4):
+elif n == 4:
     print(num[0])
     print(num[2], num[1])
     print(num[5], num[4], num[3])
     print(num[9], num[8], num[7], num[6])
 # ...
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `6d3d1b01e07b4b01947d39c60df5bdb3`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `6d3d1b01e07b4b01947d39c60df5bdb3`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 # Read the file using the variable filename, and print the result in the output.
 
-r=open(finame,"r")
-rr=r.readlines
+r = open(finame, "r")
+rr = r.readlines
 print(rr)
 ```
 
@@ -386,15 +419,16 @@ print(rr)
   - Variant `ns_25t2_py21_1/20`, Student ID `50294a392c8a49bfb5ccd3cef2aa375a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-n= int(input())
-lines =input()
+n = int(input())
+lines = input()
 f.readlines(n)
-if i+1:
+if i + 1:
     lines[1]
 else:
-    lines:[0]
+    lines: [0]
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `406450ebd07245e3a930fe02f6825866`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `406450ebd07245e3a930fe02f6825866`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 # Read the file using the variable filename, and print the result in the output.
@@ -414,7 +448,7 @@ else:
             ch = input()
         except EOFError:
             break
-        print(' ' * spaces + ch)
+        print(" " * spaces + ch)
 # ...
 ```
 
@@ -430,19 +464,19 @@ else:
   - Variant `ns_25t2_py21_1/20`, Student ID `314736e85ea045ccacfd54c301b451be`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    number = 1
-    for i in range(1,n+1):
-        if i % 2 == 0 :
-            start_num = number + i -1
-            for j in range (i ):
-                print(start_num , end = "")
-                start_num -= 1
-            number += i
-        else :
-            for j in range(i):
-                print(number, end="")
-                number += 1
-        print(generate_alternating_pattern())
+number = 1
+for i in range(1, n + 1):
+    if i % 2 == 0:
+        start_num = number + i - 1
+        for j in range(i):
+            print(start_num, end="")
+            start_num -= 1
+        number += i
+    else:
+        for j in range(i):
+            print(number, end="")
+            number += 1
+    print(generate_alternating_pattern())
 ```
 
 ### Runtime AttributeError from list/string method misuse while building/printing rows
@@ -457,18 +491,19 @@ else:
   - Variant `ns_25t2_py21_1/20`, Student ID `de5d5fee15ff43a58a12f2149cd4d58e`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if n <= 0:
-        print("n must be a postive integer")
-        return
-    current= 1
-    for row_len in range(1,n+1):
-        row=list(range(current, current+row_len))
-        if row_len % 2==0:
-            row.reversed()
-        print(*row)
-        current += row_len
+if n <= 0:
+    print("n must be a postive integer")
+    return
+current = 1
+for row_len in range(1, n + 1):
+    row = list(range(current, current + row_len))
+    if row_len % 2 == 0:
+        row.reversed()
+    print(*row)
+    current += row_len
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `5e04b5790b9848afa71a3c83110b6e08`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `5e04b5790b9848afa71a3c83110b6e08`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 # Read the file using the variable filename, and print the result in the output.
@@ -502,38 +537,39 @@ else:
   - Variant `ns_25t2_py21_1/20`, Student ID `a781045654a74fd484ebd8160430d314`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-n=int(input())
-l=''
+n = int(input())
+l = ""
 for i in range(n):
-    if i %2 == 0:
+    if i % 2 == 0:
         for j in range(i):
-            l+= i+j
-    if i%2==1:
-        for j in range(0,i,-1):
-            l+= i +j
+            l += i + j
+    if i % 2 == 1:
+        for j in range(0, i, -1):
+            l += i + j
 return l
 ```
-  - Variant `ns_25t2_py21_2/26`, Student ID `79a66d76d45e426e8a75135b9da94c26`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/26`, Student ID `79a66d76d45e426e8a75135b9da94c26`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 # Read the file using the variable filename, and print the result in the output.
 print(arr[1])
-print(  arr[2])
-print(   arr[3])
-print(  arr[4])
-print(arr[5])
-print(   arr[6])
-print(    arr[7])
-print(  arr[8])
-print(arr[9])
-print(  arr[10])
-print(    arr[11])
-print(arr[1])
-print( arr[2])
+print(arr[2])
 print(arr[3])
-print( arr[4])
+print(arr[4])
 print(arr[5])
-print( arr[6])
+print(arr[6])
+print(arr[7])
+print(arr[8])
+print(arr[9])
+print(arr[10])
+print(arr[11])
+print(arr[1])
+print(arr[2])
+print(arr[3])
+print(arr[4])
+print(arr[5])
+print(arr[6])
 # ...
 ```
 
@@ -549,12 +585,12 @@ print( arr[6])
   - Variant `ns_25t2_py21_1/20`, Student ID `6fcba0bca67e461d95c5a7a4f807d794`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-n=int(input())
+n = int(input())
 for lines in range(n):
-    if n==1:
+    if n == 1:
         print(1)
     else:
-        if n[lines]%2==0:
+        if n[lines] % 2 == 0:
             print()
         else:
             print()
@@ -573,22 +609,23 @@ for lines in range(n):
 
 ```python
 import sys
+
 data = sys.stdin.read().splitlines()
 z = int(data[0].strip())
-char = [line.rstrip("\n") for line in data [1:]]
+char = [line.rstrip("\n") for line in data[1:]]
 
 if z <= 1:
     for ch in chars:
         print(ch)
     else:
-        spaces= 0
+        spaces = 0
         going_down = True
 
         for ch in chars:
-            print(""*spaces+ch)
+            print("" * spaces + ch)
             if going_down:
-                spaces+=1
-                if spaces == z -1:
+                spaces += 1
+                if spaces == z - 1:
                     going_down = False
 # ...
 ```
@@ -605,8 +642,8 @@ if z <= 1:
   - Variant `ns_25t2_py21_1/20`, Student ID `0582f4dee5484e2895fe93c7804d87e8`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-if __name__ == '__name__':
-    n = int(input() .strip())
+if __name__ == "__name__":
+    n = int(input().strip())
     num = 1
     for i in range(1, n + 1):
         row = []
@@ -614,7 +651,7 @@ if __name__ == '__name__':
             row.append(num)
             num += 1
         if i % 2 == 0:
-            row. reverse()
+            row.reverse()
         print(*row)
 ```
 
@@ -663,11 +700,10 @@ while(ind<len(pro)):
   - Variant `ns_25t2_py21_2/26`, Student ID `c09e126ef6834d6e8aa141214899c987`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-lines = sys.stdin.read().strip().split('\n')
+lines = sys.stdin.read().strip().split("\n")
 z = int(lines[0])
 characters = lines[1:]
 if z == 1:
-
     for char in characters:
         print(char)
 else:
@@ -680,5 +716,5 @@ else:
         else:
             spaces = cycle_length - position_in_cycle
 
-        print(' ' * spaces + char)
+        print(" " * spaces + char)
 ```

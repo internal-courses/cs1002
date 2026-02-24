@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py14_1/10` (canonical) | 616 | 489 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py14_1/10` (canonical) |              616 |      489 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py14_1/10` | 616 | 127 | 489 | 378 | 111 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py14_1/10` |              616 |       127 |      489 |                378 |                    111 |
 
 ## Private Case Structure
 
@@ -44,25 +44,25 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py14_1/10` |
-| --- | ---: | ---: | ---: |
-| Incorrect program-level vowel-reversal logic (I/O, global reversal, or formatting semantics are wrong) | 160 | 32.7% | 160 |
-| Syntax / non-parseable final submission | 111 | 22.7% | 111 |
-| Hard-codes sample output strings (e.g., `HollE`) instead of reversing vowels for arbitrary input | 73 | 14.9% | 73 |
-| Processes only one line (or prints line-by-line incorrectly) instead of reversing vowels globally across all input lines | 37 | 7.6% | 37 |
-| Runtime TypeError | 20 | 4.1% | 20 |
-| Runtime error (parseable final submission) | 19 | 3.9% | 19 |
-| Runtime NameError from undefined line/text accumulator variables in multi-line vowel-reversal code | 17 | 3.5% | 17 |
-| Runtime AttributeError | 12 | 2.5% | 12 |
-| Runtime NameError | 11 | 2.2% | 11 |
-| Runtime IndexError from pointer/pop indexing bugs while reversing vowels | 9 | 1.8% | 9 |
-| Builds transformed characters but outputs with incorrect formatting (missing join/newline preservation) | 8 | 1.6% | 8 |
-| Runtime IndexError | 4 | 0.8% | 4 |
-| Runtime ValueError from parsing string input as integers in a text-processing question | 3 | 0.6% | 3 |
-| Runtime TypeError from trying to mutate Python strings in-place while swapping vowels | 2 | 0.4% | 2 |
-| Partially correct vowel-reversal program with global-vowel or output-formatting bug | 1 | 0.2% | 1 |
-| Incomplete vowel set (missing one vowel/uppercase vowel), causing hidden-case misses | 1 | 0.2% | 1 |
-| Treats the entire multi-line input as a single tokenized line (ignores line count / line boundaries) | 1 | 0.2% | 1 |
+| Pattern                                                                                                                  | Cluster count | % of cluster non-full | `ns_25t2_py14_1/10` |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | ------------------: |
+| Incorrect program-level vowel-reversal logic (I/O, global reversal, or formatting semantics are wrong)                   |           160 |                 32.7% |                 160 |
+| Syntax / non-parseable final submission                                                                                  |           111 |                 22.7% |                 111 |
+| Hard-codes sample output strings (e.g., `HollE`) instead of reversing vowels for arbitrary input                         |            73 |                 14.9% |                  73 |
+| Processes only one line (or prints line-by-line incorrectly) instead of reversing vowels globally across all input lines |            37 |                  7.6% |                  37 |
+| Runtime TypeError                                                                                                        |            20 |                  4.1% |                  20 |
+| Runtime error (parseable final submission)                                                                               |            19 |                  3.9% |                  19 |
+| Runtime NameError from undefined line/text accumulator variables in multi-line vowel-reversal code                       |            17 |                  3.5% |                  17 |
+| Runtime AttributeError                                                                                                   |            12 |                  2.5% |                  12 |
+| Runtime NameError                                                                                                        |            11 |                  2.2% |                  11 |
+| Runtime IndexError from pointer/pop indexing bugs while reversing vowels                                                 |             9 |                  1.8% |                   9 |
+| Builds transformed characters but outputs with incorrect formatting (missing join/newline preservation)                  |             8 |                  1.6% |                   8 |
+| Runtime IndexError                                                                                                       |             4 |                  0.8% |                   4 |
+| Runtime ValueError from parsing string input as integers in a text-processing question                                   |             3 |                  0.6% |                   3 |
+| Runtime TypeError from trying to mutate Python strings in-place while swapping vowels                                    |             2 |                  0.4% |                   2 |
+| Partially correct vowel-reversal program with global-vowel or output-formatting bug                                      |             1 |                  0.2% |                   1 |
+| Incomplete vowel set (missing one vowel/uppercase vowel), causing hidden-case misses                                     |             1 |                  0.2% |                   1 |
+| Treats the entire multi-line input as a single tokenized line (ignores line count / line boundaries)                     |             1 |                  0.2% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -80,23 +80,23 @@ Residual `Other` after second-pass re-clustering: `0/489` (`0.0%`)
 
 ```python
 # Write your solution here
-n=int(input())
-if n==1 :
-    s=input()
-    b=len(s)
-    c=list(range(b))
-    l=list()
-    p=list()
-    for i in range(len(s)) :
-        if s[i].lower() in'aeiou' :
+n = int(input())
+if n == 1:
+    s = input()
+    b = len(s)
+    c = list(range(b))
+    l = list()
+    p = list()
+    for i in range(len(s)):
+        if s[i].lower() in "aeiou":
             l.append(i)
-        else :
+        else:
             p.append(i)
-    for i in range(len(l)-1) :
-        c[l[i]]=s[l[i+1]]
-        c[l[i+1]]=s[l[i]]
-    for i in p :
-        c[i]=s[i]
+    for i in range(len(l) - 1):
+        c[l[i]] = s[l[i + 1]]
+        c[l[i + 1]] = s[l[i]]
+    for i in p:
+        c[i] = s[i]
 # ...
 ```
 
@@ -174,7 +174,7 @@ n = int(input())
 
 for _ in range(n):
     line = input()
-    #print (line)
+    # print (line)
     for i in range(len(line)):
         if line[i].lower() in v:
             d[line[i]] = i
@@ -238,10 +238,10 @@ for _ in range(n):
     for char in line:
         lower_char = char.lower()
         upper_char = char.upper()
-        vowels = ['a', 'e', 'i', 'o', 'u','A', 'E', 'I', 'O', 'U']
-        new_char= char.reverse()
+        vowels = ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"]
+        new_char = char.reverse()
 for char in word:
-    indices = sorted([i1, i2], reverse = True)
+    indices = sorted([i1, i2], reverse=True)
     for indices in char:
         if indices < len(l):
             s == s[::-1]
@@ -295,21 +295,21 @@ for char in word:
 ```python
 # Write your solution here
 
-vowel = {"a","e","i","o","u"}
-vowstring= ""
-consstring =""
-vowindex =[]
+vowel = {"a", "e", "i", "o", "u"}
+vowstring = ""
+consstring = ""
+vowindex = []
 consindex = []
 newstring = ""
 n = int(input())
-for i in range (n):
+for i in range(n):
     string = input()
-    for j in range (len(string)):
+    for j in range(len(string)):
         if string[j].lower() in vowel:
-            vowstring+=string[j]
+            vowstring += string[j]
             vowindex.append(j)
         else:
-            consstring+=string[j]
+            consstring += string[j]
             consindex.append(j)
 # ...
 ```
@@ -327,13 +327,13 @@ for i in range (n):
 
 ```python
 # Write your solution here
-n=int(input())
-vowel='aeiouAEIOU'
-word=input()
-empty=""
+n = int(input())
+vowel = "aeiouAEIOU"
+word = input()
+empty = ""
 for vowel in word:
-    empty=append.vowel
-reverse=list(empty[::-1])
+    empty = append.vowel
+reverse = list(empty[::-1])
 print(reverse.word)
 ```
 
@@ -357,12 +357,12 @@ for i in range(inp1):
     outp = list(inp)
     inparr.append(inp)
     outpar.append(outp)
-vowel = 'aeiouAEIOU'
+vowel = "aeiouAEIOU"
 
 arr = []
 ind = []
 for inp in inparr:
-    for i in range(0,len(inp)):
+    for i in range(0, len(inp)):
         if inp[i] in vowel:
             arr.append(str(inp[i]))
             ind.append(i)
@@ -380,24 +380,24 @@ for inp in inparr:
   - Variant `ns_25t2_py14_1/10`, Student ID `94b70cb1ee8147d8befa150fceff4941`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-n=int(input())
-lines=[]
+n = int(input())
+lines = []
 for i in range(n):
-    line=input()
+    line = input()
     lines.append(line)
 
 # e o o U O e
 # e O U o o e
 
-vow='AEIOUaeiou'
-vow_list=[]
+vow = "AEIOUaeiou"
+vow_list = []
 
-for line in lines: #line is str
-    for i in line: #i is individual char (str)
+for line in lines:  # line is str
+    for i in line:  # i is individual char (str)
         if i in vow:
             vow_list.append(i)
 
-vow_list=vow_list[::-1]
+vow_list = vow_list[::-1]
 # ...
 ```
 
@@ -413,23 +413,23 @@ vow_list=vow_list[::-1]
   - Variant `ns_25t2_py14_1/10`, Student ID `a5792d71fa85465bb39ba203b454570f`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    vowels_in_text=[]
-    vowel_indices=[]
-    vowels_set={'a','e','i','o','u', 'A', 'E', 'I', 'O', 'U'}
-    for i, char in enumerate(text):
-        if char in vowels_set:
-            vowels_in_text.append(char)
-            vowel_indicesa.append(i)
-        vowels_in_text.reverse()
-        result=list(text)
-        vowel_index=0
-        for char in text:
-            if char.lower() in {'a','e','i','o','u'}:
-                result.append(vowels_in_text[vowel_index])
-                vowel_index+=1
-            else:
-                result.append(char)
-        return ''.join(result)
+vowels_in_text = []
+vowel_indices = []
+vowels_set = {"a", "e", "i", "o", "u", "A", "E", "I", "O", "U"}
+for i, char in enumerate(text):
+    if char in vowels_set:
+        vowels_in_text.append(char)
+        vowel_indicesa.append(i)
+    vowels_in_text.reverse()
+    result = list(text)
+    vowel_index = 0
+    for char in text:
+        if char.lower() in {"a", "e", "i", "o", "u"}:
+            result.append(vowels_in_text[vowel_index])
+            vowel_index += 1
+        else:
+            result.append(char)
+    return "".join(result)
 ```
 
 ### Runtime ValueError from parsing string input as integers in a text-processing question
@@ -444,23 +444,23 @@ vow_list=vow_list[::-1]
 
 ```python
 # Write your solution here
-n=int(input())
-vowels='aeiouAEIOU'
-ans=''
-val=''
-if n==1:
-    words=str(input())
+n = int(input())
+vowels = "aeiouAEIOU"
+ans = ""
+val = ""
+if n == 1:
+    words = str(input())
     for char in words:
         if char in vowels:
-            ans+=char
-    a=ans[0]
-    b=ans[1]
-    a,b=b,a
+            ans += char
+    a = ans[0]
+    b = ans[1]
+    a, b = b, a
     ans[0]
     for char in words:
-        i=0
+        i = 0
         if char in vowels:
-            val+=ans[i]
+            val += ans[i]
 # ...
 ```
 
@@ -510,21 +510,21 @@ for i in (x):
 # Write your solution here
 
 
-n=int(input())
-str=''
+n = int(input())
+str = ""
 for i in range(n):
-    s1=input()
-    str=str+'\n'+s1
-s='aeiouAEIOU'
-l=list(str)
-k=len(l)-1
-for i in range(len(l)//2):
-    for j in range(k,len(l)//2-1,-1):
+    s1 = input()
+    str = str + "\n" + s1
+s = "aeiouAEIOU"
+l = list(str)
+k = len(l) - 1
+for i in range(len(l) // 2):
+    for j in range(k, len(l) // 2 - 1, -1):
         if l[i] in s and l[j] in s:
-            l[i],l[j]=l[j],l[i]
-            k=j-1
+            l[i], l[j] = l[j], l[i]
+            k = j - 1
             break
-print(''.join(l))
+print("".join(l))
 ```
 
 ### Incomplete vowel set (missing one vowel/uppercase vowel), causing hidden-case misses
@@ -539,19 +539,19 @@ print(''.join(l))
 
 ```python
 # Write your solution here
-vowels="aeiouAEIO"
-n=int (input())
-lines=[input() for _ in range(n)]
-all_vowels=[c for line in lines for c in line if c in vowels][::-1]
-i=0
+vowels = "aeiouAEIO"
+n = int(input())
+lines = [input() for _ in range(n)]
+all_vowels = [c for line in lines for c in line if c in vowels][::-1]
+i = 0
 for line in lines:
-    res=''
+    res = ""
     for c in line:
-      if c in vowels:
-        res+=all_vowels[i]
-        i+=1
-      else:
-        res+=c
+        if c in vowels:
+            res += all_vowels[i]
+            i += 1
+        else:
+            res += c
 
     print(res)
 ```
@@ -572,13 +572,13 @@ for line in lines:
 
 depth = int(input())
 
-inlist =[]
+inlist = []
 
 for i in range(depth):
     n = input().split()
     inlist.append(n)
 
-vowels = ['a','e','i','o','u','A','E','I','O','U']
+vowels = ["a", "e", "i", "o", "u", "A", "E", "I", "O", "U"]
 vowelsreplace = []
 
 # print(inlist)

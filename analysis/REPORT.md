@@ -235,13 +235,13 @@ Example 1: Wrong output on pattern printing (later solved) (`Volatile reworker`)
 - Best public outcome for the attempt: `All Cases Passed` (`4/4`)
 
 ```py
-n=int(input())
-if n==1:
-    q="|"+"/"+"\\"+"|"
+n = int(input())
+if n == 1:
+    q = "|" + "/" + "\\" + "|"
     print(q)
-if n>=2:
+if n >= 2:
     for i in range(n):
-        q=("|"+" "*(n-i-1)+"/"+"\\"+ " "*(n-i-1)+"|")
+        q = "|" + " " * (n - i - 1) + "/" + "\\" + " " * (n - i - 1) + "|"
 print(q)
 ```
 
@@ -255,9 +255,9 @@ Example 2: Runtime error on data-analysis question (`Builder with setbacks`)
 
 ```py
 for data in dict:
-    sum=0
+    sum = 0
     for i in range(len(data)):
-        sum+=data[i]
+        sum += data[i]
 ```
 
 Observed error (first failing test): `TypeError: 'type' object is not iterable`
@@ -272,14 +272,14 @@ Example 3: Uses the right shape, wrong logic (duplicate counting instead of uniq
 - Best public outcome for the attempt: `All Cases Passed`
 
 ```py
-s=tuple(l)
-c=0
-e=0
+s = tuple(l)
+c = 0
+e = 0
 for i in s:
-    if i%2==0:
-        c=c+1
+    if i % 2 == 0:
+        c = c + 1
     else:
-        e=e+1
+        e = e + 1
 ```
 
 What went wrong (ELI15): the function counts all numbers, not unique numbers.

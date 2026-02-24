@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py22_1/16` (canonical) | 949 | 200 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py22_1/16` (canonical) |              949 |      200 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py22_1/16` | 949 | 749 | 200 | 174 | 26 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py22_1/16` |              949 |       749 |      200 |                174 |                     26 |
 
 ## Private Case Structure
 
@@ -45,29 +45,29 @@ Private-case vectors in this report are 4-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py22_1/16` |
-| --- | ---: | ---: | ---: |
-| Uses wrong minimum-length threshold (treats length-3 strings like valid edge-combine inputs) | 44 | 22.0% | 44 |
-| Syntax / non-parseable final submission | 26 | 13.0% | 26 |
-| Partially correct edge-combine logic: wrong length threshold for the 3-character edge case | 21 | 10.5% | 21 |
-| Partially correct slicing but fails one or both short-string edge cases | 18 | 9.0% | 18 |
-| Near-correct edge-combine logic with branch/slice bug | 16 | 8.0% | 16 |
-| Combines first/last two chars without handling short-string edge cases (`len <= 3`) | 16 | 8.0% | 16 |
-| No return / implicit `None` | 12 | 6.0% | 12 |
-| Runtime NameError | 8 | 4.0% | 8 |
-| Builds result via direct indexing (`s[0], s[1], s[-2], s[-1]`) with missing/wrong short-string guard | 6 | 3.0% | 6 |
-| Hard-codes sample strings/outputs instead of combining edges generically | 6 | 3.0% | 6 |
-| Other wrong-answer logic pattern (residual) | 5 | 2.5% | 5 |
-| Long-string return path is unreachable (second `return` placed inside the short-string branch) | 4 | 2.0% | 4 |
-| Runtime TypeError | 4 | 2.0% | 4 |
-| Incorrect edge-combine logic (broad wrong-answer failure) | 3 | 1.5% | 3 |
-| Duplicates the first two characters instead of taking the last two | 3 | 1.5% | 3 |
-| Returns the original string instead of first-two + last-two combination | 3 | 1.5% | 3 |
-| Runtime RecursionError | 1 | 0.5% | 1 |
-| Runtime AttributeError | 1 | 0.5% | 1 |
-| Uses wrong slices (`first 3` + `last 1`) instead of first/last two characters | 1 | 0.5% | 1 |
-| Runtime ValueError | 1 | 0.5% | 1 |
-| Uses wrong slice widths (`first 2` + `last 1`) instead of first/last two characters | 1 | 0.5% | 1 |
+| Pattern                                                                                              | Cluster count | % of cluster non-full | `ns_25t2_py22_1/16` |
+| ---------------------------------------------------------------------------------------------------- | ------------: | --------------------: | ------------------: |
+| Uses wrong minimum-length threshold (treats length-3 strings like valid edge-combine inputs)         |            44 |                 22.0% |                  44 |
+| Syntax / non-parseable final submission                                                              |            26 |                 13.0% |                  26 |
+| Partially correct edge-combine logic: wrong length threshold for the 3-character edge case           |            21 |                 10.5% |                  21 |
+| Partially correct slicing but fails one or both short-string edge cases                              |            18 |                  9.0% |                  18 |
+| Near-correct edge-combine logic with branch/slice bug                                                |            16 |                  8.0% |                  16 |
+| Combines first/last two chars without handling short-string edge cases (`len <= 3`)                  |            16 |                  8.0% |                  16 |
+| No return / implicit `None`                                                                          |            12 |                  6.0% |                  12 |
+| Runtime NameError                                                                                    |             8 |                  4.0% |                   8 |
+| Builds result via direct indexing (`s[0], s[1], s[-2], s[-1]`) with missing/wrong short-string guard |             6 |                  3.0% |                   6 |
+| Hard-codes sample strings/outputs instead of combining edges generically                             |             6 |                  3.0% |                   6 |
+| Other wrong-answer logic pattern (residual)                                                          |             5 |                  2.5% |                   5 |
+| Long-string return path is unreachable (second `return` placed inside the short-string branch)       |             4 |                  2.0% |                   4 |
+| Runtime TypeError                                                                                    |             4 |                  2.0% |                   4 |
+| Incorrect edge-combine logic (broad wrong-answer failure)                                            |             3 |                  1.5% |                   3 |
+| Duplicates the first two characters instead of taking the last two                                   |             3 |                  1.5% |                   3 |
+| Returns the original string instead of first-two + last-two combination                              |             3 |                  1.5% |                   3 |
+| Runtime RecursionError                                                                               |             1 |                  0.5% |                   1 |
+| Runtime AttributeError                                                                               |             1 |                  0.5% |                   1 |
+| Uses wrong slices (`first 3` + `last 1`) instead of first/last two characters                        |             1 |                  0.5% |                   1 |
+| Runtime ValueError                                                                                   |             1 |                  0.5% |                   1 |
+| Uses wrong slice widths (`first 2` + `last 1`) instead of first/last two characters                  |             1 |                  0.5% |                   1 |
 
 ## Re-clustered Pattern Details
 
@@ -229,17 +229,17 @@ def combine_edges(s: str) -> str:
   - Variant `ns_25t2_py22_1/16`, Student ID `4e4af5a9e07545648c56dde7546d6524`, summary `Wrong Answer`, score `75`, vector `0111`
 
 ```python
-    ...
-    '''a=s[:2] + s[-2:]
-    if s[:2]== s[-2:] :
-        return ""
-    else:
-        return a '''
-    a= s[:2] + s[-2:]
-    if s[:2] == s[-2:] :
-        return ""
-    else:
-        return a
+...
+"""a=s[:2] + s[-2:]
+if s[:2]== s[-2:] :
+    return ""
+else:
+    return a """
+a = s[:2] + s[-2:]
+if s[:2] == s[-2:]:
+    return ""
+else:
+    return a
 ```
 
 ### No return / implicit `None`
@@ -255,7 +255,7 @@ def combine_edges(s: str) -> str:
 
 ```python
 def combine_edges(s: str) -> str:
-    '''
+    """
     Create a new string made of the first two and last two
     characters from the given string.
 
@@ -263,9 +263,11 @@ def combine_edges(s: str) -> str:
     s: str - a string.
 
     Return: str - a new string made of the first and last two characters.
-    '''
-s = 'HelloWorld'
-print('Held')
+    """
+
+
+s = "HelloWorld"
+print("Held")
 ```
 
 ### Runtime NameError
@@ -280,13 +282,13 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `949c083aa59e4fee8ff3e9030447251e`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    n = len(s)
-    if len(s) in range(0,5):
-        result == " "
-    if len(s) in  range(5,n) :
-        result == [s[0]+s[1]+s[n-1]+s[n]]
-    return result
-    print(result)
+n = len(s)
+if len(s) in range(0, 5):
+    result == " "
+if len(s) in range(5, n):
+    result == [s[0] + s[1] + s[n - 1] + s[n]]
+return result
+print(result)
 ```
 
 ### Builds result via direct indexing (`s[0], s[1], s[-2], s[-1]`) with missing/wrong short-string guard
@@ -300,12 +302,12 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `1db316ad1fd44faebb89cc5d71f20ca7`, summary `Wrong Answer`, score `75`, vector `0111`
 
 ```python
-    first_two = s[0] + s[1]
-    last_two =  s[-2] + s[-1]
-    if len(s) > 2:
-        return first_two + last_two
-    else:
-        return ''
+first_two = s[0] + s[1]
+last_two = s[-2] + s[-1]
+if len(s) > 2:
+    return first_two + last_two
+else:
+    return ""
 ```
 
 ### Hard-codes sample strings/outputs instead of combining edges generically
@@ -319,12 +321,12 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `a239c3f9831744519a83bbd60bcb75eb`, summary `Wrong Answer`, score `50`, vector `0101`
 
 ```python
-    if len(s)<2:
-        return
-    return s[:2]+s[-2:]
-    print(first_and_last_two("Helloworld"))
-    print(first_and_last_two("Python"))
-    print(first_and_last_two("hi"))
+if len(s) < 2:
+    return
+return s[:2] + s[-2:]
+print(first_and_last_two("Helloworld"))
+print(first_and_last_two("Python"))
+print(first_and_last_two("hi"))
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -338,13 +340,13 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `e8b6673b85de4c6abe7f134d96f85261`, summary `Wrong Answer`, score `50`, vector `0010`
 
 ```python
-    if len(s)>=4:
-        s1=s[:1]
-        s2=s[-2:]
-        return s1+s2
-    else:
-        out=''
-        return out
+if len(s) >= 4:
+    s1 = s[:1]
+    s2 = s[-2:]
+    return s1 + s2
+else:
+    out = ""
+    return out
 ```
 
 ### Long-string return path is unreachable (second `return` placed inside the short-string branch)
@@ -385,19 +387,19 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `b4c7829d680d4da48bf5179ff7659dbf`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    str=[]
-    for ch in range(len(s)):
-        if ch==0:
-            str.append(s(ch))
-        elif ch==1:
-            str.append(s(ch))
-        elif ch==(len(s)-1):
-            str.append(s(ch))
-        elif ch==(len(s)-2):
-            str.append(s(ch))
-        else:
-            continue
-    return str
+str = []
+for ch in range(len(s)):
+    if ch == 0:
+        str.append(s(ch))
+    elif ch == 1:
+        str.append(s(ch))
+    elif ch == (len(s) - 1):
+        str.append(s(ch))
+    elif ch == (len(s) - 2):
+        str.append(s(ch))
+    else:
+        continue
+return str
 ```
 
 ### Incorrect edge-combine logic (broad wrong-answer failure)
@@ -462,12 +464,12 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `17e497c0264e4c809e394db3506d81d7`, summary `Wrong Answer`, score `75`, vector `0111`
 
 ```python
-    l=len(s)
-    if l == 2:
-        S=''
-    else:
-        S=s[0]+s[1]+s[l-2]+s[l-1]
-    return S
+l = len(s)
+if l == 2:
+    S = ""
+else:
+    S = s[0] + s[1] + s[l - 2] + s[l - 1]
+return S
 ```
 
 ### Runtime RecursionError
@@ -482,8 +484,8 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `217043a234274d7c8e95315ab9ddbd96`, summary `Runtime Error`, score `0`, vector `0000`
 
 ```python
-    s = 'HelloWorld'
-    is_equal(combine_edges(s), 'Held')
+s = "HelloWorld"
+is_equal(combine_edges(s), "Held")
 ```
 
 ### Runtime AttributeError
@@ -518,8 +520,8 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `450f4cbf0d2f4c36b4ddf46e90a371ff`, summary `Wrong Answer`, score `0`, vector `0000`
 
 ```python
-    ...
-    return s[0:3] + s[-1:]
+...
+return s[0:3] + s[-1:]
 ```
 
 ### Runtime ValueError
@@ -533,12 +535,12 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `b19d7f570f484bdda11a46346ebd9832`, summary `Runtime Error`, score `50`, vector `0101`
 
 ```python
-    ...
-    combine_edges=str(s)
-    if len(combine_edges)>=5:
-        return combine_edges[:2] + combine_edges[-2:]
-    else:
-        ''.join(combine_edges).split('')
+...
+combine_edges = str(s)
+if len(combine_edges) >= 5:
+    return combine_edges[:2] + combine_edges[-2:]
+else:
+    "".join(combine_edges).split("")
 ```
 
 ### Uses wrong slice widths (`first 2` + `last 1`) instead of first/last two characters
@@ -552,7 +554,7 @@ print('Held')
   - Variant `ns_25t2_py22_1/16`, Student ID `c96e4c64c8af4ecf930a6eea8316f084`, summary `Wrong Answer`, score `50`, vector `0010`
 
 ```python
-    if len(s) < 4:
-        return ""
-    return s[:2] + s[-1:]
+if len(s) < 4:
+    return ""
+return s[:2] + s[-1:]
 ```

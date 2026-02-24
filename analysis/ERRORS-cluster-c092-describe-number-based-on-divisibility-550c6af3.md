@@ -12,9 +12,9 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py11_1/5` (canonical) | 624 | 251 | Exact duplicate problem JSON |
+| Variant                        | final_submitters | non_full | Relationship                 |
+| ------------------------------ | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py11_1/5` (canonical) |              624 |      251 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -30,9 +30,9 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py11_1/5` | 624 | 373 | 251 | 189 | 62 |
+| Variant            | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------ | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py11_1/5` |              624 |       373 |      251 |                189 |                     62 |
 
 ## Private Case Structure
 
@@ -44,26 +44,26 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py11_1/5` |
-| --- | ---: | ---: | ---: |
-| Returns wrong casing for fallback label (`'normal'` instead of `'Normal'`) | 122 | 48.6% | 122 |
-| Syntax / non-parseable final submission | 62 | 24.7% | 62 |
-| No return / implicit `None` | 13 | 5.2% | 13 |
-| Runtime NameError from returning bare labels (`Fizz`, `Buzz`, etc.) without quotes | 9 | 3.6% | 9 |
-| Incorrect Fizz/Buzz/FizzBuzz labeling logic (broad wrong-answer failure) | 7 | 2.8% | 7 |
-| Reads `input()` inside function-type question (EOF under evaluator tests) | 6 | 2.4% | 6 |
-| Missing fallback `Normal` branch / incomplete case coverage | 6 | 2.4% | 6 |
-| Checks `%3`/`%5` before `%15`, so `FizzBuzz` branch is unreachable for multiples of 15 | 5 | 2.0% | 5 |
-| Runtime TypeError from invalid modulo/comparison operations in Fizz/Buzz logic | 5 | 2.0% | 5 |
-| Runtime error (parseable final submission) | 3 | 1.2% | 3 |
-| Runtime RecursionError | 3 | 1.2% | 3 |
-| Runtime TypeError | 3 | 1.2% | 3 |
-| Runtime NameError | 2 | 0.8% | 2 |
-| Returns a boolean divisibility test instead of the required string label (`Fizz`/`Buzz`/`FizzBuzz`/`Normal`) | 1 | 0.4% | 1 |
-| Uses always-truthy string boolean-chain logic (`'Fizz' or 'Buzz' ...`) instead of conditional labels | 1 | 0.4% | 1 |
-| Uses bitwise `&` in divisibility conditions (operator/precedence bug) | 1 | 0.4% | 1 |
-| Uses `% 10 == 0` for `Buzz` instead of `% 5 == 0` | 1 | 0.4% | 1 |
-| Runtime ValueError | 1 | 0.4% | 1 |
+| Pattern                                                                                                      | Cluster count | % of cluster non-full | `ns_25t2_py11_1/5` |
+| ------------------------------------------------------------------------------------------------------------ | ------------: | --------------------: | -----------------: |
+| Returns wrong casing for fallback label (`'normal'` instead of `'Normal'`)                                   |           122 |                 48.6% |                122 |
+| Syntax / non-parseable final submission                                                                      |            62 |                 24.7% |                 62 |
+| No return / implicit `None`                                                                                  |            13 |                  5.2% |                 13 |
+| Runtime NameError from returning bare labels (`Fizz`, `Buzz`, etc.) without quotes                           |             9 |                  3.6% |                  9 |
+| Incorrect Fizz/Buzz/FizzBuzz labeling logic (broad wrong-answer failure)                                     |             7 |                  2.8% |                  7 |
+| Reads `input()` inside function-type question (EOF under evaluator tests)                                    |             6 |                  2.4% |                  6 |
+| Missing fallback `Normal` branch / incomplete case coverage                                                  |             6 |                  2.4% |                  6 |
+| Checks `%3`/`%5` before `%15`, so `FizzBuzz` branch is unreachable for multiples of 15                       |             5 |                  2.0% |                  5 |
+| Runtime TypeError from invalid modulo/comparison operations in Fizz/Buzz logic                               |             5 |                  2.0% |                  5 |
+| Runtime error (parseable final submission)                                                                   |             3 |                  1.2% |                  3 |
+| Runtime RecursionError                                                                                       |             3 |                  1.2% |                  3 |
+| Runtime TypeError                                                                                            |             3 |                  1.2% |                  3 |
+| Runtime NameError                                                                                            |             2 |                  0.8% |                  2 |
+| Returns a boolean divisibility test instead of the required string label (`Fizz`/`Buzz`/`FizzBuzz`/`Normal`) |             1 |                  0.4% |                  1 |
+| Uses always-truthy string boolean-chain logic (`'Fizz' or 'Buzz' ...`) instead of conditional labels         |             1 |                  0.4% |                  1 |
+| Uses bitwise `&` in divisibility conditions (operator/precedence bug)                                        |             1 |                  0.4% |                  1 |
+| Uses `% 10 == 0` for `Buzz` instead of `% 5 == 0`                                                            |             1 |                  0.4% |                  1 |
+| Runtime ValueError                                                                                           |             1 |                  0.4% |                  1 |
 
 ## Re-clustered Pattern Details
 
@@ -205,11 +205,11 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `f8f6336e1a0c47e7b3a39c9a6ddee9a4`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    a = divisible_by_3 = (9 % 3 == 0)
-    b = divisible_by_5 = (10 % 5 == 0)
-    c = divisible_by_3_and_5 = divisible_by_3 and divisible_by_5
-    divisible_by_neither = ( 9 % 3 != 0 and 10 % 5 != 0)
-    return a or b or c or divisible_by_neither
+a = divisible_by_3 = 9 % 3 == 0
+b = divisible_by_5 = 10 % 5 == 0
+c = divisible_by_3_and_5 = divisible_by_3 and divisible_by_5
+divisible_by_neither = 9 % 3 != 0 and 10 % 5 != 0
+return a or b or c or divisible_by_neither
 ```
 
 ### Reads `input()` inside function-type question (EOF under evaluator tests)
@@ -223,15 +223,15 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `d94ebc77eb114acfbcdc4fbc85f0f99d`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    describe_number = int(input())
-    if  describe_number % 3 == 0 and describe_number % 5 != 0:
-        print("\"Fizz\"")
-    if  describe_number % 5 == 0 and describe_number%3 != 0:
-        print("\"Buzz\"")
-    if  describe_number % 3 == 0 and describe_number % 5 == 0:
-        print("\"FizzBuzz\"")
-    if  describe_number% 3 != 0 and  describe_number% 5 != 0:
-        print("\"Normal\"")
+describe_number = int(input())
+if describe_number % 3 == 0 and describe_number % 5 != 0:
+    print('"Fizz"')
+if describe_number % 5 == 0 and describe_number % 3 != 0:
+    print('"Buzz"')
+if describe_number % 3 == 0 and describe_number % 5 == 0:
+    print('"FizzBuzz"')
+if describe_number % 3 != 0 and describe_number % 5 != 0:
+    print('"Normal"')
 ```
 
 ### Missing fallback `Normal` branch / incomplete case coverage
@@ -245,12 +245,12 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `8a51fee95a8a475b9380c0234c31fc24`, summary `Wrong Answer`, score `33`, vector `100`
 
 ```python
-    if num % 3 ==0:
-        return "Fizz"
-    if num % 5 ==0:
-        return "Buzz"
-    if num % 3 == 0 and num % 5 == 0:
-        return "FizzBuzz"
+if num % 3 == 0:
+    return "Fizz"
+if num % 5 == 0:
+    return "Buzz"
+if num % 3 == 0 and num % 5 == 0:
+    return "FizzBuzz"
 ```
 
 ### Checks `%3`/`%5` before `%15`, so `FizzBuzz` branch is unreachable for multiples of 15
@@ -296,15 +296,15 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `34cb1a31b2984d98beb02dfd277965a9`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    if num % 3 == 0:
-       num = str("Fizz")
-    if num % 5 == 0:
-       num = str("Buzz")
-    if num % 3 == 0 and num % 5 == 0:
-       num = str("FizzBuzz")
-    if num % 3 != 0 and num % 5 != 0:
-       num=str("Normal")
-    return(num)
+if num % 3 == 0:
+    num = str("Fizz")
+if num % 5 == 0:
+    num = str("Buzz")
+if num % 3 == 0 and num % 5 == 0:
+    num = str("FizzBuzz")
+if num % 3 != 0 and num % 5 != 0:
+    num = str("Normal")
+return num
 ```
 
 ### Runtime error (parseable final submission)
@@ -385,7 +385,7 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `e199f37e2a5b4c3c8cc5916f95b9c18a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    str(9,10,15,7)//(3,5,3 or 5 , neither)
+str(9, 10, 15, 7) // (3, 5, 3 or 5, neither)
 ```
 
 ### Runtime NameError
@@ -400,7 +400,7 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `9bd709c45e30423fb75f3ed93ae10d4e`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    return (num1 % 3 == 0 and num2 % 5 ==0)
+return num1 % 3 == 0 and num2 % 5 == 0
 ```
 
 ### Returns a boolean divisibility test instead of the required string label (`Fizz`/`Buzz`/`FizzBuzz`/`Normal`)
@@ -414,7 +414,7 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `0d8c8285b536400d976110965afc435c`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return num % 3 == 0 or num % 5 == 0
+return num % 3 == 0 or num % 5 == 0
 ```
 
 ### Uses always-truthy string boolean-chain logic (`'Fizz' or 'Buzz' ...`) instead of conditional labels
@@ -428,7 +428,7 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `1022c5e6385c41d1aec6d665035b648b`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-    return str('Fizz' or 'Buzz' or 'FizzBuzz' or 'Normal')
+return str("Fizz" or "Buzz" or "FizzBuzz" or "Normal")
 ```
 
 ### Uses bitwise `&` in divisibility conditions (operator/precedence bug)
@@ -442,14 +442,14 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `3d9f954f5e024097b29b53f440205c56`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
-    if n%3==0 & n%5==0:
-        return "FizzBuzz"
-    elif n%3==0:
-        return "Fizz"
-    elif n%5==0:
-        return "Buzz"
-    else:
-        return "Normal"
+if n % 3 == 0 & n % 5 == 0:
+    return "FizzBuzz"
+elif n % 3 == 0:
+    return "Fizz"
+elif n % 5 == 0:
+    return "Buzz"
+else:
+    return "Normal"
 ```
 
 ### Uses `% 10 == 0` for `Buzz` instead of `% 5 == 0`
@@ -489,5 +489,5 @@ def describe_number(num: int) -> str:
   - Variant `ns_25t2_py11_1/5`, Student ID `8b517dfd2f66418fbfbd3bf85caca79a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-    ...
+...
 ```

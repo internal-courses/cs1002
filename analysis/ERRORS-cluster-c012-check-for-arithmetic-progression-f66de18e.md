@@ -12,10 +12,10 @@
 
 Cluster membership (zero-submitter variants omitted):
 
-| Variant | final_submitters | non_full | Relationship |
-| --- | ---: | ---: | --- |
-| `ns_25t2_py21_1/17` | 677 | 264 | Exact duplicate problem JSON |
-| `ns_25t2_py21_2/20` (canonical) | 688 | 243 | Exact duplicate problem JSON |
+| Variant                         | final_submitters | non_full | Relationship                 |
+| ------------------------------- | ---------------: | -------: | ---------------------------- |
+| `ns_25t2_py21_1/17`             |              677 |      264 | Exact duplicate problem JSON |
+| `ns_25t2_py21_2/20` (canonical) |              688 |      243 | Exact duplicate problem JSON |
 
 ## Canonical Question Spec (Full Source Artifact)
 
@@ -33,10 +33,10 @@ Cluster membership (zero-submitter variants omitted):
 
 Variant-level comparison:
 
-| Variant | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| `ns_25t2_py21_1/17` | 677 | 413 | 264 | 232 | 32 |
-| `ns_25t2_py21_2/20` | 688 | 445 | 243 | 207 | 36 |
+| Variant             | Final submitters | Full pass | Non-full | Parseable non-full | Non-parseable non-full |
+| ------------------- | ---------------: | --------: | -------: | -----------------: | ---------------------: |
+| `ns_25t2_py21_1/17` |              677 |       413 |      264 |                232 |                     32 |
+| `ns_25t2_py21_2/20` |              688 |       445 |      243 |                207 |                     36 |
 
 ## Private Case Structure
 
@@ -48,30 +48,30 @@ Private-case vectors in this report are 3-character pass/fail strings over the p
 
 ## Exhaustive Pattern Inventory (Cluster-Level)
 
-| Pattern | Cluster count | % of cluster non-full | `ns_25t2_py21_1/17` | `ns_25t2_py21_2/20` |
-| --- | ---: | ---: | ---: | ---: |
-| Returns inside loop before completing full check/computation | 183 | 36.1% | 110 | 73 |
-| Runtime IndexError | 98 | 19.3% | 48 | 50 |
-| Syntax / non-parseable final submission | 68 | 13.4% | 32 | 36 |
-| Incorrect AP logic (broad wrong-answer failure) | 23 | 4.5% | 6 | 17 |
-| Partially correct AP check (fails specific edge-case groups) | 21 | 4.1% | 9 | 12 |
-| Skeleton placeholder `...` left in function | 15 | 3.0% | 7 | 8 |
-| Runtime NameError | 15 | 3.0% | 7 | 8 |
-| Always returns `True` (constant output) | 14 | 2.8% | 7 | 7 |
-| Uses `abs()` on differences (sign-insensitive AP check) | 13 | 2.6% | 8 | 5 |
-| Checks only a few fixed positions, not the whole sequence | 12 | 2.4% | 8 | 4 |
-| Runtime TypeError | 8 | 1.6% | 2 | 6 |
-| Runtime error (parseable final submission) | 8 | 1.6% | 6 | 2 |
-| Always returns `False` (constant output) | 7 | 1.4% | 2 | 5 |
-| Other wrong-answer logic pattern (residual) | 7 | 1.4% | 3 | 4 |
-| No return / implicit `None` | 5 | 1.0% | 3 | 2 |
-| Runtime RecursionError | 3 | 0.6% | 2 | 1 |
-| Runtime AttributeError | 2 | 0.4% | 1 | 1 |
-| Runtime ValueError | 1 | 0.2% | 0 | 1 |
-| Compares only initial/final differences, not all consecutive differences | 1 | 0.2% | 0 | 1 |
-| Reconstructs expected sequence with wrong base term/indexing | 1 | 0.2% | 1 | 0 |
-| Time Limit Exceeded | 1 | 0.2% | 1 | 0 |
-| Prints output but does not return required value | 1 | 0.2% | 1 | 0 |
+| Pattern                                                                  | Cluster count | % of cluster non-full | `ns_25t2_py21_1/17` | `ns_25t2_py21_2/20` |
+| ------------------------------------------------------------------------ | ------------: | --------------------: | ------------------: | ------------------: |
+| Returns inside loop before completing full check/computation             |           183 |                 36.1% |                 110 |                  73 |
+| Runtime IndexError                                                       |            98 |                 19.3% |                  48 |                  50 |
+| Syntax / non-parseable final submission                                  |            68 |                 13.4% |                  32 |                  36 |
+| Incorrect AP logic (broad wrong-answer failure)                          |            23 |                  4.5% |                   6 |                  17 |
+| Partially correct AP check (fails specific edge-case groups)             |            21 |                  4.1% |                   9 |                  12 |
+| Skeleton placeholder `...` left in function                              |            15 |                  3.0% |                   7 |                   8 |
+| Runtime NameError                                                        |            15 |                  3.0% |                   7 |                   8 |
+| Always returns `True` (constant output)                                  |            14 |                  2.8% |                   7 |                   7 |
+| Uses `abs()` on differences (sign-insensitive AP check)                  |            13 |                  2.6% |                   8 |                   5 |
+| Checks only a few fixed positions, not the whole sequence                |            12 |                  2.4% |                   8 |                   4 |
+| Runtime TypeError                                                        |             8 |                  1.6% |                   2 |                   6 |
+| Runtime error (parseable final submission)                               |             8 |                  1.6% |                   6 |                   2 |
+| Always returns `False` (constant output)                                 |             7 |                  1.4% |                   2 |                   5 |
+| Other wrong-answer logic pattern (residual)                              |             7 |                  1.4% |                   3 |                   4 |
+| No return / implicit `None`                                              |             5 |                  1.0% |                   3 |                   2 |
+| Runtime RecursionError                                                   |             3 |                  0.6% |                   2 |                   1 |
+| Runtime AttributeError                                                   |             2 |                  0.4% |                   1 |                   1 |
+| Runtime ValueError                                                       |             1 |                  0.2% |                   0 |                   1 |
+| Compares only initial/final differences, not all consecutive differences |             1 |                  0.2% |                   0 |                   1 |
+| Reconstructs expected sequence with wrong base term/indexing             |             1 |                  0.2% |                   1 |                   0 |
+| Time Limit Exceeded                                                      |             1 |                  0.2% |                   1 |                   0 |
+| Prints output but does not return required value                         |             1 |                  0.2% |                   1 |                   0 |
 
 ## Re-clustered Pattern Details
 
@@ -110,7 +110,8 @@ while after < n:
     is_arithmetic_progression([1, 3, 5, 7, 9])
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `300b0f417401414590a2ed5c84505b0f`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `300b0f417401414590a2ed5c84505b0f`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
 l1=[]
@@ -148,23 +149,49 @@ for k in range(len(l1)):
 
 ```python
 for i in range(len(sequence)):
-        if len(sequence)<=5:
-            if sequence[i+1]-sequence[i] == sequence[i+2]-sequence[i+1] == sequence[i+3] - sequence[i+2]==sequence[i+4]-sequence[i+3]:
-                return True
-            else:
-                return False
-        elif len(sequence) <= 8:
-            if sequence[i+1]-sequence[i]==sequence[i+2]-sequence[i+1]==sequence[i+3]-sequence[i+2]==sequence[i+4]-sequence[i+3]==sequence[i+5]-sequence[i+4]==sequence[i+6]-sequence[i+5]==sequence[i+7]-sequence[i+6]:
-                return True
-            else:
-                return False
-        elif len(sequence) > 8:
-            if sequence[i+1]-sequence[i]==sequence[i+2]-sequence[i+1]==sequence[i+3]-sequence[i+2]==sequence[i+4]-sequence[i+3]==sequence[i+5]-sequence[i+4]==sequence[i+6]-sequence[i+5]==sequence[i+7]-sequence[i+6]==sequence[i+8]-sequence[i+7]==sequence[i+9]-sequence[i+8]==sequence[i+10]-sequence[i+9]==sequence[i+11]-sequence[i+10]:
-                return True
-            else:
-                return False
+    if len(sequence) <= 5:
+        if (
+            sequence[i + 1] - sequence[i]
+            == sequence[i + 2] - sequence[i + 1]
+            == sequence[i + 3] - sequence[i + 2]
+            == sequence[i + 4] - sequence[i + 3]
+        ):
+            return True
+        else:
+            return False
+    elif len(sequence) <= 8:
+        if (
+            sequence[i + 1] - sequence[i]
+            == sequence[i + 2] - sequence[i + 1]
+            == sequence[i + 3] - sequence[i + 2]
+            == sequence[i + 4] - sequence[i + 3]
+            == sequence[i + 5] - sequence[i + 4]
+            == sequence[i + 6] - sequence[i + 5]
+            == sequence[i + 7] - sequence[i + 6]
+        ):
+            return True
+        else:
+            return False
+    elif len(sequence) > 8:
+        if (
+            sequence[i + 1] - sequence[i]
+            == sequence[i + 2] - sequence[i + 1]
+            == sequence[i + 3] - sequence[i + 2]
+            == sequence[i + 4] - sequence[i + 3]
+            == sequence[i + 5] - sequence[i + 4]
+            == sequence[i + 6] - sequence[i + 5]
+            == sequence[i + 7] - sequence[i + 6]
+            == sequence[i + 8] - sequence[i + 7]
+            == sequence[i + 9] - sequence[i + 8]
+            == sequence[i + 10] - sequence[i + 9]
+            == sequence[i + 11] - sequence[i + 10]
+        ):
+            return True
+        else:
+            return False
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `fbbd37d093eb4b94b728959d2881a780`, summary `Runtime Error`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `fbbd37d093eb4b94b728959d2881a780`, summary `Runtime Error`, score `67`, vector `110`
 
 ```python
 for i in range(len(sequence)):
@@ -221,7 +248,8 @@ if sequence[1]- sequence[0]==diff:
                         return False
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `32783e45160a476ab02847d2dbd387e5`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `32783e45160a476ab02847d2dbd387e5`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 if len(sequence)<2:
@@ -275,7 +303,8 @@ if 2&10 in sequence:
 '''else:
         return False'''
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `24fe2547249e44bf91cc4af2c7c2cdba`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `24fe2547249e44bf91cc4af2c7c2cdba`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 a = sequence[1] - sequence[0]
@@ -311,27 +340,28 @@ if minu ==0:
   - Variant `ns_25t2_py21_1/17`, Student ID `5facc27e0c754129abbac1c610613d9e`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
-bool1=True
-if len(sequence)>1:
-        sub=sequence[1]-sequence[0]
-if len(sequence)==3:
-        num1=sequence[0]
-        num2=sequence[1]
-        num3=sequence[2]
-        if (((num2-num1)==(num3-num2)) and ((num2-num1)==sub)):
-            bool1=True
-        else:
-            bool1=False
-if len(sequence)>3:
-        for i in range(len(sequence)):
-            if i == (len(sequence)-3):
-                break
-            num1=sequence[i]
-            num2=sequence[i+1]
-            num3=sequence[i+2]
+bool1 = True
+if len(sequence) > 1:
+    sub = sequence[1] - sequence[0]
+if len(sequence) == 3:
+    num1 = sequence[0]
+    num2 = sequence[1]
+    num3 = sequence[2]
+    if ((num2 - num1) == (num3 - num2)) and ((num2 - num1) == sub):
+        bool1 = True
+    else:
+        bool1 = False
+if len(sequence) > 3:
+    for i in range(len(sequence)):
+        if i == (len(sequence) - 3):
+            break
+        num1 = sequence[i]
+        num2 = sequence[i + 1]
+        num3 = sequence[i + 2]
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `e167e906fa4244918efe46144d1237f8`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `e167e906fa4244918efe46144d1237f8`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 ...
@@ -364,7 +394,8 @@ if flag == True:
 ```python
 ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `07a5cf895ccf4b1c97306f462f6aa45f`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `07a5cf895ccf4b1c97306f462f6aa45f`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 ...
@@ -385,25 +416,14 @@ if flag == True:
 ```python
 print("True")
 print("True")
-is_equal(
-    is_arithmetic_progression([10, 9, 6, 4, 2]),
-    False
-)
-is_equal(
-    is_arithmetic_progression([10, 8, 7, 4, 2]),
-    False
-)
-is_equal(
-    is_arithmetic_progression([10, 9, 6, 4, 2]),
-    False
-)
-is_equal(
-    is_arithmetic_progression([10, 8, 7, 4, 2]),
-    False
-)
+is_equal(is_arithmetic_progression([10, 9, 6, 4, 2]), False)
+is_equal(is_arithmetic_progression([10, 8, 7, 4, 2]), False)
+is_equal(is_arithmetic_progression([10, 9, 6, 4, 2]), False)
+is_equal(is_arithmetic_progression([10, 8, 7, 4, 2]), False)
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `8bc7d985cd314cee9c8c8d4a2df21a90`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `8bc7d985cd314cee9c8c8d4a2df21a90`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 n=len(s)
@@ -460,18 +480,19 @@ for i in range(4):
     is_arithmetic_progression([1, 3, 5, 6, 11])
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `b2e2c48acdb14de9bced791a07a34694`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `b2e2c48acdb14de9bced791a07a34694`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-if len(sequence)>2:
-       return True
-       diff=sequence[1]-sequence[0]
-       for i in range(2,len(sequence)):
-           if sequence[i]-sequence[i-1]==diff:
-               return True
-           else:
-               return True
-           is_arithmetic_progression([1,3,5,7,9])
+if len(sequence) > 2:
+    return True
+    diff = sequence[1] - sequence[0]
+    for i in range(2, len(sequence)):
+        if sequence[i] - sequence[i - 1] == diff:
+            return True
+        else:
+            return True
+        is_arithmetic_progression([1, 3, 5, 7, 9])
 ```
 
 ### Uses `abs()` on differences (sign-insensitive AP check)
@@ -506,7 +527,8 @@ if not nomatch :
         return nomatch
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `8d2c5337634240e29a28e245332e876c`, summary `Wrong Answer`, score `33`, vector `010`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `8d2c5337634240e29a28e245332e876c`, summary `Wrong Answer`, score `33`, vector `010`
 
 ```python
 result= sequence[1]-sequence[0]
@@ -562,27 +584,28 @@ if len(sequence)<6:
         f=e-d
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `66a7b1afdbf345bdbe757e0385665e93`, summary `Wrong Answer`, score `67`, vector `110`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `66a7b1afdbf345bdbe757e0385665e93`, summary `Wrong Answer`, score `67`, vector `110`
 
 ```python
 if len(sequence) >= 4 and len(sequence) < 6:
-        a = sequence[0]
-        b = sequence[1]
-        c = sequence[2]
-        d = sequence[3]
+    a = sequence[0]
+    b = sequence[1]
+    c = sequence[2]
+    d = sequence[3]
 
-        diff1 = a - b
-        diff2 = c - d
+    diff1 = a - b
+    diff2 = c - d
 
-        if diff1 == diff2:
-            return True
-        else:
-            return False
+    if diff1 == diff2:
+        return True
+    else:
+        return False
 if len(sequence) >= 8:
-        a = sequence[0]
-        b = sequence[1]
-        c = sequence[2]
-        d = sequence[3]
+    a = sequence[0]
+    b = sequence[1]
+    c = sequence[2]
+    d = sequence[3]
 # ...
 ```
 
@@ -599,14 +622,15 @@ if len(sequence) >= 8:
   - Variant `ns_25t2_py21_1/17`, Student ID `bee6eac0421a43c3bbad0423b13e6898`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-n= len (list)
-for i in range (n):
-        if list[i+1] - list[i] == list[i+2] - list[i+1]:
-            return True
-        else:
-            return False
+n = len(list)
+for i in range(n):
+    if list[i + 1] - list[i] == list[i + 2] - list[i + 1]:
+        return True
+    else:
+        return False
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `2a311854322e46139a7eb98e7f76620c`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `2a311854322e46139a7eb98e7f76620c`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 for i in list:
@@ -646,20 +670,21 @@ if difference == is_arithmetic_progression:
 count = 0
 diff = 0
 for i in sequence:
-        count += 1
-for j in range (count-1):
-        diff_per_iter = sequence[j+1] - sequence[j]
-        if diff == 0:
-            diff = diff_per_iter
+    count += 1
+for j in range(count - 1):
+    diff_per_iter = sequence[j + 1] - sequence[j]
+    if diff == 0:
+        diff = diff_per_iter
+    else:
+        if diff_per_iter == diff:
+            is_arithmetic_progression = True
         else:
-            if diff_per_iter == diff:
-                is_arithmetic_progression = True
-            else:
-                is_arithmetic_progression = False
-                break
+            is_arithmetic_progression = False
+            break
 return is_arithmetic_progression
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `4513408ff00d473ebafdbad27b173ddd`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `4513408ff00d473ebafdbad27b173ddd`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 n=len(sequence)
@@ -697,24 +722,25 @@ while i<n-1:
 
 ```python
 ...
-a=sequence[0]-sequence[1]
+a = sequence[0] - sequence[1]
 for i in range(len(sequence)):
-        if i==len(sequence) and sequence[i]==sequence[i+1]+a:
-            return(True)
+    if i == len(sequence) and sequence[i] == sequence[i + 1] + a:
+        return True
 
-        else:
-            return(False)
+    else:
+        return False
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `5ae92d5eb96a4382be5e0a9242bb9276`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `5ae92d5eb96a4382be5e0a9242bb9276`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
 x = sequence[1] - sequence[0]
 for i in range(len(sequence)):
-        while i in range(len(sequence)):
-            if sequence[i] - sequence[(i+1)] == x:
-                return(True)
-            else:
-                return(False)
+    while i in range(len(sequence)):
+        if sequence[i] - sequence[(i + 1)] == x:
+            return True
+        else:
+            return False
 ```
 
 ### Other wrong-answer logic pattern (residual)
@@ -749,7 +775,8 @@ if len(s)==1:
     Examples:
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `7e003dc9ec2149a68e438dca79b94c07`, summary `Wrong Answer`, score `33`, vector `001`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `7e003dc9ec2149a68e438dca79b94c07`, summary `Wrong Answer`, score `33`, vector `001`
 
 ```python
 first=sequence[0]
@@ -806,7 +833,8 @@ def is_arithmetic_progression(sequence: list) -> bool:
     is_arithmetic_progression([1, 2, 4, 8, 16])
 # ...
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `510df751d0b34826849149c5caac5316`, summary `Wrong Answer`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `510df751d0b34826849149c5caac5316`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
 def is_arithmetic_progression(sequence: list) -> bool:
@@ -843,16 +871,11 @@ def is_arithmetic_progression(sequence: list) -> bool:
   - Variant `ns_25t2_py21_1/17`, Student ID `abd9675ec2e1419291b48fc1c1bd0b2a`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-is_equal(
-    is_arithmetic_progression([2,4,6,8,10]),
-    True
-    )
-is_equal(
-        is_arithmetic_progression([-1,1,3,5,7]),
-        True
-        )
+is_equal(is_arithmetic_progression([2, 4, 6, 8, 10]), True)
+is_equal(is_arithmetic_progression([-1, 1, 3, 5, 7]), True)
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `36f278254d9f42a5bfa8e20d0ab640e1`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `36f278254d9f42a5bfa8e20d0ab640e1`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 if is_arithmetic_progression([8,12,16,20,24,28,32,36]):
@@ -882,15 +905,16 @@ if is_arithmetic_progression([8,12,16,20,24,28,32,36]):
   - Variant `ns_25t2_py21_1/17`, Student ID `1af8b8766aa7419eb29e044f215eceff`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
-sequence = [1,3,5,7,9]
+sequence = [1, 3, 5, 7, 9]
 diff_1 = sequence.idx(1) - sequence.idx(0)
 diff_2 = sequence.idx(2) - sequence.idx(1)
 diff_3 = sequence.idx(3) - sequence.idx(2)
 diff_4 = sequence.idx(4) - sequence.idx(3)
-is_arithmetic_progression = (diff_1==diff_2==diff_3==diff_4)
+is_arithmetic_progression = diff_1 == diff_2 == diff_3 == diff_4
 return is_arithmetic_progression
 ```
-  - Variant `ns_25t2_py21_2/20`, Student ID `5b124aa8e1074ca1af120f98e94636e3`, summary `Runtime Error`, score `0`, vector `000`
+
+- Variant `ns_25t2_py21_2/20`, Student ID `5b124aa8e1074ca1af120f98e94636e3`, summary `Runtime Error`, score `0`, vector `000`
 
 ```python
 for i in str(len(sequence)):
@@ -913,19 +937,19 @@ if sequence.arithmetic:
   - Variant `ns_25t2_py21_2/20`, Student ID `96743b60b9ab45259fd283585746a3b5`, summary `Runtime Error`, score `33`, vector `010`
 
 ```python
-a1=sequence[0]
-a2=sequence[1]
-d=a2-a1
-length=len(sequence)
-L1=[]
-for i in range(a1,(a1+(length-1)*d)+d,d):
-        L1.append(i)
+a1 = sequence[0]
+a2 = sequence[1]
+d = a2 - a1
+length = len(sequence)
+L1 = []
+for i in range(a1, (a1 + (length - 1) * d) + d, d):
+    L1.append(i)
 for i in range(length):
-        if L1[i]==sequence[i]:
-            continue
-        else :
-            return False
-            break
+    if L1[i] == sequence[i]:
+        continue
+    else:
+        return False
+        break
 return True
 ```
 
@@ -1013,18 +1037,18 @@ if diff2 == diff1:
   - Variant `ns_25t2_py21_1/17`, Student ID `f8c14b164b324e31b64642cfa166e6df`, summary `Wrong Answer`, score `0`, vector `000`
 
 ```python
-if(is_arithmetic_progression == ([2, 4 ,6 ,8 ,10])):
-        print("True")
-if(is_arithmetic_progression == ([-1, 1, 3, 5, 7])):
-        print("True")
-if(is_arithmetic_progression == ([10, 9, 6, 4, 2])):
-        print("False")
-if(is_arithmetic_progression == ([10, 8, 7, 4, 2])):
-        print("False")
-if(is_arithmetic_progression == ([8, 12, 16, 20, 24, 28, 32, 36])):
-        print("True")
-if(is_arithmetic_progression == ([8, 12, 16, 20, 24, 28, 32, 36])):
-        print("True")
-if(is_arithmetic_progression == ([8, 12, 16, 20, 22, 24, 26, 28])):
-        print("False")
+if is_arithmetic_progression == ([2, 4, 6, 8, 10]):
+    print("True")
+if is_arithmetic_progression == ([-1, 1, 3, 5, 7]):
+    print("True")
+if is_arithmetic_progression == ([10, 9, 6, 4, 2]):
+    print("False")
+if is_arithmetic_progression == ([10, 8, 7, 4, 2]):
+    print("False")
+if is_arithmetic_progression == ([8, 12, 16, 20, 24, 28, 32, 36]):
+    print("True")
+if is_arithmetic_progression == ([8, 12, 16, 20, 24, 28, 32, 36]):
+    print("True")
+if is_arithmetic_progression == ([8, 12, 16, 20, 22, 24, 26, 28]):
+    print("False")
 ```
