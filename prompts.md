@@ -1398,7 +1398,7 @@ Proceed with the next 5 clusters with the highest final_submitters.
 
 (This was repeated multiple times)
 
-### Take stock and plan next steps
+## Take stock and plan next steps
 
 Update analysis/ERRORS.md to include a short summary (up to ~50 words) that summarizes the key error patterns for each cluster that has been analyzed.
 
@@ -1407,3 +1407,30 @@ Then summarize (at the top of analysis/ERRORS.md) the overall insights from the 
 Think like an expert: What would an expert in this field check, what patterns would an expert recognize, that beginners would miss?
 
 Write for a lay audience. ELI15.
+
+## Restructure into JSON
+
+Convert the data in `analysis/ERRORS-cluster-*` into a structured `analysis/errors.json` for all the errors analyzed so far.
+Think carefully about the best data structure for this JSON to ensure it captures all the relevant information in a way that can be easily queried and visualized.
+
+## Visualize
+
+Using analysis/README.md, prompts.md, analysis/evaluation.json, analysis/* any other available content, write a **Narrative-driven Data Story** that synthesizes the patterns of student errors into a compelling narrative.
+
+The objective is to help the reader understand the nature of errors students make (synthesizing across the different questions), why they make them, and what can be done about it — all through a narrative that is engaging, insightful, and **ACTIONABLE**.
+
+Write like Malcolm Gladwell. Visualize like the NYT graphics team. Think like a detective who must defend findings under scrutiny.
+
+- **Compelling hook**: Start with a human angle, tension, or mystery that draws readers in
+- **Story arc**: Build the narrative through discovery, revealing insights progressively
+- **Integrated visualizations**: Beautiful, **interactive** charts that are revelatory and advance the story (not decorative)
+- **Link for context** wherever possible. For non-HTML content (e.g. code, configurations, images), consider popups with captions (syntax-highlighted for text files). Re-use popup code similar entities for consistency and efficiency. Wherever possible, show examples of actual problem statements, student solutions, test cases, etc. as code as popups. Weave it into the narrative in the few key places where it adds the most value.
+- **Concrete examples**: Make abstract patterns tangible through specific cases
+- **Evidence woven in**: Data points, statistics, and supporting details flow naturally within the prose
+- **"Wait, really?" moments**: Position surprising findings for maximum impact
+- **So what?**: Clear implications and actions embedded in the narrative
+- **Honest caveats**: Acknowledge limitations without undermining the story
+
+Beauty and aesthetics are key.
+
+Create this as a single errors.html (under analysis/) that loads errors.json and renders the narrative.

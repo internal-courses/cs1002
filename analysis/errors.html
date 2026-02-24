@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Error Fingerprints | Student Mistake Patterns in Programming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f7f2;--bg-alt:#f0ede5;--text:#1c1917;--muted:#6b6560;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--purple:#6d28d9;--blue:#1d4ed8;
+  --rule:#d6cfc4;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Crimson Pro',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:20px;line-height:1.68;-webkit-font-smoothing:antialiased}
+
+/* Layout */
+.col{max-width:700px;margin:0 auto;padding:0 28px}
+.wide{max-width:1100px;margin:0 auto;padding:0 28px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+/* Header */
+header{padding:40px 0 0}
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(2rem,5.5vw,3.6rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:14px}
+.dek{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--muted);line-height:1.45;margin-bottom:28px}
+.byline{font-family:var(--sans);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-bottom:28px;border-bottom:1px solid var(--rule)}
+
+/* Stats hero */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--rule);margin:44px 0}
+.stat{padding:28px 12px;text-align:center}
+.stat:not(:last-child){border-right:1px solid var(--rule)}
+.stat-n{font-family:var(--sans);font-size:2.6rem;font-weight:700;line-height:1;letter-spacing:-.03em;display:block}
+.stat-n.r{color:var(--red)}.stat-n.a{color:var(--amber)}
+.stat-l{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+
+/* Body text */
+p{margin-bottom:1.45em}
+.section{margin:56px 0}
+.act{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h2{font-family:var(--serif);font-size:clamp(1.55rem,3vw,2.15rem);font-weight:700;line-height:1.18;margin-bottom:22px;letter-spacing:-.015em}
+h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px}
+
+/* Pullquote */
+.pq{font-family:var(--serif);font-size:1.42rem;font-style:italic;line-height:1.38;color:var(--red);border-left:4px solid var(--red);padding:14px 22px;margin:40px 0}
+
+/* Inline highlights */
+.r{color:var(--red);font-weight:600}.a{color:var(--amber);font-weight:600}.g{color:var(--green);font-weight:600}
+
+/* Code triggers */
+.ct{border-bottom:1.5px dashed var(--blue);color:var(--blue);cursor:pointer;transition:opacity .15s}
+.ct:hover{opacity:.72}
+
+/* Callout */
+.callout{background:var(--bg-alt);border-left:4px solid var(--amber);padding:18px 22px;margin:32px 0;font-family:var(--sans);font-size:13.5px;line-height:1.6}
+.callout strong{display:block;margin-bottom:5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
+
+/* Separator */
+.sep{border:none;border-top:1px solid var(--rule);margin:48px 0}
+
+/* Chart wrappers */
+.chart-wrap{margin:8px 0 4px}
+.chart-hed{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.chart-sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+.legend{display:flex;gap:18px;margin-top:12px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:11px;color:var(--muted)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.loading{text-align:center;padding:40px 20px;font-family:var(--sans);font-size:13px;color:var(--muted)}
+
+/* Archetype cards */
+.arch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px;margin:28px 0}
+.arch-card{background:#fff;border:1px solid var(--rule);border-radius:5px;padding:18px;border-top:3px solid currentColor}
+.arch-name{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.arch-pct{font-family:var(--sans);font-size:1.7rem;font-weight:700;line-height:1;margin-bottom:7px}
+.arch-desc{font-family:var(--sans);font-size:11.5px;color:var(--muted);line-height:1.42}
+
+/* Recs */
+.recs{list-style:none;margin:24px 0}
+.recs li{display:grid;grid-template-columns:36px 1fr;gap:10px;margin-bottom:20px;align-items:start}
+.rec-n{font-family:var(--sans);font-weight:700;font-size:12px;color:var(--amber);padding-top:2px}
+.rec-t strong{font-family:var(--sans);font-size:13px;font-weight:600;display:block;margin-bottom:2px}
+
+/* Methodology */
+.meth{border-top:1px solid var(--rule);padding:36px 0;margin-top:56px}
+.meth p{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.8em}
+
+/* Tooltip */
+#tip{position:fixed;background:#1c1917;color:#f9f7f2;padding:11px 15px;border-radius:4px;font-family:var(--sans);font-size:12px;line-height:1.5;pointer-events:none;z-index:1000;max-width:290px;opacity:0;transition:opacity .12s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#tip.on{opacity:1}#tip strong{color:#f9d4a0;display:block;margin-bottom:3px}
+
+/* Popup */
+#pop{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#pop.on{opacity:1;pointer-events:all}
+.pop-card{background:#1e1b16;border-radius:8px;max-width:720px;width:92vw;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pop-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 12px;border-bottom:1px solid #333}
+.pop-title{font-family:var(--sans);font-size:12px;font-weight:600;color:#f9d4a0;text-transform:uppercase;letter-spacing:.08em}
+.pop-x{background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1;padding:0 0 0 14px;flex-shrink:0}
+.pop-x:hover{color:#fff}
+.pop-card pre{margin:0;border-radius:0;font-size:13px;line-height:1.6}
+.pop-cap{font-family:var(--sans);font-size:12px;color:#777;padding:14px 22px;line-height:1.55;border-top:1px solid #333}
+
+/* SVG helpers */
+.chart-svg text{font-family:var(--sans)}
+
+@media(max-width:640px){
+  body{font-size:18px}
+  .stats-row{grid-template-columns:1fr}
+  .stat:not(:last-child){border-right:none;border-bottom:1px solid var(--rule)}
+  .arch-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="tip"></div>
+
+<!-- Code popup -->
+<div id="pop">
+  <div class="pop-card">
+    <div class="pop-head">
+      <span class="pop-title" id="pop-title"></span>
+      <button class="pop-x" onclick="closePop()">×</button>
+    </div>
+    <pre><code id="pop-code" class="language-python"></code></pre>
+    <p class="pop-cap" id="pop-cap"></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<div class="col">
+<header>
+  <div class="kicker">Data Analysis · Programming Education · OPPE 2025</div>
+  <h1>The Error Fingerprints</h1>
+  <p class="dek">How 38,000 students fail the same way — and what that reveals about how we teach code</p>
+  <div class="byline">Analysis of 2,057,658 events · 60 questions · 13,623 students</div>
+</header>
+
+<!-- Stats -->
+<div class="stats-row">
+  <div class="stat"><span class="stat-n" id="s-sub">–</span><span class="stat-l">Final submissions</span></div>
+  <div class="stat"><span class="stat-n r" id="s-fail">–</span><span class="stat-l">Did not pass every test</span></div>
+  <div class="stat"><span class="stat-n a" id="s-pat">–</span><span class="stat-l">Distinct error patterns</span></div>
+</div>
+
+<!-- HOOK -->
+<section class="section">
+  <p>Somewhere in India, on an exam night, a student finishes her Python function. She runs it against the three sample test cases in the problem statement. All three pass. She presses Submit.</p>
+  <p>Zero points.</p>
+  <p>What just happened to her has a name. In fact, it has several names. And across 38,683 final code submissions to a national programming assessment, we can tell you exactly which name applies to which student — with fingerprint-like regularity.</p>
+  <p>This is not a story about students who didn't try. It's a story about students who tried the wrong thing, in ways so systematic and repetitive that the same five mistakes surface across completely different questions, in different exam sessions, from different students, term after term.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT I -->
+<section class="section">
+  <div class="act">Act I</div>
+  <h2>A Pattern, Not Noise</h2>
+  <p>When 4 in 10 final submissions fail, the natural assumption is diversity — a thousand different misunderstandings scattered in a thousand different directions. The data says otherwise.</p>
+  <p>We analyzed 60 distinct programming questions — from simple arithmetic to multi-function data analysis tasks — covering <span class="g">90.1% of all final submissions</span>. What emerged was not chaos. It was a taxonomy. The chart below shows every question, sorted from hardest to easiest. Notice the spread.</p>
+</section>
+</div><!-- /col -->
+
+<!-- CLUSTER CHART - full bleed -->
+<div class="bleed" style="background:var(--bg-alt);padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Pass vs. fail by question — sorted from hardest to easiest</div>
+    <div class="chart-sub">Each row is one question. <span style="color:#4ade80;font-weight:600">■</span> Full pass &nbsp;·&nbsp; <span style="color:#fb923c;font-weight:600">■</span> Logic / runtime error &nbsp;·&nbsp; <span style="color:#f87171;font-weight:600">■</span> Syntax error or unfinished code &nbsp;·&nbsp; Hover for details</div>
+    <div id="cluster-chart" class="loading chart-wrap">Loading data…</div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <div class="pq">"A perfect 50–50: 666 students passed the pangram check, 665 failed it. The most democratic failure in the dataset."</div>
+  <p>Some questions fail <span class="g">fewer than 5%</span> of students. Others fail <span class="r">more than 90%</span>. The easiest — "Check is even or divisible by 5" — is a single boolean expression. The hardest — YouTube Video Engagement Analysis — requires four interdependent helper functions, precise decimal formatting, and careful data-structure reasoning. The difference isn't just difficulty. It's the type of mistake being made.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT II: ARCHETYPES -->
+<section class="section">
+  <div class="act">Act II</div>
+  <h2>Seven Fingerprints</h2>
+  <p>When you name an error precisely enough, patterns start to speak. Across 1,317 distinct error patterns in 60 questions, seven archetypes account for virtually all failures. The donut below shows their relative weight — sized by total error count, not unique students, so a single submission can contribute to multiple categories.</p>
+</section>
+</div>
+
+<div class="bleed" style="background:#fff;padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Error archetypes across all 60 questions</div>
+    <div class="chart-sub">Hover each segment for a description. Sized by total pattern-attributed errors.</div>
+    <div id="arch-chart" class="loading chart-wrap">Loading…</div>
+  </div>
+</div>
+
+<div class="col">
+<div id="arch-cards" class="arch-grid"></div>
+
+<p style="margin-top:8px">Each archetype has its own character, its own cause, and its own remedy. The next two acts examine the two most instructive in close detail.</p>
+
+<hr class="sep">
+
+<!-- ACT III: THE MIMIC -->
+<section class="section">
+  <div class="act">Act III</div>
+  <h2>The Mimic: When Passing Tests Isn't the Same as Solving the Problem</h2>
+
+  <p>The task sounds straightforward: given a three-word sentence and a permutation tuple, return the words in the new order. A function named <code>shuffle_sentence(sentence, order)</code>.</p>
+  <p>The sample inputs in the problem statement used three specific permutations: <code>(0,2,1)</code>, <code>(2,1,0)</code>, and <code>(1,0,2)</code>. Those three permutations share a remarkable property — they are all <em>self-inverse</em>. Apply the permutation, apply it again, you get the original order back. This means a student could write code implementing the wrong algorithm — the inverse permutation instead of the forward permutation — and still pass every single sample test.</p>
+  <p>That's exactly what happened. <span class="r">34%</span> of failing shuffle submissions hard-coded behavior for the known permutations or implemented the inverse permutation. <span class="ct" onclick="showCode('The Mimic — Shuffle Sentence (C002)','def shuffle_sentence(sentence, order):\n    l = sentence.split()\n    x = []\n    for z in order:\n        x.append(z)\n    k = [0, 0, 0]\n    for a in range(len(x)):\n        k[x[a]] = l[a]      # Stores l[a] at position order[a] — the INVERSE permutation\n    return(f\"{k[0]} {k[1]} {k[2]}\")','Real student submission. Score: 33/100. Passed public tests (self-inverse permutations like (0,2,1) and (2,1,0)), failed private tests with cyclic permutations like (2,0,1). The bug: k[x[a]] = l[a] stores word a at position order[a], which is the inverse of what\'s needed. It works only when the permutation is its own inverse — exactly the property that the sample inputs had.')">Here's one student's submission.</span> At first glance it looks reasonable — it uses the <code>order</code> parameter, builds a result list, formats the output. But line 7 stores <code>l[a]</code> at position <code>x[a]</code> instead of placing word <code>order[i]</code> at position <code>i</code>. It's the inverse permutation. For the public tests — all self-inverse — the result is identical. For private tests with cyclic permutations like <code>(2,0,1)</code>: wrong answer. Score: 33 out of 100.</p>
+  <p>The simpler variant of this mistake is the explicit if-elif chain: <code>if order == (0, 2, 1): return ...</code> for each known permutation. Memorizing the answer sheet rather than solving the problem. Same mechanism, more visible.</p>
+  <div class="callout">
+    <strong>The Mimic in Numbers</strong>
+    Hard-coded sample outputs appear as a significant error type in at least 23 of the 60 question clusters. In the shuffle sentence problem: 72 of 212 failing students (34%) were Mimics. In the pangram check: 77 students (11.6%) hard-coded sample pangram strings rather than computing letter coverage. The pattern transcends the specific question.
+  </div>
+  <p>Why does this happen? Because the test feedback loop teaches exactly the wrong lesson. Every sample test that passes reinforces the belief that the approach is correct. The private tests — which probe the general case — are invisible until submission. By then, it's too late.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT IV: THE QUITTER -->
+<section class="section">
+  <div class="act">Act IV</div>
+  <h2>The Quitter: One Loop, One Return, 243 Students</h2>
+
+  <p>A pangram is a sentence containing every letter of the alphabet. <em>"The quick brown fox jumps over the lazy dog"</em> is the canonical example. The task: write <code>is_pangram(text)</code> — return <code>True</code> if the sentence is a pangram, <code>False</code> otherwise.</p>
+  <p>Of 1,331 students who submitted a final answer, exactly 665 failed. A near-perfect 50–50. Within those 665 failures, one pattern so dominates the others that it rewrites the story of the question entirely.</p>
+  <div class="pq">"243 students made the same mistake. Not a similar mistake — the exact same structural error, reproduced across two cohorts."</div>
+  <p>The bug: returning <code>True</code> or <code>False</code> <em>inside</em> the loop that checks each letter. The loop is supposed to check all 26 letters before concluding anything. The return statement exits the function after checking exactly one — usually the first character. The code is valid Python. It runs without errors. It even gives the right answer sometimes — when the first character of the text is alphabetic it returns <code>True</code>, when it's not it returns <code>False</code>. It just doesn't solve the stated problem.</p>
+  <p><span class="ct" onclick="showCode('The Quitter — Pangram Check (C013)','def is_pangram(text):\n    text = text.lower()\n    count = {}\n    digit = \'0123456789\'\n    alpha = \'abcdefghijklmnopqrstuvwxyz\'\n    for char in alpha:       # ← Loops over all 26 letters\n        if char in text:     # ← Checks if this letter exists in text\n            return True      # ← EXITS after the very first match!\n        else:\n            return False     # ← EXITS after the very first non-match!','Real student submission. Score: 0/100. The loop intends to check all 26 letters, but return True / return False inside the loop means the function exits after checking just the first letter — whether \"a\" appears in the text. Most sentences contain \"a\", so most inputs return True regardless. The function never checks the remaining 25 letters.')">Here's the bug in action</span> — a function that looks like it's checking all 26 letters, but actually returns after checking just the first one.</p>
+  <p>This is The Quitter: correct structure, premature conclusion. The intuition behind it is locally reasonable: <em>"If the letter is here, it's a pangram — return True. If not — return False."</em> That reasoning is right for one letter in isolation. A pangram requires <em>all</em> 26, which means you must finish the loop before concluding anything.</p>
+</section>
+</div>
+
+<!-- PANGRAM CHART - full bleed -->
+<div class="bleed" style="background:var(--bg-alt);padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">What went wrong — 665 failing pangram submissions, broken down</div>
+    <div class="chart-sub">The "early return" bug alone accounts for more failures than the next four patterns combined.</div>
+    <div id="pangram-chart" class="loading chart-wrap">Loading…</div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>The pattern appears in at least 8 other question clusters under slightly different labels: "returns inside loop before completing full check," "stops after first match," "decides after first iteration." It is the same cognitive model error, wearing different clothes across different problems.</p>
+  <p>The fix is a single structural change: move the <code>return False</code> outside the loop, and change the <code>return True</code> inside to just continue. But students don't see that because their mental model says "check → decide" rather than "check all → decide once."</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT V: THE HARDEST ROOM -->
+<section class="section">
+  <div class="act">Act V</div>
+  <h2>The Hardest Room: Why Some Questions Fail 95% of Students</h2>
+  <p>The scatter plot below maps each question by its popularity (students attempted) against its failure rate. Most questions cluster in a band between 20% and 60% failure. A handful sit in the upper right — where 80%, 90%, even 95% of students who submitted a final answer still failed.</p>
+</section>
+</div>
+
+<!-- SCATTER - full bleed -->
+<div class="bleed" style="background:#fff;padding:32px 0">
+  <div class="wide">
+    <div class="chart-hed">Failure rate vs. question popularity — each dot is one question</div>
+    <div class="chart-sub">Dot size = number of students. Color shifts green (easy) → red (hard). Hover any dot for details.</div>
+    <div id="scatter-chart" class="loading chart-wrap">Loading…</div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>The questions with the highest failure rates share a profile: multiple helper functions, non-trivial data formats, and output that requires precise formatting. They test whether students can maintain a coherent mental model across a complex system — not just implement a single algorithm.</p>
+  <p>YouTube Video Engagement Analysis is the hardest: <span class="r">514 of 542 students (95%) failed</span>. The single most common failure — 103 students — wasn't a conceptual error. It was <span class="ct" onclick="showCode('The Precision Trap — YouTube Engagement (C097)','def engagement_rate(video: dict) -> float:\n    """Returns engagement rate: (likes + comments) / views * 100\n    rounded to 2 decimal places.\"\"\"\n    engagement = 0\n    for key in video:\n        if key == \"likes\":\n            engagement += video[\"likes\"]\n        elif key == \"comments\":\n            engagement += video[\"comments\"]\n    if video[\"views\"] > 0:\n        rate = (engagement / video[\"views\"]) * 100\n        return rate          # ← Missing: round(rate, 2)\n    return 0.0','Real student submission. Close — but no round(). 103 students shared this exact mistake: correct formula, correct data access, wrong output precision. The private tests check to exactly 2 decimal places. The difference between passing and failing: 0.001.')">not rounding to 2 decimal places</span>. One hundred and three students wrote structurally correct code — right formula, right data access — and failed everything because they skipped <code>round(rate, 2)</code>. That's not a conceptual failure. It's a spec-reading failure.</p>
+  <div class="callout">
+    <strong>The Two Other Hard Rooms</strong>
+    Chess Game Analysis (C110) and Batsman Performance Analysis (C108) each failed 94% of students. Both involve multiple interdependent helper functions. The most common pattern in both: leaving template placeholder code (<code>...</code> or <code>pass</code>) in required helpers — students who ran out of time or couldn't figure out one part and submitted incomplete work. A bug in one helper propagates through all downstream functions.
+  </div>
+  <p>The contrast with the easiest questions is instructive. "Check is even or divisible by 5" failed just 11% of students. "Compute Electricity Bill" failed 15%. These questions have single functions, numerical inputs, no formatting requirements. They test one concept at a time. Students can verify them easily against the samples.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT VI: IMPLICATIONS -->
+<section class="section">
+  <div class="act">Act VI — Implications</div>
+  <h2>What Should Change</h2>
+  <p>The patterns in this data are not just interesting. They are <em>actionable</em>. Here is what the fingerprints suggest:</p>
+
+  <ul class="recs">
+    <li>
+      <span class="rec-n">01</span>
+      <div class="rec-t">
+        <strong>Design tests that break the most common shortcuts</strong>
+        The pangram sample tests didn't include a sentence starting with a non-alphabetic character — so the early-return bug passed all of them. Every public test should be paired with at least one private test that specifically invalidates the most common shortcut. For shuffle, that means cyclic permutations. For pangrams, a sentence starting with a digit. For electricity bills, a reading in the middle of a slab boundary.
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">02</span>
+      <div class="rec-t">
+        <strong>Categorize feedback, not just scores</strong>
+        "Wrong Answer" tells a student nothing useful. "Your function returns after checking only the first element" is a diagnosis. The pattern data in this analysis exists — it can power automated feedback categories. Students who receive "Your code appears to hard-code sample outputs" are far more likely to fix the right thing than students who receive only a red X.
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">03</span>
+      <div class="rec-t">
+        <strong>Teach spec-reading as a first-class skill</strong>
+        The rounding error that sank 103 YouTube submissions suggests students skim problem statements for "what to compute" and miss "how to format it." Explicit pre-coding checklists — what is the exact return type? what formatting is required? what edge cases are implied? — can be taught explicitly. They are now as important as syntax.
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">04</span>
+      <div class="rec-t">
+        <strong>Scaffold multi-function problems</strong>
+        Questions with 90%+ failure rates almost always involve multiple interdependent helpers. A bug in one function makes all subsequent functions untestable. Consider providing tested stubs, letting students implement one function at a time, or offering partial credit per helper tested independently.
+      </div>
+    </li>
+    <li>
+      <span class="rec-n">05</span>
+      <div class="rec-t">
+        <strong>In the AI era: test for robustness, not just correctness</strong>
+        AI tools generate code that looks polished and passes samples while silently assuming a narrower problem. This is the Mimic pattern, automated. The solution isn't to ban AI — it's to design evaluations that specifically probe the general case, edge cases, and exact output contracts. A test suite that breaks AI-generated solutions is a better test suite for everyone.
+      </div>
+    </li>
+  </ul>
+
+  <p>There is something hopeful embedded in all of this. The errors are systematic, which means they are teachable. The pangram bug isn't a mystery — it's a mental model mismatch about when to exit a loop. Once named, it can be addressed directly. The Mimic isn't dishonesty — it's a misaligned incentive created by visible sample tests and invisible private ones. Once the system changes, the behavior changes.</p>
+  <p>The data is optimistic. Not because the failure rate is low — it isn't. But because the failures are <em>comprehensible</em>. They have names. They have causes. And causes, unlike chaos, can be fixed.</p>
+</section>
+
+<!-- METHODOLOGY -->
+<div class="meth">
+  <p><strong>Methodology:</strong> This analysis covers 60 of 163 question clusters from the OPPE 2025 programming assessment, representing 90.1% of all final submissions (38,683 of 42,918 total). Error patterns were generated by LLM-assisted analysis of actual student code, then validated and clustered by pattern type. The 1,317 named patterns represent distinct failure modes across these questions, with 1,441 representative code examples extracted from real student submissions.</p>
+  <p>A "final submission" is a student's last evaluated private-test submission for a question. Students who only ran public tests are excluded from the denominator. "Full pass" means 100% of private test cases passed. Failure rate is non_full / final_submitters per question cluster. Archetype classification uses keyword matching on pattern names; ambiguous patterns default to "Logic Error."</p>
+  <p><em>Caveat:</em> This analysis spans academic year 2025 across multiple terms and waves. Error patterns across cohorts are remarkably consistent — which increases confidence — but temporal and selection effects cannot be fully ruled out. The 103 questions not yet analyzed may show different patterns.</p>
+</div>
+</div><!-- /col -->
+
+<script>
+// ─────────────────────────────────────────────
+// ARCHETYPE CONFIG
+// ─────────────────────────────────────────────
+const ARCH = {
+  'Sample Overfit':      {color:'#7c3aed',label:'The Mimic',     desc:'Hard-codes sample outputs instead of computing the general solution. Passes public tests, fails private ones.'},
+  'Early Exit':          {color:'#dc2626',label:'The Quitter',   desc:'Returns or breaks out of a loop before completing the full computation. Decides after one iteration instead of all.'},
+  'Missing Return':      {color:'#ea580c',label:'The Ghost',     desc:'Computes the right answer but never returns it — uses print() instead of return, or omits the return entirely.'},
+  'Wrong I/O Mode':      {color:'#d97706',label:'The Confused',  desc:'Uses input() inside a function-based question. Works interactively; fails under automated function-call tests.'},
+  'Syntax / Unfinished': {color:'#64748b',label:'The Unfinished',desc:'Code is syntactically invalid, broken, or contains only skeleton placeholders. Cannot be meaningfully evaluated.'},
+  'Runtime Crash':       {color:'#2563eb',label:'The Crasher',   desc:'Raises TypeError, NameError, IndexError, or other runtime exceptions. Logic may be partially correct but execution fails.'},
+  'Logic Error':         {color:'#059669',label:'The Wanderer',  desc:'Valid syntax, no crash, but wrong answers. Incorrect algorithm, wrong operator, off-by-one, or missing edge-case handling.'},
+};
+
+function classify(name) {
+  const n = name.toLowerCase();
+  if (n.includes('hard-cod') || n.includes('hard cod') || (n.includes('sample') && (n.includes('output') || n.includes('string') || n.includes('result')))) return 'Sample Overfit';
+  if (n.includes('returns inside') || (n.includes('inside') && n.includes('loop')) || n.includes('first character') || n.includes('first iteration') || n.includes('decides after') || n.includes('first match')) return 'Early Exit';
+  if (n.includes('no return') || (n.includes('implicit') && n.includes('none')) || (n.includes('print') && !n.includes('pattern') && !n.includes('printing'))) return 'Missing Return';
+  if (n.includes('input()') || (n.includes('reads') && n.includes('input'))) return 'Wrong I/O Mode';
+  if (n.startsWith('syntax') || n.includes('non-parseable') || n.includes('skeleton') || n.includes('placeholder') || n.includes('empty/comment')) return 'Syntax / Unfinished';
+  if (n.startsWith('runtime') || ['typeerror','nameerror','indexerror','valueerror','attributeerror','recursionerror','keyerror'].some(e => n.includes(e))) return 'Runtime Crash';
+  return 'Logic Error';
+}
+
+// ─────────────────────────────────────────────
+// TOOLTIP
+// ─────────────────────────────────────────────
+const tip = document.getElementById('tip');
+function showTip(e, html) {
+  tip.innerHTML = html;
+  tip.classList.add('on');
+  moveTip(e);
+}
+function moveTip(e) {
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = (x + tw > window.innerWidth - 10 ? e.clientX - tw - 14 : x) + 'px';
+  tip.style.top  = (y + th > window.innerHeight - 10 ? e.clientY - th - 10 : y) + 'px';
+}
+function hideTip() { tip.classList.remove('on'); }
+
+// ─────────────────────────────────────────────
+// CODE POPUP
+// ─────────────────────────────────────────────
+function showCode(title, code, caption) {
+  document.getElementById('pop-title').textContent = title;
+  const el = document.getElementById('pop-code');
+  el.textContent = code;
+  el.removeAttribute('data-highlighted');
+  hljs.highlightElement(el);
+  document.getElementById('pop-cap').textContent = caption || '';
+  document.getElementById('pop').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closePop() {
+  document.getElementById('pop').classList.remove('on');
+  document.body.style.overflow = '';
+}
+document.getElementById('pop').addEventListener('click', e => { if (e.target === document.getElementById('pop')) closePop(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+
+// ─────────────────────────────────────────────
+// CHART: CLUSTER OVERVIEW
+// ─────────────────────────────────────────────
+function buildClusterChart(el, clusters) {
+  const sorted = [...clusters].sort((a, b) => b.failure_rate - a.failure_rate);
+  const ROW = 17, ml = 215, mr = 58, mt = 8, mb = 28;
+  const CW = el.clientWidth || 900;
+  const W = CW - ml - mr;
+  const H = sorted.length * ROW + mt + mb;
+
+  const svg = d3.select(el).html('').append('svg')
+    .attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ml},${mt})`);
+
+  const x = d3.scaleLinear().domain([0, 1]).range([0, W]);
+  g.append('g').attr('transform', `translate(0,${sorted.length * ROW})`)
+    .call(d3.axisBottom(x).tickFormat(d3.format('.0%')).ticks(5))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'))
+    .call(a => a.selectAll('line').attr('stroke', '#d6cfc4'));
+
+  sorted.forEach((d, i) => {
+    const y = i * ROW;
+    const pw = x(d.full_pass / d.submitters);
+    const lw = x(d.parseable / d.submitters);
+    const sw = x(d.non_parseable / d.submitters);
+    const row = g.append('g');
+
+    row.append('rect').attr('x', 0).attr('y', y + 1).attr('width', pw).attr('height', ROW - 2).attr('fill', '#4ade80').attr('opacity', .75);
+    row.append('rect').attr('x', pw).attr('y', y + 1).attr('width', lw).attr('height', ROW - 2).attr('fill', '#fb923c').attr('opacity', .82);
+    row.append('rect').attr('x', pw + lw).attr('y', y + 1).attr('width', sw).attr('height', ROW - 2).attr('fill', '#f87171').attr('opacity', .82);
+
+    const lbl = d.title.length > 33 ? d.title.slice(0, 31) + '…' : d.title;
+    row.append('text').attr('x', -5).attr('y', y + ROW / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').attr('font-size', 10).attr('fill', '#444').text(lbl);
+
+    const fr = d.failure_rate;
+    row.append('text').attr('x', W + 5).attr('y', y + ROW / 2).attr('dominant-baseline', 'middle').attr('font-size', 10)
+      .attr('fill', fr > .7 ? '#dc2626' : fr > .4 ? '#d97706' : '#15803d')
+      .attr('font-weight', fr > .7 ? '700' : '400')
+      .text(d3.format('.0%')(fr));
+
+    const pats = d.top_patterns.map(p => `• ${p.name.slice(0, 58)}${p.name.length > 58 ? '…' : ''} (${Math.round(p.pct)}%)`).join('<br>');
+    row.append('rect').attr('x', -ml).attr('y', y).attr('width', CW).attr('height', ROW).attr('fill', 'transparent')
+      .on('mousemove', e => showTip(e, `<strong>${d.title}</strong>${d.submitters.toLocaleString()} students · ${Math.round(fr * 100)}% failed<br><br>${pats}`))
+      .on('mouseleave', hideTip);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: ARCHETYPE DONUT
+// ─────────────────────────────────────────────
+function buildArchChart(el, totals) {
+  const CW = el.clientWidth || 800;
+  const H = 300;
+  const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  const total = entries.reduce((s, [, v]) => s + v, 0);
+
+  // Donut radius, centred at left side
+  const R = Math.min(CW * 0.22, 120);
+  const cx = R + 28, cy = H / 2;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const pie = d3.pie().value(d => d[1]).sort(null);
+  const arc = d3.arc().innerRadius(R * .55).outerRadius(R);
+  const arcH = d3.arc().innerRadius(R * .55).outerRadius(R + 9);
+
+  const g = svg.append('g').attr('transform', `translate(${cx},${cy})`);
+  const segs = g.selectAll('path').data(pie(entries)).join('path')
+    .attr('d', arc)
+    .attr('fill', d => ARCH[d.data[0]]?.color || '#888')
+    .attr('stroke', '#fff').attr('stroke-width', 2)
+    .style('cursor', 'pointer');
+
+  segs.on('mousemove', (e, d) => {
+    d3.select(e.currentTarget).attr('d', arcH);
+    const cfg = ARCH[d.data[0]] || {};
+    showTip(e, `<strong>${cfg.label || d.data[0]}</strong>${d.data[1].toLocaleString()} errors · ${((d.data[1] / total) * 100).toFixed(1)}%<br>${cfg.desc || ''}`);
+  }).on('mouseleave', (e) => { d3.select(e.currentTarget).attr('d', arc); hideTip(); });
+
+  g.append('text').attr('text-anchor', 'middle').attr('dy', '-.25em').attr('font-size', 20).attr('font-weight', '700').attr('fill', '#1c1917').text(total.toLocaleString());
+  g.append('text').attr('text-anchor', 'middle').attr('dy', '1.1em').attr('font-size', 10).attr('fill', '#9b9086').text('total errors');
+
+  // Legend
+  const lx = cx + R + 36, ly = (H - entries.length * 36) / 2;
+  const lg = svg.append('g').attr('transform', `translate(${lx},${ly})`);
+  entries.forEach(([k, v], i) => {
+    const cfg = ARCH[k] || {color: '#888', label: k};
+    const row = lg.append('g').attr('transform', `translate(0,${i * 36})`);
+    row.append('rect').attr('width', 11).attr('height', 11).attr('rx', 2).attr('y', 2).attr('fill', cfg.color);
+    row.append('text').attr('x', 17).attr('y', 9).attr('dominant-baseline', 'middle').attr('font-size', 12).attr('font-weight', '600').attr('fill', '#1c1917').text(cfg.label);
+    row.append('text').attr('x', 17).attr('y', 22).attr('font-size', 10).attr('fill', '#9b9086').text(`${((v / total) * 100).toFixed(1)}% · ${v.toLocaleString()}`);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: PANGRAM PATTERNS
+// ─────────────────────────────────────────────
+function buildPangramChart(el, cluster) {
+  if (!cluster) return;
+  const pats = (cluster.reclustered_patterns?.patterns || []).slice(0, 10);
+  const ml = 350, mr = 80, mt = 8, mb = 28, ROW = 28;
+  const CW = el.clientWidth || 900;
+  const W = CW - ml - mr;
+  const H = pats.length * ROW + mt + mb;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ml},${mt})`);
+
+  const max = d3.max(pats, d => d.cluster_frequency.count);
+  const x = d3.scaleLinear().domain([0, max]).range([0, W]);
+  g.append('g').attr('transform', `translate(0,${pats.length * ROW})`)
+    .call(d3.axisBottom(x).ticks(5))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+
+  pats.forEach((d, i) => {
+    const y = i * ROW;
+    const cnt = d.cluster_frequency.count;
+    const pct = d.cluster_frequency.pct;
+    const top = i === 0;
+    const fill = top ? '#dc2626' : (i < 3 ? '#fb923c' : '#94a3b8');
+    const op = top ? .9 : .65;
+
+    g.append('rect').attr('x', 0).attr('y', y + 4).attr('width', x(cnt)).attr('height', ROW - 8).attr('fill', fill).attr('opacity', op);
+
+    const lbl = d.name.length > 54 ? d.name.slice(0, 52) + '…' : d.name;
+    g.append('text').attr('x', -6).attr('y', y + ROW / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
+      .attr('font-size', 10.5).attr('fill', top ? '#dc2626' : '#444').attr('font-weight', top ? '600' : '400').text(lbl);
+
+    g.append('text').attr('x', x(cnt) + 6).attr('y', y + ROW / 2).attr('dominant-baseline', 'middle')
+      .attr('font-size', 10.5).attr('fill', top ? '#dc2626' : '#666').attr('font-weight', top ? '700' : '400')
+      .text(`${cnt}  (${pct.toFixed(0)}%)`);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHART: SCATTER PLOT
+// ─────────────────────────────────────────────
+function buildScatter(el, clusters) {
+  const ml = 52, mr = 36, mt = 28, mb = 48;
+  const CW = el.clientWidth || 900;
+  const H = 400;
+  const W = CW - ml - mr, h = H - mt - mb;
+
+  const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
+  const g = svg.append('g').attr('transform', `translate(${ml},${mt})`);
+
+  const minS = d3.min(clusters, d => d.submitters);
+  const maxS = d3.max(clusters, d => d.submitters);
+  const x = d3.scaleLog().domain([Math.max(50, minS * 0.8), maxS * 1.3]).range([0, W]);
+  const y = d3.scaleLinear().domain([0, 1]).range([h, 0]);
+  const color = d3.scaleSequential().domain([0, 1]).interpolator(t => d3.interpolateRdYlGn(1 - t)).clamp(true);
+  const rScale = d => Math.max(5, Math.sqrt(d.submitters) * 1.15);
+
+  // Gridlines
+  g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(''))
+    .call(a => a.select('.domain').remove())
+    .call(a => a.selectAll('line').attr('stroke', '#e8e3da').attr('stroke-dasharray', '3,5'));
+
+  // Axes
+  g.append('g').attr('transform', `translate(0,${h})`)
+    .call(d3.axisBottom(x).tickFormat(d => d >= 1000 ? d3.format('.0k')(d) : d).ticks(5))
+    .call(a => a.select('.domain').attr('stroke', '#d6cfc4'))
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+  g.append('g').call(d3.axisLeft(y).tickFormat(d3.format('.0%')))
+    .call(a => a.select('.domain').attr('stroke', '#d6cfc4'))
+    .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
+
+  // Axis labels
+  svg.append('text').attr('x', ml + W / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#9b9086').text('Students who submitted (log scale)');
+  svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(mt + h / 2)).attr('y', 13).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#9b9086').text('Failure rate');
+
+  // Circles
+  g.selectAll('circle').data(clusters).join('circle')
+    .attr('cx', d => x(d.submitters))
+    .attr('cy', d => y(d.failure_rate))
+    .attr('r', d => rScale(d))
+    .attr('fill', d => color(d.failure_rate))
+    .attr('stroke', '#fff').attr('stroke-width', 1.5).attr('opacity', .82)
+    .on('mousemove', (e, d) => {
+      const pats = d.top_patterns.map(p => `• ${p.name.slice(0, 52)}${p.name.length > 52 ? '…' : ''}`).join('<br>');
+      showTip(e, `<strong>${d.title}</strong>${d.submitters.toLocaleString()} students · ${Math.round(d.failure_rate * 100)}% failed<br><br>${pats}`);
+    })
+    .on('mouseleave', hideTip);
+
+  // Label extreme points
+  clusters.filter(d => d.failure_rate > 0.87 || d.failure_rate < 0.13 || d.submitters > 1200).forEach(d => {
+    const cx = x(d.submitters), cy = y(d.failure_rate), r = rScale(d);
+    const short = d.title.length > 20 ? d.title.slice(0, 19) + '…' : d.title;
+    const above = cy > 30;
+    g.append('text').attr('x', cx).attr('y', above ? cy - r - 4 : cy + r + 13)
+      .attr('text-anchor', 'middle').attr('font-size', 9.5).attr('fill', '#555').text(short);
+  });
+}
+
+// ─────────────────────────────────────────────
+// ARCHETYPE CARDS
+// ─────────────────────────────────────────────
+function buildArchCards(totals) {
+  const total = Object.values(totals).reduce((s, v) => s + v, 0);
+  const container = document.getElementById('arch-cards');
+  container.innerHTML = '';
+  Object.entries(totals).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => {
+    const cfg = ARCH[k] || {color: '#888', label: k, desc: ''};
+    const pct = ((v / total) * 100).toFixed(1);
+    const card = document.createElement('div');
+    card.className = 'arch-card';
+    card.style.color = cfg.color;
+    card.innerHTML = `<div class="arch-name">${cfg.label}</div><div class="arch-pct">${pct}%</div><div class="arch-desc">${cfg.desc}</div>`;
+    container.appendChild(card);
+  });
+}
+
+// ─────────────────────────────────────────────
+// ANIMATE COUNTERS
+// ─────────────────────────────────────────────
+function counter(el, target, fmt, ms = 1400) {
+  const t0 = performance.now();
+  function tick(now) {
+    const p = Math.min((now - t0) / ms, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(Math.round(target * e));
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = fmt(target);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ─────────────────────────────────────────────
+// MAIN
+// ─────────────────────────────────────────────
+async function main() {
+  let data;
+  try {
+    data = await d3.json('errors.json');
+  } catch (err) {
+    ['cluster-chart', 'arch-chart', 'pangram-chart', 'scatter-chart'].forEach(id => {
+      document.getElementById(id).textContent = 'Could not load errors.json. Serve from a local web server (e.g. python -m http.server 8000).';
+    });
+    return;
+  }
+
+  const totals = data.summary.totals;
+
+  // Process clusters
+  const clusters = data.clusters
+    .filter(c => c.outcomes.final_submitters > 0)
+    .map(c => ({
+      id: c.cluster_id,
+      title: c.title,
+      submitters: c.outcomes.final_submitters,
+      full_pass: c.outcomes.full_pass,
+      non_full: c.outcomes.non_full_final_submissions,
+      parseable: c.outcomes.parseable_non_full,
+      non_parseable: c.outcomes.non_parseable_non_full,
+      failure_rate: c.outcomes.non_full_final_submissions / c.outcomes.final_submitters,
+      top_patterns: (c.reclustered_patterns?.patterns || []).slice(0, 3).map(p => ({
+        name: p.name,
+        count: p.cluster_frequency.count,
+        pct: p.cluster_frequency.pct,
+      })),
+    }));
+
+  // Aggregate archetypes
+  const archTotals = {};
+  data.clusters.forEach(c => {
+    (c.reclustered_patterns?.patterns || []).forEach(p => {
+      const k = classify(p.name);
+      archTotals[k] = (archTotals[k] || 0) + p.cluster_frequency.count;
+    });
+  });
+
+  // Counters
+  const fr = totals.non_full_final_submissions / totals.final_submitters;
+  counter(document.getElementById('s-sub'), totals.final_submitters, n => n.toLocaleString());
+  counter(document.getElementById('s-fail'), Math.round(fr * 1000), n => (n / 10).toFixed(1) + '%');
+  counter(document.getElementById('s-pat'), totals.pattern_sections, n => n.toLocaleString());
+
+  // Charts
+  buildClusterChart(document.getElementById('cluster-chart'), clusters);
+  buildArchChart(document.getElementById('arch-chart'), archTotals);
+  buildArchCards(archTotals);
+
+  const pangram = data.clusters.find(c => c.cluster_id === 'C013');
+  buildPangramChart(document.getElementById('pangram-chart'), pangram);
+
+  buildScatter(document.getElementById('scatter-chart'), clusters);
+}
+
+main();
+</script>
+</body>
+</html>

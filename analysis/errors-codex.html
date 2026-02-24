@@ -1,0 +1,2757 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Shape of Student Mistakes</title>
+  <meta name="description" content="Interactive narrative analysis of student code error patterns across question clusters.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github-dark.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/lib/common.min.js"></script>
+  <style>
+    :root {
+      --paper: #f6f1e7;
+      --paper-2: #efe5d2;
+      --ink: #14212b;
+      --ink-soft: #425565;
+      --muted: #6d7b86;
+      --line: #d4c9b7;
+      --panel: rgba(255, 255, 255, 0.72);
+      --panel-strong: rgba(255, 255, 255, 0.88);
+      --accent: #b63e2e;
+      --accent-2: #0f6c7a;
+      --accent-3: #8a5a13;
+      --shadow: 0 12px 32px rgba(20, 33, 43, 0.12);
+
+      --family-syntax: #1f2937;
+      --family-runtime: #c2410c;
+      --family-placeholder: #8c510a;
+      --family-sample: #d97706;
+      --family-control: #0f766e;
+      --family-contract: #1d4ed8;
+      --family-boundary: #059669;
+      --family-format: #be185d;
+      --family-data: #7c2d12;
+      --family-order: #0369a1;
+      --family-logic: #6b7280;
+      --family-unknown: #9ca3af;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 650px at 8% -10%, rgba(182, 62, 46, 0.11), transparent 60%),
+        radial-gradient(900px 600px at 96% 2%, rgba(15, 108, 122, 0.10), transparent 58%),
+        linear-gradient(180deg, #fbf7ef 0%, #f3ecde 65%, #efe6d8 100%);
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Newsreader", Georgia, serif;
+      line-height: 1.5;
+      letter-spacing: 0.002em;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.15em;
+    }
+
+    a:hover { color: var(--accent); }
+
+    code, pre, kbd, samp {
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
+      font-size: 0.92em;
+    }
+
+    .page {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1.2rem 1rem 4rem;
+    }
+
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(246, 241, 231, 0.92), rgba(246, 241, 231, 0.55));
+      border-bottom: 1px solid rgba(212, 201, 183, 0.5);
+      margin: 0 -1rem 1.2rem;
+      padding: 0.6rem 1rem;
+    }
+
+    .masthead-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      justify-content: space-between;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .masthead-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-knot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background:
+        conic-gradient(from 45deg, var(--accent) 0 25%, #fcae66 0 50%, var(--accent-2) 0 75%, #1e3a5f 0);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.6);
+    }
+
+    .masthead-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.35rem 0.6rem;
+      background: rgba(255,255,255,0.55);
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .hero {
+      position: relative;
+      padding: 2rem 0 1rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 1rem 1.2rem;
+      align-items: start;
+    }
+
+    .eyebrow {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Fraunces", "Newsreader", serif;
+      font-size: clamp(2rem, 4vw, 3.55rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      font-weight: 700;
+      max-width: 18ch;
+    }
+
+    .hero-deck {
+      margin-top: 0.9rem;
+      color: var(--ink-soft);
+      font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+      max-width: 62ch;
+    }
+
+    .lede {
+      margin-top: 1rem;
+      color: var(--ink);
+      font-size: 1.02rem;
+      max-width: 65ch;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .note-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.66));
+      border: 1px solid rgba(212, 201, 183, 0.95);
+      border-radius: 16px;
+      padding: 0.9rem 0.95rem;
+      box-shadow: var(--shadow);
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .note-card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+
+    .note-card p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+      gap: 1.1rem;
+      align-items: start;
+      margin-top: 0.6rem;
+    }
+
+    .section-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.84), rgba(255,255,255,0.72));
+      border: 1px solid rgba(212, 201, 183, 0.92);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: clip;
+    }
+
+    .section-card header {
+      padding: 0.9rem 1rem 0.35rem;
+      border-bottom: 1px solid rgba(212,201,183,0.55);
+      background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    }
+
+    .section-card h2 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.22rem, 1.55vw, 1.45rem);
+      line-height: 1.06;
+      letter-spacing: -0.01em;
+    }
+
+    .section-card .subhed {
+      margin-top: 0.35rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .section-body {
+      padding: 0.9rem 1rem 1rem;
+    }
+
+    .prose {
+      font-size: 1.02rem;
+      color: var(--ink);
+    }
+
+    .prose p {
+      margin: 0 0 0.85rem;
+    }
+
+    .prose .pull {
+      font-family: "Fraunces", serif;
+      font-size: 1.1rem;
+      line-height: 1.25;
+      color: #713a1b;
+      margin: 0.75rem 0;
+      padding-left: 0.8rem;
+      border-left: 3px solid #e2b78c;
+    }
+
+    .figure {
+      margin-top: 0.7rem;
+      background: rgba(255,255,255,0.45);
+      border: 1px solid rgba(212,201,183,0.65);
+      border-radius: 14px;
+      padding: 0.8rem;
+    }
+
+    .figure h3 {
+      margin: 0;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.25;
+      letter-spacing: 0.005em;
+    }
+
+    .figure .figure-sub {
+      margin-top: 0.25rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .figure .chart-wrap {
+      margin-top: 0.65rem;
+      min-height: 260px;
+      position: relative;
+    }
+
+    .chart-legend {
+      margin-top: 0.6rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 0.35rem 0.7rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      min-width: 0;
+    }
+
+    .legend-swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      margin-top: 0.2rem;
+      flex: 0 0 auto;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-top: 0.7rem;
+    }
+
+    .stat-tile {
+      border: 1px solid rgba(212, 201, 183, 0.9);
+      border-radius: 14px;
+      padding: 0.8rem;
+      background: rgba(255,255,255,0.58);
+      min-width: 0;
+    }
+
+    .stat-label {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+      line-height: 1;
+      letter-spacing: -0.015em;
+    }
+
+    .stat-foot {
+      margin-top: 0.25rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.77rem;
+      color: var(--ink-soft);
+      line-height: 1.3;
+    }
+
+    .wait-card {
+      margin-top: 0.75rem;
+      border-radius: 14px;
+      border: 1px solid rgba(215, 119, 6, 0.35);
+      background: linear-gradient(180deg, rgba(255,250,238,0.75), rgba(255,245,222,0.55));
+      padding: 0.8rem;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .wait-card h4 {
+      margin: 0 0 0.25rem;
+      color: #8a4b09;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+    }
+
+    .wait-card p {
+      margin: 0;
+      color: #6f5030;
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .case-grid {
+      margin-top: 0.8rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .case-card {
+      border: 1px solid rgba(212, 201, 183, 0.95);
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.62));
+      border-radius: 16px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .case-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .case-title {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: 1.08rem;
+      line-height: 1.1;
+    }
+
+    .case-meta {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .case-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.78rem;
+    }
+
+    .mini-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .mini-list li {
+      border-left: 3px solid rgba(15, 108, 122, 0.25);
+      padding-left: 0.5rem;
+    }
+
+    .mini-list .pattern-title {
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.81rem;
+      line-height: 1.25;
+    }
+
+    .mini-list .pattern-metric {
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-top: 0.1rem;
+    }
+
+    .mini-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.2rem;
+    }
+
+    button, .btn {
+      font: inherit;
+      border: 1px solid rgba(212, 201, 183, 1);
+      background: rgba(255,255,255,0.74);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      line-height: 1.2;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+    }
+
+    button:hover, .btn:hover {
+      transform: translateY(-1px);
+      border-color: #bea985;
+      background: rgba(255,255,255,0.95);
+    }
+
+    button:focus-visible, .btn:focus-visible, select:focus-visible, input:focus-visible {
+      outline: 2px solid rgba(15, 108, 122, 0.55);
+      outline-offset: 2px;
+    }
+
+    .btn-accent {
+      background: rgba(15, 108, 122, 0.10);
+      border-color: rgba(15, 108, 122, 0.35);
+      color: #0b5b67;
+    }
+
+    .btn-warm {
+      background: rgba(182, 62, 46, 0.08);
+      border-color: rgba(182, 62, 46, 0.28);
+      color: #8f2d21;
+    }
+
+    .family-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.72rem;
+      border-radius: 999px;
+      padding: 0.22rem 0.5rem;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.55);
+      color: var(--ink-soft);
+    }
+
+    .chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      z-index: 40;
+      max-width: min(360px, 92vw);
+      padding: 0.6rem 0.7rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(20, 33, 43, 0.92);
+      color: #f6f1e7;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.28);
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.78rem;
+      line-height: 1.35;
+      opacity: 0;
+      transform: translateY(2px);
+      transition: opacity 100ms ease, transform 100ms ease;
+      white-space: normal;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .explorer-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 0.9rem;
+      align-items: start;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .control {
+      display: grid;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+
+    .control label {
+      font-size: 0.73rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .control input, .control select {
+      width: 100%;
+      border: 1px solid rgba(212,201,183,1);
+      border-radius: 10px;
+      padding: 0.5rem 0.6rem;
+      background: rgba(255,255,255,0.78);
+      font-family: "IBM Plex Sans", sans-serif;
+      color: var(--ink);
+      min-width: 0;
+    }
+
+    .table-wrap {
+      max-height: 580px;
+      overflow: auto;
+      border: 1px solid rgba(212, 201, 183, 0.85);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.54);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: rgba(244, 237, 223, 0.96);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(212,201,183,0.9);
+      text-align: left;
+      font-size: 0.74rem;
+      color: var(--muted);
+      padding: 0.5rem 0.55rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    tbody td {
+      border-bottom: 1px solid rgba(212, 201, 183, 0.45);
+      padding: 0.48rem 0.55rem;
+      vertical-align: top;
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    tbody tr {
+      cursor: pointer;
+    }
+
+    tbody tr:hover {
+      background: rgba(15, 108, 122, 0.05);
+    }
+
+    tbody tr.selected {
+      background: rgba(15, 108, 122, 0.10);
+      outline: 1px solid rgba(15, 108, 122, 0.15);
+    }
+
+    .num {
+      text-align: right;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pattern-cell {
+      display: grid;
+      gap: 0.25rem;
+      min-width: 0;
+    }
+
+    .pattern-cell strong {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .cluster-ref {
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .detail-panel {
+      border: 1px solid rgba(212, 201, 183, 0.85);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.58);
+      padding: 0.8rem;
+      min-height: 380px;
+      position: sticky;
+      top: 4.6rem;
+    }
+
+    .detail-panel h4 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: 1.12rem;
+      line-height: 1.1;
+    }
+
+    .detail-panel .detail-sub {
+      margin-top: 0.28rem;
+      color: var(--muted);
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .detail-block {
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid rgba(212,201,183,0.5);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.4rem 0.6rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+    }
+
+    .detail-grid .label {
+      color: var(--muted);
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.12rem;
+    }
+
+    .detail-list {
+      margin: 0.4rem 0 0;
+      padding-left: 1rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .detail-list li { margin-bottom: 0.28rem; }
+
+    .detail-vfreq {
+      margin-top: 0.45rem;
+      display: grid;
+      gap: 0.28rem;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.78rem;
+    }
+
+    .vf-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .vf-track {
+      position: relative;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(212,201,183,0.5);
+      overflow: hidden;
+      margin-top: 0.2rem;
+    }
+
+    .vf-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: linear-gradient(90deg, rgba(15,108,122,0.75), rgba(15,108,122,0.45));
+      border-radius: 999px;
+    }
+
+    .method-box {
+      margin-top: 0.8rem;
+      border: 1px solid rgba(212,201,183,0.7);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.5);
+      padding: 0.75rem;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .method-box details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--ink);
+      list-style: none;
+    }
+
+    .method-box details summary::-webkit-details-marker { display: none; }
+
+    .method-box details[open] summary {
+      margin-bottom: 0.4rem;
+    }
+
+    .method-box p, .method-box li {
+      margin: 0.25rem 0;
+      color: var(--ink-soft);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
+    .method-box ul {
+      margin: 0.3rem 0 0;
+      padding-left: 1rem;
+    }
+
+    .footer-note {
+      margin-top: 1.2rem;
+      padding: 0.8rem 0.2rem 0;
+      color: var(--muted);
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.82rem;
+      border-top: 1px solid rgba(212,201,183,0.7);
+    }
+
+    .loading, .error-state {
+      margin: 12vh auto 0;
+      max-width: 680px;
+      border-radius: 18px;
+      border: 1px solid rgba(212,201,183,0.9);
+      background: rgba(255,255,255,0.75);
+      box-shadow: var(--shadow);
+      padding: 1rem;
+    }
+
+    .loading h2, .error-state h2 {
+      margin: 0 0 0.4rem;
+      font-family: "Fraunces", serif;
+      font-size: 1.4rem;
+      line-height: 1.1;
+    }
+
+    .loading p, .error-state p {
+      margin: 0 0 0.5rem;
+      color: var(--ink-soft);
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+
+    .mono {
+      font-family: "IBM Plex Mono", monospace;
+      background: rgba(20,33,43,0.06);
+      border-radius: 6px;
+      padding: 0.08rem 0.3rem;
+    }
+
+    dialog#text-modal {
+      width: min(980px, 94vw);
+      max-height: 92vh;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      background: rgba(17, 27, 36, 0.96);
+      color: #f5f0e6;
+      padding: 0;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    dialog#text-modal::backdrop {
+      background: rgba(20, 33, 43, 0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 0.85rem 0.95rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .modal-title {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: 1.05rem;
+      line-height: 1.1;
+    }
+
+    .modal-subtitle {
+      margin-top: 0.24rem;
+      color: #cdd7de;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      line-height: 1.3;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .modal-body {
+      padding: 0.95rem;
+      overflow: auto;
+      max-height: calc(92vh - 74px);
+    }
+
+    .modal-caption {
+      color: #cfd7df;
+      font-family: "IBM Plex Sans", sans-serif;
+      font-size: 0.8rem;
+      margin-bottom: 0.55rem;
+      line-height: 1.35;
+    }
+
+    .code-frame {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0f1722;
+    }
+
+    .code-frame pre {
+      margin: 0;
+      max-height: 64vh;
+      overflow: auto;
+      padding: 0.8rem;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .smallcaps {
+      font-variant-caps: all-small-caps;
+      letter-spacing: 0.06em;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .mobile-only { display: none; }
+
+    @media (max-width: 1000px) {
+      .hero,
+      .story-grid,
+      .explorer-layout {
+        grid-template-columns: 1fr;
+      }
+      .detail-panel {
+        position: static;
+      }
+      .case-grid {
+        grid-template-columns: 1fr;
+      }
+      .controls {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .masthead {
+        position: static;
+      }
+      .page { padding: 0.8rem 0.7rem 2.4rem; }
+      .hero { padding-top: 0.4rem; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .chart-legend { grid-template-columns: 1fr; }
+      .mobile-only { display: inline-flex; }
+      .desktop-only { display: none; }
+      .table-wrap { max-height: 420px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="masthead">
+    <div class="masthead-inner">
+      <div class="masthead-brand">
+        <span class="brand-knot" aria-hidden="true"></span>
+        <span>The Shape of Student Mistakes</span>
+      </div>
+      <div class="masthead-links">
+        <a class="pill" href="ERRORS.md">Cluster index</a>
+        <a class="pill" href="errors.json">Raw JSON</a>
+        <button class="pill" id="open-method-top" type="button">Method and caveats</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="app-root">
+    <div class="loading" id="loading-state">
+      <h2>Loading the evidence...</h2>
+      <p>This page fetches <span class="mono">errors.json</span> and builds the charts in your browser.</p>
+      <p class="muted">If you opened this file directly from disk and the browser blocks local fetches, serve the folder with a small local web server (for example <span class="mono">uv run python -m http.server</span> from the repo root) and open <span class="mono">/analysis/errors.html</span>.</p>
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+  <dialog id="text-modal" aria-labelledby="modal-title">
+    <div class="modal-head">
+      <div>
+        <h3 class="modal-title" id="modal-title">Preview</h3>
+        <div class="modal-subtitle" id="modal-subtitle"></div>
+      </div>
+      <div class="modal-actions">
+        <a id="modal-open-link" class="btn" target="_blank" rel="noopener noreferrer">Open file</a>
+        <button id="modal-close" type="button">Close</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-caption" id="modal-caption"></div>
+      <div class="code-frame">
+        <pre><code id="modal-code" class="language-text"></code></pre>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+  (() => {
+    "use strict";
+
+    const FAMILY_LABELS = [
+      "Task-specific logic rule",
+      "Sample overfitting / hard-coding",
+      "Control flow stops too early",
+      "Contract / I-O mismatch",
+      "Edge-case / boundary logic",
+      "Formatting / exact-output semantics",
+      "Order / uniqueness semantics",
+      "Data-model / helper integration",
+      "Template left unfinished",
+      "Runtime crash",
+      "Syntax / non-parseable",
+      "Other / unknown"
+    ];
+
+    const FAMILY_COLORS = {
+      "Syntax / non-parseable": getCSS("--family-syntax"),
+      "Runtime crash": getCSS("--family-runtime"),
+      "Template left unfinished": getCSS("--family-placeholder"),
+      "Sample overfitting / hard-coding": getCSS("--family-sample"),
+      "Control flow stops too early": getCSS("--family-control"),
+      "Contract / I-O mismatch": getCSS("--family-contract"),
+      "Edge-case / boundary logic": getCSS("--family-boundary"),
+      "Formatting / exact-output semantics": getCSS("--family-format"),
+      "Data-model / helper integration": getCSS("--family-data"),
+      "Order / uniqueness semantics": getCSS("--family-order"),
+      "Task-specific logic rule": getCSS("--family-logic"),
+      "Other / unknown": getCSS("--family-unknown"),
+    };
+
+    const STORY_CASES = ["C013", "C110", "C017", "C020"];
+    const tooltip = document.getElementById("tooltip");
+    const modal = document.getElementById("text-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalSubtitle = document.getElementById("modal-subtitle");
+    const modalCaption = document.getElementById("modal-caption");
+    const modalCode = document.getElementById("modal-code");
+    const modalOpenLink = document.getElementById("modal-open-link");
+    const modalClose = document.getElementById("modal-close");
+    const appRoot = document.getElementById("app-root");
+
+    let APP = null;
+
+    modalClose.addEventListener("click", () => modal.close());
+    document.getElementById("open-method-top").addEventListener("click", () => {
+      const details = document.getElementById("method-details");
+      if (details) {
+        details.open = true;
+        details.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      boot().catch((err) => {
+        console.error(err);
+        renderError(err);
+      });
+    }, { once: true });
+
+    async function boot() {
+      const data = await fetchJSON("errors.json");
+      APP = buildModel(data);
+      renderApp(APP);
+      wireGlobalInteractions(APP);
+      window.addEventListener("resize", debounce(() => redrawCharts(APP), 120));
+    }
+
+    async function fetchJSON(path) {
+      const resp = await fetch(path, { cache: "no-store" });
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch ${path}: ${resp.status} ${resp.statusText}`);
+      }
+      return resp.json();
+    }
+
+    function renderError(err) {
+      appRoot.innerHTML = `
+        <div class="error-state">
+          <h2>The story could not load its data</h2>
+          <p>${escapeHtml(err && err.message ? err.message : String(err))}</p>
+          <p>Expected <span class="mono">analysis/errors.json</span> next to this file. Try serving the repo root and opening <span class="mono">/analysis/errors.html</span>.</p>
+          <p><a href="errors.json">Open errors.json directly</a></p>
+        </div>
+      `;
+    }
+
+    function buildModel(data) {
+      const clusters = (data.clusters || []).map(enrichCluster);
+      const clusterMap = new Map(clusters.map((c) => [c.cluster_id, c]));
+
+      const patternRows = (data.indexes?.pattern_rows || []).map((row) => {
+        const family = classifyPattern(row.pattern_name || "", row.tags || []);
+        return {
+          ...row,
+          primaryFamily: family,
+          color: FAMILY_COLORS[family] || FAMILY_COLORS["Other / unknown"],
+        };
+      });
+
+      const familyAgg = d3.rollups(
+        patternRows,
+        (rows) => {
+          const count = d3.sum(rows, (d) => d.cluster_count || 0);
+          const clustersSeen = new Set(rows.map((d) => d.cluster_id)).size;
+          const examples = d3.sum(rows, (d) => d.example_count || 0);
+          return {
+            count,
+            clusters: clustersSeen,
+            pctOfNonFull: count / (data.summary?.totals?.non_full_final_submissions || 1),
+            pctOfClusters: clustersSeen / Math.max(1, clusters.length),
+            examples,
+            rows,
+          };
+        },
+        (d) => d.primaryFamily
+      )
+      .map(([family, agg]) => ({ family, ...agg, color: FAMILY_COLORS[family] || FAMILY_COLORS["Other / unknown"] }))
+      .sort((a, b) => d3.descending(a.count, b.count));
+
+      const familyOrder = FAMILY_LABELS.filter((label) => familyAgg.find((d) => d.family === label));
+
+      const totals = data.summary?.totals || {};
+      const selectiveHiddenEstimate = estimateSelectiveHiddenFailure(patternRows);
+      const partialCreditPatternMass = estimatePartialCreditMass(clusters);
+      const residualStats = summarizeResiduals(clusters);
+
+      const topClustersByNonFull = [...clusters].sort((a, b) => d3.descending(a.outcomes.non_full_final_submissions || 0, b.outcomes.non_full_final_submissions || 0));
+      const topHeatmapClusters = topClustersByNonFull.slice(0, 14);
+
+      const runtimeSubtypeAgg = summarizeRuntimeSubtypes(patternRows);
+      const topSpecificPatterns = d3.rollups(
+        patternRows,
+        (rows) => ({
+          totalCount: d3.sum(rows, (d) => d.cluster_count || 0),
+          clusters: rows.length,
+          family: rows[0]?.primaryFamily || "Other / unknown",
+        }),
+        (d) => d.pattern_name
+      )
+      .map(([pattern_name, v]) => ({ pattern_name, ...v }))
+      .sort((a, b) => d3.descending(a.totalCount, b.totalCount));
+
+      const patternTableRows = patternRows
+        .map((row) => {
+          const cluster = clusterMap.get(row.cluster_id);
+          return {
+            ...row,
+            clusterTitle: cluster?.title || row.cluster_title,
+            clusterObj: cluster || null,
+          };
+        })
+        .sort((a, b) => d3.descending(a.cluster_count || 0, b.cluster_count || 0));
+
+      const caseStudies = STORY_CASES.map((id) => clusterMap.get(id)).filter(Boolean);
+
+      return {
+        raw: data,
+        clusters,
+        clusterMap,
+        totals,
+        patternRows,
+        familyAgg,
+        familyOrder,
+        runtimeSubtypeAgg,
+        topSpecificPatterns,
+        topClustersByNonFull,
+        topHeatmapClusters,
+        caseStudies,
+        selectiveHiddenEstimate,
+        partialCreditPatternMass,
+        residualStats,
+        state: {
+          selectedFamily: null,
+          selectedPatternRowKey: null,
+          search: "",
+          clusterFilter: "all",
+          minCount: 10,
+          sortBy: "count",
+        },
+        derived: {},
+      };
+    }
+
+    function enrichCluster(cluster) {
+      const variants = cluster.variants || [];
+      const patterns = cluster.reclustered_patterns?.patterns || [];
+      const outcomes = cluster.outcomes || {};
+      const residual = cluster.reclustered_patterns?.residual_other || null;
+
+      const patternSummaries = patterns.map((p, idx) => {
+        const name = p.name || `Pattern ${idx + 1}`;
+        const count = p.cluster_frequency?.count ?? p.inventory_cluster_count ?? 0;
+        const pct = p.cluster_frequency?.pct ?? p.inventory_cluster_non_full_pct ?? null;
+        const tags = inferTagsFromPatternSection(p);
+        const family = classifyPattern(name, tags);
+        return {
+          ...p,
+          _count: count,
+          _pct: pct,
+          _family: family,
+          _tags: tags,
+        };
+      });
+
+      patternSummaries.sort((a, b) => d3.descending(a._count, b._count));
+      const familyBreakdown = d3.rollups(
+        patternSummaries,
+        (rows) => d3.sum(rows, (d) => d._count || 0),
+        (d) => d._family
+      )
+      .map(([family, count]) => ({ family, count, pct: count / Math.max(1, outcomes.non_full_final_submissions || 1) }))
+      .sort((a, b) => d3.descending(a.count, b.count));
+
+      const reportHref = localHref(cluster.analysis_file);
+      const canonicalProblem = cluster.canonical_question_spec?.canonical_full_question_json || null;
+      const canonicalProblemHref = canonicalProblem ? ("../" + canonicalProblem) : null;
+
+      return {
+        ...cluster,
+        variants,
+        outcomes,
+        residual,
+        patterns: patternSummaries,
+        familyBreakdown,
+        reportHref,
+        canonicalProblemHref,
+        canonicalProblemPath: canonicalProblem,
+        key: cluster.cluster_id,
+      };
+    }
+
+    function inferTagsFromPatternSection(pattern) {
+      const tags = new Set();
+      for (const t of pattern.tags || []) tags.add(t);
+      const lower = String(pattern.name || "").toLowerCase();
+      if (lower.includes("runtime")) tags.add("runtime");
+      if (lower.includes("syntax") || lower.includes("non-parseable")) tags.add("syntax");
+      if (lower.includes("placeholder") || lower.includes("...")) tags.add("placeholder");
+      if (lower.includes("hard-code") || lower.includes("sample")) tags.add("sample_overfit");
+      if (lower.includes("returns inside") || lower.includes("early return")) tags.add("early_return");
+      return [...tags];
+    }
+
+    function classifyPattern(name, tags) {
+      const lower = String(name || "").toLowerCase();
+      const tagSet = new Set(tags || []);
+
+      const has = (s) => lower.includes(s);
+      const any = (...parts) => parts.some((p) => has(p));
+
+      if (tagSet.has("syntax") || any("non-parseable", "syntax /")) return "Syntax / non-parseable";
+      if (tagSet.has("runtime") || /^runtime /.test(lower) || any("runtime error")) return "Runtime crash";
+      if (tagSet.has("placeholder") || any("placeholder", "skeleton placeholder", "template placeholder", "leaves template")) return "Template left unfinished";
+      if (tagSet.has("sample_overfit") || any("hard-codes", "hard-coded", "copies evaluator/sample", "sample output")) return "Sample overfitting / hard-coding";
+      if (tagSet.has("early_return") || any("returns inside", "early return", "returns from inside")) return "Control flow stops too early";
+
+      if (any(
+        "reads input()",
+        "printing is not enough",
+        "instead of return",
+        "no return / implicit",
+        "wrong return shape",
+        "wrong return type",
+        "returns raw ",
+        "returns an undefined ",
+        "output formatting" // some are formatting, but contract for function/program mismatch matters here
+      )) return "Contract / I-O mismatch";
+
+      if (any(
+        "spacing",
+        "newline",
+        "casing",
+        "case-sensitive",
+        "trailing space",
+        "formatting mismatch",
+        "exact-output",
+        "bolding"
+      )) return "Formatting / exact-output semantics";
+
+      if (any(
+        "duplicate",
+        "unique",
+        "set() order-loss",
+        "set symmetric",
+        "repeated-character",
+        "reverse-pair dedupe",
+        "order rule",
+        "order/content"
+      )) return "Order / uniqueness semantics";
+
+      if (any(
+        "off-by-one",
+        "boundary",
+        "threshold",
+        "short-",
+        "edge-case",
+        "len(",
+        "out-of-range",
+        "zero guard",
+        "4-digit",
+        "minimum-length"
+      )) return "Edge-case / boundary logic";
+
+      if (any(
+        "helper",
+        "multi-function",
+        "data-analysis",
+        "sales-analysis",
+        "chess-analysis",
+        "book-data",
+        "wrong shape",
+        "list/dict",
+        "container",
+        "parameter `sales_data`",
+        "uses sample variable `sales`",
+        "uses sample variable sales",
+        "globals like",
+        "data model"
+      )) return "Data-model / helper integration";
+
+      if (any(
+        "wrong comparison operator",
+        "divisibility logic",
+        "partially correct",
+        "fails hidden",
+        "logic bug",
+        "broadly incorrect",
+        "incorrect ",
+        "solves a different",
+        "alternating direction missing"
+      )) return "Task-specific logic rule";
+
+      if (tagSet.has("io_contract") || tagSet.has("print_vs_return")) return "Contract / I-O mismatch";
+      if (tagSet.has("boundary_case")) return "Edge-case / boundary logic";
+      if (tagSet.has("data_shape")) return "Data-model / helper integration";
+      if (tagSet.has("set_uniqueness_logic")) return "Order / uniqueness semantics";
+      if (tagSet.has("formatting")) return "Formatting / exact-output semantics";
+
+      return "Other / unknown";
+    }
+
+    function estimateSelectiveHiddenFailure(patternRows) {
+      let count = 0;
+      let patterns = 0;
+      for (const row of patternRows) {
+        const vectors = row.dominant_private_case_vectors || [];
+        const hasSelectiveVector = vectors.some((v) => {
+          const label = String(v.vector || "");
+          return /^[01]+$/.test(label) && label.includes("0") && label.includes("1");
+        });
+        if (hasSelectiveVector) {
+          count += row.cluster_count || 0;
+          patterns += 1;
+        }
+      }
+      return { count, patterns };
+    }
+
+    function estimatePartialCreditMass(clusters) {
+      let count = 0;
+      let patterns = 0;
+      for (const cluster of clusters) {
+        for (const p of cluster.patterns) {
+          const scores = p.score_distribution_top || [];
+          const hasPartial = scores.some((s) => typeof s.score === "number" && s.score > 0 && s.score < 100);
+          if (hasPartial) {
+            count += p._count || 0;
+            patterns += 1;
+          }
+        }
+      }
+      return { count, patterns };
+    }
+
+    function summarizeResiduals(clusters) {
+      const pcts = clusters
+        .map((c) => c.residual?.pct)
+        .filter((v) => typeof v === "number")
+        .sort((a, b) => a - b);
+      if (!pcts.length) return null;
+      return {
+        min: pcts[0],
+        median: d3.quantileSorted(pcts, 0.5),
+        p90: d3.quantileSorted(pcts, 0.9),
+        max: pcts[pcts.length - 1],
+      };
+    }
+
+    function summarizeRuntimeSubtypes(patternRows) {
+      const runtimeRows = patternRows.filter((d) => d.primaryFamily === "Runtime crash");
+      const groups = d3.rollups(
+        runtimeRows,
+        (rows) => d3.sum(rows, (d) => d.cluster_count || 0),
+        (d) => runtimeSubtype(d.pattern_name || "")
+      )
+      .map(([subtype, count]) => ({ subtype, count }))
+      .sort((a, b) => d3.descending(a.count, b.count));
+      return groups;
+    }
+
+    function runtimeSubtype(patternName) {
+      const lower = String(patternName).toLowerCase();
+      if (lower.includes("nameerror")) return "NameError (undefined names)";
+      if (lower.includes("typeerror")) return "TypeError (wrong types)";
+      if (lower.includes("indexerror")) return "IndexError (out of range)";
+      if (lower.includes("attributeerror")) return "AttributeError (wrong API)";
+      if (lower.includes("keyerror")) return "KeyError (missing dict key)";
+      if (lower.includes("valueerror")) return "ValueError (bad parse/conversion)";
+      if (lower.includes("zerodivisionerror")) return "ZeroDivisionError";
+      if (lower.includes("eoferror")) return "EOFError (wrong input shape)";
+      if (lower.includes("recurs")) return "Recursion / infinite loop";
+      return "Generic runtime crash";
+    }
+
+    function renderApp(app) {
+      appRoot.innerHTML = pageTemplate(app);
+      renderFamilyLegend(app);
+      redrawCharts(app);
+      renderCaseStudies(app);
+      initExplorer(app);
+      renderRuntimeSubtypeList(app);
+      installStoryButtons(app);
+      populateNarrativeText(app);
+    }
+
+    function pageTemplate(app) {
+      return `
+        <section class="hero">
+          <div>
+            <div class="eyebrow">A Data Story About Coding Errors</div>
+            <h1>The bugs are not where we think they are</h1>
+            <div class="hero-deck">
+              We went looking for "students who do not understand loops." We found something stranger:
+              students who often understand just enough to pass the sample, then quietly fail the real problem.
+            </div>
+            <div class="lede">
+              This page turns the error analyses in <code>analysis/ERRORS-cluster-*</code> into a single, queryable story. It covers
+              <strong id="hero-clusters"></strong> question clusters analyzed so far, and follows the mistakes that keep reappearing under different disguises:
+              early returns, sample overfitting, contract mismatches, unfinished helpers, and exact-formatting blind spots.
+            </div>
+            <div class="mini-actions" style="margin-top:0.75rem;">
+              <a class="btn btn-accent" href="ERRORS.md">Browse cluster index</a>
+              <a class="btn" href="errors.json">Download dataset</a>
+              <button class="btn btn-warm" type="button" id="open-pangram-example-inline">Open a real pangram failure</button>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div class="note-card">
+              <h3>The mystery</h3>
+              <p>Why do many wrong answers look polished, even persuasive, and still fail hidden tests? Because they often solve a narrower problem than the prompt actually asks.</p>
+            </div>
+            <div class="note-card">
+              <h3>The method</h3>
+              <p>Final evaluated submissions only, parsed and clustered by specific recurring error patterns. Residual "Other" rates are intentionally pushed down so the categories actually mean something.</p>
+            </div>
+            <div class="note-card">
+              <h3>The point</h3>
+              <p>This is not just a grading report. It is a map of where instruction, prompt design, and AI-era testing need to get sharper.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="story-grid">
+          <section class="section-card">
+            <header>
+              <h2>Act I - The shortcut is the story</h2>
+              <div class="subhed">The most common mistakes are often not "algorithm failure." They are shortcut failure: solving the sample, not the specification.</div>
+            </header>
+            <div class="section-body">
+              <div class="prose">
+                <p>Start with the easiest wrong assumption: that bad code is mostly random. It is not. Wrong answers have shape. They repeat. They travel from problem to problem.</p>
+                <p>Across the analyzed clusters, we are not just seeing syntax slips. We are seeing a recurring human strategy: take a visible example, infer a smaller rule, and write code that works for that smaller world. It is efficient. It is plausible. It is usually wrong.</p>
+                <p class="pull">The data keeps saying the same thing in different accents: students are frequently solving a believable version of the task, not the task itself.</p>
+              </div>
+
+              <div class="figure">
+                <h3 id="family-strip-title">Where non-full submissions fail most often</h3>
+                <div class="figure-sub" id="family-strip-sub">Weighted by final non-full submissions across analyzed clusters.</div>
+                <div class="chart-wrap" id="family-strip-chart"></div>
+                <div class="chart-legend" id="family-legend"></div>
+              </div>
+
+              <div class="figure">
+                <h3>The recurring cast of mistakes</h3>
+                <div class="figure-sub">Each bar is a family of error patterns. Width shows affected submissions. Labels show how many clusters the family appears in.</div>
+                <div class="chart-wrap" id="family-bars-chart"></div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="section-card">
+            <header>
+              <h2>The Numbers That Matter</h2>
+              <div class="subhed">The story is only useful if the measurements are trustworthy.</div>
+            </header>
+            <div class="section-body">
+              <div class="stat-grid">
+                <div class="stat-tile">
+                  <div class="stat-label">Analyzed clusters</div>
+                  <div class="stat-value" id="stat-clusters"></div>
+                  <div class="stat-foot">With full pattern breakdowns and example snippets</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">Final non-full submissions</div>
+                  <div class="stat-value" id="stat-nonfull"></div>
+                  <div class="stat-foot">Every one of these appears in exactly one pattern per cluster</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">Syntax or non-parseable</div>
+                  <div class="stat-value" id="stat-syntax-share"></div>
+                  <div class="stat-foot">The single largest recurring bucket across clusters</div>
+                </div>
+                <div class="stat-tile">
+                  <div class="stat-label">Residual "Other"</div>
+                  <div class="stat-value" id="stat-residual-median"></div>
+                  <div class="stat-foot" id="stat-residual-foot">Median cluster residual rate after re-clustering</div>
+                </div>
+              </div>
+
+              <div class="wait-card">
+                <h4>Wait, really?</h4>
+                <p id="wait-moment-1"></p>
+              </div>
+
+              <div class="wait-card">
+                <h4>Wait, really?</h4>
+                <p id="wait-moment-2"></p>
+              </div>
+
+              <div class="figure">
+                <h3>Runtime crashes, broken into causes</h3>
+                <div class="figure-sub">When code parses but still fails at runtime, the crash type is often diagnostic.</div>
+                <div id="runtime-subtypes"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="story-grid" style="margin-top: 1rem;">
+          <section class="section-card">
+            <header>
+              <h2>Act II - Hidden tests are not "gotchas." They are X-rays.</h2>
+              <div class="subhed">They reveal which rule the student actually implemented.</div>
+            </header>
+            <div class="section-body">
+              <div class="prose">
+                <p>Public examples tell students what success looks like. Hidden tests tell us what the student believed the rule was.</p>
+                <p>When a pattern passes some private case groups and fails others, that is not random noise. It is a fingerprint. It means the code is systematic, but the system is wrong.</p>
+                <p>That is why these reports store private-case vectors. They let you separate "this never worked" from "this works until the data gets weird."</p>
+              </div>
+
+              <div class="figure">
+                <h3>Cluster fingerprints: the same assignment can fail in different ways</h3>
+                <div class="figure-sub">Top clusters by non-full submissions. Heatmap cells show the share of non-full finals in each high-level error family. Click a row for details.</div>
+                <div class="chart-wrap" id="heatmap-chart"></div>
+              </div>
+
+              <div class="figure">
+                <h3>Residual rates stay low after re-clustering</h3>
+                <div class="figure-sub">This matters because a giant "Other" bucket hides teaching opportunities. Lower is better only if the pattern labels remain meaningful.</div>
+                <div class="chart-wrap" id="residual-scatter-chart"></div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="section-card">
+            <header>
+              <h2>Case Files</h2>
+              <div class="subhed">Concrete examples make the pattern visible.</div>
+            </header>
+            <div class="section-body">
+              <div class="prose">
+                <p>Look closely at a few clusters and a strange thing happens. The mistakes stop looking "basic." They start looking like decisions.</p>
+                <p>Some are time-saving decisions. Some are copy-paste decisions. Some are "I know what the teacher means" decisions. Hidden tests are where those decisions leave fingerprints.</p>
+              </div>
+              <div class="case-grid" id="case-studies"></div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="story-grid" style="margin-top: 1rem;">
+          <section class="section-card">
+            <header>
+              <h2>Act III - The same bug, many costumes</h2>
+              <div class="subhed">Experts notice patterns that cut across topics: control flow, contracts, data shape, and exact semantics.</div>
+            </header>
+            <div class="section-body">
+              <div class="prose">
+                <p>Beginners often describe errors by syntax: loops, strings, lists. Experts describe them by invariants: do we examine every item, preserve order, return the expected type, and honor the exact output contract?</p>
+                <p>That shift matters. It is the difference between teaching "another loop trick" and teaching the habit of checking whether a loop is allowed to stop early.</p>
+              </div>
+
+              <div class="figure">
+                <h3>Pattern Explorer</h3>
+                <div class="figure-sub">Search across all analyzed patterns, filter by family, and inspect real student examples with context links.</div>
+                <div class="explorer-layout">
+                  <div>
+                    <div class="controls">
+                      <div class="control">
+                        <label for="ctrl-search">Search</label>
+                        <input id="ctrl-search" type="search" placeholder="e.g. early return, hard-coded, placeholder">
+                      </div>
+                      <div class="control">
+                        <label for="ctrl-family">Family</label>
+                        <select id="ctrl-family"></select>
+                      </div>
+                      <div class="control">
+                        <label for="ctrl-cluster">Cluster</label>
+                        <select id="ctrl-cluster"></select>
+                      </div>
+                      <div class="control">
+                        <label for="ctrl-sort">Sort</label>
+                        <select id="ctrl-sort">
+                          <option value="count">Submission count</option>
+                          <option value="pct">Cluster %</option>
+                          <option value="cluster">Cluster</option>
+                          <option value="pattern">Pattern name</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="controls" style="grid-template-columns: minmax(0, 1fr) auto;">
+                      <div class="control">
+                        <label for="ctrl-mincount">Min affected submissions (current filter)</label>
+                        <input id="ctrl-mincount" type="range" min="1" max="100" step="1" value="10">
+                      </div>
+                      <div class="control">
+                        <label>&nbsp;</label>
+                        <button id="ctrl-reset" type="button">Reset filters</button>
+                      </div>
+                    </div>
+                    <div class="muted" id="explorer-summary" style="font-family:'IBM Plex Sans',sans-serif;font-size:0.8rem;margin-bottom:0.45rem;"></div>
+                    <div class="table-wrap">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th style="width:54%;">Pattern</th>
+                            <th class="num" style="width:12%;">Count</th>
+                            <th class="num" style="width:12%;">Cluster %</th>
+                            <th style="width:22%;">Family</th>
+                          </tr>
+                        </thead>
+                        <tbody id="explorer-tbody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="detail-panel" id="pattern-detail-panel">
+                    <div class="muted" style="font-family:'IBM Plex Sans',sans-serif;font-size:0.88rem;">Select a pattern row to inspect variant rates, private-case vectors, and example code.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <aside class="section-card">
+            <header>
+              <h2>Act IV - What changes in the AI era</h2>
+              <div class="subhed">Polished code is no longer a strong signal. Robustness is.</div>
+            </header>
+            <div class="section-body">
+              <div class="prose">
+                <p>AI makes one part of programming easier: producing plausible code quickly. It also makes one educational problem harder: plausible code fails quietly.</p>
+                <p>The danger is not that students use AI. The danger is that both students and instructors mistake sample-passing code for spec-correct code.</p>
+              </div>
+              <div class="wait-card" style="margin-top:0.5rem;">
+                <h4>The planning implication</h4>
+                <p id="ai-implication-1"></p>
+              </div>
+              <div class="wait-card">
+                <h4>The design implication</h4>
+                <p id="ai-implication-2"></p>
+              </div>
+
+              <div class="method-box">
+                <details id="method-details">
+                  <summary>Method and caveats</summary>
+                  <p>This page uses <code>analysis/errors.json</code>, which is an export of the analyzed cluster reports only. It does not include unanalyzed clusters yet.</p>
+                  <ul>
+                    <li>Counts are weighted by final non-full submissions unless otherwise noted.</li>
+                    <li>Every non-full final submission is assigned to one cluster-specific pattern in its cluster report.</li>
+                    <li>The broad families in this page are a second layer of grouping (heuristic, for storytelling and visualization).</li>
+                    <li>Representative examples are anonymized and come from actual student submissions embedded in the cluster reports.</li>
+                    <li>Low residual rates are a strength, but they are not proof of perfect labeling. They are evidence that the labels are specific enough to be useful.</li>
+                  </ul>
+                </details>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="footer-note">
+          Built from <span id="footer-clusters"></span> analyzed cluster reports in <code>analysis/ERRORS-cluster-*.md</code>. Generated data: <a href="errors.json">errors.json</a>. Index: <a href="ERRORS.md">ERRORS.md</a>.
+        </div>
+      `;
+    }
+
+    function populateNarrativeText(app) {
+      const totals = app.totals;
+      const familyMap = new Map(app.familyAgg.map((d) => [d.family, d]));
+      const syntax = familyMap.get("Syntax / non-parseable")?.count || 0;
+      const runtime = familyMap.get("Runtime crash")?.count || 0;
+      const sample = familyMap.get("Sample overfitting / hard-coding")?.count || 0;
+      const control = familyMap.get("Control flow stops too early")?.count || 0;
+      const placeholder = familyMap.get("Template left unfinished")?.count || 0;
+      const contract = familyMap.get("Contract / I-O mismatch")?.count || 0;
+
+      setText("#hero-clusters", `${fmtNum(app.raw.summary.cluster_count)} clusters and ${fmtNum(totals.non_full_final_submissions)} non-full final submissions`);
+      setText("#stat-clusters", fmtNum(app.raw.summary.cluster_count));
+      setText("#stat-nonfull", fmtNum(totals.non_full_final_submissions));
+      setText("#stat-syntax-share", `${pct(syntax / Math.max(1, totals.non_full_final_submissions))}`);
+      setText("#stat-residual-median", `${fmt1(app.residualStats?.median ?? 0)}%`);
+      setText("#stat-residual-foot", `Median residual; 90th percentile is ${fmt1(app.residualStats?.p90 ?? 0)}%, max is ${fmt1(app.residualStats?.max ?? 0)}%.`);
+
+      setText("#wait-moment-1",
+        `${fmtNum(sample)} non-full finals (${pct(sample / Math.max(1, totals.non_full_final_submissions))}) fall into explicit sample-overfitting or hard-coded patterns. That is not "random wrong." It is targeted wrong: the code was written for the visible examples.`
+      );
+      setText("#wait-moment-2",
+        `${fmtNum(app.partialCreditPatternMass.count)} non-full finals belong to patterns whose top score distribution includes partial credit. In other words, a lot of wrong code is systematically, almost convincingly right.`
+      );
+      setText("#ai-implication-1",
+        `Teach verification as a first-class skill. A student (or model) can produce plausible code fast; the bottleneck is now checking invariants, edge cases, and exact contracts. The grading system should reinforce that habit.`);
+      setText("#ai-implication-2",
+        `Design hidden tests to break shortcuts on purpose: duplicates, ties, mixed case, extra lines, multi-digit values, boundary lengths, and format-sensitive outputs. AI-generated sample-fit code often collapses exactly there.`);
+      setText("#footer-clusters", fmtNum(app.raw.summary.cluster_count));
+    }
+
+    function renderFamilyLegend(app) {
+      const el = document.getElementById("family-legend");
+      if (!el) return;
+      el.innerHTML = app.familyAgg.map((f) => `
+        <div class="legend-item">
+          <span class="legend-swatch" style="background:${f.color}"></span>
+          <div>
+            <div>${escapeHtml(f.family)}</div>
+            <div class="muted">${fmtNum(f.count)} submissions in ${fmtNum(f.clusters)} clusters</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function redrawCharts(app) {
+      if (!window.d3) return;
+      drawFamilyStrip(app);
+      drawFamilyBars(app);
+      drawHeatmap(app);
+      drawResidualScatter(app);
+    }
+
+    function drawFamilyStrip(app) {
+      const root = document.getElementById("family-strip-chart");
+      if (!root) return;
+      root.innerHTML = "";
+      const width = Math.max(320, root.clientWidth);
+      const height = 76;
+      const margin = { top: 8, right: 8, bottom: 8, left: 8 };
+      const svg = d3.select(root).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`);
+
+      const data = app.familyAgg.filter((d) => d.count > 0);
+      const total = d3.sum(data, (d) => d.count);
+      let cursor = margin.left;
+      const usableWidth = width - margin.left - margin.right;
+      const stripY = 20;
+      const stripH = 22;
+
+      data.forEach((d, idx) => {
+        const w = idx === data.length - 1
+          ? (margin.left + usableWidth - cursor)
+          : Math.round((d.count / total) * usableWidth);
+        d._x = cursor;
+        d._w = Math.max(1, w);
+        cursor += d._w;
+      });
+
+      const g = svg.append("g");
+      g.selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", (d) => d._x)
+        .attr("y", stripY)
+        .attr("width", (d) => d._w)
+        .attr("height", stripH)
+        .attr("rx", 6)
+        .attr("fill", (d) => d.color)
+        .attr("stroke", "rgba(255,255,255,0.65)")
+        .attr("stroke-width", 1)
+        .style("cursor", "pointer")
+        .on("mouseenter mousemove", (event, d) => {
+          showTooltip(event, `
+            <div><strong>${escapeHtml(d.family)}</strong></div>
+            <div>${fmtNum(d.count)} non-full finals (${pct(d.pctOfNonFull)})</div>
+            <div>Appears in ${fmtNum(d.clusters)} of ${fmtNum(app.clusters.length)} analyzed clusters</div>
+            <div class="smallcaps" style="opacity:.85;">Click to filter explorer</div>
+          `);
+        })
+        .on("mouseleave", hideTooltip)
+        .on("click", (_, d) => {
+          app.state.selectedFamily = d.family;
+          syncExplorerControls(app);
+          refreshExplorer(app);
+        });
+
+      g.selectAll("text.segment-label")
+        .data(data.filter((d) => d._w > 80))
+        .join("text")
+        .attr("class", "segment-label")
+        .attr("x", (d) => d._x + 6)
+        .attr("y", stripY + 14)
+        .attr("fill", "rgba(255,255,255,0.92)")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("font-weight", 600)
+        .text((d) => `${d.family.replace(" / ", " / ")} · ${pct(d.pctOfNonFull)}`);
+
+      svg.append("text")
+        .attr("x", margin.left)
+        .attr("y", 13)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text(`All non-full finals analyzed so far · n = ${fmtNum(total)}`);
+
+      svg.append("text")
+        .attr("x", width - margin.right)
+        .attr("y", 56)
+        .attr("text-anchor", "end")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text("Click a segment to filter the explorer below");
+    }
+
+    function drawFamilyBars(app) {
+      const root = document.getElementById("family-bars-chart");
+      if (!root) return;
+      root.innerHTML = "";
+      const width = Math.max(320, root.clientWidth);
+      const data = app.familyAgg.filter((d) => d.count > 0);
+      const rowH = 28;
+      const margin = { top: 10, right: 76, bottom: 26, left: 190 };
+      const height = margin.top + margin.bottom + rowH * data.length;
+
+      const svg = d3.select(root).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`);
+
+      const x = d3.scaleLinear()
+        .domain([0, d3.max(data, (d) => d.count) || 1])
+        .nice()
+        .range([margin.left, width - margin.right]);
+      const y = d3.scaleBand()
+        .domain(data.map((d) => d.family))
+        .range([margin.top, height - margin.bottom])
+        .paddingInner(0.23);
+
+      const clusterX = d3.scaleLinear()
+        .domain([0, 1])
+        .range([margin.left, width - margin.right]);
+
+      svg.append("g")
+        .selectAll("rect")
+        .data(data)
+        .join("rect")
+        .attr("x", x(0))
+        .attr("y", (d) => y(d.family))
+        .attr("width", (d) => Math.max(1, x(d.count) - x(0)))
+        .attr("height", y.bandwidth())
+        .attr("rx", 6)
+        .attr("fill", (d) => d.color)
+        .attr("opacity", 0.9)
+        .style("cursor", "pointer")
+        .on("mouseenter mousemove", (event, d) => {
+          const topPatterns = d.rows.slice().sort((a, b) => d3.descending(a.cluster_count, b.cluster_count)).slice(0, 3);
+          showTooltip(event, `
+            <div><strong>${escapeHtml(d.family)}</strong></div>
+            <div>${fmtNum(d.count)} non-full finals (${pct(d.pctOfNonFull)})</div>
+            <div>${fmtNum(d.clusters)} clusters (${pct(d.pctOfClusters)})</div>
+            <div style="margin-top:.25rem;"><em>Top labels in this family</em></div>
+            ${topPatterns.map((p) => `<div>${fmtNum(p.cluster_count)} · ${escapeHtml(truncate(p.pattern_name, 62))}</div>`).join("")}
+          `);
+        })
+        .on("mouseleave", hideTooltip)
+        .on("click", (_, d) => {
+          app.state.selectedFamily = d.family;
+          syncExplorerControls(app);
+          refreshExplorer(app);
+        });
+
+      svg.append("g")
+        .selectAll("text.family-label")
+        .data(data)
+        .join("text")
+        .attr("x", margin.left - 8)
+        .attr("y", (d) => (y(d.family) || 0) + y.bandwidth() / 2 + 4)
+        .attr("text-anchor", "end")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 12)
+        .attr("fill", getCSS("--ink"))
+        .text((d) => d.family);
+
+      svg.append("g")
+        .selectAll("text.bar-value")
+        .data(data)
+        .join("text")
+        .attr("x", (d) => x(d.count) + 6)
+        .attr("y", (d) => (y(d.family) || 0) + y.bandwidth() / 2 + 4)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--ink-soft"))
+        .text((d) => `${fmtNum(d.count)} · ${fmtNum(d.clusters)} clusters`);
+
+      const axis = d3.axisBottom(x).ticks(Math.max(4, Math.floor((width - margin.left - margin.right) / 90))).tickFormat((d) => fmtShort(d));
+      svg.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(axis)
+        .call((g) => g.selectAll("text").attr("font-family", "IBM Plex Sans, sans-serif").attr("font-size", 11).attr("fill", getCSS("--muted")))
+        .call((g) => g.selectAll("path,line").attr("stroke", "rgba(109,123,134,0.35)"));
+
+      svg.append("text")
+        .attr("x", margin.left)
+        .attr("y", height - 5)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text("Affected non-full submissions (weighted)");
+    }
+
+    function drawHeatmap(app) {
+      const root = document.getElementById("heatmap-chart");
+      if (!root) return;
+      root.innerHTML = "";
+      root.style.overflowX = "auto";
+      const width = Math.max(320, root.clientWidth);
+      const clusters = app.topHeatmapClusters;
+      const families = [
+        "Task-specific logic rule",
+        "Sample overfitting / hard-coding",
+        "Control flow stops too early",
+        "Contract / I-O mismatch",
+        "Template left unfinished",
+        "Runtime crash",
+        "Syntax / non-parseable",
+      ].filter((f) => app.familyAgg.some((d) => d.family === f));
+
+      const margin = { top: 20, right: 8, bottom: 80, left: 220 };
+      const cellH = 24;
+      const height = margin.top + margin.bottom + clusters.length * cellH;
+      const innerW = width - margin.left - margin.right;
+      const cellW = Math.max(34, Math.floor(innerW / Math.max(1, families.length)));
+      const svgW = margin.left + margin.right + cellW * families.length;
+
+      const svg = d3.select(root).append("svg")
+        .attr("width", svgW)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${svgW} ${height}`)
+        .style("display", "block");
+
+      const color = d3.scaleSequential()
+        .domain([0, 0.7])
+        .interpolator((t) => d3.interpolateRgbBasis(["#fff9ef", "#fbd38d", "#f59e0b", "#b45309"])(t));
+
+      const x = d3.scaleBand().domain(families).range([margin.left, margin.left + families.length * cellW]).paddingInner(0.06);
+      const y = d3.scaleBand().domain(clusters.map((c) => c.cluster_id)).range([margin.top, margin.top + clusters.length * cellH]).paddingInner(0.08);
+
+      const rows = [];
+      for (const cluster of clusters) {
+        const familyMap = new Map(cluster.familyBreakdown.map((d) => [d.family, d]));
+        for (const family of families) {
+          const v = familyMap.get(family);
+          rows.push({
+            cluster,
+            family,
+            pct: v?.pct || 0,
+            count: v?.count || 0,
+          });
+        }
+      }
+
+      svg.append("g")
+        .selectAll("rect")
+        .data(rows)
+        .join("rect")
+        .attr("x", (d) => x(d.family))
+        .attr("y", (d) => y(d.cluster.cluster_id))
+        .attr("width", x.bandwidth())
+        .attr("height", y.bandwidth())
+        .attr("rx", 3)
+        .attr("fill", (d) => color(d.pct))
+        .attr("stroke", "rgba(255,255,255,0.75)")
+        .style("cursor", "pointer")
+        .on("mouseenter mousemove", (event, d) => {
+          showTooltip(event, `
+            <div><strong>${escapeHtml(d.cluster.cluster_id)} · ${escapeHtml(d.cluster.title)}</strong></div>
+            <div>${escapeHtml(d.family)}</div>
+            <div>${fmtNum(d.count)} submissions · ${pct(d.pct)} of non-full finals in this cluster</div>
+            <div>Residual Other: ${fmt1(d.cluster.residual?.pct ?? 0)}%</div>
+            <div class="smallcaps" style="opacity:.85;">Click row label or cell for case details</div>
+          `);
+        })
+        .on("mouseleave", hideTooltip)
+        .on("click", (_, d) => openClusterInExplorer(app, d.cluster.cluster_id));
+
+      svg.append("g")
+        .selectAll("text.row-label")
+        .data(clusters)
+        .join("text")
+        .attr("x", margin.left - 8)
+        .attr("y", (d) => (y(d.cluster_id) || 0) + y.bandwidth() / 2 + 4)
+        .attr("text-anchor", "end")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--ink"))
+        .style("cursor", "pointer")
+        .text((d) => `${d.cluster_id} · ${truncate(d.title, 28)}`)
+        .on("mouseenter mousemove", (event, d) => showTooltip(event, `
+            <div><strong>${escapeHtml(d.cluster_id)} · ${escapeHtml(d.title)}</strong></div>
+            <div>${fmtNum(d.outcomes.non_full_final_submissions || 0)} non-full finals</div>
+            <div>${fmtNum(d.outcomes.final_submitters || 0)} final submitters</div>
+            <div>Dominant pattern: ${escapeHtml(d.patterns[0]?.name || "n/a")}</div>
+        `))
+        .on("mouseleave", hideTooltip)
+        .on("click", (_, d) => openClusterInExplorer(app, d.cluster_id));
+
+      svg.append("g")
+        .selectAll("text.col-label")
+        .data(families)
+        .join("text")
+        .attr("x", (d) => (x(d) || 0) + x.bandwidth() / 2)
+        .attr("y", height - margin.bottom + 10)
+        .attr("text-anchor", "start")
+        .attr("transform", (d) => `rotate(35 ${(x(d) || 0) + x.bandwidth() / 2} ${height - margin.bottom + 10})`)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text((d) => d.replace(" / ", " / "));
+
+      const legendX = margin.left;
+      const legendY = height - 28;
+      const legendW = Math.min(220, svgW - margin.left - margin.right - 8);
+      const defs = svg.append("defs");
+      const lg = defs.append("linearGradient").attr("id", "heat-grad");
+      d3.range(0, 1.01, 0.1).forEach((t) => {
+        lg.append("stop").attr("offset", `${t * 100}%`).attr("stop-color", color(t * 0.7));
+      });
+      svg.append("rect")
+        .attr("x", legendX)
+        .attr("y", legendY)
+        .attr("width", legendW)
+        .attr("height", 10)
+        .attr("rx", 6)
+        .attr("fill", "url(#heat-grad)")
+        .attr("stroke", "rgba(212,201,183,0.6)");
+      svg.append("text")
+        .attr("x", legendX)
+        .attr("y", legendY - 5)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 10)
+        .attr("fill", getCSS("--muted"))
+        .text("Share of cluster non-full finals");
+      svg.append("text")
+        .attr("x", legendX)
+        .attr("y", legendY + 23)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 10)
+        .attr("fill", getCSS("--muted"))
+        .text("0%");
+      svg.append("text")
+        .attr("x", legendX + legendW)
+        .attr("y", legendY + 23)
+        .attr("text-anchor", "end")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 10)
+        .attr("fill", getCSS("--muted"))
+        .text("70%+");
+    }
+
+    function drawResidualScatter(app) {
+      const root = document.getElementById("residual-scatter-chart");
+      if (!root) return;
+      root.innerHTML = "";
+      const width = Math.max(320, root.clientWidth);
+      const height = 290;
+      const margin = { top: 12, right: 14, bottom: 34, left: 48 };
+
+      const data = app.clusters.map((c) => ({
+        cluster_id: c.cluster_id,
+        title: c.title,
+        non_full: c.outcomes.non_full_final_submissions || 0,
+        final_submitters: c.outcomes.final_submitters || 0,
+        residual_pct: c.residual?.pct || 0,
+      }));
+
+      const svg = d3.select(root).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", `0 0 ${width} ${height}`);
+
+      const x = d3.scaleLinear()
+        .domain([0, d3.max(data, (d) => d.non_full) || 1])
+        .nice()
+        .range([margin.left, width - margin.right]);
+      const y = d3.scaleLinear()
+        .domain([0, Math.max(5, d3.max(data, (d) => d.residual_pct) || 0)])
+        .nice()
+        .range([height - margin.bottom, margin.top]);
+      const r = d3.scaleSqrt()
+        .domain([0, d3.max(data, (d) => d.final_submitters) || 1])
+        .range([3.2, 12]);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x).ticks(6).tickFormat((d) => fmtShort(d)))
+        .call((g) => g.selectAll("text").attr("font-family", "IBM Plex Sans, sans-serif").attr("font-size", 11).attr("fill", getCSS("--muted")))
+        .call((g) => g.selectAll("path,line").attr("stroke", "rgba(109,123,134,0.35)"));
+
+      svg.append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(y).ticks(5).tickFormat((d) => `${d}%`))
+        .call((g) => g.selectAll("text").attr("font-family", "IBM Plex Sans, sans-serif").attr("font-size", 11).attr("fill", getCSS("--muted")))
+        .call((g) => g.selectAll("path,line").attr("stroke", "rgba(109,123,134,0.35)"));
+
+      const median = app.residualStats?.median ?? 0;
+      svg.append("line")
+        .attr("x1", margin.left)
+        .attr("x2", width - margin.right)
+        .attr("y1", y(median))
+        .attr("y2", y(median))
+        .attr("stroke", "rgba(15,108,122,0.45)")
+        .attr("stroke-dasharray", "5 4");
+
+      svg.append("text")
+        .attr("x", width - margin.right)
+        .attr("y", y(median) - 4)
+        .attr("text-anchor", "end")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 10)
+        .attr("fill", getCSS("--accent-2"))
+        .text(`Median residual ${fmt1(median)}%`);
+
+      svg.append("g")
+        .selectAll("circle")
+        .data(data)
+        .join("circle")
+        .attr("cx", (d) => x(d.non_full))
+        .attr("cy", (d) => y(d.residual_pct))
+        .attr("r", (d) => r(d.final_submitters))
+        .attr("fill", "rgba(15,108,122,0.35)")
+        .attr("stroke", "rgba(15,108,122,0.8)")
+        .attr("stroke-width", 1.2)
+        .style("cursor", "pointer")
+        .on("mouseenter mousemove", (event, d) => showTooltip(event, `
+          <div><strong>${escapeHtml(d.cluster_id)} · ${escapeHtml(d.title)}</strong></div>
+          <div>${fmtNum(d.non_full)} non-full finals</div>
+          <div>Residual Other: ${fmt1(d.residual_pct)}%</div>
+          <div>Total final submitters: ${fmtNum(d.final_submitters)}</div>
+        `))
+        .on("mouseleave", hideTooltip)
+        .on("click", (_, d) => openClusterInExplorer(app, d.cluster_id));
+
+      const annotateIds = new Set(["C017", "C013", "C011"]);
+      const ann = data.filter((d) => annotateIds.has(d.cluster_id));
+      svg.append("g")
+        .selectAll("text.annot")
+        .data(ann)
+        .join("text")
+        .attr("x", (d) => x(d.non_full) + r(d.final_submitters) + 4)
+        .attr("y", (d) => y(d.residual_pct) + 3)
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 10)
+        .attr("fill", getCSS("--ink-soft"))
+        .text((d) => `${d.cluster_id}`);
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height - 4)
+        .attr("text-anchor", "middle")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text("Cluster non-full finals");
+      svg.append("text")
+        .attr("transform", `translate(13 ${height / 2}) rotate(-90)`)
+        .attr("text-anchor", "middle")
+        .attr("font-family", "IBM Plex Sans, sans-serif")
+        .attr("font-size", 11)
+        .attr("fill", getCSS("--muted"))
+        .text("Residual Other (%)");
+    }
+
+    function renderCaseStudies(app) {
+      const root = document.getElementById("case-studies");
+      if (!root) return;
+      const cards = app.caseStudies.map((cluster) => caseCardHtml(cluster));
+      root.innerHTML = cards.join("");
+
+      root.querySelectorAll("[data-action='open-example']").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const clusterId = btn.getAttribute("data-cluster");
+          const patternIdx = Number(btn.getAttribute("data-pattern-index"));
+          const exampleIdx = Number(btn.getAttribute("data-example-index"));
+          openRepresentativeExample(clusterId, patternIdx, exampleIdx);
+        });
+      });
+
+      root.querySelectorAll("[data-action='open-report-preview']").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const href = btn.getAttribute("data-href");
+          const title = btn.getAttribute("data-title");
+          if (href) openRemoteTextPreview({ href, title, subtitle: "Cluster report (Markdown)", lang: "markdown" });
+        });
+      });
+
+      root.querySelectorAll("[data-action='open-problem-preview']").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const href = btn.getAttribute("data-href");
+          const title = btn.getAttribute("data-title");
+          if (href) openRemoteTextPreview({ href, title, subtitle: "Canonical problem JSON", lang: "json" });
+        });
+      });
+    }
+
+    function caseCardHtml(cluster) {
+      const topPatterns = cluster.patterns.slice(0, 3);
+      const dominantFamily = cluster.familyBreakdown[0];
+      const reportHref = cluster.reportHref || "#";
+      const problemHref = cluster.canonicalProblemHref || "#";
+
+      return `
+        <article class="case-card">
+          <div class="case-head">
+            <div>
+              <h3 class="case-title">${escapeHtml(cluster.cluster_id)} · ${escapeHtml(cluster.title)}</h3>
+              <div class="case-meta">
+                ${fmtNum(cluster.outcomes.non_full_final_submissions || 0)} non-full finals · residual ${fmt1(cluster.residual?.pct || 0)}%
+              </div>
+            </div>
+            ${dominantFamily ? familyChip(dominantFamily.family) : ""}
+          </div>
+          <div class="case-links">
+            <a class="btn" href="${escapeAttr(reportHref)}">Report</a>
+            <button class="btn" type="button" data-action="open-report-preview" data-href="${escapeAttr(reportHref)}" data-title="${escapeAttr(cluster.cluster_id + " · " + cluster.title)}">Preview report</button>
+            ${cluster.canonicalProblemHref ? `<a class="btn" href="${escapeAttr(problemHref)}">Problem JSON</a>` : ""}
+            ${cluster.canonicalProblemHref ? `<button class="btn" type="button" data-action="open-problem-preview" data-href="${escapeAttr(problemHref)}" data-title="${escapeAttr(cluster.cluster_id + " · " + cluster.title)}">Preview JSON</button>` : ""}
+          </div>
+          <ul class="mini-list">
+            ${topPatterns.map((p) => {
+              const ex = (p.representative_examples || []).find((e) => e.student_id && e.code);
+              const exButton = ex
+                ? `<button class="btn btn-accent" type="button" data-action="open-example" data-cluster="${escapeAttr(cluster.cluster_id)}" data-pattern-index="${escapeAttr(String(p.pattern_index || p.order || 1))}" data-example-index="1">Open example (${escapeHtml(ex.student_id.slice(0, 8))}...)</button>`
+                : "";
+              return `
+                <li>
+                  <div class="pattern-title">${escapeHtml(p.name)}</div>
+                  <div class="pattern-metric">${fmtNum(p._count)} submissions (${pct((p._pct || 0) / 100)}) · ${escapeHtml(p._family)}</div>
+                  <div class="mini-actions">${exButton}</div>
+                </li>
+              `;
+            }).join("")}
+          </ul>
+        </article>
+      `;
+    }
+
+    function renderRuntimeSubtypeList(app) {
+      const root = document.getElementById("runtime-subtypes");
+      if (!root) return;
+      const totalRuntime = d3.sum(app.runtimeSubtypeAgg, (d) => d.count) || 1;
+      root.innerHTML = `
+        <div style="display:grid;gap:0.38rem;margin-top:0.55rem;">
+          ${app.runtimeSubtypeAgg.slice(0, 8).map((d) => `
+            <div class="vf-row">
+              <div style="min-width:0;">
+                <div style="font-size:0.8rem;color:var(--ink);font-family:'IBM Plex Sans',sans-serif;">${escapeHtml(d.subtype)}</div>
+                <div class="vf-track"><div class="vf-fill" style="width:${Math.max(1, (d.count/totalRuntime)*100)}%; background: linear-gradient(90deg, rgba(194,65,12,.85), rgba(194,65,12,.35));"></div></div>
+              </div>
+              <div class="num" style="font-family:'IBM Plex Sans',sans-serif;font-size:0.78rem;color:var(--muted);">${fmtNum(d.count)} · ${pct(d.count/totalRuntime)}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function installStoryButtons(app) {
+      const btn = document.getElementById("open-pangram-example-inline");
+      if (btn) {
+        btn.addEventListener("click", () => {
+          const cluster = app.clusterMap.get("C013");
+          if (!cluster) return;
+          const pattern = cluster.patterns.find((p) => (p.name || "").toLowerCase().includes("returns inside the alphabet-check loop"));
+          if (!pattern) return;
+          openRepresentativeExample("C013", pattern.pattern_index || pattern.order || 1, 1);
+        });
+      }
+    }
+
+    function initExplorer(app) {
+      const familySelect = document.getElementById("ctrl-family");
+      const clusterSelect = document.getElementById("ctrl-cluster");
+      const searchInput = document.getElementById("ctrl-search");
+      const minCountInput = document.getElementById("ctrl-mincount");
+      const sortSelect = document.getElementById("ctrl-sort");
+      const resetBtn = document.getElementById("ctrl-reset");
+
+      familySelect.innerHTML = [
+        `<option value="all">All families</option>`,
+        ...app.familyOrder.map((family) => `<option value="${escapeAttr(family)}">${escapeHtml(family)}</option>`),
+      ].join("");
+
+      clusterSelect.innerHTML = [
+        `<option value="all">All clusters</option>`,
+        ...app.clusters
+          .slice()
+          .sort((a, b) => d3.ascending(a.cluster_id, b.cluster_id))
+          .map((c) => `<option value="${escapeAttr(c.cluster_id)}">${escapeHtml(c.cluster_id + " · " + truncate(c.title, 40))}</option>`),
+      ].join("");
+
+      searchInput.addEventListener("input", () => {
+        app.state.search = searchInput.value.trim();
+        refreshExplorer(app);
+      });
+      familySelect.addEventListener("change", () => {
+        app.state.selectedFamily = familySelect.value === "all" ? null : familySelect.value;
+        refreshExplorer(app);
+      });
+      clusterSelect.addEventListener("change", () => {
+        app.state.clusterFilter = clusterSelect.value;
+        refreshExplorer(app);
+      });
+      minCountInput.addEventListener("input", () => {
+        app.state.minCount = Number(minCountInput.value);
+        refreshExplorer(app);
+      });
+      sortSelect.addEventListener("change", () => {
+        app.state.sortBy = sortSelect.value;
+        refreshExplorer(app);
+      });
+      resetBtn.addEventListener("click", () => {
+        app.state.selectedFamily = null;
+        app.state.clusterFilter = "all";
+        app.state.search = "";
+        app.state.minCount = 10;
+        app.state.sortBy = "count";
+        syncExplorerControls(app);
+        refreshExplorer(app);
+      });
+
+      syncExplorerControls(app);
+      refreshExplorer(app);
+    }
+
+    function syncExplorerControls(app) {
+      const familySelect = document.getElementById("ctrl-family");
+      const clusterSelect = document.getElementById("ctrl-cluster");
+      const searchInput = document.getElementById("ctrl-search");
+      const minCountInput = document.getElementById("ctrl-mincount");
+      const sortSelect = document.getElementById("ctrl-sort");
+      if (!familySelect) return;
+      familySelect.value = app.state.selectedFamily || "all";
+      clusterSelect.value = app.state.clusterFilter || "all";
+      searchInput.value = app.state.search || "";
+      minCountInput.value = String(app.state.minCount || 1);
+      sortSelect.value = app.state.sortBy || "count";
+    }
+
+    function refreshExplorer(app) {
+      const tbody = document.getElementById("explorer-tbody");
+      const summary = document.getElementById("explorer-summary");
+      if (!tbody || !summary) return;
+
+      const q = (app.state.search || "").toLowerCase();
+      const selectedFamily = app.state.selectedFamily;
+      const clusterFilter = app.state.clusterFilter;
+      const minCount = app.state.minCount || 1;
+      const sortBy = app.state.sortBy || "count";
+
+      let rows = app.patternRows.filter((row) => {
+        if ((row.cluster_count || 0) < minCount) return false;
+        if (selectedFamily && row.primaryFamily !== selectedFamily) return false;
+        if (clusterFilter && clusterFilter !== "all" && row.cluster_id !== clusterFilter) return false;
+        if (q) {
+          const hay = `${row.pattern_name} ${row.cluster_title} ${row.cluster_id} ${row.primaryFamily}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      rows = rows.map((row) => {
+        const cluster = app.clusterMap.get(row.cluster_id);
+        const pattern = cluster?.patterns.find((p) => (p.pattern_index || p.order) === row.pattern_index) || null;
+        return { ...row, _cluster: cluster, _pattern: pattern };
+      });
+
+      if (sortBy === "count") {
+        rows.sort((a, b) => d3.descending(a.cluster_count || 0, b.cluster_count || 0) || d3.ascending(a.cluster_id, b.cluster_id));
+      } else if (sortBy === "pct") {
+        rows.sort((a, b) => d3.descending(a.cluster_pct_non_full || 0, b.cluster_pct_non_full || 0) || d3.descending(a.cluster_count || 0, b.cluster_count || 0));
+      } else if (sortBy === "cluster") {
+        rows.sort((a, b) => d3.ascending(a.cluster_id, b.cluster_id) || d3.descending(a.cluster_count || 0, b.cluster_count || 0));
+      } else if (sortBy === "pattern") {
+        rows.sort((a, b) => d3.ascending(a.pattern_name, b.pattern_name));
+      }
+
+      const shown = rows.slice(0, 250);
+      summary.textContent = `${fmtNum(rows.length)} pattern rows match the current filters${rows.length > shown.length ? ` (showing top ${fmtNum(shown.length)})` : ""}. Click a row for details.`;
+
+      tbody.innerHTML = shown.map((row) => {
+        const key = patternRowKey(row);
+        const selected = app.state.selectedPatternRowKey === key ? "selected" : "";
+        return `
+          <tr class="${selected}" data-key="${escapeAttr(key)}">
+            <td>
+              <div class="pattern-cell">
+                <strong>${escapeHtml(row.pattern_name)}</strong>
+                <div class="cluster-ref">${escapeHtml(row.cluster_id)} · ${escapeHtml(truncate(row.cluster_title, 46))}</div>
+              </div>
+            </td>
+            <td class="num">${fmtNum(row.cluster_count || 0)}</td>
+            <td class="num">${fmt1(row.cluster_pct_non_full || 0)}%</td>
+            <td>${familyChip(row.primaryFamily)}</td>
+          </tr>
+        `;
+      }).join("");
+
+      tbody.querySelectorAll("tr").forEach((tr) => {
+        tr.addEventListener("click", () => {
+          const key = tr.getAttribute("data-key");
+          app.state.selectedPatternRowKey = key;
+          renderPatternDetail(app, key);
+          [...tbody.querySelectorAll("tr.selected")].forEach((r) => r.classList.remove("selected"));
+          tr.classList.add("selected");
+        });
+      });
+
+      if (!app.state.selectedPatternRowKey && shown[0]) {
+        const key = patternRowKey(shown[0]);
+        app.state.selectedPatternRowKey = key;
+      }
+
+      renderPatternDetail(app, app.state.selectedPatternRowKey, shown);
+    }
+
+    function renderPatternDetail(app, key, currentRows) {
+      const panel = document.getElementById("pattern-detail-panel");
+      if (!panel) return;
+      const rows = currentRows || app.patternRows;
+      let row = rows.find((r) => patternRowKey(r) === key);
+      if (!row) row = app.patternRows.find((r) => patternRowKey(r) === key);
+      if (!row) {
+        panel.innerHTML = `<div class="muted" style="font-family:'IBM Plex Sans',sans-serif;font-size:0.88rem;">Select a pattern row to inspect details.</div>`;
+        return;
+      }
+
+      const cluster = app.clusterMap.get(row.cluster_id);
+      const pattern = cluster?.patterns.find((p) => (p.pattern_index || p.order) === row.pattern_index) || null;
+      if (!cluster || !pattern) {
+        panel.innerHTML = `<div class="muted">Pattern details not found in cluster payload.</div>`;
+        return;
+      }
+
+      const examples = (pattern.representative_examples || []).filter((e) => e.student_id);
+      const reportHref = cluster.reportHref || "#";
+      const problemHref = cluster.canonicalProblemHref || null;
+      const vectors = pattern.dominant_private_case_vectors || [];
+      const scores = pattern.score_distribution_top || [];
+      const vfreqs = pattern.variant_frequencies || [];
+
+      panel.innerHTML = `
+        <h4>${escapeHtml(pattern.name)}</h4>
+        <div class="detail-sub">${escapeHtml(cluster.cluster_id)} · ${escapeHtml(cluster.title)}</div>
+        <div class="mini-actions" style="margin-top:0.45rem;">
+          ${familyChip(row.primaryFamily)}
+          <a class="btn" href="${escapeAttr(reportHref)}">Report</a>
+          <button class="btn" type="button" id="detail-open-report">Preview report</button>
+          ${problemHref ? `<a class="btn" href="${escapeAttr(problemHref)}">Problem JSON</a>` : ""}
+          ${problemHref ? `<button class="btn" type="button" id="detail-open-problem">Preview JSON</button>` : ""}
+        </div>
+
+        <div class="detail-block">
+          <div class="detail-grid">
+            <div><span class="label">Affected submissions</span><div>${fmtNum(pattern._count)}</div></div>
+            <div><span class="label">Share of cluster non-full</span><div>${fmt1(pattern._pct || 0)}%</div></div>
+            <div><span class="label">Residual Other in cluster</span><div>${fmt1(cluster.residual?.pct || 0)}%</div></div>
+            <div><span class="label">Examples in report</span><div>${fmtNum(examples.length)}</div></div>
+          </div>
+        </div>
+
+        ${pattern.interpretation ? `
+          <div class="detail-block">
+            <div class="label" style="font-family:'IBM Plex Sans',sans-serif;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;">Interpretation</div>
+            <div style="font-family:'IBM Plex Sans',sans-serif;font-size:.85rem;line-height:1.35;color:var(--ink-soft);">${escapeHtml(pattern.interpretation)}</div>
+          </div>
+        ` : ""}
+
+        ${vfreqs.length ? `
+          <div class="detail-block">
+            <div class="label" style="font-family:'IBM Plex Sans',sans-serif;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;">Variant frequencies</div>
+            <div class="detail-vfreq">
+              ${vfreqs.map((vf) => `
+                <div>
+                  <div class="vf-row">
+                    <div style="font-family:'IBM Plex Sans',sans-serif;font-size:.78rem;min-width:0;">${escapeHtml(vf.variant)}<div class="vf-track"><div class="vf-fill" style="width:${Math.max(1, vf.pct || 0)}%"></div></div></div>
+                    <div class="num" style="font-family:'IBM Plex Sans',sans-serif;font-size:.76rem;color:var(--muted);">${fmtNum(vf.count || 0)}/${fmtNum(vf.total || 0)} · ${fmt1(vf.pct || 0)}%</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        ` : ""}
+
+        ${vectors.length ? `
+          <div class="detail-block">
+            <div class="label" style="font-family:'IBM Plex Sans',sans-serif;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;">Dominant private-case vectors</div>
+            <ul class="detail-list">
+              ${vectors.map((v) => `<li><code>${escapeHtml(v.vector || "")}</code> x ${fmtNum(v.count || 0)}</li>`).join("")}
+            </ul>
+          </div>
+        ` : ""}
+
+        ${scores.length ? `
+          <div class="detail-block">
+            <div class="label" style="font-family:'IBM Plex Sans',sans-serif;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;">Top score distribution</div>
+            <ul class="detail-list">
+              ${scores.map((s) => `<li>${escapeHtml(String(s.score_label ?? s.score))} x ${fmtNum(s.count || 0)}</li>`).join("")}
+            </ul>
+          </div>
+        ` : ""}
+
+        <div class="detail-block">
+          <div class="label" style="font-family:'IBM Plex Sans',sans-serif;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:.06em;">Representative examples</div>
+          ${examples.length ? `
+            <div class="mini-actions" style="margin-top:0.4rem;">
+              ${examples.slice(0, 4).map((ex, idx) => `
+                <button class="btn btn-accent" type="button" data-detail-example="${idx + 1}">
+                  ${escapeHtml((ex.student_id || "").slice(0, 8))}... · ${escapeHtml(String(ex.score_label ?? ex.score))}
+                </button>
+              `).join("")}
+            </div>
+          ` : `<div class="muted" style="font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;margin-top:.25rem;">No code snippet embedded for this pattern in the current report.</div>`}
+        </div>
+      `;
+
+      const detailOpenReport = panel.querySelector("#detail-open-report");
+      if (detailOpenReport) {
+        detailOpenReport.addEventListener("click", () => openRemoteTextPreview({
+          href: reportHref,
+          title: `${cluster.cluster_id} · ${cluster.title}`,
+          subtitle: "Cluster report (Markdown)",
+          lang: "markdown"
+        }));
+      }
+      const detailOpenProblem = panel.querySelector("#detail-open-problem");
+      if (detailOpenProblem && problemHref) {
+        detailOpenProblem.addEventListener("click", () => openRemoteTextPreview({
+          href: problemHref,
+          title: `${cluster.cluster_id} · ${cluster.title}`,
+          subtitle: "Canonical problem JSON",
+          lang: "json"
+        }));
+      }
+      panel.querySelectorAll("[data-detail-example]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const exIdx = Number(btn.getAttribute("data-detail-example"));
+          openRepresentativeExample(cluster.cluster_id, pattern.pattern_index || pattern.order || 1, exIdx);
+        });
+      });
+    }
+
+    function wireGlobalInteractions(app) {
+      modal.addEventListener("click", (event) => {
+        const rect = modal.getBoundingClientRect();
+        const inDialog = rect.top <= event.clientY && event.clientY <= rect.bottom &&
+          rect.left <= event.clientX && event.clientX <= rect.right;
+        if (!inDialog) modal.close();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") hideTooltip();
+      });
+    }
+
+    function openClusterInExplorer(app, clusterId) {
+      app.state.clusterFilter = clusterId;
+      syncExplorerControls(app);
+      refreshExplorer(app);
+      const explorerTbody = document.getElementById("explorer-tbody");
+      const explorer = explorerTbody ? explorerTbody.closest(".figure") : null;
+      if (explorer) explorer.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function patternRowKey(row) {
+      return `${row.cluster_id}::${row.pattern_index}`;
+    }
+
+    function localHref(path) {
+      if (!path) return null;
+      return String(path).replace(/^analysis\//, "");
+    }
+
+    function openRepresentativeExample(clusterId, patternIndex, exampleIndex = 1) {
+      if (!APP) return;
+      const cluster = APP.clusterMap.get(clusterId);
+      if (!cluster) return;
+      const pattern = cluster.patterns.find((p) => (p.pattern_index || p.order) === Number(patternIndex));
+      if (!pattern) return;
+      const examples = (pattern.representative_examples || []).filter((e) => e.student_id && typeof e.code === "string");
+      const ex = examples[Math.max(0, Number(exampleIndex) - 1)] || examples[0];
+      if (!ex) return;
+
+      showTextModal({
+        title: `${cluster.cluster_id} · ${cluster.title}`,
+        subtitle: `${pattern.name}`,
+        caption: `Representative example from actual student submission. Student ID ${ex.student_id}. Summary: ${ex.summary || "n/a"}. Score: ${ex.score_label ?? ex.score}. Private-case vector: ${ex.vector || "n/a"}.`,
+        code: ex.code || "",
+        lang: ex.code_lang || "python",
+        openHref: cluster.reportHref,
+      });
+    }
+
+    async function openRemoteTextPreview({ href, title, subtitle, lang }) {
+      try {
+        const resp = await fetch(href, { cache: "no-store" });
+        if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}`);
+        const text = await resp.text();
+        const trimmed = trimPreview(text, lang);
+        showTextModal({
+          title,
+          subtitle,
+          caption: `Preview of ${href}. Showing ${trimmed.note}. Use "Open file" for the full source.`,
+          code: trimmed.text,
+          lang,
+          openHref: href,
+        });
+      } catch (err) {
+        showTextModal({
+          title,
+          subtitle,
+          caption: `Could not fetch ${href}: ${err.message || err}`,
+          code: "",
+          lang: "text",
+          openHref: href,
+        });
+      }
+    }
+
+    function trimPreview(text, lang) {
+      const lines = String(text).split("\n");
+      const maxLines = lang === "json" ? 180 : 220;
+      if (lines.length <= maxLines) {
+        return { text, note: `${lines.length} lines (full file)` };
+      }
+      return {
+        text: lines.slice(0, maxLines).join("\n") + `\n\n... [trimmed ${lines.length - maxLines} more lines]`,
+        note: `the first ${maxLines} of ${lines.length} lines`,
+      };
+    }
+
+    function showTextModal({ title, subtitle = "", caption = "", code = "", lang = "text", openHref = null }) {
+      modalTitle.textContent = title || "Preview";
+      modalSubtitle.textContent = subtitle || "";
+      modalCaption.textContent = caption || "";
+      modalCode.className = "";
+      modalCode.classList.add(`language-${lang}`);
+      modalCode.textContent = code || "";
+      if (openHref) {
+        modalOpenLink.style.display = "inline-flex";
+        modalOpenLink.href = openHref;
+      } else {
+        modalOpenLink.style.display = "none";
+        modalOpenLink.removeAttribute("href");
+      }
+      modal.showModal();
+      if (window.hljs) {
+        try { window.hljs.highlightElement(modalCode); } catch (_) {}
+      }
+    }
+
+    function showTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.classList.add("show");
+      const pad = 12;
+      const rect = tooltip.getBoundingClientRect();
+      let x = event.clientX + 12;
+      let y = event.clientY + 12;
+      if (x + rect.width > window.innerWidth - pad) x = event.clientX - rect.width - 12;
+      if (y + rect.height > window.innerHeight - pad) y = event.clientY - rect.height - 12;
+      tooltip.style.left = `${Math.max(pad, x)}px`;
+      tooltip.style.top = `${Math.max(pad, y)}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("show");
+    }
+
+    function familyChip(family) {
+      const color = FAMILY_COLORS[family] || FAMILY_COLORS["Other / unknown"];
+      return `<span class="family-chip"><span class="chip-dot" style="background:${color}"></span>${escapeHtml(family)}</span>`;
+    }
+
+    function getCSS(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function setText(selector, text) {
+      const el = document.querySelector(selector);
+      if (el) el.textContent = text;
+    }
+
+    function fmtNum(n) {
+      return new Intl.NumberFormat("en-US").format(Number(n || 0));
+    }
+
+    function fmtShort(n) {
+      const num = Number(n || 0);
+      if (num >= 1_000_000) return `${(num / 1_000_000).toFixed(num >= 10_000_000 ? 0 : 1)}M`;
+      if (num >= 1_000) return `${(num / 1_000).toFixed(num >= 10_000 ? 0 : 1)}k`;
+      return String(num);
+    }
+
+    function fmt1(n) {
+      return Number(n || 0).toFixed(1);
+    }
+
+    function pct(value) {
+      return `${(Number(value || 0) * 100).toFixed(1)}%`;
+    }
+
+    function truncate(text, max) {
+      const s = String(text || "");
+      if (s.length <= max) return s;
+      return s.slice(0, Math.max(0, max - 1)) + "...";
+    }
+
+    function debounce(fn, ms) {
+      let t = null;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+      };
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value);
+    }
+  })();
+  </script>
+</body>
+</html>
