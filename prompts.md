@@ -797,9 +797,9 @@ These are the findings that shape everything below.
 
 **Genuine logic failure is the single largest failure bucket** — roughly 3x the combined syntax gates. The formatting tax is negligible (0.25%).
 
-**The data has two tracks.** 23 of 35 namespaces have zero submission capture (a data pipeline issue, not student behaviour). Track A (12 submission-positive namespaces, \~42,918 submitter rows + \~11,112 non-submitter rows) has private test results. Track B (23 zero-submission namespaces, \~97,748 rows) has public test\_run results only.
+**The data has two tracks.** 23 of 35 namespaces have zero submission capture (a data pipeline issue, not student behaviour). Track A (12 submission-positive namespaces, \~42,918 submitter rows + \~11,112 non-submitter rows) has private test results. Track B (23 zero-submission namespaces, \~97,748 rows) has public test_run results only.
 
-**The S2 self-loop is the dominant "death spiral."** Students in State S2 (parseable code, zero public tests passing) have a 78.93% probability of remaining in S2 at the next test\_run. This is a debugging and problem-decomposition gap, not a syntax gap.
+**The S2 self-loop is the dominant "death spiral."** Students in State S2 (parseable code, zero public tests passing) have a 78.93% probability of remaining in S2 at the next test_run. This is a debugging and problem-decomposition gap, not a syntax gap.
 
 **Test cases are heavily redundant.** 34.46% of within-question item pairs have phi > 0.90\. Cronbach's alpha > 0.97 across namespaces.
 
@@ -840,7 +840,7 @@ Thrashers spend 2.2x the time of incremental debuggers but achieve much worse ou
 
 **7a. Fix the submission capture pipeline.**
 
-23/35 namespaces have zero submission events. This is an instrumentation issue — students in these namespaces have test\_run activity (and 48.76% passed all public tests in at least one run) but no submissions are recorded. Without fixing this, 64% of student-question rows lack private test results and formal scores.
+23/35 namespaces have zero submission events. This is an instrumentation issue — students in these namespaces have test_run activity (and 48.76% passed all public tests in at least one run) but no submissions are recorded. Without fixing this, 64% of student-question rows lack private test results and formal scores.
 
 Investigate:
 
@@ -910,7 +910,7 @@ Specific targets: the high-thrash questions named in 7c.
 
 **7g. Investigate variant equivalence.**
 
-Step 6 found some variant pairs with material θ differences after linking (e.g., ns\_25t1\_py22\_1 vs \_2: +0.653). For variant pairs with large differences:
+Step 6 found some variant pairs with material θ differences after linking (e.g., ns_25t1_py22_1 vs \_2: +0.653). For variant pairs with large differences:
 
 - Review whether question content is truly equivalent in difficulty.
 - Check whether student assignment to variants is random or cohort-based. If cohort-based, the difference may reflect the population, not the instrument.
@@ -947,7 +947,7 @@ For students who took both waves (\~4,290 in 25t1, \~2,933 in 25t2, \~2,682 in 2
 - Do "skeleton-only" students in Wave 1 show any engagement improvement in Wave 2?
 - Do "regression" students in Wave 1 learn to maintain working code in Wave 2?
 
-4. **State-transition improvement.** Compare the student's dominant state in Wave 1 (what state they spent the most test\_runs in) to their dominant state in Wave 2\. A shift from dominant-S2 to dominant-S3 or S4 is progress even if the final score doesn't change much.
+4. **State-transition improvement.** Compare the student's dominant state in Wave 1 (what state they spent the most test_runs in) to their dominant state in Wave 2\. A shift from dominant-S2 to dominant-S3 or S4 is progress even if the final score doesn't change much.
 
 **8b. Cross-term analysis for repeat students (paired comparisons).**
 
@@ -1041,12 +1041,12 @@ This is directly computable from existing Step 3 and Step 5 outputs (`structural
 
 Build the usage-vs-mastery table:
 
-| Concept             | Relevant Construct(s)                   | Usage Rate (ever used in attempt) | Mastery Rate (among users) | Gap Type |
-| ------------------- | --------------------------------------- | --------------------------------- | -------------------------- | -------- |
-| Loops               | for\_loop (46.71%), while\_loop (5.13%) | ?                                 | ?                          | ?        |
-| List comprehensions | list\_comp (4.53%)                      | ?                                 | ?                          | ?        |
-| Dictionaries        | dict\_comp (0.41%)                      | ?                                 | ?                          | ?        |
-| Error handling      | try\_stmt (1.45%)                       | ?                                 | ?                          | ?        |
+| Concept             | Relevant Construct(s)                 | Usage Rate (ever used in attempt) | Mastery Rate (among users) | Gap Type |
+| ------------------- | ------------------------------------- | --------------------------------- | -------------------------- | -------- |
+| Loops               | for_loop (46.71%), while_loop (5.13%) | ?                                 | ?                          | ?        |
+| List comprehensions | list_comp (4.53%)                     | ?                                 | ?                          | ?        |
+| Dictionaries        | dict_comp (0.41%)                     | ?                                 | ?                          | ?        |
+| Error handling      | try_stmt (1.45%)                      | ?                                 | ?                          | ?        |
 
 For each concept, classify the gap:
 
@@ -1113,7 +1113,7 @@ Step 5 classified 52.64% of attempts into no named archetype. Before presenting 
 **Option A: Refine archetype rules.** The current rules are strict. Examine the feature distributions of "Other" attempts:
 
 - What fraction are "near-steady-builder" (mostly monotonic improvement, but with one or two dips)?
-- What fraction are "moderate effort, moderate outcome" (median test\_run count, some test passes, no strong pattern)?
+- What fraction are "moderate effort, moderate outcome" (median test_run count, some test passes, no strong pattern)?
 - What fraction are "late regression" (good progress until the last few runs, then a decline)?
 
 Relax the thresholds or add 2–3 new named archetypes to cover the most common "Other" patterns.
@@ -1367,8 +1367,8 @@ Then apply it for one question, share the result, and get feedback.
 This is a great start! Make a few changes:
 
 - Cluster questions. Some questions are very similar. Cluster the questions themselves first, if they're nearly semantically identical, and mention each variant by showing the full code base for one question as example, then mentioning how the others are different. Then perform this analysis at a question level.
-- Create a separate analysis/ERRORS-*.md for each question cluster. Begin by finding the cluster for the question you just analyzed and move the analysis there (naming the file appropriately) and extending the analysis to the other questions in the cluster.
-- Replace analysis/ERRORS.md listing all the question clusters along with their variations and the number of submissions for each question. This will be the "index" of the error analyses and should link to the specific analysis/ERRORS-*.md files for each cluster. (Link to the files even before they're created. This file will serve as the reference to create future files.)
+- Create a separate analysis/ERRORS-\*.md for each question cluster. Begin by finding the cluster for the question you just analyzed and move the analysis there (naming the file appropriately) and extending the analysis to the other questions in the cluster.
+- Replace analysis/ERRORS.md listing all the question clusters along with their variations and the number of submissions for each question. This will be the "index" of the error analyses and should link to the specific analysis/ERRORS-\*.md files for each cluster. (Link to the files even before they're created. This file will serve as the reference to create future files.)
 - Ensure that the representative examples are from actual student submissions and mention the student ID (which is already an anonymized hash).
 
 Do this first, share the result and get feedback. Then we can proceed to the next question cluster.
@@ -1425,7 +1425,7 @@ Think carefully about the best data structure for this JSON to ensure it capture
 
 ## Visualize
 
-Using analysis/README.md, prompts.md, analysis/evaluation.json, analysis/* any other available content, write a **Narrative-driven Data Story** that synthesizes the patterns of student errors into a compelling narrative.
+Using analysis/README.md, prompts.md, analysis/evaluation.json, analysis/\* any other available content, write a **Narrative-driven Data Story** that synthesizes the patterns of student errors into a compelling narrative.
 
 The objective is to help the reader understand the nature of errors students make (synthesizing across the different questions), why they make them, and what can be done about it — all through a narrative that is engaging, insightful, and **ACTIONABLE**.
 
@@ -1444,6 +1444,43 @@ Write like Malcolm Gladwell. Visualize like the NYT graphics team. Think like a 
 Beauty and aesthetics are key.
 
 Create this as a single errors.html (under analysis/) that loads errors.json and renders the narrative.
+
+### Update visualization with table and popups
+
+I renamed `analysis/errors.html` to `analysis/errors-codex.html` and had Claude Code create a new `analysis/errors.html`. Read this new `analysis/errors.html` and update it to include a table covering the Cluster List from analysis/ERRORS.md. Show
+
+- Cluster: `C001 - Deinterleave Even and Odd Indices in String`
+- Question: `ns_25t2_py12_1/6` (canonical variant)
+- Variants: `4`
+- Submitters: `578`
+- Non-full: `108`
+- Key error summary (analyzed): Common mistakes: incorrect deinterleaving logic (general logic failure), hard-codes sample outputs instead of deinterleaving the input string generically, and uses s.index(char) while iterating characters, so duplicate characters get the wrong parity/index. Also many syntax/empty code, missing returns, and runtime crashes.
+
+Clicking on any row should open a popup with the corresponding `analysis/ERRORS-cluster*.md` file rendered as HTML with syntax highlighting.
+
+Also, ensure that clicking on any question, e.g. `ns_25t2_py12_1/6`, `ns_25t2_py21_2/18`, etc. opens a popup with the problem statement and test cases for that question, as well as the result and error statistics, so readers can understand the context of the errors.
+Update the `Pass vs. fail by question — sorted from hardest to easiest` and `Failure rate vs. question popularity — each dot is one question` visualizations to open the same popup when clicking on a question.
+Any reference to a question should open the same popup for that question.
+
+Update the `Seven Fingerprints` section so that clicking on any fingerprint opens a popup with comprehensive details about each archetype, including illustrations about their process patterns, performance statistics, and any other data & analysis available about them.
+Any reference to an archetype/fingerprint in the narrative should open the same popup for that archetype.
+
+Update the chart under `What went wrong — 665 failing pangram submissions, broken down` so that clicking on any error pattern opens a popup showing examples of actual student code snippets that exhibit that error pattern, along with any other relevant data.
+Any reference to an error pattern for a question in the narrative should open the same popup.
+
+### Improve the narrative
+
+- Ensure that the table in Cluster List is in a wide column. Allow sorting it by any column.
+- Instead of rendering the Markdown when any row in the Cluster List table is clicked, open a popup with the same information rendered via `analysis/errors.json`, structured in a similar but much richer, hyperlinked way. Remove the "(from analysis/ERRORS.md)" part from the title but clicking on it should render `analysis/ERRORS.md` in the popup with syntax highlighting.
+- In the popup for the archetypes/fingerprints, include actual examples of student timelines (along with readable timestamps, e.g. 1:30 pm) that exemplify each archetype, along with annotations explaining how the timeline illustrates the archetype's characteristics / steps. Literally show one below the other, for a student, the sequence: the step (and step description), timestamp, the code, the test results, and any other relevant data. This will make the archetype descriptions much more concrete and actionable.
+
+### Improve the narrative 2
+
+- In the popup for the archetypes/fingerprints, when showing actual examples of student timelines, show it using a stepper. We should be able to see only one step (i.e. save, submission, etc.) at a time, with the code on the right and the other details on the left. Clicking on a "next" button or any stepper should update to the appropriate step. But the data we want to show remains the same.
+- When a popup is opened, ensure that the scroll is at the top. Otherwise, after scrolling down and clicking to open a popup, the new popup opens scrolled down, which is confusing.
+- When showing the actual student example in the cluster - error pattern popups, list all the tests, results, and score for each explicitly. (Currently we show the vector, but that's not immediately understandable.)
+- Instead of showing popup notes like "Question context popup" or "Error pattern popup" showing up as cards in .pop-main, show a small tag at the right of the .pop-toolbar indicating "Question context" or "Error pattern" with a tooltip that explains what it means.
+- In the "What Should Change" section, link to popups wherever relevant - or introduce relevant examples in brackets with popups where that will help the reader understand the context better. Don't over-do this, though. Smooth flow of the narrative is key, so only add popups where they will clearly add value and insight.
 
 ## Visualize report
 

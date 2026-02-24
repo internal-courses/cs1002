@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -59,6 +60,11 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 /* Code triggers */
 .ct{border-bottom:1.5px dashed var(--blue);color:var(--blue);cursor:pointer;transition:opacity .15s}
 .ct:hover{opacity:.72}
+.xref{border-bottom:1px dashed currentColor;cursor:pointer;transition:opacity .15s}
+.xref:hover{opacity:.7}
+.qref{color:var(--blue)}
+.aref{color:var(--purple)}
+.pref{color:var(--red)}
 
 /* Callout */
 .callout{background:var(--bg-alt);border-left:4px solid var(--amber);padding:18px 22px;margin:32px 0;font-family:var(--sans);font-size:13.5px;line-height:1.6}
@@ -100,13 +106,105 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 /* Popup */
 #pop{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 #pop.on{opacity:1;pointer-events:all}
-.pop-card{background:#1e1b16;border-radius:8px;max-width:720px;width:92vw;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pop-card{background:#1e1b16;border-radius:8px;max-width:1100px;width:94vw;max-height:88vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column}
 .pop-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 12px;border-bottom:1px solid #333}
 .pop-title{font-family:var(--sans);font-size:12px;font-weight:600;color:#f9d4a0;text-transform:uppercase;letter-spacing:.08em}
 .pop-x{background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1;padding:0 0 0 14px;flex-shrink:0}
 .pop-x:hover{color:#fff}
 .pop-card pre{margin:0;border-radius:0;font-size:13px;line-height:1.6}
-.pop-cap{font-family:var(--sans);font-size:12px;color:#777;padding:14px 22px;line-height:1.55;border-top:1px solid #333}
+.pop-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 22px;border-bottom:1px solid #2f2a23;background:#191611}
+.pop-toolbar a,.pop-toolbar button{font-family:var(--sans);font-size:11px;border:1px solid #3e372f;background:#221d17;color:#ddd;padding:5px 9px;border-radius:999px;text-decoration:none;cursor:pointer}
+.pop-toolbar a:hover,.pop-toolbar button:hover{background:#2b241c;border-color:#574a3d}
+.pop-toolbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pop-toolbar-spacer{flex:1 1 auto}
+.pop-toolbar-tag{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:10.5px;line-height:1;padding:6px 9px;border-radius:999px;border:1px solid #5a4a36;background:#2b2219;color:#f4e8cf;white-space:nowrap}
+.pop-toolbar-tag .i{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:999px;border:1px solid #7c6b57;font-size:10px;color:#d7ccb9}
+.pop-main{overflow:auto;padding:0;flex:1}
+.pop-body{padding:16px 22px 18px;color:#ece7de;font-family:var(--sans);font-size:13px;line-height:1.55}
+.pop-body h1,.pop-body h2,.pop-body h3,.pop-body h4{font-family:var(--serif);line-height:1.2;color:#f4e8cf;margin:12px 0 8px}
+.pop-body h1{font-size:1.45rem}.pop-body h2{font-size:1.2rem}.pop-body h3{font-size:1.02rem}.pop-body h4{font-size:.95rem}
+.pop-body p{margin:0 0 .9em}
+.pop-body a{color:#93c5fd}
+.pop-body code{font-family:var(--mono);font-size:.92em;background:#18140f;border:1px solid #31281f;border-radius:4px;padding:.1em .25em}
+.pop-body pre{border:1px solid #332b22;border-radius:6px;overflow:auto;background:#0f0d0b;margin:.75em 0}
+.pop-body pre code{background:transparent;border:none;padding:0}
+.pop-body table{width:100%;border-collapse:collapse;margin:.7em 0;font-size:12px}
+.pop-body th,.pop-body td{border:1px solid #342d25;padding:6px 8px;vertical-align:top}
+.pop-body th{background:#211c16;color:#d7cec0;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.pop-body details{border:1px solid #332b22;border-radius:6px;padding:8px 10px;margin:.65em 0;background:#17130f}
+.pop-body summary{cursor:pointer;font-weight:600;color:#efe1c6}
+.pop-cap{font-family:var(--sans);font-size:12px;color:#b0a79a;padding:12px 22px;line-height:1.55;border-top:1px solid #333;background:#191611}
+.pop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:8px 0 12px}
+.pop-kv{border:1px solid #332b22;border-radius:6px;background:#17130f;padding:9px}
+.pop-kv .k{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#a89b88;margin-bottom:4px}
+.pop-kv .v{font-family:var(--sans);font-size:14px;color:#f0e7da;font-weight:600}
+.pop-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:11px;color:#ddd;border:1px solid #3a3128;background:#1b1712;border-radius:999px;padding:4px 9px;margin:2px 4px 2px 0}
+.pop-badge{display:inline-block;font-family:var(--sans);font-size:10px;background:#2a221a;border:1px solid #43392f;border-radius:999px;padding:2px 6px;color:#d8cebf;margin-left:6px}
+.pop-stack{display:grid;gap:10px}
+.pop-cardmini{border:1px solid #332b22;border-radius:6px;background:#17130f;padding:10px}
+.pop-cardmini h4{margin:0 0 4px}
+.pop-cardmini p{margin:0 0 6px;color:#d4ccbf}
+.pop-small{font-size:11px;color:#b8ad9d}
+.process-diagram{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:8px 0}
+.process-step{border:1px solid #3b3228;border-radius:6px;background:#18140f;padding:9px;position:relative}
+.process-step .n{font-family:var(--sans);font-size:10px;letter-spacing:.08em;color:#c7b89f;text-transform:uppercase}
+.process-step .t{display:block;font-family:var(--sans);font-weight:600;color:#f3e8d0;margin-top:2px;font-size:12px}
+.process-step .d{display:block;font-family:var(--sans);color:#cfc6b8;margin-top:4px;font-size:11px;line-height:1.35}
+.process-step:not(:last-child)::after{content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);color:#7b6f60;font-size:14px}
+.pop-table-scroll{overflow:auto;border:1px solid #332b22;border-radius:6px}
+.pop-note{font-family:var(--sans);font-size:12px;color:#c9c0b3;background:#17130f;border:1px solid #332b22;border-radius:6px;padding:10px;margin:8px 0}
+
+/* Cluster list table */
+.clusterlist-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+.clusterlist-tools input,.clusterlist-tools select{font-family:var(--sans);font-size:12px;border:1px solid var(--rule);border-radius:5px;padding:7px 10px;background:#fff;color:var(--text)}
+.clusterlist-tools .meta{font-family:var(--sans);font-size:11.5px;color:var(--muted)}
+.clusterlist-section{max-width:none;width:min(1100px, calc(100vw - 56px));margin-left:50%;transform:translateX(-50%)}
+.table-scroll{overflow:auto;border:1px solid var(--rule);border-radius:6px;background:#fff}
+.cluster-table{width:100%;border-collapse:collapse;min-width:980px}
+.cluster-table th,.cluster-table td{padding:10px 11px;border-bottom:1px solid #eee6d8;vertical-align:top}
+.cluster-table th{position:sticky;top:0;background:#faf7f0;z-index:2;font-family:var(--sans);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;cursor:pointer;user-select:none}
+.cluster-table th:hover{background:#f4efe6;color:#5c554d}
+.cluster-table th.sort-asc::after,.cluster-table th.sort-desc::after{margin-left:6px;font-size:10px;opacity:.8}
+.cluster-table th.sort-asc::after{content:'▲'}
+.cluster-table th.sort-desc::after{content:'▼'}
+.cluster-table td{font-family:var(--sans);font-size:12px;line-height:1.45}
+.cluster-table tbody tr{cursor:pointer}
+.cluster-table tbody tr:hover{background:#faf7f0}
+.cluster-table tbody tr.selected{background:#f3eee4}
+.cluster-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cluster-table .cluster-cell{min-width:240px}
+.cluster-table .cluster-cell strong{display:block;color:#1c1917}
+.cluster-table .summary-cell{min-width:420px;color:#4f4a45}
+.cluster-table .q-link{color:var(--blue);text-decoration:none;border-bottom:1px dashed rgba(29,78,216,.4)}
+.cluster-table .q-link:hover{color:#1e3a8a}
+.cluster-table .summary-missing{color:#9a9287;font-style:italic}
+.cluster-table .pill-ana{display:inline-block;font-family:var(--sans);font-size:10px;padding:2px 6px;border-radius:999px;background:#eef5ff;color:#1d4ed8;border:1px solid #c7dbff;margin-left:6px}
+.timeline-stepper{border:1px solid #332b22;border-radius:8px;background:#17130f;padding:10px}
+.timeline-stepper-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.timeline-stepper-title{font-weight:700;color:#f4e8cf}
+.timeline-stepper-sub{font-family:var(--sans);font-size:12px;color:#c9c0b3}
+.timeline-stepper-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 8px}
+.timeline-step-tab{all:unset;cursor:pointer;font-family:var(--sans);font-size:11px;line-height:1.2;padding:6px 8px;border-radius:999px;border:1px solid #3d342b;background:#211b15;color:#d8cdbf}
+.timeline-step-tab:hover{background:#2c241c}
+.timeline-step-tab.active{border-color:#7c3aed;background:#2a1f38;color:#efe7ff}
+.timeline-stepper-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 10px}
+.timeline-stepper-controls button{font-family:var(--sans);font-size:11px;border:1px solid #3e372f;background:#221d17;color:#ddd;padding:5px 9px;border-radius:999px;cursor:pointer}
+.timeline-stepper-controls button:disabled{opacity:.45;cursor:not-allowed}
+.timeline-stepper-status{font-family:var(--sans);font-size:11px;color:#c9c0b3}
+.timeline-stepper-panel{display:none}
+.timeline-stepper-panel.active{display:block}
+.timeline-stepper-grid{display:grid;grid-template-columns:minmax(260px,1fr) minmax(320px,1.2fr);gap:12px}
+.timeline-stepper-grid .pane{border:1px solid #332b22;border-radius:6px;padding:10px;background:#191611}
+.timeline-stepper-grid .pane h5{margin:0 0 6px;font-size:12px;font-family:var(--sans);letter-spacing:.03em;text-transform:uppercase;color:#c9c0b3}
+.timeline-stepper-grid .pane pre{margin:0;max-height:520px;overflow:auto}
+.timeline-step-metrics{margin:8px 0}
+.timeline-step-testlist{display:grid;gap:6px;margin-top:8px}
+.timeline-step-testitem{padding:8px;border:1px solid #332b22;border-radius:6px;background:#1c1712}
+.timeline-step-testitem .label{font-family:var(--sans);font-size:11px;color:#c9c0b3}
+.timeline-step-testitem .value{font-size:13px;color:#efe3d1}
+.timeline-step-testitem.pass{border-color:#1f5c3e;background:#122118}
+.timeline-step-testitem.fail{border-color:#6b2e2e;background:#241515}
+.timeline-step-testitem.unknown{border-color:#4f463c;background:#211c16}
 
 /* SVG helpers */
 .chart-svg text{font-family:var(--sans)}
@@ -116,6 +214,9 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
   .stats-row{grid-template-columns:1fr}
   .stat:not(:last-child){border-right:none;border-bottom:1px solid var(--rule)}
   .arch-grid{grid-template-columns:1fr 1fr}
+  .clusterlist-section{width:calc(100vw - 24px)}
+  .process-step:not(:last-child)::after{display:none}
+  .timeline-stepper-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -130,7 +231,11 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
       <span class="pop-title" id="pop-title"></span>
       <button class="pop-x" onclick="closePop()">×</button>
     </div>
-    <pre><code id="pop-code" class="language-python"></code></pre>
+    <div class="pop-toolbar" id="pop-toolbar" style="display:none"></div>
+    <div class="pop-main">
+      <div class="pop-body" id="pop-body" style="display:none"></div>
+      <pre id="pop-code-wrap"><code id="pop-code" class="language-python"></code></pre>
+    </div>
     <p class="pop-cap" id="pop-cap"></p>
   </div>
 </div>
@@ -190,7 +295,7 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 <!-- ACT II: ARCHETYPES -->
 <section class="section">
   <div class="act">Act II</div>
-  <h2>Seven Fingerprints</h2>
+  <h2><span class="xref aref" data-arch="__overview">Seven Fingerprints</span></h2>
   <p>When you name an error precisely enough, patterns start to speak. Across 1,317 distinct error patterns in 60 questions, seven archetypes account for virtually all failures. The donut below shows their relative weight — sized by total error count, not unique students, so a single submission can contribute to multiple categories.</p>
 </section>
 </div>
@@ -213,11 +318,11 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 <!-- ACT III: THE MIMIC -->
 <section class="section">
   <div class="act">Act III</div>
-  <h2>The Mimic: When Passing Tests Isn't the Same as Solving the Problem</h2>
+  <h2><span class="xref aref" data-arch="Sample Overfit">The Mimic</span>: When Passing Tests Isn't the Same as Solving the Problem</h2>
 
   <p>The task sounds straightforward: given a three-word sentence and a permutation tuple, return the words in the new order. A function named <code>shuffle_sentence(sentence, order)</code>.</p>
   <p>The sample inputs in the problem statement used three specific permutations: <code>(0,2,1)</code>, <code>(2,1,0)</code>, and <code>(1,0,2)</code>. Those three permutations share a remarkable property — they are all <em>self-inverse</em>. Apply the permutation, apply it again, you get the original order back. This means a student could write code implementing the wrong algorithm — the inverse permutation instead of the forward permutation — and still pass every single sample test.</p>
-  <p>That's exactly what happened. <span class="r">34%</span> of failing shuffle submissions hard-coded behavior for the known permutations or implemented the inverse permutation. <span class="ct" onclick="showCodeById('mimic-shuffle')">Here’s one student’s submission.</span> At first glance it looks reasonable — it uses the <code>order</code> parameter, builds a result list, formats the output. But line 7 stores <code>l[a]</code> at position <code>x[a]</code> instead of placing word <code>order[i]</code> at position <code>i</code>. It's the inverse permutation. For the public tests — all self-inverse — the result is identical. For private tests with cyclic permutations like <code>(2,0,1)</code>: wrong answer. Score: 33 out of 100.</p>
+  <p>That's exactly what happened. <span class="r">34%</span> of failing shuffle submissions hard-coded behavior for the known permutations or implemented the inverse permutation. <span class="ct pref" data-pattern-cluster="C002" data-pattern-match="hard-cod|inverse permutation">Here’s one student’s submission.</span> At first glance it looks reasonable — it uses the <code>order</code> parameter, builds a result list, formats the output. But line 7 stores <code>l[a]</code> at position <code>x[a]</code> instead of placing word <code>order[i]</code> at position <code>i</code>. It's the inverse permutation. For the public tests — all self-inverse — the result is identical. For private tests with cyclic permutations like <code>(2,0,1)</code>: wrong answer. Score: 33 out of 100.</p>
   <p>The simpler variant of this mistake is the explicit if-elif chain: <code>if order == (0, 2, 1): return ...</code> for each known permutation. Memorizing the answer sheet rather than solving the problem. Same mechanism, more visible.</p>
   <div class="callout">
     <strong>The Mimic in Numbers</strong>
@@ -231,14 +336,14 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 <!-- ACT IV: THE QUITTER -->
 <section class="section">
   <div class="act">Act IV</div>
-  <h2>The Quitter: One Loop, One Return, 243 Students</h2>
+  <h2><span class="xref aref" data-arch="Early Exit">The Quitter</span>: One Loop, One Return, 243 Students</h2>
 
   <p>A pangram is a sentence containing every letter of the alphabet. <em>"The quick brown fox jumps over the lazy dog"</em> is the canonical example. The task: write <code>is_pangram(text)</code> — return <code>True</code> if the sentence is a pangram, <code>False</code> otherwise.</p>
   <p>Of 1,331 students who submitted a final answer, exactly 665 failed. A near-perfect 50–50. Within those 665 failures, one pattern so dominates the others that it rewrites the story of the question entirely.</p>
   <div class="pq">"243 students made the same mistake. Not a similar mistake — the exact same structural error, reproduced across two cohorts."</div>
-  <p>The bug: returning <code>True</code> or <code>False</code> <em>inside</em> the loop that checks each letter. The loop is supposed to check all 26 letters before concluding anything. The return statement exits the function after checking exactly one — usually the first character. The code is valid Python. It runs without errors. It even gives the right answer sometimes — when the first character of the text is alphabetic it returns <code>True</code>, when it's not it returns <code>False</code>. It just doesn't solve the stated problem.</p>
-  <p><span class="ct" onclick="showCodeById('quitter-pangram')">Here’s the bug in action</span> — a function that looks like it's checking all 26 letters, but actually returns after checking just the first one.</p>
-  <p>This is The Quitter: correct structure, premature conclusion. The intuition behind it is locally reasonable: <em>"If the letter is here, it's a pangram — return True. If not — return False."</em> That reasoning is right for one letter in isolation. A pangram requires <em>all</em> 26, which means you must finish the loop before concluding anything.</p>
+  <p>The bug: <span class="xref pref" data-pattern-cluster="C013" data-pattern-match="Returns inside the alphabet-check loop">returning <code>True</code> or <code>False</code> <em>inside</em> the loop that checks each letter</span>. The loop is supposed to check all 26 letters before concluding anything. The return statement exits the function after checking exactly one — usually the first character. The code is valid Python. It runs without errors. It even gives the right answer sometimes — when the first character of the text is alphabetic it returns <code>True</code>, when it's not it returns <code>False</code>. It just doesn't solve the stated problem.</p>
+  <p><span class="ct pref" data-pattern-cluster="C013" data-pattern-match="Returns inside the alphabet-check loop">Here’s the bug in action</span> — a function that looks like it's checking all 26 letters, but actually returns after checking just the first one.</p>
+  <p>This is <span class="xref aref" data-arch="Early Exit">The Quitter</span>: correct structure, premature conclusion. The intuition behind it is locally reasonable: <em>"If the letter is here, it's a pangram — return True. If not — return False."</em> That reasoning is right for one letter in isolation. A pangram requires <em>all</em> 26, which means you must finish the loop before concluding anything.</p>
 </section>
 </div>
 
@@ -246,7 +351,7 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 <div class="bleed" style="background:var(--bg-alt);padding:32px 0">
   <div class="wide">
     <div class="chart-hed">What went wrong — 665 failing pangram submissions, broken down</div>
-    <div class="chart-sub">The "early return" bug alone accounts for more failures than the next four patterns combined.</div>
+    <div class="chart-sub">The "<span class="xref pref" data-pattern-cluster="C013" data-pattern-match="Returns inside the alphabet-check loop">early return</span>" bug alone accounts for more failures than the next four patterns combined.</div>
     <div id="pangram-chart" class="loading chart-wrap">Loading…</div>
   </div>
 </div>
@@ -279,12 +384,12 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 <div class="col">
 <section class="section">
   <p>The questions with the highest failure rates share a profile: multiple helper functions, non-trivial data formats, and output that requires precise formatting. They test whether students can maintain a coherent mental model across a complex system — not just implement a single algorithm.</p>
-  <p>YouTube Video Engagement Analysis is the hardest: <span class="r">514 of 542 students (95%) failed</span>. The single most common failure — 103 students — wasn't a conceptual error. It was <span class="ct" onclick="showCodeById('precision-youtube')">not rounding to 2 decimal places</span>. One hundred and three students wrote structurally correct code — right formula, right data access — and failed everything because they skipped <code>round(rate, 2)</code>. That's not a conceptual failure. It's a spec-reading failure.</p>
+  <p><span class="xref qref" data-cluster="C097">YouTube Video Engagement Analysis</span> is the hardest: <span class="r">514 of 542 students (95%) failed</span>. The single most common failure — 103 students — wasn't a conceptual error. It was <span class="ct pref" data-pattern-cluster="C097" data-pattern-match="round .*2 decimal|Does not round">not rounding to 2 decimal places</span>. One hundred and three students wrote structurally correct code — right formula, right data access — and failed everything because they skipped <code>round(rate, 2)</code>. That's not a conceptual failure. It's a spec-reading failure.</p>
   <div class="callout">
     <strong>The Two Other Hard Rooms</strong>
-    Chess Game Analysis (C110) and Batsman Performance Analysis (C108) each failed 94% of students. Both involve multiple interdependent helper functions. The most common pattern in both: leaving template placeholder code (<code>...</code> or <code>pass</code>) in required helpers — students who ran out of time or couldn't figure out one part and submitted incomplete work. A bug in one helper propagates through all downstream functions.
+    <span class="xref qref" data-cluster="C110">Chess Game Analysis</span> (C110) and <span class="xref qref" data-cluster="C108">Batsman Performance Analysis</span> (C108) each failed 94% of students. Both involve multiple interdependent helper functions. The most common pattern in both: <span class="ct pref" data-pattern-cluster="C110" data-pattern-match="placeholder">leaving template placeholder code</span> (<code>...</code> or <code>pass</code>) in required helpers — students who ran out of time or couldn't figure out one part and submitted incomplete work. A bug in one helper propagates through all downstream functions.
   </div>
-  <p>The contrast with the easiest questions is instructive. "Check is even or divisible by 5" failed just 11% of students. "Compute Electricity Bill" failed 15%. These questions have single functions, numerical inputs, no formatting requirements. They test one concept at a time. Students can verify them easily against the samples.</p>
+  <p>The contrast with the easiest questions is instructive. "<span class="xref qref" data-cluster="C004">Check is even or divisible by 5</span>" failed just 11% of students. "<span class="xref qref" data-cluster="C010">Compute Electricity Bill</span>" failed 15%. These questions have single functions, numerical inputs, no formatting requirements. They test one concept at a time. Students can verify them easily against the samples.</p>
 </section>
 
 <hr class="sep">
@@ -300,41 +405,82 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
       <span class="rec-n">01</span>
       <div class="rec-t">
         <strong>Design tests that break the most common shortcuts</strong>
-        The pangram sample tests didn't include a sentence starting with a non-alphabetic character — so the early-return bug passed all of them. Every public test should be paired with at least one private test that specifically invalidates the most common shortcut. For shuffle, that means cyclic permutations. For pangrams, a sentence starting with a digit. For electricity bills, a reading in the middle of a slab boundary.
+        The <span class="xref qref" data-cluster="C013">pangram</span> sample tests didn't include a sentence starting with a non-alphabetic character — so the <span class="ct pref" data-pattern-cluster="C013" data-pattern-match="Returns inside the alphabet-check loop">early-return bug</span> passed all of them. Every public test should be paired with at least one private test that specifically invalidates the most common shortcut. For <span class="xref qref" data-cluster="C002">shuffle</span>, that means cyclic permutations. For pangrams, a sentence starting with a digit. For <span class="xref qref" data-cluster="C010">electricity bills</span>, a reading in the middle of a slab boundary.
       </div>
     </li>
     <li>
       <span class="rec-n">02</span>
       <div class="rec-t">
         <strong>Categorize feedback, not just scores</strong>
-        "Wrong Answer" tells a student nothing useful. "Your function returns after checking only the first element" is a diagnosis. The pattern data in this analysis exists — it can power automated feedback categories. Students who receive "Your code appears to hard-code sample outputs" are far more likely to fix the right thing than students who receive only a red X.
+        "Wrong Answer" tells a student nothing useful. "<span class="ct pref" data-pattern-cluster="C013" data-pattern-match="Returns inside the alphabet-check loop">Your function returns after checking only the first element</span>" is a diagnosis. The pattern data in this analysis exists — it can power automated feedback categories. Students who receive "<span class="xref aref" data-arch="Sample Overfit">Your code appears to hard-code sample outputs</span>" are far more likely to fix the right thing than students who receive only a red X.
       </div>
     </li>
     <li>
       <span class="rec-n">03</span>
       <div class="rec-t">
         <strong>Teach spec-reading as a first-class skill</strong>
-        The rounding error that sank 103 YouTube submissions suggests students skim problem statements for "what to compute" and miss "how to format it." Explicit pre-coding checklists — what is the exact return type? what formatting is required? what edge cases are implied? — can be taught explicitly. They are now as important as syntax.
+        The <span class="ct pref" data-pattern-cluster="C097" data-pattern-match="round .*2 decimal|Does not round">rounding error that sank 103 YouTube submissions</span> suggests students skim problem statements for "what to compute" and miss "how to format it." Explicit pre-coding checklists — what is the exact return type? what formatting is required? what edge cases are implied? — can be taught explicitly. They are now as important as syntax.
       </div>
     </li>
     <li>
       <span class="rec-n">04</span>
       <div class="rec-t">
         <strong>Scaffold multi-function problems</strong>
-        Questions with 90%+ failure rates almost always involve multiple interdependent helpers. A bug in one function makes all subsequent functions untestable. Consider providing tested stubs, letting students implement one function at a time, or offering partial credit per helper tested independently.
+        Questions with 90%+ failure rates almost always involve multiple interdependent helpers (see <span class="xref qref" data-cluster="C110">Chess Game Analysis</span> and <span class="xref qref" data-cluster="C108">Batsman Performance Analysis</span>). A bug in one function makes all subsequent functions untestable; in practice, many students submit with <span class="ct pref" data-pattern-cluster="C110" data-pattern-match="placeholder">placeholder helpers still in place</span>. Consider providing tested stubs, letting students implement one function at a time, or offering partial credit per helper tested independently.
       </div>
     </li>
     <li>
       <span class="rec-n">05</span>
       <div class="rec-t">
         <strong>In the AI era: test for robustness, not just correctness</strong>
-        AI tools generate code that looks polished and passes samples while silently assuming a narrower problem. This is the Mimic pattern, automated. The solution isn't to ban AI — it's to design evaluations that specifically probe the general case, edge cases, and exact output contracts. A test suite that breaks AI-generated solutions is a better test suite for everyone.
+        AI tools generate code that looks polished and passes samples while silently assuming a narrower problem. This is the <span class="xref aref" data-arch="Sample Overfit">Mimic</span> pattern, automated. The solution isn't to ban AI — it's to design evaluations that specifically probe the general case, edge cases, and exact output contracts. A test suite that breaks AI-generated solutions is a better test suite for everyone.
       </div>
     </li>
   </ul>
 
-  <p>There is something hopeful embedded in all of this. The errors are systematic, which means they are teachable. The pangram bug isn't a mystery — it's a mental model mismatch about when to exit a loop. Once named, it can be addressed directly. The Mimic isn't dishonesty — it's a misaligned incentive created by visible sample tests and invisible private ones. Once the system changes, the behavior changes.</p>
+  <p>There is something hopeful embedded in all of this. The errors are systematic, which means they are teachable. The pangram bug isn't a mystery — it's a mental model mismatch about when to exit a loop. Once named, it can be addressed directly. <span class="xref aref" data-arch="Sample Overfit">The Mimic</span> isn't dishonesty — it's a misaligned incentive created by visible sample tests and invisible private ones. Once the system changes, the behavior changes.</p>
   <p>The data is optimistic. Not because the failure rate is low — it isn't. But because the failures are <em>comprehensible</em>. They have names. They have causes. And causes, unlike chaos, can be fixed.</p>
+</section>
+
+<hr class="sep">
+
+<!-- APPENDIX: CLUSTER LIST -->
+<section class="section clusterlist-section">
+  <div class="act">Appendix</div>
+  <h2><span class="xref qref" data-open-errors-index="1" role="button" tabindex="0">Cluster List</span></h2>
+  <p>This table mirrors the cluster index and adds click-through context. Click any row to open a richer, JSON-backed cluster overview popup with links to patterns, variants, questions, and the full report. Click any canonical question ID to open the question statement, test cases, and available error statistics.</p>
+  <div class="clusterlist-tools">
+    <input id="clusterlist-search" type="search" placeholder="Search cluster title, ID, question, summary…">
+    <select id="clusterlist-filter">
+      <option value="all">All clusters</option>
+      <option value="analyzed">Analyzed only</option>
+      <option value="unanalyzed">Not yet analyzed</option>
+    </select>
+    <select id="clusterlist-sort">
+      <option value="id">Sort by cluster ID</option>
+      <option value="submitters">Sort by submitters (desc)</option>
+      <option value="nonfull">Sort by non-full (desc)</option>
+      <option value="variants">Sort by variants (desc)</option>
+    </select>
+    <span class="meta" id="clusterlist-meta">Loading cluster index…</span>
+  </div>
+  <div class="table-scroll">
+    <table class="cluster-table">
+      <thead>
+        <tr>
+          <th data-sort-col="cluster" role="button" tabindex="0">Cluster</th>
+          <th data-sort-col="question" role="button" tabindex="0">Question (canonical)</th>
+          <th data-sort-col="variants" role="button" tabindex="0">Variants</th>
+          <th data-sort-col="submitters" role="button" tabindex="0">Submitters</th>
+          <th data-sort-col="nonfull" role="button" tabindex="0">Non-full</th>
+          <th data-sort-col="summary" role="button" tabindex="0">Key error summary (analyzed)</th>
+        </tr>
+      </thead>
+      <tbody id="clusterlist-body">
+        <tr><td colspan="6" style="font-family:var(--sans);font-size:12px;color:var(--muted);padding:12px;">Loading cluster list…</td></tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <!-- METHODOLOGY -->
@@ -347,27 +493,291 @@ h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px
 
 <script>
 // ─────────────────────────────────────────────
-// ARCHETYPE CONFIG
+// GLOBAL STATE / CONFIG
 // ─────────────────────────────────────────────
-const ARCH = {
-  'Sample Overfit':      {color:'#7c3aed',label:'The Mimic',     desc:'Hard-codes sample outputs instead of computing the general solution. Passes public tests, fails private ones.'},
-  'Early Exit':          {color:'#dc2626',label:'The Quitter',   desc:'Returns or breaks out of a loop before completing the full computation. Decides after one iteration instead of all.'},
-  'Missing Return':      {color:'#ea580c',label:'The Ghost',     desc:'Computes the right answer but never returns it — uses print() instead of return, or omits the return entirely.'},
-  'Wrong I/O Mode':      {color:'#d97706',label:'The Confused',  desc:'Uses input() inside a function-based question. Works interactively; fails under automated function-call tests.'},
-  'Syntax / Unfinished': {color:'#64748b',label:'The Unfinished',desc:'Code is syntactically invalid, broken, or contains only skeleton placeholders. Cannot be meaningfully evaluated.'},
-  'Runtime Crash':       {color:'#2563eb',label:'The Crasher',   desc:'Raises TypeError, NameError, IndexError, or other runtime exceptions. Logic may be partially correct but execution fails.'},
-  'Logic Error':         {color:'#059669',label:'The Wanderer',  desc:'Valid syntax, no crash, but wrong answers. Incorrect algorithm, wrong operator, off-by-one, or missing edge-case handling.'},
+const APP = {
+  data: null,
+  errorsIndexMd: null,
+  errorsIndexEntries: [],
+  clusterById: new Map(),
+  variantToClusterId: new Map(),
+  questionJsonCache: new Map(),
+  textCache: new Map(),
+  archetypeStats: new Map(),
+  archetypeTimelines: null,
+  clustersForCharts: [],
+  archTotals: {},
+  clusterListState: {
+    q: '',
+    filter: 'all',
+    sort: 'cluster',
+    sortDir: 'asc',
+    selectedClusterId: null,
+  },
 };
 
+const ARCH = {
+  'Sample Overfit': {
+    color:'#7c3aed',
+    label:'The Mimic',
+    desc:'Hard-codes sample outputs or fits visible examples instead of computing the general solution.',
+    process:[
+      ['See samples', 'Learns the visible cases instead of the full rule'],
+      ['Infer shortcut', 'Builds if/elif or sample-shaped logic'],
+      ['Validate locally', 'Public tests pass, confidence spikes'],
+      ['Hidden test shift', 'New permutation/edge case breaks the shortcut'],
+      ['Wrong answer', 'Code looked polished, but solved a smaller problem'],
+    ],
+    interventions:[
+      'Add public examples that are not self-inverse / not symmetric.',
+      'Teach a “change the sample” check before submission.',
+      'Surface feedback labels like “sample-specific solution detected”.',
+    ],
+  },
+  'Early Exit': {
+    color:'#dc2626',
+    label:'The Quitter',
+    desc:'Returns or breaks out of a loop before completing the full computation; decides after one iteration.',
+    process:[
+      ['Start loop', 'Structure looks correct at first glance'],
+      ['Check first item', 'Local condition is evaluated'],
+      ['Return immediately', 'Function exits before checking the rest'],
+      ['Partial truth', 'Sometimes matches expected outputs by accident'],
+      ['Systematic fail', 'Hidden tests expose the incomplete scan'],
+    ],
+    interventions:[
+      'Teach “check all → decide once” as an explicit loop invariant.',
+      'Use tests where the first item is misleading.',
+      'Give feedback: “Your function stops after the first iteration”.',
+    ],
+  },
+  'Missing Return': {
+    color:'#ea580c',
+    label:'The Ghost',
+    desc:'Computes something but does not return it (or returns None implicitly).',
+    process:[
+      ['Compute answer', 'Core logic may be correct'],
+      ['Print/debug', 'Student sees output locally and assumes success'],
+      ['No return', 'Function returns None to evaluator'],
+      ['Contract mismatch', 'Automated tests compare return values'],
+      ['Zero/partial score', 'Looks right to human eyes, fails machine contract'],
+    ],
+    interventions:[
+      'Teach “print vs return” with side-by-side examples.',
+      'Include hidden assertions that mention missing return explicitly.',
+      'Add function-contract checklist before coding.',
+    ],
+  },
+  'Wrong I/O Mode': {
+    color:'#d97706',
+    label:'The Confused',
+    desc:'Reads input() or prints in a function-type question, or otherwise uses the wrong evaluation interface.',
+    process:[
+      ['Recognize task loosely', 'Focuses on computation, not evaluation mode'],
+      ['Write program-style code', 'Uses input() / print() in a function problem'],
+      ['Local success', 'Manual terminal test looks fine'],
+      ['Evaluator mismatch', 'Grader calls function directly'],
+      ['Failure', 'Correct idea, wrong contract surface'],
+    ],
+    interventions:[
+      'Label function-type vs program-type more prominently.',
+      'Show one explicit anti-example with input()/print() misuse.',
+      'Feedback category: “Wrong I/O mode for this question type”.',
+    ],
+  },
+  'Syntax / Unfinished': {
+    color:'#64748b',
+    label:'The Unfinished',
+    desc:'Syntax errors, broken code, placeholders, or empty submissions prevent meaningful evaluation.',
+    process:[
+      ['Begin implementation', 'Some structure is present'],
+      ['Run out of time / confidence', 'Leaves placeholder or partial edit'],
+      ['Submit anyway', 'Incomplete helper or broken block remains'],
+      ['Parser/runtime fails early', 'No logic evaluation possible'],
+      ['Low score', 'The failure is about completion, not just concept'],
+    ],
+    interventions:[
+      'Scaffold multi-function problems and independent helper tests.',
+      'Autosave lint/syntax checks before final submit.',
+      'Encourage “submit a smaller working subset” strategy with partial credit.',
+    ],
+  },
+  'Runtime Crash': {
+    color:'#2563eb',
+    label:'The Crasher',
+    desc:'Valid syntax, but execution fails with exceptions (NameError, TypeError, IndexError, etc.).',
+    process:[
+      ['Logic partially built', 'Code parses and begins to run'],
+      ['Unexpected input shape', 'Hidden cases violate assumptions'],
+      ['Wrong name/type/index', 'Exception triggers before output'],
+      ['Partial evidence lost', 'Potentially good logic is masked by crash'],
+      ['Runtime fail', 'Needs debugging discipline more than syntax drilling'],
+    ],
+    interventions:[
+      'Teach defensive checks around indices/types only where contract requires.',
+      'Use hidden tests that isolate shape assumptions.',
+      'Provide exception-family feedback (NameError vs TypeError vs IndexError).',
+    ],
+  },
+  'Logic Error': {
+    color:'#059669',
+    label:'The Wanderer',
+    desc:'Runs without crashing, but applies the wrong rule, wrong operator, or misses an edge case.',
+    process:[
+      ['Build plausible rule', 'Code is coherent and executable'],
+      ['Pass easy cases', 'Simple inputs reinforce confidence'],
+      ['Miss hidden invariant', 'Order, uniqueness, boundaries, or formatting semantics are wrong'],
+      ['Systematic wrong answers', 'Failure repeats across similar inputs'],
+      ['Needs specification repair', 'Problem is usually invariants, not syntax'],
+    ],
+    interventions:[
+      'Teach invariant checks (“what must always stay true?”).',
+      'Design tests that isolate one semantic rule at a time.',
+      'Use targeted feedback labels instead of generic “Wrong Answer”.',
+    ],
+  },
+};
+
+// ─────────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────────
+const fmtInt = n => Number(n || 0).toLocaleString();
+const pct = n => `${(Number(n || 0) * 100).toFixed(1)}%`;
+const pct1 = n => `${Number(n || 0).toFixed(1)}%`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const truncate = (s, n) => String(s ?? '').length > n ? String(s).slice(0, n - 1) + '…' : String(s ?? '');
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
 function classify(name) {
-  const n = name.toLowerCase();
-  if (n.includes('hard-cod') || n.includes('hard cod') || (n.includes('sample') && (n.includes('output') || n.includes('string') || n.includes('result')))) return 'Sample Overfit';
-  if (n.includes('returns inside') || (n.includes('inside') && n.includes('loop')) || n.includes('first character') || n.includes('first iteration') || n.includes('decides after') || n.includes('first match')) return 'Early Exit';
-  if (n.includes('no return') || (n.includes('implicit') && n.includes('none')) || (n.includes('print') && !n.includes('pattern') && !n.includes('printing'))) return 'Missing Return';
+  const n = String(name || '').toLowerCase();
+  if (n.includes('hard-cod') || (n.includes('sample') && (n.includes('output') || n.includes('string') || n.includes('result') || n.includes('case')))) return 'Sample Overfit';
+  if (n.includes('returns inside') || (n.includes('inside') && n.includes('loop')) || n.includes('first iteration') || n.includes('first match') || n.includes('decides after first')) return 'Early Exit';
+  if (n.includes('no return') || (n.includes('implicit') && n.includes('none')) || (n.includes('print') && n.includes('instead of return'))) return 'Missing Return';
   if (n.includes('input()') || (n.includes('reads') && n.includes('input'))) return 'Wrong I/O Mode';
-  if (n.startsWith('syntax') || n.includes('non-parseable') || n.includes('skeleton') || n.includes('placeholder') || n.includes('empty/comment')) return 'Syntax / Unfinished';
-  if (n.startsWith('runtime') || ['typeerror','nameerror','indexerror','valueerror','attributeerror','recursionerror','keyerror'].some(e => n.includes(e))) return 'Runtime Crash';
+  if (n.startsWith('syntax') || n.includes('non-parseable') || n.includes('placeholder') || n.includes('empty final submission') || n.includes('skeleton')) return 'Syntax / Unfinished';
+  if (n.startsWith('runtime') || ['typeerror','nameerror','indexerror','valueerror','attributeerror','recursionerror','keyerror','zerodivisionerror','eoferror'].some(e => n.includes(e))) return 'Runtime Crash';
   return 'Logic Error';
+}
+
+function mdTableSplit(line) {
+  const cells = [];
+  let cur = '';
+  let inTicks = false;
+  for (let i = 1; i < line.length - 1; i += 1) {
+    const ch = line[i];
+    if (ch === '`') inTicks = !inTicks;
+    if (ch === '|' && !inTicks) {
+      cells.push(cur.trim());
+      cur = '';
+      continue;
+    }
+    cur += ch;
+  }
+  cells.push(cur.trim());
+  return cells;
+}
+
+function parseIntLoose(s) {
+  const m = String(s ?? '').replace(/`/g, '').replace(/,/g, '').match(/-?\d+/);
+  return m ? Number(m[0]) : null;
+}
+
+function parseErrorsIndexMarkdown(text) {
+  const lines = String(text || '').split(/\r?\n/);
+  const entries = [];
+  let i = 0;
+  while (i < lines.length) {
+    const head = lines[i].match(/^### (C\d{3}) - (.+)$/);
+    if (!head) { i += 1; continue; }
+    const entry = {
+      cluster_id: head[1],
+      title: head[2],
+      analysis_file_path: null,
+      analysis_file_href: null,
+      variants_count: null,
+      total_final_submitters: null,
+      total_non_full: null,
+      canonical_variant: null,
+      variant_relationship: null,
+      key_error_summary: null,
+      variants: [],
+    };
+    i += 1;
+    while (i < lines.length && !/^### (C\d{3}) - /.test(lines[i])) {
+      const line = lines[i];
+      if (line.startsWith('- Analysis file:')) {
+        const pathTick = line.match(/`([^`]+)`/);
+        const href = line.match(/\]\(([^)]+)\)/);
+        entry.analysis_file_path = pathTick ? pathTick[1] : null;
+        entry.analysis_file_href = href ? href[1] : (entry.analysis_file_path ? entry.analysis_file_path.replace(/^analysis\//, '') : null);
+      } else if (line.startsWith('- Variants in cluster:')) {
+        entry.variants_count = parseIntLoose(line);
+      } else if (line.startsWith('- Total final submitters across variants:')) {
+        entry.total_final_submitters = parseIntLoose(line);
+      } else if (line.startsWith('- Total non-full finals across variants:')) {
+        entry.total_non_full = parseIntLoose(line);
+      } else if (line.startsWith('- Canonical variant:')) {
+        const m = line.match(/`([^`]+)`/);
+        entry.canonical_variant = m ? m[1] : null;
+      } else if (line.startsWith('- Variant relationship:')) {
+        entry.variant_relationship = line.split(':').slice(1).join(':').trim();
+      } else if (line.startsWith('- Key error summary (analyzed):')) {
+        entry.key_error_summary = line.split(':').slice(1).join(':').trim();
+      } else if (line.startsWith('| Variant |')) {
+        const header = mdTableSplit(line);
+        i += 2; // separator
+        while (i < lines.length && /^\|/.test(lines[i])) {
+          const cells = mdTableSplit(lines[i]);
+          if (cells.length === header.length) {
+            const row = Object.fromEntries(header.map((h, idx) => [h, cells[idx]]));
+            const variantCell = row['Variant'] || '';
+            const variantMatch = variantCell.match(/`([^`]+)`/);
+            entry.variants.push({
+              variant: variantMatch ? variantMatch[1] : null,
+              canonical: /\(canonical\)/.test(variantCell),
+              final_submitters: parseIntLoose(row['final_submitters']),
+              non_full: parseIntLoose(row['non_full']),
+              tests_pub_priv: (row['Tests (pub/priv)'] || '').replace(/`/g, ''),
+              diff_vs_canonical: row['Difference vs canonical'] || '',
+            });
+          }
+          i += 1;
+        }
+        continue;
+      }
+      i += 1;
+    }
+    entry.analyzed = Boolean(entry.key_error_summary);
+    entries.push(entry);
+  }
+  return entries;
+}
+
+function markdownToHtml(md) {
+  if (!window.marked) return `<pre><code>${esc(md)}</code></pre>`;
+  marked.setOptions({ gfm: true, breaks: false });
+  return marked.parse(md);
+}
+
+async function fetchTextCached(path) {
+  if (APP.textCache.has(path)) return APP.textCache.get(path);
+  const p = fetch(path, { cache: 'no-store' }).then(async (resp) => {
+    if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}`);
+    return resp.text();
+  });
+  APP.textCache.set(path, p);
+  return p;
+}
+
+async function fetchJsonCached(path) {
+  if (APP.questionJsonCache.has(path)) return APP.questionJsonCache.get(path);
+  const p = fetch(path, { cache: 'no-store' }).then(async (resp) => {
+    if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}`);
+    return resp.json();
+  });
+  APP.questionJsonCache.set(path, p);
+  return p;
 }
 
 // ─────────────────────────────────────────────
@@ -388,31 +798,94 @@ function moveTip(e) {
 function hideTip() { tip.classList.remove('on'); }
 
 // ─────────────────────────────────────────────
-// CODE POPUP
+// GENERIC POPUP (code / html / markdown / question / pattern / archetype)
 // ─────────────────────────────────────────────
-function showCode(title, code, caption) {
-  document.getElementById('pop-title').textContent = title;
-  const el = document.getElementById('pop-code');
-  el.textContent = code;
-  el.removeAttribute('data-highlighted');
-  hljs.highlightElement(el);
-  document.getElementById('pop-cap').textContent = caption || '';
-  document.getElementById('pop').classList.add('on');
+const popEl = document.getElementById('pop');
+const popTitleEl = document.getElementById('pop-title');
+const popBodyEl = document.getElementById('pop-body');
+const popCodeEl = document.getElementById('pop-code');
+const popCodeWrapEl = document.getElementById('pop-code-wrap');
+const popCapEl = document.getElementById('pop-cap');
+const popToolbarEl = document.getElementById('pop-toolbar');
+const popMainEl = popEl.querySelector('.pop-main');
+
+function setPopupToolbar(actions = [], contextTag = null) {
+  const hasActions = Boolean(actions && actions.length);
+  const hasTag = Boolean(contextTag && contextTag.label);
+  if (!hasActions && !hasTag) {
+    popToolbarEl.innerHTML = '';
+    popToolbarEl.style.display = 'none';
+    return;
+  }
+  popToolbarEl.style.display = 'flex';
+  popToolbarEl.innerHTML = `
+    <div class="pop-toolbar-actions">
+      ${hasActions ? actions.map((a, idx) => {
+        if (a.href) {
+          return `<a href="${esc(a.href)}" target="_blank" rel="noopener noreferrer">${esc(a.label || 'Open')}</a>`;
+        }
+        return `<button type="button" data-pop-action="${idx}">${esc(a.label || 'Action')}</button>`;
+      }).join('') : ''}
+    </div>
+    <div class="pop-toolbar-spacer"></div>
+    ${hasTag ? `<span class="pop-toolbar-tag" title="${esc(contextTag.help || '')}"><span>${esc(contextTag.label)}</span><span class="i" aria-hidden="true">i</span></span>` : ''}
+  `;
+  [...popToolbarEl.querySelectorAll('[data-pop-action]')].forEach(btn => {
+    btn.onclick = () => {
+      const a = actions[Number(btn.getAttribute('data-pop-action'))];
+      if (a && typeof a.onClick === 'function') a.onClick();
+    };
+  });
+}
+
+function highlightPopupCodeBlocks() {
+  if (!window.hljs) return;
+  popEl.querySelectorAll('pre code').forEach(node => {
+    node.removeAttribute('data-highlighted');
+    try { hljs.highlightElement(node); } catch (_) {}
+  });
+}
+
+function showPopup({ title, html = null, code = null, codeLang = 'python', caption = '', actions = [], contextTag = null }) {
+  popTitleEl.textContent = title || '';
+  setPopupToolbar(actions, contextTag);
+  popCapEl.textContent = caption || '';
+  if (html != null) {
+    popCodeWrapEl.style.display = 'none';
+    popBodyEl.style.display = 'block';
+    popBodyEl.innerHTML = html;
+  } else {
+    popBodyEl.style.display = 'none';
+    popCodeWrapEl.style.display = 'block';
+    popCodeEl.className = `language-${codeLang || 'text'}`;
+    popCodeEl.textContent = code || '';
+  }
+  if (popMainEl) popMainEl.scrollTop = 0;
+  popBodyEl.scrollTop = 0;
+  popCodeWrapEl.scrollTop = 0;
+  highlightPopupCodeBlocks();
+  popEl.classList.add('on');
   document.body.style.overflow = 'hidden';
 }
+
+function showCode(title, code, caption) {
+  showPopup({ title, code, codeLang: 'python', caption });
+}
+
 function closePop() {
-  document.getElementById('pop').classList.remove('on');
+  popEl.classList.remove('on');
   document.body.style.overflow = '';
 }
-document.getElementById('pop').addEventListener('click', e => { if (e.target === document.getElementById('pop')) closePop(); });
+window.closePop = closePop;
+popEl.addEventListener('click', e => { if (e.target === popEl) closePop(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
 
 // ─────────────────────────────────────────────
-// CODE EXAMPLES LOOKUP (avoids HTML attribute escaping issues)
+// CODE EXAMPLES LOOKUP (fallback / illustrative popup)
 // ─────────────────────────────────────────────
 const CODE_EXAMPLES = {
   'mimic-shuffle': {
-    title: 'The Mimic \u2014 Shuffle Sentence (C002)',
+    title: 'The Mimic — Shuffle Sentence (C002)',
     code: `def shuffle_sentence(sentence, order):
     l = sentence.split()
     x = []
@@ -420,49 +893,996 @@ const CODE_EXAMPLES = {
         x.append(z)
     k = [0, 0, 0]
     for a in range(len(x)):
-        k[x[a]] = l[a]      # Stores l[a] at position order[a] \u2014 the INVERSE permutation
+        k[x[a]] = l[a]      # Stores l[a] at position order[a] — the INVERSE permutation
     return(f"{k[0]} {k[1]} {k[2]}")`,
-    caption: 'Real student submission. Score: 33/100. Passed public tests (self-inverse permutations like (0,2,1) and (2,1,0)), failed private tests with cyclic permutations like (2,0,1). The bug: k[x[a]] = l[a] stores word a at position order[a], which is the inverse of what\'s needed. It works only when the permutation is its own inverse \u2014 exactly the property that the sample inputs had.',
+    caption: 'Real student submission. Inverse-permutation bug: works on self-inverse sample permutations, fails cyclic hidden cases.',
   },
   'quitter-pangram': {
-    title: 'The Quitter \u2014 Pangram Check (C013)',
+    title: 'The Quitter — Pangram Check (C013)',
     code: `def is_pangram(text):
     text = text.lower()
-    count = {}
-    digit = '0123456789'
     alpha = 'abcdefghijklmnopqrstuvwxyz'
-    for char in alpha:       # \u2190 Loops over all 26 letters
-        if char in text:     # \u2190 Checks if this letter exists in text
-            return True      # \u2190 EXITS after the very first match!
+    for char in alpha:
+        if char in text:
+            return True
         else:
-            return False     # \u2190 EXITS after the very first non-match!`,
-    caption: 'Real student submission. Score: 0/100. The loop intends to check all 26 letters, but return True / return False inside the loop means the function exits after checking just the first letter \u2014 whether "a" appears in the text. Most sentences contain "a", so most inputs return True regardless. The function never checks the remaining 25 letters.',
+            return False`,
+    caption: 'Real student submission. Returns after checking only the first letter; never evaluates all 26.',
   },
   'precision-youtube': {
-    title: 'The Precision Trap \u2014 YouTube Engagement (C097)',
+    title: 'Precision Trap — YouTube Engagement (C097)',
     code: `def engagement_rate(video: dict) -> float:
-    """Returns engagement rate: (likes + comments) / views * 100
-    rounded to 2 decimal places."""
-    engagement = 0
-    for key in video:
-        if key == "likes":
-            engagement += video["likes"]
-        elif key == "comments":
-            engagement += video["comments"]
+    engagement = video["likes"] + video["comments"]
     if video["views"] > 0:
         rate = (engagement / video["views"]) * 100
-        return rate          # \u2190 Missing: round(rate, 2)
+        return rate          # Missing round(rate, 2)
     return 0.0`,
-    caption: 'Real student submission. Close \u2014 but no round(). 103 students shared this exact mistake: correct formula, correct data access, wrong output precision. The private tests check to exactly 2 decimal places. The difference between passing and failing: 0.001.',
+    caption: 'Real student submission. Formula is correct; formatting contract (2-decimal rounding) is missed.',
   },
 };
 function showCodeById(id) {
   const ex = CODE_EXAMPLES[id];
   if (ex) showCode(ex.title, ex.code, ex.caption);
 }
+window.showCodeById = showCodeById;
 
 // ─────────────────────────────────────────────
-// CHART: CLUSTER OVERVIEW
+// DERIVED INDEXES / LOOKUPS
+// ─────────────────────────────────────────────
+function buildVariantToClusterIndex() {
+  APP.variantToClusterId.clear();
+  APP.clusterById.forEach(cluster => {
+    (cluster.variants || []).forEach(v => {
+      if (v.variant) APP.variantToClusterId.set(v.variant, cluster.cluster_id);
+    });
+  });
+  APP.errorsIndexEntries.forEach(entry => {
+    if (entry.canonical_variant && !APP.variantToClusterId.has(entry.canonical_variant)) {
+      APP.variantToClusterId.set(entry.canonical_variant, entry.cluster_id);
+    }
+    entry.variants.forEach(v => {
+      if (v.variant && !APP.variantToClusterId.has(v.variant)) APP.variantToClusterId.set(v.variant, entry.cluster_id);
+    });
+  });
+}
+
+function clusterIndexEntryById(clusterId) {
+  return APP.errorsIndexEntries.find(e => e.cluster_id === clusterId) || null;
+}
+
+function getCanonicalVariantForCluster(clusterId) {
+  const cluster = APP.clusterById.get(clusterId);
+  if (cluster?.cluster_summary?.canonical_variant_by_submissions) return cluster.cluster_summary.canonical_variant_by_submissions;
+  const idx = clusterIndexEntryById(clusterId);
+  return idx?.canonical_variant || null;
+}
+
+function getProblemJsonPathForVariant(variantId) {
+  return variantId ? `../problems/${variantId}.json` : null;
+}
+
+function getVariantStatsFromCluster(cluster, variantId) {
+  if (!cluster) return null;
+  return (cluster.variants || []).find(v => v.variant === variantId) || null;
+}
+
+function getVariantPatternBreakdown(cluster, variantId) {
+  if (!cluster || !cluster.reclustered_patterns?.patterns) return [];
+  const out = [];
+  for (const p of cluster.reclustered_patterns.patterns) {
+    const vf = (p.variant_frequencies || []).find(v => v.variant === variantId);
+    if (!vf || !vf.count) continue;
+    out.push({
+      name: p.name,
+      count: vf.count,
+      total: vf.total,
+      pct: vf.pct,
+      pattern: p,
+    });
+  }
+  out.sort((a, b) => (b.count - a.count) || (b.pct - a.pct) || a.name.localeCompare(b.name));
+  return out;
+}
+
+// ─────────────────────────────────────────────
+// POPUP OPENERS
+// ─────────────────────────────────────────────
+async function openClusterReportPopup(clusterId) {
+  const idx = clusterIndexEntryById(clusterId);
+  const cluster = APP.clusterById.get(clusterId);
+  const href = (idx?.analysis_file_href || cluster?.analysis_file || '').replace(/^analysis\//, '');
+  const title = `${clusterId} · ${idx?.title || cluster?.title || 'Cluster report'}`;
+  if (!href) {
+    showPopup({
+      title,
+      html: `<div class="pop-note">No cluster report file is linked for this cluster yet.</div>`,
+      caption: 'This cluster may not have been analyzed yet.',
+    });
+    return;
+  }
+  try {
+    const md = await fetchTextCached(href);
+    const html = `
+      <div class="pop-note">Rendered from <code>${esc('analysis/' + href)}</code>. Syntax highlighting is applied to code fences. Use the toolbar link for the raw markdown.</div>
+      <div class="markdown-body">${markdownToHtml(md)}</div>
+    `;
+    showPopup({
+      title,
+      html,
+      caption: `Cluster report markdown (${href})`,
+      actions: [
+        { label: 'Open markdown file', href },
+        ...(idx?.canonical_variant ? [{ label: `Open canonical question (${idx.canonical_variant})`, onClick: () => openQuestionPopupByVariant(idx.canonical_variant) }] : []),
+      ],
+    });
+  } catch (err) {
+    showPopup({
+      title,
+      html: `<div class="pop-note">Could not open <code>${esc(href)}</code>: ${esc(err.message || String(err))}</div>`,
+      caption: 'The index links to this file, but it may not have been created yet.',
+      actions: [{ label: 'Try opening raw path', href }],
+    });
+  }
+}
+
+async function openErrorsIndexPopup() {
+  try {
+    const md = APP.errorsIndexMd || await fetchTextCached('ERRORS.md');
+    const html = `
+      <div class="pop-note">Rendered from <code>analysis/ERRORS.md</code>. This is the source index used to build the cluster-list table below in the story.</div>
+      <div class="markdown-body">${markdownToHtml(md)}</div>
+    `;
+    showPopup({
+      title: 'ERRORS.md — Cluster Index',
+      html,
+      caption: 'Rendered markdown with syntax highlighting',
+      actions: [{ label: 'Open raw ERRORS.md', href: 'ERRORS.md' }],
+    });
+  } catch (err) {
+    showPopup({
+      title: 'ERRORS.md — Cluster Index',
+      html: `<div class="pop-note">Could not load <code>analysis/ERRORS.md</code>: ${esc(err.message || String(err))}</div>`,
+      caption: 'Cluster index source file',
+      actions: [{ label: 'Try opening ERRORS.md', href: 'ERRORS.md' }],
+    });
+  }
+}
+
+function summarizeClusterFamilies(cluster) {
+  const totals = {};
+  for (const p of (cluster?.reclustered_patterns?.patterns || [])) {
+    const k = classify(p.name);
+    totals[k] = (totals[k] || 0) + (p.cluster_frequency?.count || 0);
+  }
+  return Object.entries(totals)
+    .map(([k, count]) => ({ key: k, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
+function renderClusterOverviewPopupHtml(cluster, idxEntry) {
+  const variants = cluster?.variants || [];
+  const patterns = cluster?.reclustered_patterns?.patterns || [];
+  const families = summarizeClusterFamilies(cluster);
+  const topPatterns = patterns.slice(0, 15);
+  const privateCases = cluster?.private_case_structure?.cases || [];
+  const canonicalVariant = getCanonicalVariantForCluster(cluster.cluster_id);
+  const canonicalQuestionPath = canonicalVariant ? getProblemJsonPathForVariant(canonicalVariant) : null;
+
+  return `
+    <div class="pop-note">
+      <strong style="color:#f4e8cf;">Cluster overview popup (JSON-backed)</strong><br>
+      This view is rendered from <code>analysis/errors.json</code> and links out to the question popup, pattern popups, and the original markdown report.
+    </div>
+
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Cluster</span><span class="v">${esc(cluster.cluster_id)} · ${esc(cluster.title)}</span></div>
+      <div class="pop-kv"><span class="k">Canonical question</span><span class="v">${canonicalVariant ? `<button type="button" data-qvariant="${esc(canonicalVariant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(canonicalVariant)}</button>` : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Variants in cluster</span><span class="v">${fmtInt(cluster.cluster_summary?.variants_in_cluster ?? idxEntry?.variants_count ?? 0)}</span></div>
+      <div class="pop-kv"><span class="k">Final submitters</span><span class="v">${fmtInt(cluster.outcomes?.final_submitters || 0)}</span></div>
+      <div class="pop-kv"><span class="k">Non-full finals</span><span class="v">${fmtInt(cluster.outcomes?.non_full_final_submissions || 0)} (${cluster.outcomes?.final_submitters ? pct((cluster.outcomes.non_full_final_submissions || 0) / cluster.outcomes.final_submitters) : 'n/a'})</span></div>
+      <div class="pop-kv"><span class="k">Residual “Other”</span><span class="v">${cluster.reclustered_patterns?.residual_other?.pct != null ? pct1(cluster.reclustered_patterns.residual_other.pct) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Parseable non-full</span><span class="v">${fmtInt(cluster.outcomes?.parseable_non_full || 0)}</span></div>
+      <div class="pop-kv"><span class="k">Non-parseable non-full</span><span class="v">${fmtInt(cluster.outcomes?.non_parseable_non_full || 0)}</span></div>
+      <div class="pop-kv"><span class="k">Pattern labels in report</span><span class="v">${fmtInt(patterns.length)}</span></div>
+    </div>
+
+    ${idxEntry?.key_error_summary ? `<div class="pop-cardmini"><h4>Key error summary (index)</h4><p>${esc(idxEntry.key_error_summary)}</p></div>` : ''}
+
+    <div class="pop-grid">
+      <div class="pop-cardmini">
+        <h4>Variants</h4>
+        <div class="pop-table-scroll">
+          <table>
+            <thead><tr><th>Question</th><th>Submitters</th><th>Non-full</th><th>Notes</th></tr></thead>
+            <tbody>
+              ${variants.length ? variants.map(v => `
+                <tr>
+                  <td><button type="button" data-qvariant="${esc(v.variant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(v.variant)}${v.canonical ? ' (canonical)' : ''}</button></td>
+                  <td class="num">${v.final_submitters != null ? fmtInt(v.final_submitters) : '–'}</td>
+                  <td class="num">${v.non_full != null ? fmtInt(v.non_full) : '–'}</td>
+                  <td>${esc(v.relationship || '')}</td>
+                </tr>
+              `).join('') : `<tr><td colspan="4">No variant rows available</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pop-cardmini">
+        <h4>Fingerprint mix inside this cluster</h4>
+        ${families.length ? `
+          <div class="pop-stack">
+            ${families.slice(0, 8).map(f => {
+              const total = cluster.outcomes?.non_full_final_submissions || 1;
+              const cfg = ARCH[f.key] || { label: f.key, color: '#888' };
+              return `
+                <div>
+                  <button type="button" data-arch-open="${esc(f.key)}" style="all:unset;cursor:pointer;color:${esc(cfg.color)};border-bottom:1px dashed rgba(255,255,255,.15);font-weight:600">${esc(cfg.label)}</button>
+                  <div class="pop-small">${fmtInt(f.count)} · ${pct(f.count / total)}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        ` : `<div class="pop-note">No analyzed patterns for this cluster yet.</div>`}
+      </div>
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>Private case structure (hidden test groups)</h4>
+      ${privateCases.length ? `
+        <div class="pop-stack">
+          ${privateCases.map(c => `<div><strong>Case ${c.index}:</strong> ${esc(c.description || '')}</div>`).join('')}
+        </div>
+      ` : `<div class="pop-note">Private case group descriptions were not found in this cluster payload.</div>`}
+      ${cluster?.private_case_structure?.vector_semantics ? `<div class="pop-small" style="margin-top:8px;">${esc(cluster.private_case_structure.vector_semantics)}</div>` : ''}
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>Top error patterns in this cluster</h4>
+      <div class="pop-table-scroll">
+        <table>
+          <thead><tr><th>Error pattern</th><th>Count</th><th>% of non-full</th><th>Examples</th></tr></thead>
+          <tbody>
+            ${topPatterns.length ? topPatterns.map(p => `
+              <tr>
+                <td><button type="button" data-pattern-open-cluster="${esc(cluster.cluster_id)}" data-pattern-open-name="${esc(p.name)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(p.name)}</button></td>
+                <td class="num">${fmtInt(p.cluster_frequency?.count || 0)}</td>
+                <td class="num">${p.cluster_frequency?.pct != null ? pct1(p.cluster_frequency.pct) : '–'}</td>
+                <td class="num">${fmtInt((p.representative_examples || []).filter(e => e.student_id).length)}</td>
+              </tr>
+            `).join('') : `<tr><td colspan="4">No analyzed patterns</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>Cluster resources</h4>
+      <div class="pop-stack">
+        <div>Report file: <code>${esc(cluster.analysis_file || idxEntry?.analysis_file_path || '')}</code></div>
+        ${canonicalQuestionPath ? `<div>Canonical problem JSON: <code>${esc(canonicalQuestionPath)}</code></div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function renderClusterIndexOnlyPopupHtml(idxEntry) {
+  const canonicalVariant = idxEntry?.canonical_variant || null;
+  const canonicalQuestionPath = canonicalVariant ? getProblemJsonPathForVariant(canonicalVariant) : null;
+  const variants = Array.isArray(idxEntry?.variants) ? idxEntry.variants : [];
+  return `
+    <div class="pop-note">
+      <strong style="color:#f4e8cf;">Cluster overview popup (index-backed)</strong><br>
+      This cluster is listed in <code>analysis/ERRORS.md</code> but does not yet have a parsed entry in <code>analysis/errors.json</code> (likely not yet analyzed). The popup still preserves the index metadata and links.
+    </div>
+
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Cluster</span><span class="v">${esc(idxEntry?.cluster_id || 'Unknown')} · ${esc(idxEntry?.title || '')}</span></div>
+      <div class="pop-kv"><span class="k">Canonical question</span><span class="v">${canonicalVariant ? `<button type="button" data-qvariant="${esc(canonicalVariant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(canonicalVariant)}</button>` : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Variants in cluster</span><span class="v">${idxEntry?.variants_count != null ? fmtInt(idxEntry.variants_count) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Final submitters</span><span class="v">${idxEntry?.total_final_submitters != null ? fmtInt(idxEntry.total_final_submitters) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Non-full finals</span><span class="v">${idxEntry?.total_non_full != null ? fmtInt(idxEntry.total_non_full) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Analyzed in errors.json</span><span class="v">No</span></div>
+      <div class="pop-kv"><span class="k">Variant relationship</span><span class="v">${esc(idxEntry?.variant_relationship || 'n/a')}</span></div>
+      <div class="pop-kv"><span class="k">Analysis file</span><span class="v">${idxEntry?.analysis_file_path ? `<code>${esc(idxEntry.analysis_file_path)}</code>` : 'n/a'}</span></div>
+    </div>
+
+    ${idxEntry?.key_error_summary ? `<div class="pop-cardmini"><h4>Key error summary (index)</h4><p>${esc(idxEntry.key_error_summary)}</p></div>` : `
+      <div class="pop-cardmini"><h4>Analysis status</h4><p>This cluster is listed for future analysis. There is no per-pattern error breakdown yet.</p></div>
+    `}
+
+    <div class="pop-cardmini">
+      <h4>Variants</h4>
+      ${variants.length ? `
+        <div class="pop-table-scroll">
+          <table>
+            <thead><tr><th>Question</th><th>Submitters</th><th>Non-full</th><th>Tests (pub/priv)</th><th>Difference vs canonical</th></tr></thead>
+            <tbody>
+              ${variants.map(v => `
+                <tr>
+                  <td>${v.variant ? `<button type="button" data-qvariant="${esc(v.variant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(v.variant)}${v.canonical ? ' (canonical)' : ''}</button>` : 'n/a'}</td>
+                  <td class="num">${v.final_submitters != null ? fmtInt(v.final_submitters) : '–'}</td>
+                  <td class="num">${v.non_full != null ? fmtInt(v.non_full) : '–'}</td>
+                  <td>${esc(v.tests_pub_priv || '')}</td>
+                  <td>${esc(v.diff_vs_canonical || '')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : `<div class="pop-note">No variant rows were parsed from the index table.</div>`}
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>What you can inspect now</h4>
+      <ul>
+        <li>Open the canonical question popup to see the exact prompt and test cases.</li>
+        <li>Open the raw cluster markdown path (if present) to check analysis status.</li>
+        <li>Use this as a placeholder until the cluster is exported into <code>analysis/errors.json</code>.</li>
+      </ul>
+      ${canonicalQuestionPath ? `<div class="pop-small">Canonical problem JSON path: <code>${esc(canonicalQuestionPath)}</code></div>` : ''}
+    </div>
+  `;
+}
+
+function openClusterOverviewPopup(clusterId) {
+  const cluster = APP.clusterById.get(clusterId);
+  const idxEntry = clusterIndexEntryById(clusterId);
+  const canonicalVariant = getCanonicalVariantForCluster(clusterId);
+  if (!cluster && !idxEntry) {
+    return openClusterReportPopup(clusterId);
+  }
+  const html = cluster ? renderClusterOverviewPopupHtml(cluster, idxEntry) : renderClusterIndexOnlyPopupHtml(idxEntry);
+  const actions = [];
+  if (cluster?.analysis_file) actions.push({ label: 'Open cluster report (raw markdown)', href: cluster.analysis_file.replace(/^analysis\//, '') });
+  if (!cluster?.analysis_file && idxEntry?.analysis_file_href) actions.push({ label: 'Open linked report path', href: idxEntry.analysis_file_href });
+  actions.push({ label: 'Open rendered cluster report', onClick: () => openClusterReportPopup(clusterId) });
+  if (canonicalVariant) actions.push({ label: `Open canonical question (${canonicalVariant})`, onClick: () => openQuestionPopupByVariant(canonicalVariant) });
+
+  showPopup({
+    title: `${cluster?.cluster_id || idxEntry?.cluster_id || clusterId} · ${cluster?.title || idxEntry?.title || 'Cluster'}`,
+    html,
+    caption: cluster ? 'Cluster overview rendered from analysis/errors.json' : 'Cluster overview rendered from the cluster index (analysis/ERRORS.md)',
+    actions,
+  });
+  popBodyEl.querySelectorAll('[data-qvariant]').forEach(btn => btn.addEventListener('click', () => openQuestionPopupByVariant(btn.getAttribute('data-qvariant'))));
+  popBodyEl.querySelectorAll('[data-pattern-open-cluster]').forEach(btn => btn.addEventListener('click', () => openPatternPopup(btn.getAttribute('data-pattern-open-cluster'), btn.getAttribute('data-pattern-open-name'))));
+  popBodyEl.querySelectorAll('[data-arch-open]').forEach(btn => btn.addEventListener('click', () => openArchetypePopup(btn.getAttribute('data-arch-open'))));
+}
+
+function renderTestcaseDetails(cases, label) {
+  if (!Array.isArray(cases) || !cases.length) {
+    return `<div class="pop-note">No ${esc(label.toLowerCase())} test cases found in the problem JSON.</div>`;
+  }
+  return `
+    <details>
+      <summary>${esc(label)} (${fmtInt(cases.length)})</summary>
+      <div class="pop-stack" style="margin-top:10px;">
+        ${cases.map((tc, i) => `
+          <div class="pop-cardmini">
+            <h4>${esc(label.replace(/s$/, ''))} ${i + 1}${tc.weight != null ? ` <span class="pop-badge">weight ${esc(String(tc.weight))}</span>` : ''}</h4>
+            <div class="pop-small" style="margin-bottom:6px;">Input</div>
+            <pre><code class="language-python">${esc(tc.input || '')}</code></pre>
+            <div class="pop-small" style="margin:6px 0 6px;">Expected output</div>
+            <pre><code class="language-text">${esc(tc.output || '')}</code></pre>
+          </div>
+        `).join('')}
+      </div>
+    </details>
+  `;
+}
+
+function decodePrivateVectorRows(cluster, vector) {
+  const chars = String(vector || '').trim().split('');
+  const cases = Array.isArray(cluster?.private_case_structure?.cases) ? cluster.private_case_structure.cases : [];
+  if (!chars.length && !cases.length) return [];
+  const n = Math.max(chars.length, cases.length);
+  const rows = [];
+  for (let i = 0; i < n; i += 1) {
+    const ch = chars[i] || '?';
+    let status = 'Unknown';
+    if (ch === '1') status = 'Pass';
+    else if (ch === '0') status = 'Fail';
+    else if (ch === '?') status = 'Unknown';
+    const caseInfo = cases[i] || {};
+    rows.push({
+      caseIndex: caseInfo.index ?? (i + 1),
+      description: caseInfo.description || '',
+      raw: ch,
+      status,
+    });
+  }
+  return rows;
+}
+
+function renderDecodedVectorTable(cluster, ex) {
+  const rows = decodePrivateVectorRows(cluster, ex?.vector);
+  if (!rows.length) return '';
+  const semantics = cluster?.private_case_structure?.vector_semantics || '';
+  return `
+    <div class="pop-cardmini">
+      <h4>Evaluator results (explicit, decoded from private-case vector)</h4>
+      <p class="pop-small">
+        Overall result: <strong>${esc(ex.summary || 'n/a')}</strong> · Score: <strong>${esc(String(ex.score_label ?? ex.score ?? 'n/a'))}</strong>
+        ${ex.vector ? ` · Raw vector <code>${esc(ex.vector)}</code>` : ''}
+      </p>
+      <div class="pop-table-scroll">
+        <table>
+          <thead><tr><th>Private case group</th><th>Result</th><th>Description</th></tr></thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>Case ${esc(String(r.caseIndex))}</td>
+                <td>${r.status === 'Pass' ? 'Pass' : (r.status === 'Fail' ? 'Fail' : 'Unknown')} <span class="pop-small">(<code>${esc(r.raw)}</code>)</span></td>
+                <td>${esc(r.description || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${semantics ? `<div class="pop-small" style="margin-top:6px;">${esc(semantics)}</div>` : ''}
+      <div class="pop-small" style="margin-top:4px;">Representative examples in <code>errors.json</code> preserve score + summary + hidden-case vector. Public-test outcomes are not retained in this export.</div>
+    </div>
+  `;
+}
+
+function makeQuestionMetricsGrid({ variantId, cluster, idxEntry, variantStats, indexVariantRow }) {
+  const submitters = variantStats?.final_submitters ?? indexVariantRow?.final_submitters ?? idxEntry?.total_final_submitters ?? null;
+  const nonFull = variantStats?.non_full ?? indexVariantRow?.non_full ?? idxEntry?.total_non_full ?? null;
+  const fullPass = variantStats?.full_pass ?? (submitters != null && nonFull != null ? submitters - nonFull : null);
+  const failureRate = submitters ? (nonFull || 0) / submitters : null;
+  const parseable = variantStats?.parseable_non_full;
+  const nonParseable = variantStats?.non_parseable_non_full;
+  const residual = cluster?.reclustered_patterns?.residual_other?.pct;
+  return `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Question</span><span class="v">${esc(variantId)}</span></div>
+      <div class="pop-kv"><span class="k">Cluster</span><span class="v">${esc(cluster?.cluster_id || idxEntry?.cluster_id || 'Unknown')} · ${esc(cluster?.title || idxEntry?.title || '')}</span></div>
+      <div class="pop-kv"><span class="k">Final submitters</span><span class="v">${submitters != null ? fmtInt(submitters) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Non-full finals</span><span class="v">${nonFull != null ? fmtInt(nonFull) : 'n/a'}${failureRate != null ? ` (${pct(failureRate)})` : ''}</span></div>
+      <div class="pop-kv"><span class="k">Full pass</span><span class="v">${fullPass != null ? fmtInt(fullPass) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Variants in cluster</span><span class="v">${idxEntry?.variants_count != null ? fmtInt(idxEntry.variants_count) : (cluster?.cluster_summary?.variants_in_cluster != null ? fmtInt(cluster.cluster_summary.variants_in_cluster) : 'n/a')}</span></div>
+      ${parseable != null ? `<div class="pop-kv"><span class="k">Parseable non-full</span><span class="v">${fmtInt(parseable)}</span></div>` : ''}
+      ${nonParseable != null ? `<div class="pop-kv"><span class="k">Syntax / non-parseable non-full</span><span class="v">${fmtInt(nonParseable)}</span></div>` : ''}
+      ${residual != null ? `<div class="pop-kv"><span class="k">Cluster residual “Other”</span><span class="v">${pct1(residual)}</span></div>` : ''}
+    </div>
+  `;
+}
+
+function renderVariantPatternTable(variantBreakdown) {
+  if (!variantBreakdown.length) {
+    return `<div class="pop-note">Detailed per-pattern error statistics are not available for this question yet (cluster not yet analyzed), or this variant has no non-full finals in the analyzed data.</div>`;
+  }
+  const top = variantBreakdown.slice(0, 20);
+  return `
+    <div class="pop-table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Error pattern</th>
+            <th>Count</th>
+            <th>Variant % of non-full</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${top.map(row => `
+            <tr>
+              <td><button type="button" data-pattern-open="${esc(row.name)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(row.name)}</button></td>
+              <td class="num">${fmtInt(row.count)}</td>
+              <td class="num">${pct1(row.pct)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function openQuestionPopupByVariant(variantId) {
+  if (!variantId) return;
+  const clusterId = APP.variantToClusterId.get(variantId) || null;
+  const cluster = clusterId ? APP.clusterById.get(clusterId) : null;
+  const idxEntry = clusterId ? clusterIndexEntryById(clusterId) : null;
+  const idxVariantRow = idxEntry?.variants?.find(v => v.variant === variantId) || null;
+  const variantStats = cluster ? getVariantStatsFromCluster(cluster, variantId) : null;
+  const variantBreakdown = cluster ? getVariantPatternBreakdown(cluster, variantId) : [];
+  const problemPath = getProblemJsonPathForVariant(variantId);
+
+  let problem = null;
+  let problemErr = null;
+  if (problemPath) {
+    try {
+      problem = await fetchJsonCached(problemPath);
+    } catch (err) {
+      problemErr = err;
+    }
+  }
+
+  const tags = (problem?.tags || []).concat(problem?.concept_tags || []).filter(Boolean);
+  const questionHtml = problem?.question || null;
+  const shortDesc = problem?.short_description || cluster?.title || idxEntry?.title || variantId;
+  const keySummary = idxEntry?.key_error_summary || null;
+
+  const html = `
+    ${makeQuestionMetricsGrid({ variantId, cluster, idxEntry, variantStats, indexVariantRow: idxVariantRow })}
+
+    ${tags.length ? `<div style="margin:2px 0 10px;">${tags.slice(0, 14).map(t => `<span class="pop-chip">${esc(String(t))}</span>`).join('')}</div>` : ''}
+
+    ${keySummary ? `<div class="pop-cardmini"><h4>Key error summary (cluster index)</h4><p>${esc(keySummary)}</p></div>` : ''}
+
+    <div class="pop-cardmini">
+      <h4>Problem statement</h4>
+      ${questionHtml ? `<div class="problem-html">${questionHtml}</div>` : `<p>${problemErr ? `Could not load problem JSON: ${esc(problemErr.message || String(problemErr))}` : 'Problem statement not available.'}</p>`}
+    </div>
+
+    <div class="pop-stack">
+      <div class="pop-cardmini">
+        <h4>Test cases</h4>
+        <p class="pop-small">Public and private testcase groups are shown from the local problem JSON so readers can see what the evaluator actually checks.</p>
+        ${problem ? renderTestcaseDetails(problem.public_testcase || [], 'Public test cases') : ''}
+        ${problem ? renderTestcaseDetails(problem.private_testcase || [], 'Private testcase groups') : ''}
+      </div>
+
+      <div class="pop-cardmini">
+        <h4>Error statistics for this question</h4>
+        <p class="pop-small">If the cluster has been analyzed, the table below shows the most common error patterns for this specific variant (not just the whole cluster).</p>
+        ${renderVariantPatternTable(variantBreakdown)}
+      </div>
+    </div>
+  `;
+
+  const actions = [];
+  if (problemPath) actions.push({ label: 'Open problem JSON', href: problemPath });
+  if (cluster?.analysis_file) actions.push({ label: 'Open cluster report', href: cluster.analysis_file.replace(/^analysis\//, '') });
+  if (clusterId) actions.push({ label: 'Open cluster report popup', onClick: () => openClusterReportPopup(clusterId) });
+
+  showPopup({
+    title: `${shortDesc} · ${variantId}`,
+    html,
+    caption: `Question: ${variantId}${clusterId ? ` · Cluster ${clusterId}` : ''}`,
+    actions,
+    contextTag: {
+      label: 'Question context',
+      help: `Problem statement, public/private test cases, and question-level error statistics${problemPath ? ` from ${problemPath}` : ''}.`,
+    },
+  });
+
+  const btns = popBodyEl.querySelectorAll('[data-pattern-open]');
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (clusterId) openPatternPopup(clusterId, btn.getAttribute('data-pattern-open'));
+    });
+  });
+}
+
+function openQuestionPopupByCluster(clusterId) {
+  const variant = getCanonicalVariantForCluster(clusterId);
+  if (variant) return openQuestionPopupByVariant(variant);
+  return openClusterReportPopup(clusterId);
+}
+
+function findPatternInCluster(clusterId, matcher) {
+  const cluster = APP.clusterById.get(clusterId);
+  if (!cluster) return null;
+  const patterns = cluster.reclustered_patterns?.patterns || [];
+  if (!matcher) return patterns[0] || null;
+  const rx = matcher instanceof RegExp ? matcher : new RegExp(String(matcher), 'i');
+  return patterns.find(p => rx.test(p.name)) || patterns.find(p => String(p.name).toLowerCase().includes(String(matcher).toLowerCase())) || null;
+}
+
+function openPatternPopup(clusterId, matcherOrName) {
+  const cluster = APP.clusterById.get(clusterId);
+  if (!cluster) return;
+  const pattern = findPatternInCluster(clusterId, matcherOrName);
+  if (!pattern) {
+    showPopup({
+      title: `${clusterId} · ${cluster.title}`,
+      html: `<div class="pop-note">Could not find a matching error pattern in this cluster report.</div>`,
+      caption: 'Pattern lookup',
+    });
+    return;
+  }
+  const cf = pattern.cluster_frequency || {};
+  const examples = (pattern.representative_examples || []).filter(e => e.code && e.student_id);
+  const variantFreqs = (pattern.variant_frequencies || []).filter(v => v.variant);
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Cluster</span><span class="v">${esc(cluster.cluster_id)} · ${esc(cluster.title)}</span></div>
+      <div class="pop-kv"><span class="k">Affected submissions</span><span class="v">${fmtInt(cf.count || 0)}</span></div>
+      <div class="pop-kv"><span class="k">% of cluster non-full</span><span class="v">${cf.pct != null ? pct1(cf.pct) : 'n/a'}</span></div>
+      <div class="pop-kv"><span class="k">Examples in report</span><span class="v">${fmtInt(examples.length)}</span></div>
+    </div>
+
+    ${pattern.interpretation ? `<div class="pop-cardmini"><h4>Interpretation</h4><p>${esc(pattern.interpretation)}</p></div>` : ''}
+
+    ${variantFreqs.length ? `
+      <div class="pop-cardmini">
+        <h4>Variant frequencies</h4>
+        <div class="pop-table-scroll">
+          <table>
+            <thead><tr><th>Variant</th><th>Count</th><th>% of variant non-full</th></tr></thead>
+            <tbody>
+              ${variantFreqs.map(v => `
+                <tr>
+                  <td><button type="button" data-qvariant="${esc(v.variant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(v.variant)}</button></td>
+                  <td class="num">${fmtInt(v.count || 0)}/${fmtInt(v.total || 0)}</td>
+                  <td class="num">${pct1(v.pct || 0)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    ` : ''}
+
+    ${(pattern.dominant_private_case_vectors || []).length || (pattern.score_distribution_top || []).length ? `
+      <div class="pop-grid">
+        ${(pattern.dominant_private_case_vectors || []).length ? `
+        <div class="pop-cardmini">
+          <h4>Dominant private-case vectors</h4>
+          <div class="pop-small">${(pattern.dominant_private_case_vectors || []).map(v => `<code>${esc(v.vector || '')}</code> x ${fmtInt(v.count || 0)}`).join(' · ')}</div>
+        </div>` : ''}
+        ${(pattern.score_distribution_top || []).length ? `
+        <div class="pop-cardmini">
+          <h4>Top score distribution</h4>
+          <div class="pop-small">${(pattern.score_distribution_top || []).map(s => `${esc(String(s.score_label ?? s.score))} x ${fmtInt(s.count || 0)}`).join(' · ')}</div>
+        </div>` : ''}
+      </div>
+    ` : ''}
+
+    <div class="pop-cardmini">
+      <h4>Actual student examples</h4>
+      <p class="pop-small">Representative examples are anonymized hashes from the cluster report. These snippets are from actual student submissions.</p>
+      ${examples.length ? `
+        <div class="pop-stack">
+          ${examples.slice(0, 6).map((ex, idx) => `
+            <div class="pop-cardmini">
+              <h4>Example ${idx + 1} <span class="pop-badge">Student ID ${esc(ex.student_id)}</span></h4>
+              <p class="pop-small">Variant <button type="button" data-qvariant="${esc(ex.variant)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(ex.variant)}</button></p>
+              ${renderDecodedVectorTable(cluster, ex)}
+              <pre><code class="language-${esc(ex.code_lang || 'python')}">${esc(ex.code || '')}</code></pre>
+            </div>
+          `).join('')}
+        </div>
+      ` : `<div class="pop-note">No code snippets embedded for this pattern in the current report.</div>`}
+    </div>
+  `;
+
+  showPopup({
+    title: `${cluster.cluster_id} · ${cluster.title} — ${pattern.name}`,
+    html,
+    caption: 'Pattern details and representative student code',
+    actions: [
+      ...(cluster.analysis_file ? [{ label: 'Open cluster report', href: cluster.analysis_file.replace(/^analysis\//, '') }] : []),
+      { label: 'Open canonical question', onClick: () => openQuestionPopupByCluster(clusterId) },
+    ],
+    contextTag: {
+      label: 'Error pattern',
+      help: 'A specific recurring failure mode within one question cluster, with frequencies, interpretation, and representative student code.',
+    },
+  });
+
+  popBodyEl.querySelectorAll('[data-qvariant]').forEach(btn => {
+    btn.addEventListener('click', () => openQuestionPopupByVariant(btn.getAttribute('data-qvariant')));
+  });
+}
+window.openPatternPopupByRef = function(clusterId, matcher) { openPatternPopup(clusterId, matcher); };
+
+function buildArchetypeStats() {
+  const stats = new Map();
+  const allPatternRows = APP.data?.indexes?.pattern_rows || [];
+  for (const [k, cfg] of Object.entries(ARCH)) {
+    stats.set(k, {
+      key: k,
+      ...cfg,
+      totalCount: 0,
+      clusterIds: new Set(),
+      patternRows: [],
+      topClusters: new Map(),
+      exampleSnippets: [],
+      partialCreditRows: 0,
+    });
+  }
+
+  APP.data.clusters.forEach(cluster => {
+    (cluster.reclustered_patterns?.patterns || []).forEach(p => {
+      const key = classify(p.name);
+      const st = stats.get(key) || stats.get('Logic Error');
+      const count = p.cluster_frequency?.count || 0;
+      st.totalCount += count;
+      st.clusterIds.add(cluster.cluster_id);
+      st.patternRows.push({ cluster, pattern: p, count });
+      st.topClusters.set(cluster.cluster_id, (st.topClusters.get(cluster.cluster_id) || 0) + count);
+      if ((p.score_distribution_top || []).some(s => Number(s.score) > 0 && Number(s.score) < 100)) st.partialCreditRows += 1;
+      const ex = (p.representative_examples || []).find(e => e.code && e.student_id);
+      if (ex && st.exampleSnippets.length < 12) {
+        st.exampleSnippets.push({ cluster, pattern: p, ex });
+      }
+    });
+  });
+
+  const totalErrors = (APP.data?.summary?.totals?.non_full_final_submissions) || 1;
+  for (const st of stats.values()) {
+    st.clusterCount = st.clusterIds.size;
+    st.share = st.totalCount / totalErrors;
+    st.topPatterns = st.patternRows
+      .slice()
+      .sort((a, b) => (b.count - a.count) || a.pattern.name.localeCompare(b.pattern.name))
+      .slice(0, 12);
+    st.topClustersList = [...st.topClusters.entries()]
+      .map(([clusterId, count]) => ({ clusterId, count, cluster: APP.clusterById.get(clusterId) || null }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+  }
+  APP.archetypeStats = stats;
+}
+
+function stripEvaluatorScaffolding(code) {
+  let s = String(code || '');
+  const marker = '\nfrom copy import deepcopy';
+  const idx = s.indexOf(marker);
+  if (idx >= 0) s = s.slice(0, idx).trimEnd();
+  return s;
+}
+
+function summarizeTimelineTestResults(ev) {
+  const tr = ev?.test_results?.test_result_summary;
+  if (!tr) return 'No testcase-level summary available.';
+  const reasons = tr.reasons || {};
+  const reasonText = Object.entries(reasons).slice(0, 3).map(([k, v]) => `${v}× ${k}`).join(' · ');
+  return `${tr.passed_cases ?? 0} passed / ${tr.failed_cases ?? 0} failed${reasonText ? ` · ${reasonText}` : ''}`;
+}
+
+function renderTimelineCardsForArchetype(archetypeKey) {
+  const tPayload = APP.archetypeTimelines;
+  const item = tPayload?.archetypes?.[archetypeKey] || null;
+  if (!item) {
+    return `
+      <div class="pop-cardmini">
+        <h4>Student timeline example</h4>
+        <div class="pop-note">Timeline cache not available for this archetype yet. Generate <code>analysis/archetype_timelines.json</code> to populate this section.</div>
+      </div>
+    `;
+  }
+  const steps = Array.isArray(item.timeline) ? item.timeline : [];
+  return `
+    <div class="pop-cardmini">
+      <h4>Actual student timeline (${esc(item.student_id)} · ${esc(item.variant)})</h4>
+      <p class="pop-small">
+        Representative of <button type="button" data-pattern-open-cluster="${esc(item.cluster_id)}" data-pattern-open-name="${esc(item.pattern_name)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(item.pattern_name)}</button>
+        in <button type="button" data-cluster-open="${esc(item.cluster_id)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(item.cluster_id)} · ${esc(item.cluster_title)}</button>.
+        Final representative example score: ${esc(String(item.example_score_label ?? item.example_score ?? 'n/a'))}${item.example_vector ? ` · vector ${esc(item.example_vector)}` : ''}.
+      </p>
+      <div class="timeline-stepper" data-timeline-stepper>
+        <div class="timeline-stepper-top">
+          <div>
+            <div class="timeline-stepper-title">Step-by-step replay (one event at a time)</div>
+            <div class="timeline-stepper-sub">Use the step buttons or next/previous controls to inspect the student’s process. Left pane shows evaluator context and results; right pane shows the code snapshot at that step.</div>
+          </div>
+        </div>
+        <div class="timeline-stepper-tabs" role="tablist" aria-label="Timeline steps">
+          ${steps.map((ev, idx) => `
+            <button type="button" class="timeline-step-tab${idx === 0 ? ' active' : ''}" data-step-tab="${idx}" role="tab" aria-selected="${idx === 0 ? 'true' : 'false'}">
+              ${esc(`Step ${ev.step_index}`)} · ${esc(ev.step_label || '')}
+            </button>
+          `).join('')}
+        </div>
+        <div class="timeline-stepper-controls">
+          <button type="button" data-step-prev disabled>Previous</button>
+          <button type="button" data-step-next ${steps.length > 1 ? '' : 'disabled'}>Next</button>
+          <span class="timeline-stepper-status" data-step-status>Step 1 of ${fmtInt(Math.max(steps.length, 1))}</span>
+        </div>
+        <div class="timeline-stepper-panels">
+          ${steps.map((ev, idx) => {
+            const sfails = ev.test_results?.test_result_summary?.sample_fails || [];
+            return `
+              <section class="timeline-stepper-panel${idx === 0 ? ' active' : ''}" data-step-panel="${idx}" role="tabpanel">
+                <div class="timeline-stepper-grid">
+                  <div class="pane">
+                    <h5>Step & timeline</h5>
+                    <p><strong>Step ${esc(String(ev.step_index))}: ${esc(ev.step_label || '')}</strong> <span class="pop-badge">${esc(ev.timestamp_display_utc || ev.timestamp_utc || 'time n/a')}</span></p>
+                    <p class="pop-small">${esc(ev.step_description || '')}</p>
+                    <p>${esc(ev.event_annotation || '')}</p>
+
+                    <div class="timeline-step-metrics pop-grid">
+                      <div class="pop-kv"><span class="k">Evaluator</span><span class="v">${esc(ev.evaluation_type || 'n/a')}</span></div>
+                      <div class="pop-kv"><span class="k">Action</span><span class="v">${esc(ev.action || 'n/a')}</span></div>
+                      <div class="pop-kv"><span class="k">Result</span><span class="v">${esc(ev.summary || 'n/a')}</span></div>
+                      <div class="pop-kv"><span class="k">Score</span><span class="v">${ev.score != null ? esc(String(ev.score)) : 'n/a'}</span></div>
+                      <div class="pop-kv"><span class="k">Tests passed</span><span class="v">${(ev.num_test_passed != null && ev.num_test_evaluated != null) ? `${esc(String(ev.num_test_passed))}/${esc(String(ev.num_test_evaluated))}` : 'n/a'}</span></div>
+                      <div class="pop-kv"><span class="k">Timestamp</span><span class="v">${esc(ev.timestamp_display_full_utc || ev.timestamp_utc || 'n/a')}</span></div>
+                    </div>
+
+                    <h5>Test results</h5>
+                    <div class="pop-note"><strong style="color:#f4e8cf;">Summary:</strong> ${esc(summarizeTimelineTestResults(ev))}</div>
+
+                    <div class="timeline-step-testlist">
+                      ${sfails.length ? sfails.map((sf, i) => `
+                        <div class="timeline-step-testitem fail">
+                          <div class="label">Failed test excerpt ${i + 1}${sf.reason ? ` · ${esc(sf.reason)}` : ''}</div>
+                          <div class="value" style="margin-top:4px;">Output</div>
+                          <pre><code class="language-text">${esc(sf.output_excerpt || '')}</code></pre>
+                          <div class="value" style="margin-top:8px;">Expected</div>
+                          <pre><code class="language-text">${esc(sf.expected_excerpt || '')}</code></pre>
+                        </div>
+                      `).join('') : `<div class="timeline-step-testitem ${Number(ev.num_test_evaluated || 0) > 0 && Number(ev.num_test_passed || 0) === Number(ev.num_test_evaluated || 0) ? 'pass' : 'unknown'}"><div class="label">Failed test excerpts</div><div class="value">No sample failure excerpts recorded for this step.</div></div>`}
+                    </div>
+                  </div>
+                  <div class="pane">
+                    <h5>Code snapshot</h5>
+                    <pre><code class="language-python">${esc(stripEvaluatorScaffolding(ev.code || ''))}</code></pre>
+                  </div>
+                </div>
+              </section>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function initTimelineSteppers(root = document) {
+  root.querySelectorAll('[data-timeline-stepper]').forEach(stepper => {
+    if (stepper.dataset.bound === '1') return;
+    stepper.dataset.bound = '1';
+    const tabs = [...stepper.querySelectorAll('[data-step-tab]')];
+    const panels = [...stepper.querySelectorAll('[data-step-panel]')];
+    const prevBtn = stepper.querySelector('[data-step-prev]');
+    const nextBtn = stepper.querySelector('[data-step-next]');
+    const statusEl = stepper.querySelector('[data-step-status]');
+    if (!tabs.length || !panels.length) return;
+    let idx = 0;
+    const setActive = (nextIdx) => {
+      idx = clamp(nextIdx, 0, panels.length - 1);
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === idx);
+        tab.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      });
+      panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+      if (prevBtn) prevBtn.disabled = idx === 0;
+      if (nextBtn) nextBtn.disabled = idx >= panels.length - 1;
+      if (statusEl) statusEl.textContent = `Step ${idx + 1} of ${panels.length}`;
+    };
+    tabs.forEach((tab, i) => {
+      const activate = () => setActive(i);
+      tab.addEventListener('click', activate);
+      tab.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activate();
+        }
+      });
+    });
+    if (prevBtn) prevBtn.addEventListener('click', () => setActive(idx - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => setActive(idx + 1));
+    setActive(0);
+  });
+}
+
+function openArchetypePopup(key) {
+  if (key === '__overview') {
+    const total = Object.values(APP.archTotals).reduce((s, v) => s + v, 0);
+    const html = `
+      <div class="pop-note">These are the seven high-level “fingerprints” used in this narrative layer. They are derived by grouping the question-specific error-pattern labels in <code>errors.json</code>.</div>
+      <div class="pop-grid">
+        <div class="pop-kv"><span class="k">Fingerprint families</span><span class="v">${Object.keys(APP.archTotals).length}</span></div>
+        <div class="pop-kv"><span class="k">Total pattern-attributed errors</span><span class="v">${fmtInt(total)}</span></div>
+        <div class="pop-kv"><span class="k">Analyzed clusters</span><span class="v">${fmtInt(APP.data.summary.cluster_count)}</span></div>
+        <div class="pop-kv"><span class="k">Distinct pattern labels</span><span class="v">${fmtInt(APP.data.summary.pattern_row_count)}</span></div>
+      </div>
+      <div class="pop-stack">
+        ${Object.entries(APP.archTotals).sort((a,b)=>b[1]-a[1]).map(([k, v]) => {
+          const cfg = ARCH[k];
+          return `
+            <div class="pop-cardmini">
+              <h4><button type="button" data-arch-open="${esc(k)}" style="all:unset;cursor:pointer;color:${esc(cfg.color)};font-weight:700;border-bottom:1px dashed rgba(255,255,255,.18)">${esc(cfg.label)}</button> <span class="pop-badge">${esc(k)}</span></h4>
+              <p>${esc(cfg.desc)}</p>
+              <div class="pop-small">${fmtInt(v)} pattern-attributed failures · ${pct(v / total)}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+    showPopup({ title: 'Seven Fingerprints — Overview', html, caption: 'Narrative-layer archetype grouping of pattern labels' });
+    popBodyEl.querySelectorAll('[data-arch-open]').forEach(btn => btn.addEventListener('click', () => openArchetypePopup(btn.getAttribute('data-arch-open'))));
+    return;
+  }
+
+  const st = APP.archetypeStats.get(key);
+  if (!st) return;
+  const totalErrors = Object.values(APP.archTotals).reduce((s, v) => s + v, 0) || 1;
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Fingerprint</span><span class="v">${esc(st.label)} <span class="pop-badge">${esc(st.key)}</span></span></div>
+      <div class="pop-kv"><span class="k">Affected failures (weighted)</span><span class="v">${fmtInt(st.totalCount)}</span></div>
+      <div class="pop-kv"><span class="k">Share of pattern-attributed failures</span><span class="v">${pct(st.totalCount / totalErrors)}</span></div>
+      <div class="pop-kv"><span class="k">Clusters where it appears</span><span class="v">${fmtInt(st.clusterCount)} / ${fmtInt(APP.data.summary.cluster_count)}</span></div>
+      <div class="pop-kv"><span class="k">Distinct pattern labels in this fingerprint</span><span class="v">${fmtInt(st.patternRows.length)}</span></div>
+      <div class="pop-kv"><span class="k">Patterns with partial-credit signatures</span><span class="v">${fmtInt(st.partialCreditRows)}</span></div>
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>What this fingerprint looks like</h4>
+      <p>${esc(st.desc)}</p>
+      <div class="process-diagram">
+        ${(st.process || []).map(([t, d], i) => `
+          <div class="process-step">
+            <span class="n">Step ${i + 1}</span>
+            <span class="t">${esc(t)}</span>
+            <span class="d">${esc(d)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="pop-grid">
+      <div class="pop-cardmini">
+        <h4>Top clusters (where this shows up most)</h4>
+        <div class="pop-stack">
+          ${st.topClustersList.slice(0, 8).map(row => `
+            <div>
+              <button type="button" data-cluster-open="${esc(row.clusterId)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(row.clusterId)} · ${esc(row.cluster?.title || '')}</button>
+              <div class="pop-small">${fmtInt(row.count)} failures attributed to this fingerprint in this cluster</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="pop-cardmini">
+        <h4>Top pattern labels in this fingerprint</h4>
+        <div class="pop-stack">
+          ${st.topPatterns.slice(0, 8).map(row => `
+            <div>
+              <button type="button" data-pattern-open-cluster="${esc(row.cluster.cluster_id)}" data-pattern-open-name="${esc(row.pattern.name)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(truncate(row.pattern.name, 86))}</button>
+              <div class="pop-small">${fmtInt(row.count)} in ${esc(row.cluster.cluster_id)} · ${esc(row.cluster.title)}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="pop-cardmini">
+      <h4>Representative student examples</h4>
+      ${st.exampleSnippets.length ? `
+        <div class="pop-stack">
+          ${st.exampleSnippets.slice(0, 5).map(({ cluster, pattern, ex }, i) => `
+            <div class="pop-cardmini">
+              <h4>${esc(cluster.cluster_id)} · ${esc(cluster.title)} <span class="pop-badge">${esc(ex.student_id)}</span></h4>
+              <p class="pop-small"><button type="button" data-pattern-open-cluster="${esc(cluster.cluster_id)}" data-pattern-open-name="${esc(pattern.name)}" style="all:unset;cursor:pointer;color:#93c5fd;border-bottom:1px dashed rgba(147,197,253,.5)">${esc(pattern.name)}</button> · ${esc(ex.summary || 'n/a')} · Score ${esc(String(ex.score_label ?? ex.score ?? 'n/a'))}</p>
+              <pre><code class="language-${esc(ex.code_lang || 'python')}">${esc(ex.code || '')}</code></pre>
+            </div>
+          `).join('')}
+        </div>
+      ` : `<div class="pop-note">No embedded example snippets were captured for this archetype in the currently analyzed clusters.</div>`}
+    </div>
+
+    ${renderTimelineCardsForArchetype(key)}
+
+    <div class="pop-cardmini">
+      <h4>What to do instructionally</h4>
+      <ul>
+        ${(st.interventions || []).map(x => `<li>${esc(x)}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+
+  showPopup({
+    title: `${st.label} · ${st.key}`,
+    html,
+    caption: 'Fingerprint details: process pattern, statistics, and representative evidence',
+    contextTag: {
+      label: 'Fingerprint',
+      help: 'A cross-question archetype that groups many question-specific error patterns into a common process/behavior pattern.',
+    },
+  });
+
+  initTimelineSteppers(popBodyEl);
+  popBodyEl.querySelectorAll('[data-cluster-open]').forEach(btn => btn.addEventListener('click', () => openClusterOverviewPopup(btn.getAttribute('data-cluster-open'))));
+  popBodyEl.querySelectorAll('[data-pattern-open-cluster]').forEach(btn => btn.addEventListener('click', () => openPatternPopup(btn.getAttribute('data-pattern-open-cluster'), btn.getAttribute('data-pattern-open-name'))));
+}
+
+// ─────────────────────────────────────────────
+// CHARTS
 // ─────────────────────────────────────────────
 function buildClusterChart(el, clusters) {
   const sorted = [...clusters].sort((a, b) => b.failure_rate - a.failure_rate);
@@ -502,23 +1922,20 @@ function buildClusterChart(el, clusters) {
       .attr('font-weight', fr > .7 ? '700' : '400')
       .text(d3.format('.0%')(fr));
 
-    const pats = d.top_patterns.map(p => `• ${p.name.slice(0, 58)}${p.name.length > 58 ? '…' : ''} (${Math.round(p.pct)}%)`).join('<br>');
+    const pats = d.top_patterns.map(p => `• ${esc(p.name.slice(0, 58))}${p.name.length > 58 ? '…' : ''} (${Math.round(p.pct)}%)`).join('<br>');
     row.append('rect').attr('x', -ml).attr('y', y).attr('width', CW).attr('height', ROW).attr('fill', 'transparent')
-      .on('mousemove', e => showTip(e, `<strong>${d.title}</strong>${d.submitters.toLocaleString()} students · ${Math.round(fr * 100)}% failed<br><br>${pats}`))
-      .on('mouseleave', hideTip);
+      .style('cursor', 'pointer')
+      .on('mousemove', e => showTip(e, `<strong>${esc(d.title)}</strong>${fmtInt(d.submitters)} students · ${Math.round(fr * 100)}% failed<br><br>${pats}<br><br><em>Click to open question popup (${esc(d.canonical_variant || 'canonical variant')})</em>`))
+      .on('mouseleave', hideTip)
+      .on('click', () => openQuestionPopupByCluster(d.id));
   });
 }
 
-// ─────────────────────────────────────────────
-// CHART: ARCHETYPE DONUT
-// ─────────────────────────────────────────────
 function buildArchChart(el, totals) {
   const CW = el.clientWidth || 800;
   const H = 300;
   const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
   const total = entries.reduce((s, [, v]) => s + v, 0);
-
-  // Donut radius, centred at left side
   const R = Math.min(CW * 0.22, 120);
   const cx = R + 28, cy = H / 2;
 
@@ -537,27 +1954,27 @@ function buildArchChart(el, totals) {
   segs.on('mousemove', (e, d) => {
     d3.select(e.currentTarget).attr('d', arcH);
     const cfg = ARCH[d.data[0]] || {};
-    showTip(e, `<strong>${cfg.label || d.data[0]}</strong>${d.data[1].toLocaleString()} errors · ${((d.data[1] / total) * 100).toFixed(1)}%<br>${cfg.desc || ''}`);
-  }).on('mouseleave', (e) => { d3.select(e.currentTarget).attr('d', arc); hideTip(); });
+    showTip(e, `<strong>${esc(cfg.label || d.data[0])}</strong>${fmtInt(d.data[1])} errors · ${((d.data[1] / total) * 100).toFixed(1)}%<br>${esc(cfg.desc || '')}<br><br><em>Click for fingerprint details</em>`);
+  }).on('mouseleave', (e) => { d3.select(e.currentTarget).attr('d', arc); hideTip(); })
+    .on('click', (_, d) => openArchetypePopup(d.data[0]));
 
   g.append('text').attr('text-anchor', 'middle').attr('dy', '-.25em').attr('font-size', 20).attr('font-weight', '700').attr('fill', '#1c1917').text(total.toLocaleString());
   g.append('text').attr('text-anchor', 'middle').attr('dy', '1.1em').attr('font-size', 10).attr('fill', '#9b9086').text('total errors');
 
-  // Legend
   const lx = cx + R + 36, ly = (H - entries.length * 36) / 2;
   const lg = svg.append('g').attr('transform', `translate(${lx},${ly})`);
   entries.forEach(([k, v], i) => {
     const cfg = ARCH[k] || {color: '#888', label: k};
-    const row = lg.append('g').attr('transform', `translate(0,${i * 36})`);
+    const row = lg.append('g').attr('transform', `translate(0,${i * 36})`).style('cursor', 'pointer');
     row.append('rect').attr('width', 11).attr('height', 11).attr('rx', 2).attr('y', 2).attr('fill', cfg.color);
     row.append('text').attr('x', 17).attr('y', 9).attr('dominant-baseline', 'middle').attr('font-size', 12).attr('font-weight', '600').attr('fill', '#1c1917').text(cfg.label);
     row.append('text').attr('x', 17).attr('y', 22).attr('font-size', 10).attr('fill', '#9b9086').text(`${((v / total) * 100).toFixed(1)}% · ${v.toLocaleString()}`);
+    row.on('click', () => openArchetypePopup(k))
+      .on('mousemove', e => showTip(e, `<strong>${esc(cfg.label)}</strong>${fmtInt(v)} errors · ${((v / total) * 100).toFixed(1)}%<br><em>Click for details</em>`))
+      .on('mouseleave', hideTip);
   });
 }
 
-// ─────────────────────────────────────────────
-// CHART: PANGRAM PATTERNS
-// ─────────────────────────────────────────────
 function buildPangramChart(el, cluster) {
   if (!cluster) return;
   const pats = (cluster.reclustered_patterns?.patterns || []).slice(0, 10);
@@ -568,7 +1985,6 @@ function buildPangramChart(el, cluster) {
 
   const svg = d3.select(el).html('').append('svg').attr('width', CW).attr('height', H);
   const g = svg.append('g').attr('transform', `translate(${ml},${mt})`);
-
   const max = d3.max(pats, d => d.cluster_frequency.count);
   const x = d3.scaleLinear().domain([0, max]).range([0, W]);
   g.append('g').attr('transform', `translate(0,${pats.length * ROW})`)
@@ -579,26 +1995,31 @@ function buildPangramChart(el, cluster) {
   pats.forEach((d, i) => {
     const y = i * ROW;
     const cnt = d.cluster_frequency.count;
-    const pct = d.cluster_frequency.pct;
+    const pctv = d.cluster_frequency.pct;
     const top = i === 0;
     const fill = top ? '#dc2626' : (i < 3 ? '#fb923c' : '#94a3b8');
     const op = top ? .9 : .65;
 
     g.append('rect').attr('x', 0).attr('y', y + 4).attr('width', x(cnt)).attr('height', ROW - 8).attr('fill', fill).attr('opacity', op);
-
     const lbl = d.name.length > 54 ? d.name.slice(0, 52) + '…' : d.name;
     g.append('text').attr('x', -6).attr('y', y + ROW / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle')
       .attr('font-size', 10.5).attr('fill', top ? '#dc2626' : '#444').attr('font-weight', top ? '600' : '400').text(lbl);
-
     g.append('text').attr('x', x(cnt) + 6).attr('y', y + ROW / 2).attr('dominant-baseline', 'middle')
       .attr('font-size', 10.5).attr('fill', top ? '#dc2626' : '#666').attr('font-weight', top ? '700' : '400')
-      .text(`${cnt}  (${pct.toFixed(0)}%)`);
+      .text(`${cnt}  (${pctv.toFixed(0)}%)`);
+
+    g.append('rect')
+      .attr('x', -ml).attr('y', y).attr('width', CW).attr('height', ROW)
+      .attr('fill', 'transparent').style('cursor', 'pointer')
+      .on('mousemove', e => {
+        const ex = (d.representative_examples || []).find(x => x.student_id);
+        showTip(e, `<strong>${esc(d.name)}</strong>${fmtInt(cnt)} of ${fmtInt(cluster.outcomes.non_full_final_submissions)} failing pangram submissions (${pct1(pctv)})<br>${d.interpretation ? esc(d.interpretation) : ''}${ex ? `<br><br>Example student: ${esc(ex.student_id.slice(0, 8))}…` : ''}<br><br><em>Click for examples and pattern details</em>`);
+      })
+      .on('mouseleave', hideTip)
+      .on('click', () => openPatternPopup('C013', d.name));
   });
 }
 
-// ─────────────────────────────────────────────
-// CHART: SCATTER PLOT
-// ─────────────────────────────────────────────
 function buildScatter(el, clusters) {
   const ml = 52, mr = 36, mt = 28, mb = 48;
   const CW = el.clientWidth || 900;
@@ -615,12 +2036,10 @@ function buildScatter(el, clusters) {
   const color = d3.scaleSequential().domain([0, 1]).interpolator(t => d3.interpolateRdYlGn(1 - t)).clamp(true);
   const rScale = d => Math.max(5, Math.sqrt(d.submitters) * 1.15);
 
-  // Gridlines
   g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-W).tickFormat(''))
     .call(a => a.select('.domain').remove())
     .call(a => a.selectAll('line').attr('stroke', '#e8e3da').attr('stroke-dasharray', '3,5'));
 
-  // Axes
   g.append('g').attr('transform', `translate(0,${h})`)
     .call(d3.axisBottom(x).tickFormat(d => d >= 1000 ? d3.format('.0k')(d) : d).ticks(5))
     .call(a => a.select('.domain').attr('stroke', '#d6cfc4'))
@@ -629,48 +2048,264 @@ function buildScatter(el, clusters) {
     .call(a => a.select('.domain').attr('stroke', '#d6cfc4'))
     .call(a => a.selectAll('text').attr('font-size', 10).attr('fill', '#9b9086'));
 
-  // Axis labels
   svg.append('text').attr('x', ml + W / 2).attr('y', H - 6).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#9b9086').text('Students who submitted (log scale)');
   svg.append('text').attr('transform', 'rotate(-90)').attr('x', -(mt + h / 2)).attr('y', 13).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#9b9086').text('Failure rate');
 
-  // Circles
   g.selectAll('circle').data(clusters).join('circle')
     .attr('cx', d => x(d.submitters))
     .attr('cy', d => y(d.failure_rate))
     .attr('r', d => rScale(d))
     .attr('fill', d => color(d.failure_rate))
     .attr('stroke', '#fff').attr('stroke-width', 1.5).attr('opacity', .82)
+    .style('cursor', 'pointer')
     .on('mousemove', (e, d) => {
-      const pats = d.top_patterns.map(p => `• ${p.name.slice(0, 52)}${p.name.length > 52 ? '…' : ''}`).join('<br>');
-      showTip(e, `<strong>${d.title}</strong>${d.submitters.toLocaleString()} students · ${Math.round(d.failure_rate * 100)}% failed<br><br>${pats}`);
+      const pats = d.top_patterns.map(p => `• ${esc(p.name.slice(0, 52))}${p.name.length > 52 ? '…' : ''}`).join('<br>');
+      showTip(e, `<strong>${esc(d.title)}</strong>${fmtInt(d.submitters)} students · ${Math.round(d.failure_rate * 100)}% failed<br>${d.canonical_variant ? `Canonical question: ${esc(d.canonical_variant)}<br>` : ''}<br>${pats}<br><br><em>Click to open question popup</em>`);
     })
-    .on('mouseleave', hideTip);
+    .on('mouseleave', hideTip)
+    .on('click', (_, d) => openQuestionPopupByCluster(d.id));
 
-  // Label extreme points
   clusters.filter(d => d.failure_rate > 0.87 || d.failure_rate < 0.13 || d.submitters > 1200).forEach(d => {
     const cx = x(d.submitters), cy = y(d.failure_rate), r = rScale(d);
     const short = d.title.length > 20 ? d.title.slice(0, 19) + '…' : d.title;
     const above = cy > 30;
     g.append('text').attr('x', cx).attr('y', above ? cy - r - 4 : cy + r + 13)
-      .attr('text-anchor', 'middle').attr('font-size', 9.5).attr('fill', '#555').text(short);
+      .attr('text-anchor', 'middle').attr('font-size', 9.5).attr('fill', '#555').text(short)
+      .style('cursor', 'pointer')
+      .on('click', () => openQuestionPopupByCluster(d.id));
   });
 }
 
-// ─────────────────────────────────────────────
-// ARCHETYPE CARDS
-// ─────────────────────────────────────────────
 function buildArchCards(totals) {
   const total = Object.values(totals).reduce((s, v) => s + v, 0);
   const container = document.getElementById('arch-cards');
   container.innerHTML = '';
   Object.entries(totals).sort((a, b) => b[1] - a[1]).forEach(([k, v]) => {
     const cfg = ARCH[k] || {color: '#888', label: k, desc: ''};
-    const pct = ((v / total) * 100).toFixed(1);
+    const pctShare = ((v / total) * 100).toFixed(1);
     const card = document.createElement('div');
     card.className = 'arch-card';
     card.style.color = cfg.color;
-    card.innerHTML = `<div class="arch-name">${cfg.label}</div><div class="arch-pct">${pct}%</div><div class="arch-desc">${cfg.desc}</div>`;
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', `${cfg.label} details`);
+    card.innerHTML = `<div class="arch-name">${esc(cfg.label)}</div><div class="arch-pct">${pctShare}%</div><div class="arch-desc">${esc(cfg.desc)}</div>`;
+    card.addEventListener('click', () => openArchetypePopup(k));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openArchetypePopup(k); } });
+    card.addEventListener('mousemove', e => showTip(e, `<strong>${esc(cfg.label)}</strong>${fmtInt(v)} errors · ${pctShare}%<br><em>Click for full fingerprint details</em>`));
+    card.addEventListener('mouseleave', hideTip);
     container.appendChild(card);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CLUSTER LIST TABLE (from ERRORS.md)
+// ─────────────────────────────────────────────
+function renderClusterListTable() {
+  const tbody = document.getElementById('clusterlist-body');
+  const meta = document.getElementById('clusterlist-meta');
+  const headers = [...document.querySelectorAll('.cluster-table thead th[data-sort-col]')];
+  if (!tbody) return;
+  let rows = [...APP.errorsIndexEntries];
+  const st = APP.clusterListState;
+  const q = st.q.trim().toLowerCase();
+  if (st.filter === 'analyzed') rows = rows.filter(r => r.analyzed);
+  if (st.filter === 'unanalyzed') rows = rows.filter(r => !r.analyzed);
+  if (q) {
+    rows = rows.filter(r => {
+      const hay = [
+        r.cluster_id, r.title, r.canonical_variant,
+        r.key_error_summary, r.analysis_file_path,
+        ...r.variants.map(v => v.variant),
+      ].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  const cmp = (a, b) => {
+    const dir = st.sortDir === 'desc' ? -1 : 1;
+    let av, bv;
+    switch (st.sort) {
+      case 'cluster':
+        av = `${a.cluster_id} ${a.title || ''}`.toLowerCase();
+        bv = `${b.cluster_id} ${b.title || ''}`.toLowerCase();
+        return dir * av.localeCompare(bv);
+      case 'question':
+        av = (a.canonical_variant || '').toLowerCase();
+        bv = (b.canonical_variant || '').toLowerCase();
+        return dir * av.localeCompare(bv) || ((a.cluster_id || '').localeCompare(b.cluster_id || ''));
+      case 'variants':
+        return dir * (((a.variants_count || 0) - (b.variants_count || 0))) || (a.cluster_id || '').localeCompare(b.cluster_id || '');
+      case 'submitters':
+        return dir * (((a.total_final_submitters || 0) - (b.total_final_submitters || 0))) || (a.cluster_id || '').localeCompare(b.cluster_id || '');
+      case 'nonfull':
+        return dir * (((a.total_non_full || 0) - (b.total_non_full || 0))) || (a.cluster_id || '').localeCompare(b.cluster_id || '');
+      case 'summary':
+        av = (a.key_error_summary || '').toLowerCase();
+        bv = (b.key_error_summary || '').toLowerCase();
+        return dir * av.localeCompare(bv) || (a.cluster_id || '').localeCompare(b.cluster_id || '');
+      default:
+        return (a.cluster_id || '').localeCompare(b.cluster_id || '');
+    }
+  };
+  rows.sort(cmp);
+
+  headers.forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    const col = th.getAttribute('data-sort-col');
+    if (col === st.sort) th.classList.add(st.sortDir === 'desc' ? 'sort-desc' : 'sort-asc');
+  });
+
+  meta.textContent = `${fmtInt(rows.length)} clusters shown · ${fmtInt(rows.filter(r => r.analyzed).length)} analyzed · sorted by ${st.sort} (${st.sortDir})`;
+
+  tbody.innerHTML = rows.map(r => {
+    const selected = st.selectedClusterId === r.cluster_id ? 'selected' : '';
+    const summary = r.key_error_summary ? esc(r.key_error_summary) : '<span class="summary-missing">Not yet analyzed</span>';
+    return `
+      <tr data-cluster-row="${esc(r.cluster_id)}" class="${selected}">
+        <td class="cluster-cell">
+          <strong>${esc(r.cluster_id)} - ${esc(r.title)}</strong>
+          ${r.analyzed ? '<span class="pill-ana">Analyzed</span>' : ''}
+        </td>
+        <td>
+          ${r.canonical_variant
+            ? `<a href="#" class="q-link" data-question="${esc(r.canonical_variant)}">${esc(r.canonical_variant)}</a>`
+            : '<span class="summary-missing">n/a</span>'}
+        </td>
+        <td class="num">${r.variants_count != null ? fmtInt(r.variants_count) : '–'}</td>
+        <td class="num">${r.total_final_submitters != null ? fmtInt(r.total_final_submitters) : '–'}</td>
+        <td class="num">${r.total_non_full != null ? fmtInt(r.total_non_full) : '–'}</td>
+        <td class="summary-cell">${summary}</td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.querySelectorAll('[data-cluster-row]').forEach(tr => {
+    tr.addEventListener('click', (e) => {
+      if (e.target.closest('[data-question]')) return;
+      const clusterId = tr.getAttribute('data-cluster-row');
+      APP.clusterListState.selectedClusterId = clusterId;
+      renderClusterListTable();
+      openClusterOverviewPopup(clusterId);
+    });
+  });
+  tbody.querySelectorAll('[data-question]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openQuestionPopupByVariant(a.getAttribute('data-question'));
+    });
+  });
+}
+
+function initClusterListControls() {
+  const search = document.getElementById('clusterlist-search');
+  const filter = document.getElementById('clusterlist-filter');
+  const sort = document.getElementById('clusterlist-sort');
+  const headers = [...document.querySelectorAll('.cluster-table thead th[data-sort-col]')];
+  if (!search || !filter || !sort) return;
+  search.addEventListener('input', () => {
+    APP.clusterListState.q = search.value || '';
+    renderClusterListTable();
+  });
+  filter.addEventListener('change', () => {
+    APP.clusterListState.filter = filter.value;
+    renderClusterListTable();
+  });
+  sort.addEventListener('change', () => {
+    APP.clusterListState.sort = sort.value;
+    APP.clusterListState.sortDir = (sort.value === 'cluster' || sort.value === 'question' || sort.value === 'summary') ? 'asc' : 'desc';
+    renderClusterListTable();
+  });
+  sort.innerHTML = `
+    <option value="cluster">Sort by cluster</option>
+    <option value="question">Sort by canonical question</option>
+    <option value="variants">Sort by variants</option>
+    <option value="submitters">Sort by submitters (desc)</option>
+    <option value="nonfull">Sort by non-full (desc)</option>
+    <option value="summary">Sort by key error summary</option>
+  `;
+  sort.value = APP.clusterListState.sort;
+  headers.forEach(th => {
+    const activate = () => {
+      const col = th.getAttribute('data-sort-col');
+      if (!col) return;
+      if (APP.clusterListState.sort === col) {
+        APP.clusterListState.sortDir = APP.clusterListState.sortDir === 'asc' ? 'desc' : 'asc';
+      } else {
+        APP.clusterListState.sort = col;
+        APP.clusterListState.sortDir = (col === 'cluster' || col === 'question' || col === 'summary') ? 'asc' : 'desc';
+      }
+      sort.value = APP.clusterListState.sort;
+      renderClusterListTable();
+    };
+    th.addEventListener('click', activate);
+    th.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate();
+      }
+    });
+  });
+}
+
+// ─────────────────────────────────────────────
+// EVENT DELEGATION FOR NARRATIVE REFERENCES
+// ─────────────────────────────────────────────
+function installReferenceClickHandlers() {
+  document.body.addEventListener('click', (e) => {
+    const errIdx = e.target.closest('[data-open-errors-index]');
+    if (errIdx) {
+      e.preventDefault?.();
+      openErrorsIndexPopup();
+      return;
+    }
+    const q = e.target.closest('[data-question]');
+    if (q) {
+      if (q.tagName === 'A') e.preventDefault();
+      openQuestionPopupByVariant(q.getAttribute('data-question'));
+      return;
+    }
+    const qc = e.target.closest('[data-cluster]');
+    if (qc) {
+      e.preventDefault?.();
+      openQuestionPopupByCluster(qc.getAttribute('data-cluster'));
+      return;
+    }
+    const ar = e.target.closest('[data-arch]');
+    if (ar) {
+      e.preventDefault?.();
+      openArchetypePopup(ar.getAttribute('data-arch'));
+      return;
+    }
+    const pr = e.target.closest('[data-pattern-cluster]');
+    if (pr) {
+      e.preventDefault?.();
+      openPatternPopup(pr.getAttribute('data-pattern-cluster'), pr.getAttribute('data-pattern-match') || '');
+      return;
+    }
+  });
+  document.body.addEventListener('keydown', (e) => {
+    if (!(e.key === 'Enter' || e.key === ' ')) return;
+    const target = e.target.closest('[data-open-errors-index],[data-question],[data-cluster],[data-arch],[data-pattern-cluster]');
+    if (!target) return;
+    e.preventDefault();
+    target.click();
+  });
+}
+
+function linkExtraNarrativeMentions() {
+  // Add missing archetype refs without rewriting large text blocks.
+  const replacements = [
+    { selector: '.callout strong', text: 'The Mimic in Numbers', html: '<span class="xref aref" data-arch="Sample Overfit">The Mimic</span> in Numbers' },
+  ];
+  replacements.forEach(({ selector, text, html }) => {
+    document.querySelectorAll(selector).forEach(node => {
+      if (node.dataset.linkified) return;
+      if (node.textContent.trim() === text) {
+        node.innerHTML = html;
+        node.dataset.linkified = '1';
+      }
+    });
   });
 }
 
@@ -678,6 +2313,7 @@ function buildArchCards(totals) {
 // ANIMATE COUNTERS
 // ─────────────────────────────────────────────
 function counter(el, target, fmt, ms = 1400) {
+  if (!el) return;
   const t0 = performance.now();
   function tick(now) {
     const p = Math.min((now - t0) / ms, 1);
@@ -694,23 +2330,40 @@ function counter(el, target, fmt, ms = 1400) {
 // ─────────────────────────────────────────────
 async function main() {
   let data;
+  let indexMd = null;
+  let archetypeTimelines = null;
   try {
-    data = await d3.json('errors.json');
+    [data, indexMd, archetypeTimelines] = await Promise.all([
+      d3.json('errors.json'),
+      fetchTextCached('ERRORS.md').catch(() => null),
+      d3.json('archetype_timelines.json').catch(() => null),
+    ]);
   } catch (err) {
     ['cluster-chart', 'arch-chart', 'pangram-chart', 'scatter-chart'].forEach(id => {
-      document.getElementById(id).textContent = 'Could not load errors.json. Serve from a local web server (e.g. python -m http.server 8000).';
+      const el = document.getElementById(id);
+      if (el) el.textContent = 'Could not load errors.json. Serve from a local web server (e.g. python -m http.server 8000).';
     });
+    const body = document.getElementById('clusterlist-body');
+    if (body) body.innerHTML = '<tr><td colspan="6" style="padding:12px;font-family:var(--sans);font-size:12px;color:var(--muted);">Could not load data files. Serve this page from a local web server.</td></tr>';
     return;
   }
 
+  APP.data = data;
+  APP.errorsIndexMd = indexMd;
+  APP.archetypeTimelines = archetypeTimelines;
+  APP.errorsIndexEntries = parseErrorsIndexMarkdown(indexMd || '');
+  APP.clusterById = new Map((data.clusters || []).map(c => [c.cluster_id, c]));
+  buildVariantToClusterIndex();
+  buildArchetypeStats();
+
   const totals = data.summary.totals;
 
-  // Process clusters
-  const clusters = data.clusters
+  APP.clustersForCharts = data.clusters
     .filter(c => c.outcomes.final_submitters > 0)
     .map(c => ({
       id: c.cluster_id,
       title: c.title,
+      canonical_variant: c.cluster_summary?.canonical_variant_by_submissions || null,
       submitters: c.outcomes.final_submitters,
       full_pass: c.outcomes.full_pass,
       non_full: c.outcomes.non_full_final_submissions,
@@ -719,35 +2372,35 @@ async function main() {
       failure_rate: c.outcomes.non_full_final_submissions / c.outcomes.final_submitters,
       top_patterns: (c.reclustered_patterns?.patterns || []).slice(0, 3).map(p => ({
         name: p.name,
-        count: p.cluster_frequency.count,
-        pct: p.cluster_frequency.pct,
+        count: p.cluster_frequency?.count || 0,
+        pct: p.cluster_frequency?.pct || 0,
       })),
     }));
 
-  // Aggregate archetypes
-  const archTotals = {};
+  APP.archTotals = {};
   data.clusters.forEach(c => {
     (c.reclustered_patterns?.patterns || []).forEach(p => {
       const k = classify(p.name);
-      archTotals[k] = (archTotals[k] || 0) + p.cluster_frequency.count;
+      APP.archTotals[k] = (APP.archTotals[k] || 0) + (p.cluster_frequency?.count || 0);
     });
   });
 
-  // Counters
   const fr = totals.non_full_final_submissions / totals.final_submitters;
   counter(document.getElementById('s-sub'), totals.final_submitters, n => n.toLocaleString());
   counter(document.getElementById('s-fail'), Math.round(fr * 1000), n => (n / 10).toFixed(1) + '%');
   counter(document.getElementById('s-pat'), totals.pattern_sections, n => n.toLocaleString());
 
-  // Charts
-  buildClusterChart(document.getElementById('cluster-chart'), clusters);
-  buildArchChart(document.getElementById('arch-chart'), archTotals);
-  buildArchCards(archTotals);
-
+  buildClusterChart(document.getElementById('cluster-chart'), APP.clustersForCharts);
+  buildArchChart(document.getElementById('arch-chart'), APP.archTotals);
+  buildArchCards(APP.archTotals);
   const pangram = data.clusters.find(c => c.cluster_id === 'C013');
   buildPangramChart(document.getElementById('pangram-chart'), pangram);
+  buildScatter(document.getElementById('scatter-chart'), APP.clustersForCharts);
 
-  buildScatter(document.getElementById('scatter-chart'), clusters);
+  initClusterListControls();
+  renderClusterListTable();
+  installReferenceClickHandlers();
+  linkExtraNarrativeMentions();
 }
 
 main();
