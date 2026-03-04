@@ -15,6 +15,7 @@ analysis/concept_knowledge_modeling/
 analysis/error_pattern_pilot/
 analysis/question_clusters.csv
 analysis/question_cluster_members.csv
+private/*
 
 # Python cache
 __pycache__/

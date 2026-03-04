@@ -1503,3 +1503,94 @@ Write like Malcolm Gladwell. Visualize like the NYT graphics team. Think like a 
 Beauty and aesthetics are key.
 
 Create this as a single report.html (under analysis/) that loads required files and renders the narrative.
+
+## No private submissions analysis, 4 Mar 2026 (Codex, gpt-5.3-codex, xhigh)
+
+Create a report analysis/no-private-submissions.csv that lists all student, namespace, question combinations where the student has made a public submission but not a private submission. Then create a no-private-submissions.md file that summarizes the findings in a human-readable format. Specifically:
+
+For each question set (namespace), how many students (out of what total) had only public submissions and no private submissions? List with examples of student IDs. Show the distribution of the number of questions they submitted publicly without any private submissions - with examples of student IDs.
+
+Show any other useful information related to this
+
+NOTE: This question may be naive. Plan like an expert. In this context, first think about:
+
+- What patterns would an expert in this field check / recognize that beginners would miss?
+- What questions would an expert ask that a beginner would not know to?
+- What problems / failures would an expert anticipate that beginners may not be aware of?
+
+... and THEN answer.
+
+### Documentations
+
+I've formatted `analysis/no-private-submissions.md` with prettier. No other changes.
+
+Prefix `analysis/no-private-submissions.md` with a simple, layman-friendly summary of the findings (ELI15) for an administrator, explaining what it means for a student to have only public submissions and no private submissions, and what implications this has for their learning and performance in the course. Then, summarize the findings in a simple way. Then recommend investigations / actions based on the findings.
+
+### Clarifications
+
+Does this mean that there were some students who, for a given question in a given namespace, ONLY made public submissions and NO private submissions for that question? This question came to my mind when I read `analysis/no-private-submissions.md`. So clarify this in the report - ideally with real examples of what you mean by showing a student's submission history that illustrates the point.
+
+---
+
+Wait, we lost the ELI15 explanations - the quick summary for administrators, recommendations, etc. Ensure those are retained in re-runs.
+
+## Teachable 10% analysis
+
+/compact
+
+---
+
+I'd like to identify the "Teachable 10%" of students, i.e students who are most likely to benefit from targeted interventions.
+
+After the first OPPE, what strategy can we use to identify that "Teachable 10%" and HOW do we implement that strategy effectively?
+
+Identify the strategy based on all the analysis we have in this folder, as well as relevant literature on student performance, intervention strategies, and best practices in programming education. Search online for information you need and document these with citations.
+
+Explain WHY these are the teachable students and how the strategy helps in identifying them.
+Then, apply that strategy via a script that will automate identifying the "Teachable 10%" of students. (It doesn't exactly have to be 10%. That's an approximation.)
+Run the script for all three terms, list the students identified.
+Then, document the strategy, the rationale behind it (in simple terms - ELI15 - with references), and show how the script works with examples based on students identified.
+Store these in `analysis/teachable.md`, `analysis/teachable.py`, and `analysis/teachable.csv` (the output of the script).
+Ensure that the documentation in `analysis/teachable.md` is clear and accessible to non-technical stakeholders (e.g. an administrator). ELI15. Explain the concept of "Teachable 10%", the strategy used to identify them, and the implications for interventions. Generate `analysis/teachable.md` via `analysis-teachable.py`.
+
+This ask ask may be naive. Plan like an expert - look for patterns, questions, problems / failures and expert would ask that a beginner would miss, reframe, then answer the real intent here.
+
+### Redefine teachability
+
+No, no, don't base the "Teachability" on scores. Based it on the pattern of errors they make, the way they engage with the platform, the concepts they struggle with, etc. - in other words, the rich data we have about their learning process and error patterns, not their scores. The next OPPE might contain completely different questions! So, write a decision tree explaining how to identify the most teachable (which might be about 10% - that's not the important point) and how to teach them with targeted interventions.
+
+The point is not the score, but the pattern of errors and engagement. In fact, it doesn't matter who improved between the two OPPEs in the past exams! This is based on known and clear best practices, not historical improvements which may not be relevant for the next OPPE.
+
+BY THE WAY, show who some of these students are and how many there are by decision-tree path for the existing exams.
+
+Using this, rewrite `analysis/teachable.*` and run.
+
+### Explain how to teach
+
+Update `analysis/teachable.md` via `analysis/teachable.py` to include a section that explains HOW to teach each segment of the teachable students. Just a few examples of specific interventions (ELI15, evocatively) for each segment.
+
+## Quick fixes
+
+/compact
+
+---
+
+Identify the low-hanging fruits, i.e. improvements in the questions or test cases that can be done quickly and easily but have a high impact on student performance. For example, if there are questions where a large percentage of students fail due to a specific error pattern - which is likely not the intended concept the question wants to test - and that can be easily fixed by changing the question or test case, that would be a quick win.
+
+For example, if many students fail a question with multiple functions because they're writing one function - but the test case fails because of a syntax error in the second function having a `...` as a placeholder, then changing the placeholder to `pass` would be a quick fix that could significantly reduce the failure rate for that question, while still preserving the intended learning outcome.
+
+Think carefully about all such opportunities for quick wins. Research all the analysis in this folder, search online as required, and document these changes in `analysis/quick-fixes.md` with clear explanations of the problem, the proposed fix (original vs revised), and the expected impact. Prioritize these quick fixes based on their potential impact and ease of implementation.
+
+## Transcript analysis
+
+/compact
+
+---
+
+Based on the discussion in '2026-02-25 IITM Weekly Review.md', create a `analysis/2026-02-25-next-steps.md` that suggests further analysis based on the discussion.
+
+Look at the most actionable and impactful suggestions from the discussion.
+Propose specific analyses that can be done based on the data we have, and that can yield insights that are directly relevant to improving the course and student outcomes.
+Document these proposed analyses in `analysis/2026-02-25-next-steps.md` with clear explanations of the rationale behind each analysis, the expected insights, and how they can inform improvements in the course. Prioritize these analyses based on their potential impact and feasibility.
+
+Write in simple language (ELI15) to be accessible to non-technical stakeholders, administrators, students, and laymen unfamiliar with this exam system.
