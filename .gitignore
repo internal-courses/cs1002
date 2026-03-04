@@ -2,6 +2,7 @@ submissions/*.json
 problems/**/*.json
 problems/*.html
 analysis/*.csv
+!analysis/teachable.csv
 analysis/*.parquet
 analysis/score_failure_profiles/
 analysis/classical_item_quality/
