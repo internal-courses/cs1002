@@ -1650,3 +1650,72 @@ Write a data story `analysis/quick-fixes.html` explaining the insights from the 
 Write a data story `analysis/quick-fixes-2.html` explaining the insights from the quick-fixes analysis in `analysis/quick-fixes.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
 
 [Repeat interactions prompt fragment]
+
+## Thrashers' language comprehension analysis
+
+Is there any indication that the thrashers didn't understand the question, e.g. it's too complex for a native Hindi speaker to understand? Is this a statistically significant result?
+
+Save the analysis/answer in analysis/thrashers_language.{py,md,csv,...} with evidence.
+
+## Buddy program evaluation
+
+We're running a buddy program for repeaters. Based on the analysis we've done so far, comment on this program, i.e. what's good and should be strengthened, what's not as good and should be improved, what's missing that should be introduced, etc.
+
+I'm asking this question naively. But plan like an expert and reframe my question before answering. In this context, first think about:
+- What patterns would an expert in this field check / recognize that beginners would miss?
+- What questions would an expert ask that a beginner would not know to?
+- What problems / failures would an expert anticipate that beginners may not be aware of?
+
+<PROGRAM-DETAILS>
+Buddy Program for Python
+
+Designed to support students who have been struggling with Python for more than two terms (2233 students)
+Participation is mandatory for selected students
+Goal: Help students successfully clear the Python OPPE exam
+
+Program Benefits
+Each student will be assigned a Buddy (1 Buddy : 60 students)
+Buddies are senior students selected through an interview process
+Buddies will:
+Mentor students
+Conduct coding sessions
+Help students prepare for the Python OPPE
+Guide students in solving problems
+
+Weekly Sessions
+
+Students must attend one session per week
+Sessions will be scheduled with the assigned buddy
+During sessions:
+Coding practice will be conducted
+Doubts will be clarified
+Problem-solving strategies will be discussed
+
+Buddy Responsibilities
+Buddies will:
+Conduct weekly mentoring sessions
+Guide students in problem-solving
+Track individual progress
+Provide feedback on performance
+Support students who face difficulty in OPPE preparation
+
+Attendance Requirement
+Important
+Attendance is mandatory
+Minimum 75% attendance required
+Students who fail to meet the attendance requirement will not be eligible to appear for OPPE
+
+Initial Observations (Week 1-2)
+~30% attendance in the first week
+Few buddies have reported that students are improving by the third session (+)
+Some students are now comfortable with Section 1 (+)
+A few students seem to be focused only on attendance (aEUR")
+</PROGRAM-DETAILS>
+
+Save the results in buddy_program_evaluation.{py,md,csv,...} with evidence.
+
+### Simplify
+
+This explanation is too complex. Rewrite the .md file (via the .py) to be layman friendly, ELI15, explaining terms like "thrashers", "success gap", "self-loop rate", etc. for a first-time reader. Use examples to illustrate the points. Make it engaging and easy to understand for someone who is not familiar with the course or the data.
+
+Commit as you go. Include prompts.md in your commit. Then push to GitHub.
