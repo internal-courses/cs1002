@@ -1594,3 +1594,59 @@ Propose specific analyses that can be done based on the data we have, and that c
 Document these proposed analyses in `analysis/2026-02-25-next-steps.md` with clear explanations of the rationale behind each analysis, the expected insights, and how they can inform improvements in the course. Prioritize these analyses based on their potential impact and feasibility.
 
 Write in simple language (ELI15) to be accessible to non-technical stakeholders, administrators, students, and laymen unfamiliar with this exam system.
+
+## Teachable Data Story (Codex, gpt-5.3-codex, xhigh)
+
+<!-- Tried GitHub Copilot CLI Yolo, Claude Sonnet 4.6, high: But it timed out. Twice. -->
+
+Write a data story `analysis/teachable.html` explaining the insights from the teachable students analysis in `analysis/teachable.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
+
+Use tooltips, popups, interactions, and animations as informative and engaging aids.
+
+**Tooltips** are for:
+
+- Context about non-obvious terms or phrases (only if relevant and useful)
+- Additional context about references (where possible)
+- Metadata and context about data points, table cells, chart elements, etc. (always)
+- Guidelines:
+  - On mobile, use tap-to-reveal with clear dismiss affordance (tap elsewhere or an × icon); auto-reposition to stay within the viewport.
+  - Debounce on hover. Only 1 tooltip at a time.
+  - Do not show tooltips where the tooltips add no meaningful value or additional information beyond the text.
+
+**Popups** are for:
+
+- Files. Link liberally to files.
+  - Clicking on file links should open the files in a popup, with a link to open the original in a new tab.
+  - Syntax-highlighted if code
+  - Show sortable for tabular data, gradient-coloring important numeric / categorical columns if that will help understand the context
+- Data points. Provide extensive context for data points.
+  - Wherever useful, clicking on data points, table cells, chart elements, etc. should open a popup that provides full context about that element.
+  - Include narratives, cards, tables, charts, or even entire dashboards that answer what the user is likely to be curious about or wants to dig in for more details. E.g. context, examples, related metrics, trends over time, breakdown by relevant dimensions, etc.
+  - Standardize the format of these popups so users know what to expect. Reuse popups by archetype.
+- Guidelines: Trap keyboard focus inside. Contain scrolling. Show loading state when required. Use a consistent anatomy.
+
+**Interactions** MAY include:
+
+- Transition on value change. Animate chart values between states (e.g., bar heights morphing) rather than jump-cutting.
+- Filters & search.
+- Also: Trails. Cursor morphing. Magnetic snapping. Intertial scrolling/panning. Contextual axis transitions.
+
+**Principles** to follow:
+
+- Meaningfulness: think carefully about what will be meaningful and useful for the audience to see, based on their objective. The goal is to help them understand and act.
+- Visual quality: is critical. Use consistency, bold typography, contrast, visual hierarchy, progressive disclosure, repetition, alignment, information density calibration, and other principles of visual design - while also evaluating relevant visual format innovation.
+- Responsive design: all interactions, tooltips, and popups work well on different screen sizes and devices.
+
+Plan the design and layout carefully before coding. Sketch the information architecture, interaction inventory, design tokens, performance sensitive paths, responsive breakpoints, etc.
+
+## Quick Fixes Data Story (GitHub Copilot CLI Yolo, Claude Sonnet 4.6, high)
+
+Write a data story `analysis/quick-fixes.html` explaining the insights from the quick-fixes analysis in `analysis/quick-fixes.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
+
+[Repeat interactions prompt fragment]
+
+## Quick Fixes Data Story 2 (Claude Code - Sonnet 4.6, high)
+
+Write a data story `analysis/quick-fixes-2.html` explaining the insights from the quick-fixes analysis in `analysis/quick-fixes.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
+
+[Repeat interactions prompt fragment]

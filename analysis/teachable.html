@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Teachable 10% | A Process-First Story of Who to Help, and How</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f7f2;--bg-alt:#f0ede5;--bg-soft:#f6f2ea;--text:#1c1917;--muted:#6b6560;--rule:#d6cfc4;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--blue:#1d4ed8;--purple:#6d28d9;--teal:#0f766e;
+  --path-d:#9ca3af;--path-t1:#0ea5e9;--path-t2:#f97316;--path-t3:#8b5cf6;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Crimson Pro',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:20px;line-height:1.68;-webkit-font-smoothing:antialiased}
+body.modal-open{overflow:hidden}
+
+.col{max-width:720px;margin:0 auto;padding:0 28px}
+.wide{max-width:1140px;margin:0 auto;padding:0 28px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+header{padding:44px 0 0}
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(2.1rem,5.8vw,3.7rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:14px}
+.dek{font-family:var(--serif);font-size:1.18rem;font-style:italic;color:var(--muted);line-height:1.45;margin-bottom:28px}
+.byline{font-family:var(--sans);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-bottom:28px;border-bottom:1px solid var(--rule)}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--rule);margin:44px 0}
+.stat{padding:24px 10px;text-align:center}
+.stat:not(:last-child){border-right:1px solid var(--rule)}
+.stat-n{font-family:var(--sans);font-size:2.2rem;font-weight:700;line-height:1;letter-spacing:-.03em;display:block}
+.stat-n.r{color:var(--red)}.stat-n.a{color:var(--amber)}.stat-n.g{color:var(--green)}.stat-n.p{color:var(--purple)}
+.stat-l{font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+
+p{margin-bottom:1.45em}
+.section{margin:56px 0}
+.act{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h2{font-family:var(--serif);font-size:clamp(1.55rem,3vw,2.15rem);font-weight:700;line-height:1.18;margin-bottom:22px;letter-spacing:-.015em}
+h3{font-family:var(--serif);font-size:1.2rem;font-weight:700;margin:30px 0 10px}
+
+.pq{font-family:var(--serif);font-size:1.38rem;font-style:italic;line-height:1.38;color:var(--teal);border-left:4px solid var(--teal);padding:14px 22px;margin:40px 0}
+
+.r{color:var(--red);font-weight:600}.a{color:var(--amber);font-weight:600}.g{color:var(--green);font-weight:600}.b{color:var(--blue);font-weight:600}.p{color:var(--purple);font-weight:600}.t{color:var(--teal);font-weight:600}
+
+.callout{background:var(--bg-alt);border-left:4px solid var(--amber);padding:18px 22px;margin:32px 0;font-family:var(--sans);font-size:13.5px;line-height:1.6}
+.callout strong{display:block;margin-bottom:5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
+.callout.good{border-color:var(--green)}
+.callout.good strong{color:var(--green)}
+
+.sep{border:none;border-top:1px solid var(--rule);margin:48px auto;max-width:720px}
+
+.chart-wrap{margin:8px 0 4px}
+.chart-hed{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.chart-sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+.chart-svg text{font-family:var(--sans)}
+
+.filter-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 8px}
+.filter-row .label{font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-family:var(--sans);font-size:11px;border:1px solid var(--rule);background:#fff;color:#3f3a35;padding:6px 10px;border-radius:999px;cursor:pointer;transition:all .16s}
+.pill:hover{background:#f7f2e9}
+.pill.active{background:#1f2937;border-color:#1f2937;color:#fff}
+
+.tree-grid{display:grid;grid-template-columns:repeat(7,minmax(110px,1fr));gap:8px;margin:18px 0}
+.tree-node{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:10px 10px 9px;cursor:pointer;transition:transform .14s,border-color .14s,box-shadow .14s;position:relative;outline:none}
+.tree-node:hover,.tree-node:focus-visible{transform:translateY(-2px);border-color:#b8afa1;box-shadow:0 8px 16px rgba(0,0,0,.06)}
+.tree-node .id{font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tree-node .name{font-family:var(--sans);font-size:11.5px;line-height:1.35;color:#2f2a25;margin-top:4px;min-height:35px}
+.tree-node .n{font-family:var(--sans);font-size:1.1rem;font-weight:700;line-height:1;margin-top:7px}
+.tree-node .pct{font-family:var(--sans);font-size:10px;color:var(--muted)}
+.tree-node.path-teach{border-color:#d5e7ff;background:#f7fbff}
+.tree-node.path-teach .n{color:var(--blue)}
+.tree-node.path-non{border-color:#e4ddd3;background:#fdfcf9}
+
+.track-grid{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:12px;margin:18px 0}
+.track-card{background:#fff;border:1px solid var(--rule);border-radius:8px;padding:14px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.track-card:hover,.track-card:focus-visible{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.07)}
+.track-card .track-id{font-family:var(--sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.track-card .track-title{font-family:var(--sans);font-size:13px;font-weight:700;line-height:1.35;margin:5px 0 5px}
+.track-card .track-meta{font-family:var(--sans);font-size:11px;color:var(--muted)}
+.track-card.t1{border-top:4px solid var(--path-t1)}
+.track-card.t2{border-top:4px solid var(--path-t2)}
+.track-card.t3{border-top:4px solid var(--path-t3)}
+
+.evidence-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.file-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:11px;color:#1f4d9a;border:1px solid #c8d7f3;background:#eef5ff;border-radius:999px;padding:5px 10px;text-decoration:none;cursor:pointer}
+.file-chip:hover{background:#dfeeff}
+
+.xref{border-bottom:1px dashed currentColor;cursor:pointer;transition:opacity .15s}
+.xref:hover{opacity:.75}
+.path-ref{color:var(--purple)}
+.file-ref{color:var(--blue)}
+.metric-ref{color:var(--teal)}
+
+.table-section{max-width:none;width:min(1140px,calc(100vw - 56px));margin-left:50%;transform:translateX(-50%)}
+.table-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0 14px}
+.table-tools input,.table-tools select{font-family:var(--sans);font-size:12px;border:1px solid var(--rule);border-radius:6px;padding:7px 10px;background:#fff;color:var(--text)}
+.table-tools .meta{font-family:var(--sans);font-size:11.5px;color:var(--muted)}
+.table-scroll{overflow:auto;border:1px solid var(--rule);border-radius:8px;background:#fff}
+.story-table{width:100%;border-collapse:collapse;min-width:1120px}
+.story-table th,.story-table td{padding:10px 11px;border-bottom:1px solid #eee6d8;vertical-align:top}
+.story-table th{position:sticky;top:0;background:#faf7f0;z-index:2;font-family:var(--sans);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:left;cursor:pointer;user-select:none}
+.story-table th:hover{background:#f4efe6;color:#5c554d}
+.story-table th.sort-asc::after,.story-table th.sort-desc::after{margin-left:6px;font-size:10px;opacity:.8}
+.story-table th.sort-asc::after{content:'▲'}
+.story-table th.sort-desc::after{content:'▼'}
+.story-table td{font-family:var(--sans);font-size:12px;line-height:1.45}
+.story-table tbody tr{cursor:pointer}
+.story-table tbody tr:hover{background:#faf7f0}
+.story-table .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.story-table .id{font-family:var(--mono);font-size:11px;color:#312d27}
+.path-pill{display:inline-block;font-family:var(--sans);font-size:10px;border-radius:999px;padding:2px 7px;border:1px solid}
+.path-pill.teach{color:#0b4f96;background:#eaf2ff;border-color:#bfd8ff}
+.path-pill.non{color:#5e5549;background:#f3ede3;border-color:#ded1bf}
+
+.meth{border-top:1px solid var(--rule);padding:36px 0 56px;margin-top:56px}
+.meth p,.meth li{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6}
+.meth ul{padding-left:16px;margin:8px 0}
+
+/* Tooltip */
+#tip{position:fixed;background:#1c1917;color:#f9f7f2;padding:10px 12px;border-radius:6px;font-family:var(--sans);font-size:12px;line-height:1.5;z-index:1200;max-width:300px;opacity:0;transform:translateY(2px);pointer-events:none;transition:opacity .12s,transform .12s;box-shadow:0 6px 24px rgba(0,0,0,.33)}
+#tip.on{opacity:1;transform:translateY(0)}
+#tip strong{display:block;color:#f9d4a0;margin-bottom:3px}
+#tip.tip-lock{pointer-events:auto}
+.tip-close{all:unset;position:absolute;top:5px;right:7px;cursor:pointer;color:#cfcbc5;font-size:12px;line-height:1;padding:2px 4px}
+.tip-close:hover{color:#fff}
+
+/* Popup */
+#pop{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#pop.on{opacity:1;pointer-events:all}
+.pop-card{background:#1e1b16;border-radius:10px;max-width:1120px;width:94vw;max-height:89vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.pop-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 12px;border-bottom:1px solid #333}
+.pop-title{font-family:var(--sans);font-size:12px;font-weight:700;color:#f9d4a0;text-transform:uppercase;letter-spacing:.08em}
+.pop-x{background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1;padding:0 0 0 14px;flex-shrink:0}
+.pop-x:hover{color:#fff}
+.pop-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 22px;border-bottom:1px solid #2f2a23;background:#191611}
+.pop-toolbar a,.pop-toolbar button{font-family:var(--sans);font-size:11px;border:1px solid #3e372f;background:#221d17;color:#ddd;padding:5px 9px;border-radius:999px;text-decoration:none;cursor:pointer}
+.pop-toolbar a:hover,.pop-toolbar button:hover{background:#2b241c;border-color:#574a3d}
+.pop-toolbar-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pop-toolbar-spacer{flex:1 1 auto}
+.pop-toolbar-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:10.5px;line-height:1;padding:6px 9px;border-radius:999px;border:1px solid #5a4a36;background:#2b2219;color:#f4e8cf;white-space:nowrap}
+.pop-toolbar-tag .i{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:999px;border:1px solid #7c6b57;font-size:10px;color:#d7ccb9}
+.pop-main{overflow:auto;padding:0;flex:1}
+.pop-body{padding:16px 22px 18px;color:#ece7de;font-family:var(--sans);font-size:13px;line-height:1.55}
+.pop-body h1,.pop-body h2,.pop-body h3,.pop-body h4{font-family:var(--serif);line-height:1.2;color:#f4e8cf;margin:12px 0 8px}
+.pop-body h1{font-size:1.45rem}.pop-body h2{font-size:1.2rem}.pop-body h3{font-size:1.02rem}.pop-body h4{font-size:.95rem}
+.pop-body p{margin:0 0 .9em}
+.pop-body a{color:#93c5fd}
+.pop-body code{font-family:var(--mono);font-size:.92em;background:#18140f;border:1px solid #31281f;border-radius:4px;padding:.1em .25em}
+.pop-body pre{border:1px solid #332b22;border-radius:6px;overflow:auto;background:#0f0d0b;margin:.75em 0}
+.pop-body pre code{background:transparent;border:none;padding:0}
+.pop-body table{width:100%;border-collapse:collapse;margin:.7em 0;font-size:12px}
+.pop-body th,.pop-body td{border:1px solid #342d25;padding:6px 8px;vertical-align:top}
+.pop-body th{background:#211c16;color:#d7cec0;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;user-select:none}
+.pop-body th.sort-asc::after,.pop-body th.sort-desc::after{margin-left:6px;opacity:.8}
+.pop-body th.sort-asc::after{content:'▲'}
+.pop-body th.sort-desc::after{content:'▼'}
+.pop-body .num{text-align:right;font-variant-numeric:tabular-nums}
+.pop-cap{font-family:var(--sans);font-size:12px;color:#b0a79a;padding:12px 22px;line-height:1.55;border-top:1px solid #333;background:#191611}
+.pop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:8px 0 12px}
+.pop-kv{border:1px solid #332b22;border-radius:6px;background:#17130f;padding:9px}
+.pop-kv .k{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#a89b88;margin-bottom:4px}
+.pop-kv .v{font-family:var(--sans);font-size:14px;color:#f0e7da;font-weight:600}
+.pop-note{font-family:var(--sans);font-size:12px;color:#c9c0b3;background:#17130f;border:1px solid #332b22;border-radius:6px;padding:10px;margin:8px 0}
+.pop-loading{display:flex;align-items:center;justify-content:center;min-height:200px;color:#c9c0b3;font-family:var(--sans);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.pop-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--sans);font-size:11px;color:#ddd;border:1px solid #3a3128;background:#1b1712;border-radius:999px;padding:4px 9px;margin:2px 4px 2px 0}
+.pop-list{display:grid;gap:8px}
+.pop-item{border:1px solid #332b22;border-radius:6px;background:#17130f;padding:8px}
+.pop-item .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#a89b88}
+.pop-item .v{font-size:12px;color:#efe3d1;margin-top:3px}
+
+.csv-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.csv-controls input,.csv-controls select{font-family:var(--sans);font-size:12px;border:1px solid #3a3128;border-radius:5px;padding:6px 8px;background:#15120e;color:#e8dfd2}
+.csv-meta{font-family:var(--sans);font-size:11px;color:#b8ad9d}
+.csv-table-wrap{overflow:auto;border:1px solid #332b22;border-radius:6px}
+
+@media(max-width:980px){
+  .tree-grid{grid-template-columns:repeat(4,minmax(120px,1fr))}
+}
+@media(max-width:760px){
+  body{font-size:18px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:none}
+  .track-grid{grid-template-columns:1fr}
+  .tree-grid{grid-template-columns:repeat(2,minmax(120px,1fr))}
+  .table-section{width:calc(100vw - 24px)}
+}
+</style>
+</head>
+<body>
+
+<div id="tip" role="tooltip" aria-hidden="true"></div>
+
+<div id="pop" aria-hidden="true">
+  <div class="pop-card" role="dialog" aria-modal="true" aria-labelledby="pop-title">
+    <div class="pop-head">
+      <span class="pop-title" id="pop-title">Detail</span>
+      <button class="pop-x" id="pop-close" aria-label="Close popup">×</button>
+    </div>
+    <div class="pop-toolbar" id="pop-toolbar" style="display:none"></div>
+    <div class="pop-main" id="pop-main"><div class="pop-body" id="pop-body"></div></div>
+    <p class="pop-cap" id="pop-cap"></p>
+  </div>
+</div>
+
+<div class="col">
+<header>
+  <div class="kicker">OPPE 2025 · Student Support Intelligence · Process-First Segmentation</div>
+  <h1>The Teachable 10%</h1>
+  <p class="dek">How to find the students who are struggling for the right reasons — and can improve fastest with the right help</p>
+  <div class="byline">Based on <span id="byline-total">13,761</span> student-term profiles from Wave 1 coding traces (not marks)</div>
+</header>
+
+<div class="stats-row">
+  <div class="stat"><span class="stat-n" id="s-total">–</span><span class="stat-l">Profiles classified</span></div>
+  <div class="stat"><span class="stat-n g" id="s-teach">–</span><span class="stat-l">Teachable-now</span></div>
+  <div class="stat"><span class="stat-n a" id="s-pct">–</span><span class="stat-l">Teachable share</span></div>
+  <div class="stat"><span class="stat-n p" id="s-track">–</span><span class="stat-l">Largest teachable track</span></div>
+</div>
+
+<section class="section">
+  <p>Imagine two students after the first OPPE. Both have low scores. One keeps running tests, edits code thoughtfully, and fails in a repeatable pattern. The other submits once, or keeps making random edits with no clear direction. They look the same on marks. They are not the same learner.</p>
+  <p>This story is about that difference. We are not asking, “Who scored poorly?” We are asking, “Who is <span class="t">most likely to improve quickly</span> if we intervene now?”</p>
+  <p>To answer that, we used coding process traces: test-run cadence, edit behavior, error signatures, concept struggle patterns, and persistence markers. The result is a decision tree that isolates a practical intervention set: about <span class="metric-ref xref" data-open-metric="teachable-share">1 in 10 profiles</span>.</p>
+  <div class="evidence-row">
+    <a href="#" class="file-chip" data-file="analysis/teachable.md" data-tip="The human-readable report generated from the script. Click to inspect methodology, counts, and examples.">analysis/teachable.md</a>
+    <a href="#" class="file-chip" data-file="analysis/teachable.py" data-tip="Classification rules and thresholds live here. Click to inspect the exact decision tree logic.">analysis/teachable.py</a>
+    <a href="#" class="file-chip" data-file="analysis/teachable.csv" data-tip="Row-level classified profiles. Click to explore sortable records.">analysis/teachable.csv</a>
+    <a href="#" class="file-chip" data-file="analysis/REPORT.md" data-tip="Broader exam findings used as context for this segmentation.">analysis/REPORT.md</a>
+  </div>
+</section>
+</div>
+
+<hr class="sep">
+
+<div class="col">
+<section class="section">
+  <div class="act">Act I</div>
+  <h2>The Sorting Hat Is a Decision Tree</h2>
+  <p>The tree has seven leaves. Four are not intervention-priority today (<span class="path-ref xref" data-open-path="D0">D0</span>, <span class="path-ref xref" data-open-path="D1">D1</span>, <span class="path-ref xref" data-open-path="D2">D2</span>, <span class="path-ref xref" data-open-path="D3">D3</span>). Three are the teachable tracks: <span class="path-ref xref" data-open-path="T1">T1</span> syntax foundations, <span class="path-ref xref" data-open-path="T2">T2</span> runtime debugging, and <span class="path-ref xref" data-open-path="T3">T3</span> logic/edge cases.</p>
+  <p>Click any node below to open a full breakdown with real student examples, dominant error signatures, and intervention guidance.</p>
+
+  <div class="tree-grid" id="tree-grid">
+    <button class="tree-node path-non" data-open-path="D0" data-tip="Low-engagement profiles. Usually one-shot or skeleton-heavy usage."><span class="id">D0</span><span class="name">Low engagement</span><span class="n" data-node-count="D0">–</span><span class="pct" data-node-pct="D0">–</span></button>
+    <button class="tree-node path-non" data-open-path="D1" data-tip="High-chaos loops: repeated regressions and stuck behavior."><span class="id">D1</span><span class="name">Severe stuck loops</span><span class="n" data-node-count="D1">–</span><span class="pct" data-node-pct="D1">–</span></button>
+    <button class="tree-node path-non" data-open-path="D2" data-tip="Already stable. Not urgent for intensive support."><span class="id">D2</span><span class="name">Already stable</span><span class="n" data-node-count="D2">–</span><span class="pct" data-node-pct="D2">–</span></button>
+    <button class="tree-node path-non" data-open-path="D3" data-tip="Mixed patterns. Needs short diagnostic sprint before routing."><span class="id">D3</span><span class="name">Mixed / diffuse</span><span class="n" data-node-count="D3">–</span><span class="pct" data-node-pct="D3">–</span></button>
+    <button class="tree-node path-teach" data-open-path="T1" data-tip="Teachable syntax track. Ideas often present, structure breaks."><span class="id">T1</span><span class="name">Syntax foundations</span><span class="n" data-node-count="T1">–</span><span class="pct" data-node-pct="T1">–</span></button>
+    <button class="tree-node path-teach" data-open-path="T2" data-tip="Largest teachable segment: code runs, then crashes."><span class="id">T2</span><span class="name">Runtime debugging</span><span class="n" data-node-count="T2">–</span><span class="pct" data-node-pct="T2">–</span></button>
+    <button class="tree-node path-teach" data-open-path="T3" data-tip="Parseable code, wrong logic on edge cases."><span class="id">T3</span><span class="name">Logic / edge cases</span><span class="n" data-node-count="T3">–</span><span class="pct" data-node-pct="T3">–</span></button>
+  </div>
+
+  <div class="callout good">
+    <strong>What Makes This Different</strong>
+    No score thresholds. No historical “who improved” dependency. The next OPPE can have completely different questions and this classification still works because it is based on behavior and error fingerprints.
+  </div>
+</section>
+</div>
+
+<div class="bleed" style="background:var(--bg-alt);padding:30px 0">
+  <div class="wide">
+    <div class="chart-hed">Decision-path distribution (click any bar for full context)</div>
+    <div class="chart-sub">Bars animate when you switch term filters. Teachable tracks are highlighted in color.</div>
+    <div class="filter-row">
+      <span class="label">Term filter</span>
+      <div class="pills" id="term-pills"></div>
+    </div>
+    <div id="path-chart" class="chart-wrap" style="min-height:360px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>The median story: most profiles are stable (<span class="metric-ref xref" data-open-path="D2">D2, 57.2%</span>). But the operational opportunity is in the colored slice. The teachable set is not giant. It is manageable. And it is rich in actionable structure.</p>
+  <div class="pq">The real intervention question is not “Who failed?” It is “Who failed in a way that can be fixed quickly?”</div>
+</section>
+</div>
+
+<hr class="sep">
+
+<div class="col">
+<section class="section">
+  <div class="act">Act II</div>
+  <h2>Not One Teachable Group. Three.</h2>
+  <p>Half of the teachable set belongs to one track: <span class="path-ref xref" data-open-path="T2">runtime debugging</span>. The rest split between <span class="path-ref xref" data-open-path="T3">logic/edge-case reasoning</span> and <span class="path-ref xref" data-open-path="T1">syntax structure repair</span>. That matters because each requires different coaching scripts.</p>
+</section>
+</div>
+
+<div class="bleed" style="background:#fff;padding:30px 0">
+  <div class="wide">
+    <div class="chart-hed">Teachable rate by term</div>
+    <div class="chart-sub">25t2 stands out with the highest teachable share. Click any bar for term-level path mix and examples.</div>
+    <div id="term-chart" class="chart-wrap" style="min-height:300px"></div>
+  </div>
+</div>
+
+<div class="bleed" style="background:var(--bg-alt);padding:30px 0">
+  <div class="wide">
+    <div class="chart-hed">Process fingerprint map</div>
+    <div class="chart-sub">X: average public runs per attempt. Y: average edits per attempt. Bubble size: profile count. Color: decision path.</div>
+    <div id="process-chart" class="chart-wrap" style="min-height:430px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Notice the separation in behavior space. <span class="path-ref xref" data-open-path="D0">D0</span> is low-run, low-edit. <span class="path-ref xref" data-open-path="D1">D1</span> is high-run, high-edit chaos. Teachable tracks occupy the middle-right: enough persistence to work with, but not so much regression that coaching becomes rescue.</p>
+</section>
+</div>
+
+<hr class="sep">
+
+<div class="col">
+<section class="section">
+  <div class="act">Act III</div>
+  <h2>How to Teach Them, Not Just Find Them</h2>
+  <p>Segmentation without pedagogy is just labeling. Each teachable path has a concrete 25-minute intervention recipe in the source report. Click the cards for ready-to-use coaching playbooks.</p>
+
+  <div class="track-grid" id="track-grid">
+    <button class="track-card t1" data-open-path="T1" data-tip="Syntax Foundations: subgoal templates + compile-repair cycles."><span class="track-id">T1</span><span class="track-title">Syntax Foundations</span><span class="track-meta" id="track-meta-t1">–</span></button>
+    <button class="track-card t2" data-open-path="T2" data-tip="Runtime Debugging: hypothesis, trace, prove, fix."><span class="track-id">T2</span><span class="track-title">Runtime Debugging</span><span class="track-meta" id="track-meta-t2">–</span></button>
+    <button class="track-card t3" data-open-path="T3" data-tip="Logic / Edge Cases: boundary tests + expected-vs-actual reasoning."><span class="track-id">T3</span><span class="track-title">Logic & Edge Cases</span><span class="track-meta" id="track-meta-t3">–</span></button>
+  </div>
+
+  <p>The recurring concept struggles inside the teachable group are equally actionable. The chart below counts concept mentions in teachable profiles’ top-struggle lists (max 3 per profile). Click any bar to see which path it clusters in and sample student hashes.</p>
+</section>
+</div>
+
+<div class="bleed" style="background:#fff;padding:30px 0">
+  <div class="wide">
+    <div class="chart-hed">Top concept struggles inside teachable profiles</div>
+    <div class="chart-sub">Counts are mention-frequency across top concept struggles. This is where targeted content can move outcomes fastest.</div>
+    <div id="concept-chart" class="chart-wrap" style="min-height:390px"></div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <div class="callout">
+    <strong>Operational translation</strong>
+    If mentor capacity is limited, start with <span class="path-ref xref" data-open-path="T2">T2</span>. It is the largest segment and has clear, teachable debugging mechanics. Keep <span class="path-ref xref" data-open-path="T3">T3</span> next for test-design and boundary reasoning. Treat <span class="path-ref xref" data-open-path="T1">T1</span> as fast wins through structured syntax scaffolds.
+  </div>
+</section>
+</div>
+
+<hr class="sep">
+
+<div class="col">
+<section class="section">
+  <div class="act">Act IV</div>
+  <h2>From Insight to Action List</h2>
+  <p>The table below is the operational surface: filter by term/path, search student hashes, sort by runs/edits/priority, and click any row for full profile context and recommended intervention track.</p>
+</section>
+</div>
+
+<div class="section table-section">
+  <div class="table-tools">
+    <input id="student-search" type="search" placeholder="Search student hash, error bucket, concept…">
+    <select id="student-path-filter">
+      <option value="all">All paths</option>
+    </select>
+    <select id="student-term-filter">
+      <option value="all">All terms</option>
+      <option value="25t1">25t1</option>
+      <option value="25t2">25t2</option>
+      <option value="25t3">25t3</option>
+    </select>
+    <span class="meta" id="student-meta">Loading profiles…</span>
+  </div>
+  <div class="table-scroll">
+    <table class="story-table" id="student-table">
+      <thead>
+        <tr>
+          <th data-sort-col="student_id" tabindex="0">Student</th>
+          <th data-sort-col="term" tabindex="0">Term</th>
+          <th data-sort-col="decision_path_id" tabindex="0">Path</th>
+          <th data-sort-col="dominant_error_profile_bucket" tabindex="0">Dominant Error</th>
+          <th data-sort-col="avg_public_runs_per_attempt" tabindex="0">Avg Runs</th>
+          <th data-sort-col="avg_edits_per_attempt" tabindex="0">Avg Edits</th>
+          <th data-sort-col="avg_active_minutes_per_attempt" tabindex="0">Avg Active Min</th>
+          <th data-sort-col="teachability_priority_index" tabindex="0">Priority Index</th>
+          <th data-sort-col="top_concept_struggles" tabindex="0">Top Concept Struggles</th>
+        </tr>
+      </thead>
+      <tbody id="student-body">
+        <tr><td colspan="9" style="padding:12px;font-family:var(--sans);font-size:12px;color:var(--muted)">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="col">
+<section class="meth">
+  <p><strong>How to read this story:</strong> This is a process-first segmentation from OPPE Wave 1 profiles. It is designed for targeted support, not for grading, ranking, or punitive decisions.</p>
+  <p><strong>Data provenance:</strong> computed from <span class="file-ref xref" data-file="analysis/teachable.csv">analysis/teachable.csv</span>, generated by <span class="file-ref xref" data-file="analysis/teachable.py">analysis/teachable.py</span>, documented in <span class="file-ref xref" data-file="analysis/teachable.md">analysis/teachable.md</span>.</p>
+  <ul>
+    <li>Caveat: profile classification uses threshold rules; false positives/negatives are possible at the margin.</li>
+    <li>Caveat: this identifies “teachable-now,” not guaranteed outcome improvement.</li>
+    <li>Caveat: student IDs are anonymized hashes; no personally identifying information is shown.</li>
+  </ul>
+  <p><strong>Related context:</strong> <span class="file-ref xref" data-file="analysis/REPORT.md">REPORT.md</span>, <span class="file-ref xref" data-file="analysis/quick-fixes.md">quick-fixes.md</span>, and <span class="file-ref xref" data-file="analysis/2026-02-25-next-steps.md">2026-02-25-next-steps.md</span>.</p>
+</section>
+</div>
+
+<script>
+// Design blueprint (implemented):
+// IA: Hook -> Decision tree -> Evidence charts -> Teaching playbooks -> Operational table.
+// Interactions: tooltips + contextual popups + filters/sort + animated chart transitions.
+// Performance: single CSV load, one-pass aggregates, cached file fetches, paged CSV popup rendering.
+// Responsive: reading column + wide visualization bands + table/popup adaptations at <=980/760px.
+
+const PATH_META = {
+  D0:{id:'D0',name:'Low Engagement / One-Shot Usage',teachable:false,track:'Re-engagement before content remediation',plan:'Contact quickly, resolve access/friction, set minimum process contract (>=2 runs + >=2 edits per problem), then reassess.',color:'var(--path-d)',rule:'one_shot>=0.50 OR skeleton_only>=0.50 OR very low runs+edits'},
+  D1:{id:'D1',name:'Severe Stuck / Chaotic Looping',teachable:false,track:'High-touch diagnostic coaching',plan:'Short 1:1 debugging with strict protocol: predict -> run -> trace -> fix. Limit random edits.',color:'var(--path-d)',rule:'high stuck OR thrasher+regression OR parse regressions + no improvement'},
+  D2:{id:'D2',name:'Already Stable (Low Immediate Need)',teachable:false,track:'Light monitoring / enrichment',plan:'Not priority for intensive support now. Provide stretch tasks and monitor for regression.',color:'var(--path-d)',rule:'dominant full-pass-like bucket OR productive_process_ratio>=0.60'},
+  D3:{id:'D3',name:'Mixed / Diffuse Pattern (Needs Diagnostic Sprint)',teachable:false,track:'Short diagnostic triage',plan:'Run 30-45 minute diagnostic sprint to find dominant failure mode, then route to T1/T2/T3.',color:'var(--path-d)',rule:'did not meet teachable gate and not in D0/D1/D2'},
+  T1:{id:'T1',name:'Teachable: Syntax Foundations',teachable:true,track:'Syntax repair + scaffolded patterns',plan:'Use subgoal-labeled templates, parse-error translation guide, and compile-repair micro-cycles.',color:'var(--path-t1)',rule:'teachable gate + syntax-heavy signature'},
+  T2:{id:'T2',name:'Teachable: Runtime Debugging',teachable:true,track:'Trace-driven debugging',plan:'Teach hypothesis-driven debugging with print/assert traces and variable-state tables.',color:'var(--path-t2)',rule:'teachable gate + runtime-heavy signature + parseable code present'},
+  T3:{id:'T3',name:'Teachable: Logic / Edge Cases',teachable:true,track:'Logic decomposition + test design',plan:'Teach boundary/adversarial test design and expected-vs-actual reasoning before recoding.',color:'var(--path-t3)',rule:'teachable gate + wrong-output / edge-case-heavy signature'}
+};
+const PATH_ORDER = ['D0','D1','D2','D3','T1','T2','T3'];
+const TERM_ORDER = ['25t1','25t2','25t3'];
+
+const APP = {
+  rows: [],
+  agg: null,
+  termFilter: 'all',
+  studentTable: { q:'', path:'all', term:'all', sort:'teachability_priority_index', dir:'desc', page:1, pageSize:150 },
+  fileCache: new Map(),
+  pop: { open:false, trapHandler:null, escHandler:null, lastFocused:null, currentTag:null },
+  tip: { timer:null, visible:false, locked:false, targetEl:null, mobile:window.matchMedia('(hover: none), (pointer: coarse)').matches }
+};
+
+const fmtInt = n => Number.isFinite(+n) ? (+n).toLocaleString() : '–';
+const fmt1 = n => Number.isFinite(+n) ? (+n).toFixed(1) : '–';
+const pct1 = n => Number.isFinite(+n) ? `${(n*100).toFixed(1)}%` : '–';
+const esc = s => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const asBool = v => v === true || v === 'true' || v === 'True' || v === 1 || v === '1';
+
+function splitConcepts(value){
+  if(!value) return [];
+  return String(value).split(';').map(s => s.trim()).filter(Boolean);
+}
+
+function asNum(v){
+  const n = +v;
+  return Number.isFinite(n) ? n : 0;
+}
+
+function mean(arr, fn){
+  if(!arr.length) return 0;
+  let s=0;
+  for(const d of arr) s += fn(d);
+  return s / arr.length;
+}
+
+function animateNumber(el, target, formatter = v => fmtInt(v), ms = 1400){
+  if(!el) return;
+  const start = performance.now();
+  const from = 0;
+  function step(t){
+    const p = Math.min((t-start)/ms, 1);
+    const eased = 1 - Math.pow(1-p,3);
+    const value = from + (target-from) * eased;
+    el.textContent = formatter(value);
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function prepRows(rows){
+  return rows.map(r => ({
+    ...r,
+    term: String(r.term),
+    wave: String(r.wave),
+    student_id: String(r.student_id),
+    decision_path_id: String(r.decision_path_id),
+    decision_path_name: String(r.decision_path_name),
+    teachable_now: asBool(r.teachable_now),
+    attempt_rows: asNum(r.attempt_rows),
+    dominant_error_profile_bucket_share: asNum(r.dominant_error_profile_bucket_share),
+    concept_profiles: asNum(r.concept_profiles),
+    concept_failed_count: asNum(r.concept_failed_count),
+    concept_failure_ratio: asNum(r.concept_failure_ratio),
+    avg_public_runs_per_attempt: asNum(r.avg_public_runs_per_attempt),
+    avg_edits_per_attempt: asNum(r.avg_edits_per_attempt),
+    avg_active_minutes_per_attempt: asNum(r.avg_active_minutes_per_attempt),
+    parseable_fraction_mean: asNum(r.parseable_fraction_mean),
+    runtime_error_rows_ratio: asNum(r.runtime_error_rows_ratio),
+    syntax_gated_rows_ratio: asNum(r.syntax_gated_rows_ratio),
+    wrong_logic_rows_ratio: asNum(r.wrong_logic_rows_ratio),
+    productive_process_ratio: asNum(r.productive_process_ratio),
+    one_shot_ratio: asNum(r.one_shot_ratio),
+    skeleton_only_ratio: asNum(r.skeleton_only_ratio),
+    thrasher_ratio: asNum(r.thrasher_ratio),
+    regression_ratio: asNum(r.regression_ratio),
+    stuck_ratio: asNum(r.stuck_ratio),
+    parseability_regression_ratio: asNum(r.parseability_regression_ratio),
+    no_improvement_latter_half_ratio: asNum(r.no_improvement_latter_half_ratio),
+    teachability_priority_index: Number.isFinite(+r.teachability_priority_index) ? +r.teachability_priority_index : null,
+    concepts: splitConcepts(r.top_concept_struggles),
+  }));
+}
+
+function aggregate(rows){
+  const total = rows.length;
+  const teachable = rows.filter(r => r.teachable_now);
+  const byPath = PATH_ORDER.map(pid => {
+    const group = rows.filter(r => r.decision_path_id === pid);
+    return {
+      path: pid,
+      meta: PATH_META[pid],
+      count: group.length,
+      pct: total ? group.length / total : 0,
+      teachable: PATH_META[pid].teachable,
+      avgRuns: mean(group, d => d.avg_public_runs_per_attempt),
+      avgEdits: mean(group, d => d.avg_edits_per_attempt),
+      avgActive: mean(group, d => d.avg_active_minutes_per_attempt),
+      avgParseable: mean(group, d => d.parseable_fraction_mean),
+      avgPriority: mean(group.filter(d => d.teachability_priority_index != null), d => d.teachability_priority_index),
+      dominantError: d3.rollups(group, v => v.length, d => d.dominant_error_profile_bucket)
+        .sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k,v]) => ({name:k,count:v,pct:group.length?v/group.length:0})),
+      topConcepts: d3.rollups(group.flatMap(d=>d.concepts), v => v.length, d => d)
+        .sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v]) => ({name:k,count:v})),
+      rows: group,
+    };
+  });
+
+  const byTerm = TERM_ORDER.map(term => {
+    const group = rows.filter(r => r.term === term);
+    const teach = group.filter(r => r.teachable_now);
+    return {
+      term,
+      count: group.length,
+      teachableCount: teach.length,
+      teachablePct: group.length ? teach.length / group.length : 0,
+      byPath: PATH_ORDER.map(pid => {
+        const g = group.filter(r => r.decision_path_id === pid);
+        return {path: pid, count:g.length, pct: group.length ? g.length/group.length : 0};
+      }),
+      rows: group,
+    };
+  });
+
+  const teachablePathMix = ['T1','T2','T3'].map(pid => {
+    const group = teachable.filter(r => r.decision_path_id === pid);
+    return { path: pid, count: group.length, pct: teachable.length ? group.length / teachable.length : 0 };
+  });
+
+  const conceptMentionsTeachable = d3.rollups(
+    teachable.flatMap(r => r.concepts.map(c => ({concept:c,path:r.decision_path_id,term:r.term,student:r.student_id}))),
+    v => ({
+      count: v.length,
+      uniqueStudents: new Set(v.map(d=>d.student)).size,
+      byPath: d3.rollups(v, vv => vv.length, d => d.path).map(([path,count]) => ({path,count})).sort((a,b)=>b.count-a.count),
+      byTerm: d3.rollups(v, vv => vv.length, d => d.term).map(([term,count]) => ({term,count})).sort((a,b)=>a.term.localeCompare(b.term)),
+    }),
+    d => d.concept,
+  )
+    .map(([concept,v]) => ({concept,...v}))
+    .sort((a,b)=>b.count-a.count);
+
+  return { total, teachableCount: teachable.length, teachablePct: total ? teachable.length/total : 0, byPath, byTerm, teachablePathMix, conceptMentionsTeachable };
+}
+
+function filteredRows(){
+  return APP.termFilter === 'all' ? APP.rows : APP.rows.filter(r => r.term === APP.termFilter);
+}
+
+function filteredAgg(){
+  return aggregate(filteredRows());
+}
+
+function setupTooltips(){
+  const tip = document.getElementById('tip');
+
+  function positionTip(x, y){
+    const pad = 12;
+    const tw = tip.offsetWidth || 260;
+    const th = tip.offsetHeight || 80;
+    let left = x + 14;
+    let top = y + 14;
+    if(left + tw > window.innerWidth - pad) left = x - tw - 14;
+    if(top + th > window.innerHeight - pad) top = y - th - 14;
+    left = Math.max(pad, left);
+    top = Math.max(pad, top);
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+  }
+
+  function showTip(html, x, y, locked=false){
+    clearTimeout(APP.tip.timer);
+    APP.tip.visible = true;
+    APP.tip.locked = !!locked;
+    tip.innerHTML = `${locked ? '<button class="tip-close" aria-label="Close tooltip">×</button>' : ''}${html}`;
+    tip.classList.add('on');
+    tip.setAttribute('aria-hidden','false');
+    tip.classList.toggle('tip-lock', !!locked);
+    positionTip(x, y);
+    if(locked){
+      const btn = tip.querySelector('.tip-close');
+      if(btn) btn.addEventListener('click', (e)=>{ e.stopPropagation(); hideTip(); });
+    }
+  }
+
+  function hideTip(){
+    APP.tip.visible = false;
+    APP.tip.locked = false;
+    APP.tip.targetEl = null;
+    tip.classList.remove('on','tip-lock');
+    tip.setAttribute('aria-hidden','true');
+    tip.innerHTML = '';
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    if(!APP.tip.visible || APP.tip.locked) return;
+    positionTip(e.clientX, e.clientY);
+  });
+
+  document.body.addEventListener('mouseover', (e) => {
+    if(APP.tip.mobile) return;
+    const el = e.target.closest('[data-tip]');
+    if(!el) return;
+    clearTimeout(APP.tip.timer);
+    APP.tip.timer = setTimeout(() => {
+      if(!el.isConnected) return;
+      const rect = el.getBoundingClientRect();
+      showTip(`<strong>Context</strong>${esc(el.getAttribute('data-tip'))}`, rect.left + rect.width/2, rect.top + rect.height/2, false);
+    }, 140);
+  });
+
+  document.body.addEventListener('mouseout', (e) => {
+    if(APP.tip.mobile) return;
+    if(APP.tip.locked) return;
+    const leaving = e.target.closest('[data-tip]');
+    if(!leaving) return;
+    clearTimeout(APP.tip.timer);
+    hideTip();
+  });
+
+  document.body.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-tip],[data-tip-mobile]');
+    const tipText = el ? (el.getAttribute('data-tip') || el.getAttribute('data-tip-mobile') || '') : '';
+    if(APP.tip.mobile && el){
+      const actionEl = el.closest('[data-open-path],[data-open-term],[data-open-concept],[data-open-student],[data-open-metric],[data-file]');
+      const target = actionEl || el;
+      if(APP.tip.locked && APP.tip.targetEl && APP.tip.targetEl === target){
+        hideTip();
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = el.getBoundingClientRect();
+      showTip(`<strong>Context</strong>${esc(tipText)}`, rect.left + rect.width/2, rect.top + rect.height/2, true);
+      APP.tip.targetEl = target;
+      return;
+    }
+    if(APP.tip.locked && !e.target.closest('#tip')) hideTip();
+  });
+
+  window.addEventListener('scroll', () => { if(!APP.tip.locked) hideTip(); }, { passive:true });
+  window.addEventListener('resize', () => { if(!APP.tip.locked) hideTip(); });
+
+  APP.hideTip = hideTip;
+}
+
+function setupPopup(){
+  const popEl = document.getElementById('pop');
+  const popTitleEl = document.getElementById('pop-title');
+  const popBodyEl = document.getElementById('pop-body');
+  const popCapEl = document.getElementById('pop-cap');
+  const popToolbarEl = document.getElementById('pop-toolbar');
+  const popMainEl = document.getElementById('pop-main');
+  const popCloseBtn = document.getElementById('pop-close');
+
+  function focusables(){
+    return [...popEl.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"]),input,select,textarea')]
+      .filter(el => el.offsetParent !== null || el === document.activeElement);
+  }
+
+  function trapFocus(e){
+    if(e.key !== 'Tab') return;
+    const f = focusables();
+    if(!f.length) return;
+    const first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){
+      e.preventDefault();
+      last.focus();
+    } else if(!e.shiftKey && document.activeElement === last){
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  function closePopup(){
+    if(!APP.pop.open) return;
+    APP.pop.open = false;
+    popEl.classList.remove('on');
+    popEl.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+    document.removeEventListener('keydown', APP.pop.trapHandler, true);
+    document.removeEventListener('keydown', APP.pop.escHandler, true);
+    if(APP.pop.lastFocused && APP.pop.lastFocused.focus) APP.pop.lastFocused.focus();
+  }
+
+  function renderToolbar(actions, contextTag){
+    if((!actions || !actions.length) && !contextTag){
+      popToolbarEl.innerHTML = '';
+      popToolbarEl.style.display = 'none';
+      return;
+    }
+    popToolbarEl.style.display = 'flex';
+    const actionHtml = (actions || []).map((a, idx) => {
+      if(a.href){
+        return `<a href="${esc(a.href)}" target="_blank" rel="noopener noreferrer">${esc(a.label || 'Open')}</a>`;
+      }
+      return `<button type="button" data-pop-action="${idx}">${esc(a.label || 'Action')}</button>`;
+    }).join('');
+    popToolbarEl.innerHTML = `
+      <div class="pop-toolbar-actions">${actionHtml}</div>
+      <div class="pop-toolbar-spacer"></div>
+      ${contextTag ? `<span class="pop-toolbar-tag" data-tip="${esc(contextTag.help || '')}"><span>${esc(contextTag.label)}</span><span class="i" aria-hidden="true">i</span></span>` : ''}
+    `;
+    [...popToolbarEl.querySelectorAll('[data-pop-action]')].forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = actions[Number(btn.getAttribute('data-pop-action'))];
+        if(a && typeof a.onClick === 'function') a.onClick();
+      });
+    });
+  }
+
+  function highlightCodeBlocks(){
+    popBodyEl.querySelectorAll('pre code').forEach(node => {
+      try { hljs.highlightElement(node); } catch {}
+    });
+  }
+
+  function openPopup({title, html, caption='', actions=[], contextTag=null, loading=false}){
+    APP.hideTip?.();
+    APP.pop.lastFocused = document.activeElement;
+    APP.pop.open = true;
+
+    popTitleEl.textContent = title || 'Detail';
+    popCapEl.textContent = caption || '';
+    renderToolbar(actions, contextTag);
+
+    if(loading){
+      popBodyEl.innerHTML = '<div class="pop-loading">Loading…</div>';
+    } else {
+      popBodyEl.innerHTML = html || '';
+      highlightCodeBlocks();
+    }
+
+    popEl.classList.add('on');
+    popEl.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+
+    popMainEl.scrollTop = 0;
+    popBodyEl.scrollTop = 0;
+
+    APP.pop.trapHandler = trapFocus;
+    APP.pop.escHandler = (e) => { if(e.key === 'Escape') closePopup(); };
+    document.addEventListener('keydown', APP.pop.trapHandler, true);
+    document.addEventListener('keydown', APP.pop.escHandler, true);
+
+    setTimeout(() => {
+      const f = focusables();
+      (f[0] || popCloseBtn).focus();
+    }, 0);
+  }
+
+  popCloseBtn.addEventListener('click', closePopup);
+  popEl.addEventListener('click', (e) => {
+    if(e.target === popEl) closePopup();
+  });
+
+  APP.openPopup = openPopup;
+  APP.closePopup = closePopup;
+  APP.popupEls = { popEl, popTitleEl, popBodyEl, popCapEl, popToolbarEl, popMainEl };
+}
+
+async function fetchTextCached(path){
+  if(APP.fileCache.has(path)) return APP.fileCache.get(path);
+  const p = fetch(path, { cache:'no-store' }).then(async resp => {
+    if(!resp.ok) throw new Error(`Failed to load ${path}: ${resp.status}`);
+    return resp.text();
+  });
+  APP.fileCache.set(path, p);
+  return p;
+}
+
+function normalizeFilePath(path){
+  const raw = String(path || '').replace(/^\.\/+/, '');
+  return raw.startsWith('analysis/') ? raw.slice('analysis/'.length) : raw;
+}
+
+function markdownToHtml(md){
+  marked.setOptions({
+    gfm: true,
+    breaks: false,
+    highlight: (code, lang) => {
+      if(lang && hljs.getLanguage(lang)) return hljs.highlight(code, { language: lang }).value;
+      return hljs.highlightAuto(code).value;
+    }
+  });
+  return marked.parse(md);
+}
+
+function guessCodeLang(path){
+  const p = path.toLowerCase();
+  if(p.endsWith('.py')) return 'python';
+  if(p.endsWith('.js')) return 'javascript';
+  if(p.endsWith('.ts')) return 'typescript';
+  if(p.endsWith('.json')) return 'json';
+  if(p.endsWith('.md')) return 'markdown';
+  if(p.endsWith('.sql')) return 'sql';
+  if(p.endsWith('.html')) return 'xml';
+  if(p.endsWith('.css')) return 'css';
+  return 'plaintext';
+}
+
+function renderCsvPopup(displayPath, resolvedPath, text){
+  const rows = d3.csvParse(text);
+  const cols = rows.columns || [];
+  const state = {
+    q: '', sort: cols[0] || '', dir: 'asc', page: 1, size: 50,
+  };
+
+  const numericCols = cols.filter(c => rows.some(r => Number.isFinite(+r[c])));
+  const stats = {};
+  numericCols.forEach(c => {
+    const vals = rows.map(r => +r[c]).filter(Number.isFinite);
+    stats[c] = { min: d3.min(vals), max: d3.max(vals) };
+  });
+
+  const tableId = `csv-table-${Math.random().toString(36).slice(2,8)}`;
+  const controlsId = `csv-ctrl-${Math.random().toString(36).slice(2,8)}`;
+
+  const html = `
+    <div class="pop-note">CSV preview with search, sort, pagination, and numeric gradient shading.</div>
+    <div id="${controlsId}" class="csv-controls">
+      <input type="search" data-csv-q placeholder="Search rows…">
+      <select data-csv-size>
+        <option value="25">25 rows</option>
+        <option value="50" selected>50 rows</option>
+        <option value="100">100 rows</option>
+      </select>
+      <span class="csv-meta" data-csv-meta></span>
+    </div>
+    <div class="csv-table-wrap" id="${tableId}"></div>
+  `;
+
+  APP.openPopup({
+    title: displayPath,
+    html,
+    caption: `CSV source: ${displayPath}`,
+    contextTag: { label:'File', help:'A raw data file rendered in a sortable, queryable popup.' },
+    actions: [{ label:'Open original in new tab', href:resolvedPath }],
+  });
+
+  const body = APP.popupEls.popBodyEl;
+  const tableWrap = body.querySelector(`#${tableId}`);
+  const controls = body.querySelector(`#${controlsId}`);
+  const qInput = controls.querySelector('[data-csv-q]');
+  const sizeSel = controls.querySelector('[data-csv-size]');
+  const meta = controls.querySelector('[data-csv-meta]');
+
+  function cmp(a,b,col,dir){
+    const av = a[col], bv = b[col];
+    const an = +av, bn = +bv;
+    const mul = dir==='desc' ? -1 : 1;
+    if(Number.isFinite(an) && Number.isFinite(bn)) return mul * (an-bn);
+    return mul * String(av ?? '').localeCompare(String(bv ?? ''));
+  }
+
+  function shade(col, value){
+    if(!numericCols.includes(col)) return '';
+    const n = +value;
+    if(!Number.isFinite(n)) return '';
+    const s = stats[col];
+    if(!s || s.max === s.min) return '';
+    const t = (n - s.min) / (s.max - s.min);
+    const alpha = 0.08 + t * 0.22;
+    return `style="background:rgba(34,197,94,${alpha.toFixed(3)})"`;
+  }
+
+  function render(){
+    const q = state.q.trim().toLowerCase();
+    let arr = rows;
+    if(q){
+      arr = arr.filter(r => cols.some(c => String(r[c] ?? '').toLowerCase().includes(q)));
+    }
+    if(state.sort){
+      arr = [...arr].sort((a,b)=>cmp(a,b,state.sort,state.dir));
+    }
+    const pages = Math.max(1, Math.ceil(arr.length / state.size));
+    if(state.page > pages) state.page = pages;
+    const start = (state.page - 1) * state.size;
+    const view = arr.slice(start, start + state.size);
+
+    meta.textContent = `${fmtInt(arr.length)} rows · page ${state.page}/${pages}`;
+
+    const head = cols.map(c => {
+      const cls = state.sort === c ? (state.dir === 'desc' ? 'sort-desc' : 'sort-asc') : '';
+      return `<th data-csv-sort="${esc(c)}" class="${cls}">${esc(c)}</th>`;
+    }).join('');
+
+    const bodyRows = view.map(r => `<tr>${cols.map(c => `<td ${shade(c, r[c])} class="${Number.isFinite(+r[c]) ? 'num' : ''}">${esc(r[c])}</td>`).join('')}</tr>`).join('');
+
+    tableWrap.innerHTML = `
+      <table>
+        <thead><tr>${head}</tr></thead>
+        <tbody>${bodyRows || `<tr><td colspan="${cols.length}" style="padding:10px">No rows.</td></tr>`}</tbody>
+      </table>
+      <div class="csv-controls" style="margin-top:8px">
+        <button type="button" data-csv-prev ${state.page<=1?'disabled':''}>Prev</button>
+        <button type="button" data-csv-next ${state.page>=pages?'disabled':''}>Next</button>
+      </div>
+    `;
+
+    tableWrap.querySelectorAll('[data-csv-sort]').forEach(th => {
+      th.addEventListener('click', () => {
+        const col = th.getAttribute('data-csv-sort');
+        if(state.sort === col){ state.dir = state.dir === 'asc' ? 'desc' : 'asc'; }
+        else { state.sort = col; state.dir = 'asc'; }
+        render();
+      });
+    });
+
+    tableWrap.querySelector('[data-csv-prev]')?.addEventListener('click', () => { if(state.page>1){ state.page--; render(); } });
+    tableWrap.querySelector('[data-csv-next]')?.addEventListener('click', () => { if(state.page<pages){ state.page++; render(); } });
+  }
+
+  qInput.addEventListener('input', () => { state.q = qInput.value; state.page = 1; render(); });
+  sizeSel.addEventListener('change', () => { state.size = +sizeSel.value; state.page = 1; render(); });
+  render();
+}
+
+async function openFilePopup(path){
+  const displayPath = String(path || '');
+  const resolvedPath = normalizeFilePath(displayPath);
+  APP.openPopup({
+    title: displayPath,
+    html: '',
+    caption: `Loading ${displayPath}…`,
+    contextTag: { label:'File', help:'Source file popup with formatting and actions.' },
+    actions: [{ label:'Open original in new tab', href: resolvedPath }],
+    loading: true,
+  });
+
+  try {
+    const text = await fetchTextCached(resolvedPath);
+    const p = resolvedPath.toLowerCase();
+    if(p.endsWith('.csv')){
+      renderCsvPopup(displayPath, resolvedPath, text);
+      return;
+    }
+    if(p.endsWith('.md')){
+      APP.openPopup({
+        title: displayPath,
+        html: markdownToHtml(text),
+        caption: `Rendered markdown from ${displayPath}`,
+        contextTag: { label:'File', help:'Markdown file rendered as HTML with syntax highlighting for code blocks.' },
+        actions: [{ label:'Open original in new tab', href: resolvedPath }],
+      });
+      return;
+    }
+
+    const lang = guessCodeLang(resolvedPath);
+    const html = `<pre><code class="language-${lang}">${esc(text)}</code></pre>`;
+    APP.openPopup({
+      title: displayPath,
+      html,
+      caption: `Source file preview (${lang})`,
+      contextTag: { label:'File', help:'Raw source view. Useful to verify implementation details from the narrative.' },
+      actions: [{ label:'Open original in new tab', href: resolvedPath }],
+    });
+  } catch (err) {
+    APP.openPopup({
+      title: displayPath,
+      html: `<div class="pop-note">Could not load file: ${esc(String(err.message || err))}</div>`,
+      caption: 'File loading failed',
+      contextTag: { label:'File', help:'A file reference from the narrative.' },
+      actions: [{ label:'Open original in new tab', href: resolvedPath }],
+    });
+  }
+}
+
+function pathStats(pathId, rows = APP.rows){
+  const group = rows.filter(r => r.decision_path_id === pathId);
+  const total = rows.length;
+  const meta = PATH_META[pathId];
+  return {
+    pathId,
+    meta,
+    count: group.length,
+    pct: total ? group.length / total : 0,
+    avgRuns: mean(group, d=>d.avg_public_runs_per_attempt),
+    avgEdits: mean(group, d=>d.avg_edits_per_attempt),
+    avgActive: mean(group, d=>d.avg_active_minutes_per_attempt),
+    avgParseable: mean(group, d=>d.parseable_fraction_mean),
+    avgPriority: mean(group.filter(d=>d.teachability_priority_index!=null), d=>d.teachability_priority_index),
+    topErrors: d3.rollups(group, v=>v.length, d=>d.dominant_error_profile_bucket)
+      .sort((a,b)=>b[1]-a[1]).slice(0,6).map(([name,count]) => ({name,count,pct:group.length?count/group.length:0})),
+    topConcepts: d3.rollups(group.flatMap(d=>d.concepts), v=>v.length, d=>d)
+      .sort((a,b)=>b[1]-a[1]).slice(0,8).map(([name,count]) => ({name,count})),
+    byTerm: TERM_ORDER.map(t => {
+      const g = group.filter(r=>r.term===t);
+      return {term:t,count:g.length,pct:group.length?g.length/group.length:0};
+    }),
+    sample: [...group]
+      .sort((a,b)=> (b.teachability_priority_index ?? -1) - (a.teachability_priority_index ?? -1) || b.avg_public_runs_per_attempt - a.avg_public_runs_per_attempt)
+      .slice(0,12),
+  };
+}
+
+function openPathPopup(pathId){
+  const st = pathStats(pathId, APP.rows);
+  const teachBadge = st.meta.teachable ? '<span class="pop-chip">Teachable-now path</span>' : '<span class="pop-chip">Not intervention-priority now</span>';
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Path</span><span class="v">${esc(st.pathId)} · ${esc(st.meta.name)}</span></div>
+      <div class="pop-kv"><span class="k">Profiles</span><span class="v">${fmtInt(st.count)} (${pct1(st.pct)})</span></div>
+      <div class="pop-kv"><span class="k">Avg public runs</span><span class="v">${fmt1(st.avgRuns)}</span></div>
+      <div class="pop-kv"><span class="k">Avg edits</span><span class="v">${fmt1(st.avgEdits)}</span></div>
+      <div class="pop-kv"><span class="k">Avg active min</span><span class="v">${fmt1(st.avgActive)}</span></div>
+      <div class="pop-kv"><span class="k">Avg parseable fraction</span><span class="v">${pct1(st.avgParseable)}</span></div>
+    </div>
+    ${teachBadge}
+    <div class="pop-note"><strong>Classification rule:</strong> ${esc(st.meta.rule)}<br><strong>Intervention track:</strong> ${esc(st.meta.track)}<br><strong>Plan:</strong> ${esc(st.meta.plan)}</div>
+
+    <h3>Term distribution</h3>
+    <div class="pop-list">${st.byTerm.map(d => `<div class="pop-item"><div class="k">${esc(d.term)}</div><div class="v">${fmtInt(d.count)} profiles (${pct1(d.pct)})</div></div>`).join('')}</div>
+
+    <h3 style="margin-top:12px">Top dominant error buckets</h3>
+    <table>
+      <thead><tr><th>Error bucket</th><th class="num">Count</th><th class="num">Share in path</th></tr></thead>
+      <tbody>${st.topErrors.map(d => `<tr><td>${esc(d.name)}</td><td class="num">${fmtInt(d.count)}</td><td class="num">${pct1(d.pct)}</td></tr>`).join('')}</tbody>
+    </table>
+
+    <h3 style="margin-top:12px">Top concept struggles</h3>
+    <div>${st.topConcepts.map(c => `<span class="pop-chip" data-open-concept="${esc(c.name)}">${esc(c.name)} · ${fmtInt(c.count)}</span>`).join('') || '<div class="pop-note">No concept tags available.</div>'}</div>
+
+    <h3 style="margin-top:12px">Sample student profiles</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Student</th><th>Term</th><th>Dominant error</th><th class="num">Runs</th><th class="num">Edits</th><th class="num">Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${st.sample.map(r => `
+          <tr data-open-student="${esc(r.student_id)}" data-open-term="${esc(r.term)}">
+            <td class="id">${esc(r.student_id)}</td>
+            <td>${esc(r.term)}</td>
+            <td>${esc(r.dominant_error_profile_bucket)}</td>
+            <td class="num">${fmt1(r.avg_public_runs_per_attempt)}</td>
+            <td class="num">${fmt1(r.avg_edits_per_attempt)}</td>
+            <td class="num">${r.teachability_priority_index == null ? '–' : fmt1(r.teachability_priority_index)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  APP.openPopup({
+    title: `${st.pathId} · ${st.meta.name}`,
+    html,
+    caption: `Decision-path deep dive from analysis/teachable.csv`,
+    contextTag: { label:'Decision path', help:'A branch of the teachability decision tree with process and error profile signatures.' },
+    actions: [
+      { label:'Open teachable.md', onClick: () => openFilePopup('analysis/teachable.md') },
+      { label:'Open teachable.py', onClick: () => openFilePopup('analysis/teachable.py') },
+    ],
+  });
+
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-concept]').forEach(el => {
+    el.addEventListener('click', () => openConceptPopup(el.getAttribute('data-open-concept')));
+  });
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-student]').forEach(el => {
+    el.addEventListener('click', () => openStudentPopup(el.getAttribute('data-open-student'), el.getAttribute('data-open-term')));
+  });
+}
+
+function openTermPopup(term){
+  const agg = APP.agg.byTerm.find(d => d.term === term);
+  if(!agg){ return; }
+  const teachRows = agg.rows.filter(r => r.teachable_now);
+  const topConcepts = d3.rollups(teachRows.flatMap(r=>r.concepts), v=>v.length, d=>d)
+    .sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const sample = [...teachRows].sort((a,b)=> (b.teachability_priority_index ?? -1) - (a.teachability_priority_index ?? -1)).slice(0,12);
+
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Term</span><span class="v">${esc(term)}</span></div>
+      <div class="pop-kv"><span class="k">Profiles</span><span class="v">${fmtInt(agg.count)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable profiles</span><span class="v">${fmtInt(agg.teachableCount)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable share</span><span class="v">${pct1(agg.teachablePct)}</span></div>
+    </div>
+
+    <h3>Decision-path mix in ${esc(term)}</h3>
+    <table>
+      <thead><tr><th>Path</th><th>Path name</th><th class="num">Count</th><th class="num">Share</th></tr></thead>
+      <tbody>
+        ${agg.byPath.map(d => `<tr data-open-path="${esc(d.path)}"><td><strong>${esc(d.path)}</strong></td><td>${esc(PATH_META[d.path].name)}</td><td class="num">${fmtInt(d.count)}</td><td class="num">${pct1(d.pct)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:12px">Top concept struggles among teachable profiles</h3>
+    <div>${topConcepts.map(([name,count]) => `<span class="pop-chip" data-open-concept="${esc(name)}">${esc(name)} · ${fmtInt(count)}</span>`).join('') || '<div class="pop-note">No teachable concepts in this term.</div>'}</div>
+
+    <h3 style="margin-top:12px">High-priority teachable examples</h3>
+    <table>
+      <thead><tr><th>Student</th><th>Path</th><th>Dominant error</th><th class="num">Priority</th><th>Top concepts</th></tr></thead>
+      <tbody>
+        ${sample.map(r => `<tr data-open-student="${esc(r.student_id)}" data-open-term="${esc(r.term)}"><td class="id">${esc(r.student_id)}</td><td>${esc(r.decision_path_id)}</td><td>${esc(r.dominant_error_profile_bucket)}</td><td class="num">${r.teachability_priority_index == null ? '–' : fmt1(r.teachability_priority_index)}</td><td>${esc(r.top_concept_struggles || '')}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+
+  APP.openPopup({
+    title: `Term lens · ${term}`,
+    html,
+    caption: 'Term-level segmentation and teachable profile composition',
+    contextTag: { label:'Term lens', help:'A per-term breakdown used for cohort-level planning and staffing.' },
+    actions: [{ label:'Open teachable.csv', onClick: () => openFilePopup('analysis/teachable.csv') }],
+  });
+
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-path]').forEach(el => el.addEventListener('click', () => openPathPopup(el.getAttribute('data-open-path'))));
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-concept]').forEach(el => el.addEventListener('click', () => openConceptPopup(el.getAttribute('data-open-concept'))));
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-student]').forEach(el => el.addEventListener('click', () => openStudentPopup(el.getAttribute('data-open-student'), el.getAttribute('data-open-term'))));
+}
+
+function openConceptPopup(concept){
+  const teachRows = APP.rows.filter(r => r.teachable_now && r.concepts.includes(concept));
+  const byPath = d3.rollups(teachRows, v=>v.length, d=>d.decision_path_id).sort((a,b)=>b[1]-a[1]);
+  const byTerm = d3.rollups(teachRows, v=>v.length, d=>d.term).sort((a,b)=>a[0].localeCompare(b[0]));
+  const errors = d3.rollups(teachRows, v=>v.length, d=>d.dominant_error_profile_bucket).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const sample = [...teachRows].sort((a,b)=> (b.teachability_priority_index ?? -1) - (a.teachability_priority_index ?? -1)).slice(0,15);
+
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Concept</span><span class="v">${esc(concept)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable mentions</span><span class="v">${fmtInt(teachRows.length)}</span></div>
+      <div class="pop-kv"><span class="k">Unique students</span><span class="v">${fmtInt(new Set(teachRows.map(r=>`${r.term}:${r.student_id}`)).size)}</span></div>
+      <div class="pop-kv"><span class="k">Most common path</span><span class="v">${byPath[0] ? `${byPath[0][0]} (${fmtInt(byPath[0][1])})` : '–'}</span></div>
+    </div>
+
+    <h3>Path breakdown</h3>
+    <div class="pop-list">${byPath.map(([path,count]) => `<div class="pop-item" data-open-path="${esc(path)}"><div class="k">${esc(path)} · ${esc(PATH_META[path].name)}</div><div class="v">${fmtInt(count)} mentions</div></div>`).join('')}</div>
+
+    <h3 style="margin-top:12px">Term breakdown</h3>
+    <div class="pop-list">${byTerm.map(([term,count]) => `<div class="pop-item" data-open-term="${esc(term)}"><div class="k">${esc(term)}</div><div class="v">${fmtInt(count)} mentions</div></div>`).join('')}</div>
+
+    <h3 style="margin-top:12px">Dominant errors in this concept slice</h3>
+    <table>
+      <thead><tr><th>Error bucket</th><th class="num">Count</th></tr></thead>
+      <tbody>${errors.map(([name,count]) => `<tr><td>${esc(name)}</td><td class="num">${fmtInt(count)}</td></tr>`).join('')}</tbody>
+    </table>
+
+    <h3 style="margin-top:12px">Sample profiles</h3>
+    <table>
+      <thead><tr><th>Student</th><th>Term</th><th>Path</th><th>Dominant error</th><th class="num">Priority</th></tr></thead>
+      <tbody>${sample.map(r => `<tr data-open-student="${esc(r.student_id)}" data-open-term="${esc(r.term)}"><td class="id">${esc(r.student_id)}</td><td>${esc(r.term)}</td><td>${esc(r.decision_path_id)}</td><td>${esc(r.dominant_error_profile_bucket)}</td><td class="num">${r.teachability_priority_index == null ? '–' : fmt1(r.teachability_priority_index)}</td></tr>`).join('')}</tbody>
+    </table>
+  `;
+
+  APP.openPopup({
+    title: `Concept lens · ${concept}`,
+    html,
+    caption: 'Concept-level drill-down for teachable profiles',
+    contextTag: { label:'Concept lens', help:'A concept-specific view that shows where to focus practice materials.' },
+    actions: [{ label:'Open teachable.md', onClick: () => openFilePopup('analysis/teachable.md') }],
+  });
+
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-path]').forEach(el => el.addEventListener('click', () => openPathPopup(el.getAttribute('data-open-path'))));
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-term]').forEach(el => el.addEventListener('click', () => openTermPopup(el.getAttribute('data-open-term'))));
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-student]').forEach(el => el.addEventListener('click', () => openStudentPopup(el.getAttribute('data-open-student'), el.getAttribute('data-open-term'))));
+}
+
+function openStudentPopup(studentId, term){
+  const row = APP.rows.find(r => r.student_id === studentId && r.term === term);
+  if(!row) return;
+  const path = PATH_META[row.decision_path_id];
+
+  const rowsSameStudent = APP.rows.filter(r => r.student_id === studentId).sort((a,b)=>a.term.localeCompare(b.term));
+
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Student hash</span><span class="v">${esc(studentId)}</span></div>
+      <div class="pop-kv"><span class="k">Term</span><span class="v">${esc(term)}</span></div>
+      <div class="pop-kv"><span class="k">Decision path</span><span class="v">${esc(row.decision_path_id)} · ${esc(path.name)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable now</span><span class="v">${row.teachable_now ? 'Yes' : 'No'}</span></div>
+      <div class="pop-kv"><span class="k">Dominant error bucket</span><span class="v">${esc(row.dominant_error_profile_bucket)}</span></div>
+      <div class="pop-kv"><span class="k">Path share of dominant bucket</span><span class="v">${pct1(row.dominant_error_profile_bucket_share)}</span></div>
+      <div class="pop-kv"><span class="k">Avg public runs/attempt</span><span class="v">${fmt1(row.avg_public_runs_per_attempt)}</span></div>
+      <div class="pop-kv"><span class="k">Avg edits/attempt</span><span class="v">${fmt1(row.avg_edits_per_attempt)}</span></div>
+      <div class="pop-kv"><span class="k">Avg active min/attempt</span><span class="v">${fmt1(row.avg_active_minutes_per_attempt)}</span></div>
+      <div class="pop-kv"><span class="k">Concept failure ratio</span><span class="v">${pct1(row.concept_failure_ratio)}</span></div>
+      <div class="pop-kv"><span class="k">Parseable fraction</span><span class="v">${pct1(row.parseable_fraction_mean)}</span></div>
+      <div class="pop-kv"><span class="k">Teachability priority index</span><span class="v">${row.teachability_priority_index == null ? '–' : fmt1(row.teachability_priority_index)}</span></div>
+    </div>
+
+    <div class="pop-note"><strong>Intervention track:</strong> ${esc(row.intervention_track)}<br><strong>Intervention plan:</strong> ${esc(row.intervention_plan)}</div>
+
+    <h3>Top concept struggles</h3>
+    <div>${row.concepts.map(c => `<span class="pop-chip" data-open-concept="${esc(c)}">${esc(c)}</span>`).join('') || '<div class="pop-note">No concept tags recorded.</div>'}</div>
+
+    <h3 style="margin-top:12px">Same student across terms (if present)</h3>
+    <table>
+      <thead><tr><th>Term</th><th>Path</th><th>Dominant error</th><th class="num">Runs</th><th class="num">Edits</th><th class="num">Priority</th></tr></thead>
+      <tbody>
+        ${rowsSameStudent.map(r => `<tr data-open-student="${esc(r.student_id)}" data-open-term="${esc(r.term)}"><td>${esc(r.term)}</td><td>${esc(r.decision_path_id)}</td><td>${esc(r.dominant_error_profile_bucket)}</td><td class="num">${fmt1(r.avg_public_runs_per_attempt)}</td><td class="num">${fmt1(r.avg_edits_per_attempt)}</td><td class="num">${r.teachability_priority_index == null ? '–' : fmt1(r.teachability_priority_index)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+
+  APP.openPopup({
+    title: `Student profile · ${studentId.slice(0,8)}… · ${term}`,
+    html,
+    caption: 'Row-level profile from teachable.csv',
+    contextTag: { label:'Student profile', help:'One anonymized student-term profile with process features, path assignment, and intervention mapping.' },
+    actions: [
+      { label:'Open path details', onClick: () => openPathPopup(row.decision_path_id) },
+      { label:'Open teachable.csv', onClick: () => openFilePopup('analysis/teachable.csv') },
+    ],
+  });
+
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-concept]').forEach(el => el.addEventListener('click', () => openConceptPopup(el.getAttribute('data-open-concept'))));
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-student]').forEach(el => el.addEventListener('click', () => openStudentPopup(el.getAttribute('data-open-student'), el.getAttribute('data-open-term'))));
+}
+
+function openMetricPopup(metricKey){
+  if(metricKey !== 'teachable-share') return;
+  const html = `
+    <div class="pop-grid">
+      <div class="pop-kv"><span class="k">Classified profiles</span><span class="v">${fmtInt(APP.agg.total)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable-now profiles</span><span class="v">${fmtInt(APP.agg.teachableCount)}</span></div>
+      <div class="pop-kv"><span class="k">Teachable share</span><span class="v">${pct1(APP.agg.teachablePct)}</span></div>
+      <div class="pop-kv"><span class="k">Largest teachable track</span><span class="v">T2 (${pct1(APP.agg.teachablePathMix.find(d=>d.path==='T2')?.pct || 0)} of teachable)</span></div>
+    </div>
+    <div class="pop-note">This metric is intentionally process-based. It does not use exam scores, pass marks, or historical score improvement.</div>
+    <table>
+      <thead><tr><th>Path</th><th>Name</th><th class="num">Count</th><th class="num">Share of all</th></tr></thead>
+      <tbody>
+        ${APP.agg.byPath.map(d => `<tr data-open-path="${esc(d.path)}"><td>${esc(d.path)}</td><td>${esc(d.meta.name)}</td><td class="num">${fmtInt(d.count)}</td><td class="num">${pct1(d.pct)}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+  APP.openPopup({
+    title: 'Metric detail · Teachable share',
+    html,
+    caption: 'Definition and decomposition of the teachable-now metric',
+    contextTag: { label:'Metric detail', help:'A breakdown of one headline number used in the narrative.' },
+    actions: [{ label:'Open teachable.py (rules)', onClick: () => openFilePopup('analysis/teachable.py') }],
+  });
+  APP.popupEls.popBodyEl.querySelectorAll('[data-open-path]').forEach(el => el.addEventListener('click', () => openPathPopup(el.getAttribute('data-open-path'))));
+}
+
+function renderHeroStats(){
+  const agg = APP.agg;
+  animateNumber(document.getElementById('s-total'), agg.total, v => fmtInt(Math.round(v)));
+  animateNumber(document.getElementById('s-teach'), agg.teachableCount, v => fmtInt(Math.round(v)));
+  animateNumber(document.getElementById('s-pct'), agg.teachablePct * 100, v => `${v.toFixed(1)}%`);
+
+  const t2 = agg.teachablePathMix.find(d => d.path === 'T2');
+  const label = t2 ? `T2 · ${(t2.pct*100).toFixed(1)}%` : '–';
+  document.getElementById('s-track').textContent = label;
+  document.getElementById('byline-total').textContent = fmtInt(agg.total);
+
+  PATH_ORDER.forEach(pid => {
+    const row = agg.byPath.find(d => d.path === pid);
+    const countEl = document.querySelector(`[data-node-count="${pid}"]`);
+    const pctEl = document.querySelector(`[data-node-pct="${pid}"]`);
+    if(countEl) countEl.textContent = fmtInt(row?.count || 0);
+    if(pctEl) pctEl.textContent = row ? pct1(row.pct) : '–';
+  });
+
+  const t1 = agg.teachablePathMix.find(d=>d.path==='T1');
+  const t2m = agg.teachablePathMix.find(d=>d.path==='T2');
+  const t3 = agg.teachablePathMix.find(d=>d.path==='T3');
+  document.getElementById('track-meta-t1').textContent = `${fmtInt(t1?.count || 0)} profiles · ${pct1(t1?.pct || 0)} of teachable`;
+  document.getElementById('track-meta-t2').textContent = `${fmtInt(t2m?.count || 0)} profiles · ${pct1(t2m?.pct || 0)} of teachable`;
+  document.getElementById('track-meta-t3').textContent = `${fmtInt(t3?.count || 0)} profiles · ${pct1(t3?.pct || 0)} of teachable`;
+}
+
+function renderTermPills(){
+  const root = document.getElementById('term-pills');
+  const options = ['all', ...TERM_ORDER];
+  root.innerHTML = options.map(term => `<button type="button" class="pill ${term===APP.termFilter?'active':''}" data-term-pill="${term}">${term==='all' ? 'All terms' : term}</button>`).join('');
+  root.querySelectorAll('[data-term-pill]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      APP.termFilter = btn.getAttribute('data-term-pill');
+      renderTermPills();
+      renderPathChart();
+      renderProcessChart();
+    });
+  });
+}
+
+function renderPathChart(){
+  const container = document.getElementById('path-chart');
+  container.innerHTML = '';
+  const data = filteredAgg().byPath;
+
+  const W = Math.max(820, container.clientWidth || 820);
+  const H = 330;
+  const m = {t:12,r:24,b:34,l:220};
+  const w = W - m.l - m.r;
+  const h = H - m.t - m.b;
+
+  const svg = d3.select(container).append('svg').attr('class','chart-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').attr('height',H);
+  const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+
+  const y = d3.scaleBand().domain(PATH_ORDER).range([0,h]).padding(0.16);
+  const x = d3.scaleLinear().domain([0, d3.max(data, d => d.pct) * 1.08 || 0.7]).range([0,w]);
+
+  g.append('g').call(d3.axisTop(x).ticks(5).tickFormat(d=>`${Math.round(d*100)}%`))
+    .call(g=>g.selectAll('.domain').remove())
+    .call(g=>g.selectAll('text').attr('fill','#7a7066').attr('font-size',11))
+    .call(g=>g.selectAll('line').attr('stroke','#ddd3c5'));
+
+  g.append('g').selectAll('text').data(PATH_ORDER).join('text')
+    .attr('x', -12).attr('y', d => y(d) + y.bandwidth()/2).attr('text-anchor','end').attr('dy','0.35em')
+    .attr('font-size',11.5).attr('fill','#524b43').text(d => `${d} · ${PATH_META[d].name}`)
+    .style('cursor','pointer')
+    .on('click', (_, d) => openPathPopup(d));
+
+  const bars = g.selectAll('.bar').data(data, d => d.path).join(enter => {
+    const bg = enter.append('g').attr('class','bar').attr('transform', d=>`translate(0,${y(d.path)})`);
+    bg.append('rect').attr('height', y.bandwidth()).attr('width', 0).attr('rx',5).attr('fill', d => d.teachable ? PATH_META[d.path].color : '#c8bfb3').attr('opacity', d=> d.teachable ? 0.88 : 0.75);
+    bg.append('text').attr('x', 6).attr('y', y.bandwidth()/2).attr('dy','0.35em').attr('fill','#fff').attr('font-size',10.8).attr('font-weight',700).text(d => `${fmtInt(d.count)} · ${pct1(d.pct)}`);
+    return bg;
+  });
+
+  bars.transition().duration(700).ease(d3.easeCubicOut)
+    .attr('transform', d=>`translate(0,${y(d.path)})`)
+    .select('rect').attr('width', d=>x(d.pct));
+
+  bars.select('text').transition().duration(700)
+    .attr('x', d => Math.max(8, Math.min(x(d.pct)-74, w-96)))
+    .text(d => `${fmtInt(d.count)} · ${pct1(d.pct)}`);
+
+  bars.attr('data-tip-mobile', d => `${d.path} · ${d.meta.name}: ${fmtInt(d.count)} profiles (${pct1(d.pct)}). Avg runs ${fmt1(d.avgRuns)}, avg edits ${fmt1(d.avgEdits)}.`);
+
+  bars.style('cursor','pointer')
+    .on('mousemove', (e,d) => {
+      if(APP.tip.mobile) return;
+      const label = `${d.path} · ${d.meta.name}`;
+      APP.hideTip?.();
+      const html = `<strong>${esc(label)}</strong>${fmtInt(d.count)} profiles · ${pct1(d.pct)}<br>Avg runs: ${fmt1(d.avgRuns)} · Avg edits: ${fmt1(d.avgEdits)}<br><em>Click for full path detail</em>`;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tip = document.getElementById('tip');
+      tip.innerHTML = html;
+      tip.classList.add('on'); tip.setAttribute('aria-hidden','false');
+      const xPos = rect.left + rect.width * 0.6;
+      const yPos = rect.top + rect.height * 0.5;
+      const tw = tip.offsetWidth || 280, th = tip.offsetHeight || 80;
+      let left = xPos + 12, top = yPos + 12;
+      if(left + tw > window.innerWidth - 12) left = xPos - tw - 12;
+      if(top + th > window.innerHeight - 12) top = yPos - th - 12;
+      tip.style.left = `${Math.max(12,left)}px`; tip.style.top = `${Math.max(12,top)}px`;
+    })
+    .on('mouseleave', () => APP.hideTip?.())
+    .on('click', (_,d) => openPathPopup(d.path));
+}
+
+function renderTermChart(){
+  const container = document.getElementById('term-chart');
+  container.innerHTML = '';
+  const data = APP.agg.byTerm;
+
+  const W = Math.max(820, container.clientWidth || 820);
+  const H = 280;
+  const m = {t:14,r:20,b:40,l:60};
+  const w = W - m.l - m.r;
+  const h = H - m.t - m.b;
+
+  const svg = d3.select(container).append('svg').attr('class','chart-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').attr('height',H);
+  const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+
+  const x = d3.scaleBand().domain(TERM_ORDER).range([0,w]).padding(0.3);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d=>d.teachablePct) * 1.18 || 0.2]).range([h,0]);
+
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x)).call(g=>g.selectAll('text').attr('font-size',11.5).attr('fill','#61584d')).call(g=>g.selectAll('line,.domain').attr('stroke','#d8cebf'));
+  g.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(d=>`${Math.round(d*100)}%`)).call(g=>g.selectAll('text').attr('font-size',11).attr('fill','#7a7066')).call(g=>g.selectAll('line').attr('stroke','#e6ddcf')).call(g=>g.selectAll('.domain').remove());
+
+  const bars = g.selectAll('rect').data(data).join('rect')
+    .attr('x', d=>x(d.term))
+    .attr('width', x.bandwidth())
+    .attr('y', h)
+    .attr('height', 0)
+    .attr('rx', 6)
+    .attr('fill', '#0f766e')
+    .attr('data-tip-mobile', d => `${d.term}: ${fmtInt(d.teachableCount)} teachable of ${fmtInt(d.count)} profiles (${pct1(d.teachablePct)}).`)
+    .style('cursor','pointer')
+    .on('mousemove', (e,d) => {
+      if(APP.tip.mobile) return;
+      const html = `<strong>${d.term}</strong>${fmtInt(d.teachableCount)} teachable of ${fmtInt(d.count)} profiles<br>${pct1(d.teachablePct)} teachable share<br><em>Click for term details</em>`;
+      const tip = document.getElementById('tip');
+      tip.innerHTML = html;
+      tip.classList.add('on'); tip.setAttribute('aria-hidden','false');
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tw = tip.offsetWidth || 240, th = tip.offsetHeight || 70;
+      let left = rect.left + rect.width/2 + 12, top = rect.top + 12;
+      if(left + tw > window.innerWidth - 12) left = rect.left - tw - 12;
+      if(top + th > window.innerHeight - 12) top = rect.bottom - th;
+      tip.style.left = `${Math.max(12,left)}px`; tip.style.top = `${Math.max(12,top)}px`;
+    })
+    .on('mouseleave', () => APP.hideTip?.())
+    .on('click', (_,d) => openTermPopup(d.term));
+
+  bars.transition().duration(760).ease(d3.easeCubicOut)
+    .attr('y', d => y(d.teachablePct))
+    .attr('height', d => h - y(d.teachablePct));
+
+  g.selectAll('.val').data(data).join('text')
+    .attr('class','val')
+    .attr('x', d => x(d.term) + x.bandwidth()/2)
+    .attr('y', d => y(d.teachablePct) - 7)
+    .attr('text-anchor','middle')
+    .attr('font-size',11)
+    .attr('font-weight',700)
+    .attr('fill','#0f766e')
+    .attr('data-tip-mobile', d => `${d.term}: ${pct1(d.teachablePct)} teachable share.`)
+    .text(d => pct1(d.teachablePct))
+    .style('cursor','pointer')
+    .on('click', (_,d)=>openTermPopup(d.term));
+}
+
+function renderProcessChart(){
+  const container = document.getElementById('process-chart');
+  container.innerHTML = '';
+  const data = filteredAgg().byPath.map(d => ({
+    ...d,
+    color: PATH_META[d.path].teachable ? PATH_META[d.path].color : '#9ca3af',
+  }));
+
+  const W = Math.max(900, container.clientWidth || 900);
+  const H = 420;
+  const m = {t:20,r:30,b:52,l:66};
+  const w = W - m.l - m.r;
+  const h = H - m.t - m.b;
+
+  const svg = d3.select(container).append('svg').attr('class','chart-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').attr('height',H);
+  const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+
+  const x = d3.scaleLinear().domain([0, d3.max(data, d=>d.avgRuns) * 1.2 || 30]).range([0,w]);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d=>d.avgEdits) * 1.15 || 35]).range([h,0]);
+  const r = d3.scaleSqrt().domain([0, d3.max(data, d=>d.count) || 1]).range([12,48]);
+
+  g.append('g').attr('transform',`translate(0,${h})`).call(d3.axisBottom(x).ticks(7)).call(g=>g.selectAll('line,.domain').attr('stroke','#d8cebf')).call(g=>g.selectAll('text').attr('font-size',11).attr('fill','#7a7066'));
+  g.append('g').call(d3.axisLeft(y).ticks(7)).call(g=>g.selectAll('line').attr('stroke','#e6ddcf')).call(g=>g.selectAll('.domain').remove()).call(g=>g.selectAll('text').attr('font-size',11).attr('fill','#7a7066'));
+
+  svg.append('text').attr('x', m.l + w/2).attr('y', H-8).attr('text-anchor','middle').attr('font-size',11).attr('fill','#8d8377').text('Average public test runs per attempt');
+  svg.append('text').attr('transform','rotate(-90)').attr('x', -(m.t+h/2)).attr('y', 14).attr('text-anchor','middle').attr('font-size',11).attr('fill','#8d8377').text('Average edits per attempt');
+
+  const nodes = g.selectAll('g.node').data(data, d=>d.path).join(enter => {
+    const node = enter.append('g').attr('class','node').style('cursor','pointer');
+    node.append('circle').attr('cx', d=>x(d.avgRuns)).attr('cy', d=>y(d.avgEdits)).attr('r', 0).attr('fill', d=>d.color).attr('opacity',0.82).attr('stroke','#fff').attr('stroke-width',1.6);
+    node.append('text').attr('x', d=>x(d.avgRuns)).attr('y', d=>y(d.avgEdits)).attr('dy','0.35em').attr('text-anchor','middle').attr('font-size',10.5).attr('font-weight',700).attr('fill','#fff').text(d=>d.path);
+    return node;
+  });
+
+  nodes.attr('data-tip-mobile', d => `${d.path} · ${d.meta.name}: ${fmtInt(d.count)} profiles. Runs ${fmt1(d.avgRuns)}, edits ${fmt1(d.avgEdits)}, active ${fmt1(d.avgActive)} min.`);
+
+  nodes.select('circle').transition().duration(760).ease(d3.easeCubicOut).attr('r', d=>r(d.count));
+  nodes.on('mousemove', (e,d) => {
+      if(APP.tip.mobile) return;
+      const html = `<strong>${d.path} · ${esc(d.meta.name)}</strong>${fmtInt(d.count)} profiles<br>Runs ${fmt1(d.avgRuns)} · Edits ${fmt1(d.avgEdits)} · Active ${fmt1(d.avgActive)} min<br><em>Click for path detail</em>`;
+      const tip = document.getElementById('tip');
+      tip.innerHTML = html; tip.classList.add('on'); tip.setAttribute('aria-hidden','false');
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tw = tip.offsetWidth || 280, th = tip.offsetHeight || 80;
+      let left = rect.left + rect.width + 10, top = rect.top + 8;
+      if(left + tw > window.innerWidth - 12) left = rect.left - tw - 12;
+      if(top + th > window.innerHeight - 12) top = rect.bottom - th;
+      tip.style.left = `${Math.max(12,left)}px`; tip.style.top = `${Math.max(12,top)}px`;
+    })
+    .on('mouseleave', () => APP.hideTip?.())
+    .on('click', (_,d) => openPathPopup(d.path));
+}
+
+function renderConceptChart(){
+  const container = document.getElementById('concept-chart');
+  container.innerHTML = '';
+  const top = APP.agg.conceptMentionsTeachable.slice(0,12).reverse();
+
+  const W = Math.max(980, container.clientWidth || 980);
+  const H = 360;
+  const m = {t:10,r:24,b:26,l:350};
+  const w = W - m.l - m.r;
+  const h = H - m.t - m.b;
+
+  const svg = d3.select(container).append('svg').attr('class','chart-svg').attr('viewBox',`0 0 ${W} ${H}`).attr('width','100%').attr('height',H);
+  const g = svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+
+  const y = d3.scaleBand().domain(top.map(d=>d.concept)).range([0,h]).padding(0.18);
+  const x = d3.scaleLinear().domain([0,d3.max(top,d=>d.count)*1.1 || 1]).range([0,w]);
+
+  g.append('g').call(d3.axisTop(x).ticks(6)).call(g=>g.selectAll('.domain').remove()).call(g=>g.selectAll('text').attr('font-size',11).attr('fill','#7a7066')).call(g=>g.selectAll('line').attr('stroke','#ddd3c5'));
+
+  g.append('g').selectAll('text').data(top).join('text')
+    .attr('x', -12).attr('y', d=>y(d.concept)+y.bandwidth()/2).attr('text-anchor','end').attr('dy','0.35em')
+    .attr('font-size',11.5).attr('fill','#4f473f')
+    .text(d=>d.concept.length > 42 ? d.concept.slice(0,41)+'…' : d.concept)
+    .style('cursor','pointer')
+    .on('click', (_,d)=>openConceptPopup(d.concept));
+
+  const bars = g.selectAll('g.bar').data(top).join('g').attr('class','bar').attr('transform', d=>`translate(0,${y(d.concept)})`);
+  bars.attr('data-tip-mobile', d => `${d.concept}: ${fmtInt(d.count)} teachable mentions across ${fmtInt(d.uniqueStudents)} students.`);
+  bars.append('rect').attr('height', y.bandwidth()).attr('width',0).attr('rx',5).attr('fill','#7c3aed').attr('opacity',0.82)
+    .transition().duration(760).ease(d3.easeCubicOut).attr('width', d=>x(d.count));
+
+  bars.append('text').attr('x', 8).attr('y', y.bandwidth()/2).attr('dy','0.35em').attr('font-size',10.8).attr('font-weight',700).attr('fill','#fff')
+    .text(d=>fmtInt(d.count));
+
+  bars.style('cursor','pointer')
+    .on('mousemove', (e,d) => {
+      if(APP.tip.mobile) return;
+      const topPath = d.byPath[0] ? `${d.byPath[0].path} (${fmtInt(d.byPath[0].count)})` : '–';
+      const html = `<strong>${esc(d.concept)}</strong>${fmtInt(d.count)} mentions · ${fmtInt(d.uniqueStudents)} unique students<br>Top path: ${esc(topPath)}<br><em>Click for concept detail</em>`;
+      const tip = document.getElementById('tip');
+      tip.innerHTML = html; tip.classList.add('on'); tip.setAttribute('aria-hidden','false');
+      const rect = e.currentTarget.getBoundingClientRect();
+      const tw = tip.offsetWidth || 270, th = tip.offsetHeight || 78;
+      let left = rect.left + rect.width + 8, topPos = rect.top + 8;
+      if(left + tw > window.innerWidth - 12) left = rect.left - tw - 12;
+      if(topPos + th > window.innerHeight - 12) topPos = rect.bottom - th;
+      tip.style.left = `${Math.max(12,left)}px`; tip.style.top = `${Math.max(12,topPos)}px`;
+    })
+    .on('mouseleave', () => APP.hideTip?.())
+    .on('click', (_,d) => openConceptPopup(d.concept));
+}
+
+function studentFilteredRows(){
+  const st = APP.studentTable;
+  let rows = APP.rows;
+  if(st.path !== 'all') rows = rows.filter(r => r.decision_path_id === st.path);
+  if(st.term !== 'all') rows = rows.filter(r => r.term === st.term);
+  const q = st.q.trim().toLowerCase();
+  if(q){
+    rows = rows.filter(r => {
+      const hay = [
+        r.student_id,
+        r.term,
+        r.decision_path_id,
+        r.decision_path_name,
+        r.dominant_error_profile_bucket,
+        r.top_concept_struggles,
+      ].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  return rows;
+}
+
+function renderStudentTable(){
+  const body = document.getElementById('student-body');
+  const meta = document.getElementById('student-meta');
+  const st = APP.studentTable;
+  const rows = studentFilteredRows();
+
+  const mul = st.dir === 'desc' ? -1 : 1;
+  rows.sort((a,b) => {
+    const col = st.sort;
+    const av = a[col], bv = b[col];
+    const an = +av, bn = +bv;
+    if(Number.isFinite(an) && Number.isFinite(bn)) return mul * (an - bn);
+    return mul * String(av ?? '').localeCompare(String(bv ?? ''));
+  });
+
+  const pageSize = st.pageSize;
+  const pages = Math.max(1, Math.ceil(rows.length / pageSize));
+  if(st.page > pages) st.page = pages;
+  const start = (st.page - 1) * pageSize;
+  const view = rows.slice(start, start + pageSize);
+
+  meta.textContent = `${fmtInt(rows.length)} profiles shown · page ${st.page}/${pages}`;
+
+  body.innerHTML = view.map(r => {
+    const path = PATH_META[r.decision_path_id];
+    return `
+      <tr data-open-student="${esc(r.student_id)}" data-open-term="${esc(r.term)}" data-tip="Click for full student profile and intervention mapping.">
+        <td class="id">${esc(r.student_id)}</td>
+        <td>${esc(r.term)}</td>
+        <td><span class="path-pill ${path.teachable?'teach':'non'}">${esc(r.decision_path_id)}</span></td>
+        <td>${esc(r.dominant_error_profile_bucket)}</td>
+        <td class="num">${fmt1(r.avg_public_runs_per_attempt)}</td>
+        <td class="num">${fmt1(r.avg_edits_per_attempt)}</td>
+        <td class="num">${fmt1(r.avg_active_minutes_per_attempt)}</td>
+        <td class="num">${r.teachability_priority_index == null ? '–' : fmt1(r.teachability_priority_index)}</td>
+        <td>${esc(r.top_concept_struggles || '')}</td>
+      </tr>
+    `;
+  }).join('') || '<tr><td colspan="9" style="padding:12px">No rows match filters.</td></tr>';
+
+  body.querySelectorAll('[data-open-student]').forEach(tr => {
+    tr.addEventListener('click', () => openStudentPopup(tr.getAttribute('data-open-student'), tr.getAttribute('data-open-term')));
+  });
+
+  const thead = document.querySelectorAll('#student-table thead th[data-sort-col]');
+  thead.forEach(th => {
+    th.classList.remove('sort-asc','sort-desc');
+    const col = th.getAttribute('data-sort-col');
+    if(col === st.sort) th.classList.add(st.dir === 'desc' ? 'sort-desc' : 'sort-asc');
+  });
+}
+
+function initStudentControls(){
+  const search = document.getElementById('student-search');
+  const pathSel = document.getElementById('student-path-filter');
+  const termSel = document.getElementById('student-term-filter');
+
+  pathSel.innerHTML = '<option value="all">All paths</option>' + PATH_ORDER.map(pid => `<option value="${pid}">${pid} · ${PATH_META[pid].name}</option>`).join('');
+
+  search.addEventListener('input', () => {
+    APP.studentTable.q = search.value;
+    APP.studentTable.page = 1;
+    renderStudentTable();
+  });
+  pathSel.addEventListener('change', () => {
+    APP.studentTable.path = pathSel.value;
+    APP.studentTable.page = 1;
+    renderStudentTable();
+  });
+  termSel.addEventListener('change', () => {
+    APP.studentTable.term = termSel.value;
+    APP.studentTable.page = 1;
+    renderStudentTable();
+  });
+
+  document.querySelectorAll('#student-table thead th[data-sort-col]').forEach(th => {
+    const activate = () => {
+      const col = th.getAttribute('data-sort-col');
+      if(APP.studentTable.sort === col){
+        APP.studentTable.dir = APP.studentTable.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        APP.studentTable.sort = col;
+        APP.studentTable.dir = (['student_id','term','decision_path_id','dominant_error_profile_bucket','top_concept_struggles'].includes(col)) ? 'asc' : 'desc';
+      }
+      renderStudentTable();
+    };
+    th.addEventListener('click', activate);
+    th.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); } });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'PageDown'){ APP.studentTable.page += 1; renderStudentTable(); }
+    if(e.key === 'PageUp'){ APP.studentTable.page = Math.max(1, APP.studentTable.page - 1); renderStudentTable(); }
+  });
+}
+
+function installReferenceHandlers(){
+  document.body.addEventListener('click', (e) => {
+    const file = e.target.closest('[data-file]');
+    if(file){ e.preventDefault(); openFilePopup(file.getAttribute('data-file')); return; }
+
+    const path = e.target.closest('[data-open-path]');
+    if(path){ e.preventDefault(); openPathPopup(path.getAttribute('data-open-path')); return; }
+
+    const term = e.target.closest('[data-open-term]');
+    if(term){ e.preventDefault(); openTermPopup(term.getAttribute('data-open-term')); return; }
+
+    const concept = e.target.closest('[data-open-concept]');
+    if(concept){ e.preventDefault(); openConceptPopup(concept.getAttribute('data-open-concept')); return; }
+
+    const student = e.target.closest('[data-open-student]');
+    if(student){ e.preventDefault(); openStudentPopup(student.getAttribute('data-open-student'), student.getAttribute('data-open-term')); return; }
+
+    const metric = e.target.closest('[data-open-metric]');
+    if(metric){ e.preventDefault(); openMetricPopup(metric.getAttribute('data-open-metric')); return; }
+  });
+
+  document.body.addEventListener('keydown', (e) => {
+    if(!(e.key === 'Enter' || e.key === ' ')) return;
+    const target = e.target.closest('[data-file],[data-open-path],[data-open-term],[data-open-concept],[data-open-student],[data-open-metric]');
+    if(!target) return;
+    e.preventDefault();
+    target.click();
+  });
+}
+
+async function main(){
+  setupTooltips();
+  setupPopup();
+  installReferenceHandlers();
+
+  let rows;
+  try {
+    rows = await d3.csv('teachable.csv');
+  } catch (err) {
+    document.querySelectorAll('#path-chart,#term-chart,#process-chart,#concept-chart').forEach(el => {
+      if(el) el.innerHTML = '<div style="font-family:var(--sans);font-size:12px;color:var(--muted);padding:12px">Could not load teachable.csv. Serve this page via a local web server.</div>';
+    });
+    return;
+  }
+
+  APP.rows = prepRows(rows);
+  APP.agg = aggregate(APP.rows);
+
+  renderHeroStats();
+  renderTermPills();
+  renderPathChart();
+  renderTermChart();
+  renderProcessChart();
+  renderConceptChart();
+  initStudentControls();
+  renderStudentTable();
+}
+
+main();
+</script>
+</body>
+</html>

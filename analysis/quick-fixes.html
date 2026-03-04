@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix the Test, Not the Student | Quick Wins for OPPE Programming Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f7f2;--bg-alt:#f0ede5;--text:#1c1917;--muted:#6b6560;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--purple:#6d28d9;--blue:#1d4ed8;
+  --rule:#d6cfc4;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Crimson Pro',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+  --p0:#b91c1c;--p1:#b45309;--p2:#1d4ed8;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:20px;line-height:1.68;-webkit-font-smoothing:antialiased}
+
+/* Layout */
+.col{max-width:700px;margin:0 auto;padding:0 28px}
+.wide{max-width:1100px;margin:0 auto;padding:0 28px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+/* Header */
+header{padding:40px 0 0}
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(2rem,5.5vw,3.6rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:14px}
+.dek{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--muted);line-height:1.45;margin-bottom:28px}
+.byline{font-family:var(--sans);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-bottom:28px;border-bottom:1px solid var(--rule)}
+
+/* Stats hero */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--rule);margin:44px 0}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:28px 12px;text-align:center}
+.stat:not(:last-child){border-right:1px solid var(--rule)}
+@media(max-width:600px){.stat:nth-child(2){border-right:none}.stat:nth-child(3){border-top:1px solid var(--rule)}.stat:nth-child(4){border-top:1px solid var(--rule)}}
+.stat-n{font-family:var(--sans);font-size:2.6rem;font-weight:700;line-height:1;letter-spacing:-.03em;display:block}
+.stat-n.r{color:var(--red)}.stat-n.a{color:var(--amber)}.stat-n.g{color:var(--green)}.stat-n.b{color:var(--blue)}
+.stat-l{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+
+/* Body text */
+p{margin-bottom:1.45em}
+.section{margin:56px 0}
+.act{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h2{font-family:var(--serif);font-size:clamp(1.55rem,3vw,2.15rem);font-weight:700;line-height:1.18;margin-bottom:22px;letter-spacing:-.015em}
+h3{font-family:var(--serif);font-size:1.25rem;font-weight:700;margin:32px 0 10px}
+
+/* Pullquote */
+.pq{font-family:var(--serif);font-size:1.42rem;font-style:italic;line-height:1.38;color:var(--red);border-left:4px solid var(--red);padding:14px 22px;margin:40px 0}
+
+/* Inline highlights */
+.r{color:var(--red);font-weight:600}.a{color:var(--amber);font-weight:600}.g{color:var(--green);font-weight:600}.b{color:var(--blue);font-weight:600}
+
+/* Priority badge */
+.badge{display:inline-block;font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.08em;padding:2px 7px;border-radius:999px;text-transform:uppercase;margin-right:4px}
+.badge-P0{background:#fee2e2;color:var(--p0);border:1px solid #fca5a5}
+.badge-P1{background:#fef3c7;color:var(--p1);border:1px solid #fcd34d}
+.badge-P2{background:#dbeafe;color:var(--p2);border:1px solid #93c5fd}
+
+/* Code span triggers */
+.ct{border-bottom:1.5px dashed var(--blue);color:var(--blue);cursor:pointer;transition:opacity .15s}
+.ct:hover{opacity:.72}
+.xref{border-bottom:1px dashed currentColor;cursor:pointer;transition:opacity .15s}
+.xref:hover{opacity:.7}
+
+/* Callout */
+.callout{background:var(--bg-alt);border-left:4px solid var(--amber);padding:18px 22px;margin:32px 0;font-family:var(--sans);font-size:13.5px;line-height:1.6}
+.callout strong{display:block;margin-bottom:5px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
+
+/* Separator */
+.sep{border:none;border-top:1px solid var(--rule);margin:48px 0}
+
+/* Chart wrappers */
+.chart-wrap{margin:8px 0 4px}
+.chart-hed{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.chart-sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-bottom:14px;line-height:1.4}
+
+/* Impact bar chart */
+.impact-chart{width:100%;border-collapse:collapse}
+.impact-chart tr{cursor:pointer;transition:background .12s}
+.impact-chart tr:hover td{background:var(--bg-alt)}
+.impact-chart td{padding:8px 10px;vertical-align:middle;border-bottom:1px solid var(--rule)}
+.impact-chart .fix-label{font-family:var(--sans);font-size:12px;color:var(--text);min-width:220px;max-width:260px;line-height:1.4}
+.impact-chart .fix-label small{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
+.impact-chart .fix-bar-cell{width:auto}
+.impact-chart .fix-bar-wrap{display:flex;align-items:center;gap:8px}
+.impact-chart .fix-bar{height:22px;border-radius:2px;min-width:2px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.impact-chart .fix-pct{font-family:var(--sans);font-size:11px;color:var(--muted);white-space:nowrap;min-width:36px}
+.impact-chart .fix-rows{font-family:var(--sans);font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap;min-width:54px;text-align:right;color:var(--text)}
+
+/* Fix cards (scrollytelling) */
+.fix-cards{display:grid;gap:28px;margin:40px 0}
+.fix-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:24px 26px;border-left:4px solid currentColor;opacity:.45;transform:translateY(8px);transition:opacity .4s,transform .4s;position:relative}
+.fix-card.visible{opacity:1;transform:none}
+.fix-card-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.fix-card-num{font-family:var(--sans);font-size:1.9rem;font-weight:700;line-height:1;flex-shrink:0;min-width:40px}
+.fix-card-meta{flex:1}
+.fix-card-title{font-family:var(--sans);font-size:13.5px;font-weight:700;margin-bottom:4px}
+.fix-card-desc{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.5}
+.fix-card-impact{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.fix-metric{border:1px solid var(--rule);border-radius:5px;padding:10px 14px;text-align:center;background:var(--bg-alt)}
+.fix-metric .m-n{font-family:var(--sans);font-size:1.45rem;font-weight:700;line-height:1;display:block}
+.fix-metric .m-l{font-family:var(--sans);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:5px;display:block}
+.fix-card-btn{font-family:var(--sans);font-size:11px;border:1px solid var(--rule);background:var(--bg);color:var(--blue);padding:5px 12px;border-radius:999px;cursor:pointer;margin-top:14px;transition:background .12s}
+.fix-card-btn:hover{background:var(--bg-alt)}
+
+/* Cumulative impact tool */
+.impact-tool{background:var(--bg-alt);border:1px solid var(--rule);border-radius:8px;padding:26px 28px;margin:40px 0}
+.impact-tool h3{margin-top:0;font-size:1.1rem}
+.fix-toggle-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:18px 0}
+.fix-toggle{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:10px 13px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none}
+.fix-toggle:hover{border-color:#c0b9af}
+.fix-toggle.active{background:#fffbf5;border-color:#f0c070}
+.fix-toggle input[type=checkbox]{margin-top:2px;flex-shrink:0;accent-color:var(--amber)}
+.fix-toggle-lbl{font-family:var(--sans);font-size:11.5px;line-height:1.45}
+.fix-toggle-lbl strong{display:block;margin-bottom:2px;font-size:12px}
+.fix-toggle-lbl span{color:var(--muted)}
+.impact-result{display:flex;align-items:center;gap:24px;margin-top:20px;flex-wrap:wrap}
+.impact-gauge{position:relative;display:flex;align-items:center;gap:14px}
+.impact-arc{width:120px;height:60px;overflow:visible;flex-shrink:0}
+.impact-big{font-family:var(--sans);font-size:2rem;font-weight:700;line-height:1;color:var(--green)}
+.impact-sub{font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-top:4px}
+.impact-bar-wrap{flex:1;min-width:200px}
+.impact-stacked{height:28px;border-radius:4px;display:flex;overflow:hidden;background:#e2ddd6;transition:all .4s}
+.impact-stacked-seg{transition:width .6s cubic-bezier(.4,0,.2,1);height:100%}
+.impact-legend{display:flex;gap:14px;margin-top:8px;flex-wrap:wrap}
+.imp-leg{display:flex;align-items:center;gap:5px;font-family:var(--sans);font-size:11px;color:var(--muted)}
+.imp-leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* Rollout timeline */
+.timeline{list-style:none;margin:28px 0;position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:10px;top:6px;bottom:6px;width:1px;background:var(--rule)}
+.timeline li{position:relative;margin-bottom:22px;padding-left:10px}
+.timeline li::before{content:'';position:absolute;left:-24px;top:7px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--rule)}
+.timeline li.done::before{background:var(--green);border-color:var(--green)}
+.timeline li.urgent::before{background:var(--red);border-color:var(--red)}
+.timeline li.normal::before{background:var(--amber);border-color:var(--amber)}
+.timeline-day{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.timeline-action{font-family:var(--sans);font-size:13px;font-weight:600;margin-bottom:3px}
+.timeline-clusters{font-family:var(--sans);font-size:11.5px;color:var(--muted)}
+
+/* Methodology */
+.meth{border-top:1px solid var(--rule);padding:36px 0;margin-top:56px}
+.meth p{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.8em}
+.meth a{color:var(--blue)}
+
+/* Tooltip */
+#tip{position:fixed;background:#1c1917;color:#f9f7f2;padding:11px 15px;border-radius:4px;font-family:var(--sans);font-size:12px;line-height:1.5;pointer-events:none;z-index:1000;max-width:290px;opacity:0;transition:opacity .12s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#tip.on{opacity:1}#tip strong{color:#f9d4a0;display:block;margin-bottom:3px}
+
+/* Popup */
+#pop{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#pop.on{opacity:1;pointer-events:all}
+.pop-card{background:#1e1b16;border-radius:8px;max-width:900px;width:94vw;max-height:88vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.pop-head{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 22px 12px;border-bottom:1px solid #333}
+.pop-title{font-family:var(--sans);font-size:12px;font-weight:600;color:#f9d4a0;text-transform:uppercase;letter-spacing:.08em}
+.pop-x{background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1;padding:0 0 0 14px;flex-shrink:0}
+.pop-x:hover{color:#fff}
+.pop-main{overflow:auto;padding:20px 22px;flex:1}
+.pop-body{color:#ece7de;font-family:var(--sans);font-size:13px;line-height:1.6}
+.pop-body h3{font-family:var(--serif);font-size:1.1rem;color:#f4e8cf;margin:14px 0 8px}
+.pop-body h3:first-child{margin-top:0}
+.pop-body p{margin-bottom:.85em}
+.pop-body a{color:#93c5fd}
+.pop-body code{font-family:var(--mono);font-size:.9em;background:#18140f;border:1px solid #31281f;border-radius:4px;padding:.1em .28em;color:#f9d4a0}
+.pop-body pre{border:1px solid #332b22;border-radius:6px;overflow:auto;background:#0f0d0b;margin:.75em 0}
+.pop-body pre code{background:transparent;border:none;padding:0;color:inherit}
+.pop-tabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid #332b22}
+.pop-tab{font-family:var(--sans);font-size:11px;padding:7px 14px;cursor:pointer;border:none;background:none;color:#a0998f;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s}
+.pop-tab.active{color:#f4e8cf;border-bottom-color:#d97706}
+.pop-panel{display:none}.pop-panel.active{display:block}
+.pop-kv-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
+.pop-kv{border:1px solid #332b22;border-radius:6px;background:#17130f;padding:9px}
+.pop-kv .k{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#a89b88;margin-bottom:4px}
+.pop-kv .v{font-family:var(--sans);font-size:14px;color:#f0e7da;font-weight:600}
+.pop-chip{display:inline-flex;align-items:center;font-family:var(--sans);font-size:11px;color:#ddd;border:1px solid #3a3128;background:#1b1712;border-radius:999px;padding:4px 9px;margin:2px 4px 2px 0}
+.pop-note{font-family:var(--sans);font-size:12px;color:#c9c0b3;background:#17130f;border:1px solid #332b22;border-radius:6px;padding:10px;margin:10px 0}
+.pop-pattern-list{list-style:none;margin:6px 0}
+.pop-pattern-list li{padding:5px 0;border-bottom:1px solid #251f18;font-size:12px;display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.pop-pattern-list li:last-child{border-bottom:none}
+.pop-pattern-list .pat-name{color:#ece7de;flex:1}
+.pop-pattern-list .pat-n{font-variant-numeric:tabular-nums;color:#f9d4a0;white-space:nowrap}
+.pop-footer{font-family:var(--sans);font-size:11.5px;color:#a0998f;padding:12px 22px;border-top:1px solid #333;background:#191611}
+.pop-footer a{color:#93c5fd}
+
+/* Comparison block */
+.cmp-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:580px){.cmp-wrap{grid-template-columns:1fr}}
+.cmp-block .cmp-label{font-family:var(--sans);font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:6px;display:block}
+.cmp-before .cmp-label{color:#ef4444}
+.cmp-after .cmp-label{color:#22c55e}
+
+/* Animated counter */
+.animated-num{display:inline-block;transition:all .4s}
+
+/* Scrollytelling scroll notice */
+.scroll-hint{font-family:var(--sans);font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+.scroll-hint svg{vertical-align:middle;margin-left:4px}
+
+/* Responsive */
+@media(max-width:700px){
+  .impact-chart .fix-label{min-width:120px;max-width:160px;font-size:11px}
+  .cmp-wrap{grid-template-columns:1fr}
+  .fix-card-impact{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<div id="tip"></div>
+
+<!-- Popup -->
+<div id="pop" role="dialog" aria-modal="true" aria-labelledby="pop-title">
+  <div class="pop-card">
+    <div class="pop-head">
+      <span class="pop-title" id="pop-title"></span>
+      <button class="pop-x" onclick="closePop()" aria-label="Close">×</button>
+    </div>
+    <div class="pop-main" id="pop-main">
+      <div class="pop-body" id="pop-body"></div>
+    </div>
+    <div class="pop-footer" id="pop-footer" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<div class="col">
+<header>
+  <div class="kicker">Quick Fixes · OPPE 2025 · Python Programming Assessment</div>
+  <h1>Fix the Test,<br>Not the Student</h1>
+  <p class="dek">How 8 small changes to programming exam test cases could rescue 1 in 4 failing students — without rewriting a single question</p>
+  <div class="byline">Analysis of 60 question clusters · 16,402 non-full final submissions · 3 terms, 2025</div>
+</header>
+
+<!-- Stats hero -->
+<div class="stats-row">
+  <div class="stat">
+    <span class="stat-n r">16,402</span>
+    <span class="stat-l">Students who didn't pass</span>
+  </div>
+  <div class="stat" data-tip="Upper-bound estimate; patterns may overlap across fixes.">
+    <span class="stat-n g">~4,118</span>
+    <span class="stat-l">Potentially addressable</span>
+  </div>
+  <div class="stat">
+    <span class="stat-n a">8</span>
+    <span class="stat-l">Targeted fixes</span>
+  </div>
+  <div class="stat">
+    <span class="stat-n b">~1 day</span>
+    <span class="stat-l">To implement P0 fixes</span>
+  </div>
+</div>
+
+<!-- HOOK -->
+<section class="section">
+  <p>Imagine you're a student. It's exam night. You've spent three hours on this Python function. You test it against every example in the problem statement — three cases, all pass. You hit Submit.</p>
+  <p>Zero points.</p>
+  <p>Now imagine that same scenario plays out across <span class="r">1,348 students</span> — all of whom wrote code that passed every visible test, all of whom got zero on tests they'd never seen. Not because their logic was wrong. Because the <em>visible</em> tests were designed in a way that let a bad strategy look like a good one.</p>
+  <p>That's not a student problem. That's a test-design problem. And it's fixable — sometimes in an afternoon.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT I -->
+<section class="section">
+  <div class="act">Act I</div>
+  <h2>The 16,000 Who Didn't Quite Make It</h2>
+  <p>In the 2025 OPPE Python assessment — three terms, a national cohort — <span class="r">16,402</span> final submissions came back without a perfect score. Of those, <span class="g">83.9%</span> were analyzed across 60 question clusters covering most of the exam.</p>
+  <p>What the analysis found wasn't random noise. Failures clustered into recognizable patterns: hardcoding visible examples, stopping loops too early, misreading file conventions, formatting output slightly wrong. Pattern after pattern, question after question, term after term.</p>
+  <p>The key insight was quieter than it sounds. Many of these patterns don't reveal a student who failed to understand the concept. They reveal a student who understood the concept but was <em>trained by the public tests</em> to do the wrong thing. The test taught a bad strategy, then penalized the student for learning it.</p>
+</section>
+</div><!-- /col -->
+
+<!-- IMPACT CHART - bleed -->
+<div class="bleed" style="background:var(--bg-alt);padding:36px 0">
+  <div class="wide">
+    <div class="chart-hed">Every fix, ranked by how many students it could rescue</div>
+    <div class="chart-sub">Bar width = estimated non-full rows affected (upper-bound). Click any row for details and code examples.</div>
+    <div class="chart-wrap">
+      <table class="impact-chart" id="impact-table" aria-label="Fixes ranked by impact">
+        <tbody id="impact-tbody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:18px;margin-top:16px;flex-wrap:wrap">
+      <div class="imp-leg"><div class="imp-leg-dot" style="background:var(--p0)"></div> P0 — deploy today</div>
+      <div class="imp-leg"><div class="imp-leg-dot" style="background:var(--p1)"></div> P1 — this sprint</div>
+      <div class="imp-leg"><div class="imp-leg-dot" style="background:var(--p2)"></div> P2 — release guardrail</div>
+    </div>
+  </div>
+</div>
+
+<div class="col">
+<section class="section">
+  <p>Seven of these eight fixes require nothing more than a few extra test cases or a sentence in the problem statement. No rubric changes. No concept changes. Just closing the gap between what the <em>visible</em> tests reward and what the <em>hidden</em> tests actually measure.</p>
+  <div class="pq">"The public tests didn't just fail to catch bad strategies — they actively taught them."</div>
+  <p>The eighth fix — the variant-equivalence guardrail — is different. It's a release process check, not a test case. But it may be the most important of all. In one question alone, <span class="r">65%</span> of an entire variant cohort effectively solved a different problem than the other variant. That's not a student failure. That's a system failure.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT II: Deep dives -->
+<section class="section">
+  <div class="act">Act II</div>
+  <h2>The Four Patterns That Matter Most</h2>
+  <p>Four families of failure dominate the P0 list — the ones that can be fixed today and will reach the most students. Each has a name, a mechanism, and a fix that takes hours, not weeks.</p>
+</section>
+</div><!-- /col -->
+
+<!-- FIX CARDS - scrollytelling -->
+<div class="wide">
+  <div class="fix-cards" id="fix-cards"></div>
+</div>
+
+<div class="col">
+
+<hr class="sep">
+
+<!-- ACT III: THE MATH -->
+<section class="section">
+  <div class="act">Act III</div>
+  <h2>What If You Did All Eight?</h2>
+  <p>Select any combination of fixes below and see their cumulative potential impact. Note that estimates are upper-bounds and patterns may overlap — real gain is likely <span class="a">60–80%</span> of the shown figure.</p>
+</section>
+
+<!-- Cumulative impact tool -->
+<div class="impact-tool">
+  <h3>Impact Calculator</h3>
+  <div class="fix-toggle-grid" id="fix-toggles"></div>
+  <div class="impact-result" id="impact-result"></div>
+</div>
+
+<section class="section">
+  <p>Combined, the eight fixes could address up to <span class="g">~25%</span> of all non-full final submissions. That's roughly 1 in 4 students who failed — not because they couldn't code, but because the exam's own test suite left a gap between what they saw and what was measured.</p>
+  <p>The research is unambiguous here. John Hattie's 2007 meta-analysis of 800 studies found that <em>specific, immediate feedback</em> is among the highest-impact interventions in education. When a student fails a hidden test they've never seen, they get no actionable feedback — just a score. These fixes turn invisible private failures into visible public signals. Students can learn from them. That's not a test-design detail. That's a pedagogy decision.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ACT IV: ROLLOUT -->
+<section class="section">
+  <div class="act">Act IV</div>
+  <h2>The Playbook: Fastest First</h2>
+  <p>Ordered by speed and reach — the same-day fixes first, then the sprint work, then the release pipeline addition.</p>
+
+  <ul class="timeline">
+    <li class="urgent">
+      <div class="timeline-day">Same day — highest priority</div>
+      <div class="timeline-action">Patch public tests with sentinel & edge cases</div>
+      <div class="timeline-clusters">Questions: <span class="xref r" data-fix="f1" onclick="openFixPopup('f3')">C085</span>, <span class="xref r" data-fix="f4" onclick="openFixPopup('f4')">C095</span>, <span class="xref r" onclick="openFixPopup('f4')">C099</span>, <span class="xref a" onclick="openFixPopup('f6')">C078</span>, <span class="xref a" onclick="openFixPopup('f5')">C096</span>, <span class="xref a" onclick="openFixPopup('f5')">C097</span></div>
+    </li>
+    <li class="urgent">
+      <div class="timeline-day">Same day</div>
+      <div class="timeline-action">Patch file-contract wording + template starter for C106 and confirm C020 variants</div>
+      <div class="timeline-clusters">Questions: <span class="xref r" onclick="openFixPopup('f0')">C106</span>, <span class="xref r" onclick="openFixPopup('f0')">C020</span></div>
+    </li>
+    <li class="urgent">
+      <div class="timeline-day">Same day</div>
+      <div class="timeline-action">Add early-return warning line + trap tests</div>
+      <div class="timeline-clusters">Questions: <span class="xref r" onclick="openFixPopup('f2')">C013</span>, <span class="xref r" onclick="openFixPopup('f2')">C012</span>, <span class="xref r" onclick="openFixPopup('f2')">C082</span></div>
+    </li>
+    <li class="normal">
+      <div class="timeline-day">1–2 days</div>
+      <div class="timeline-action">Add helper-level smoke tests for multi-function questions</div>
+      <div class="timeline-clusters">Questions: <span class="xref a" onclick="openFixPopup('f3')">C110</span>, <span class="xref a" onclick="openFixPopup('f3')">C108</span>, <span class="xref a" onclick="openFixPopup('f3')">C026</span>, <span class="xref a" onclick="openFixPopup('f3')">C014</span></div>
+    </li>
+    <li class="normal">
+      <div class="timeline-day">1 day</div>
+      <div class="timeline-action">Add variant-equivalence preflight script to release checklist</div>
+      <div class="timeline-clusters">Prevents catastrophic-risk variant drift (cf. <span class="xref b" onclick="openFixPopup('f8')">C020</span>)</div>
+    </li>
+  </ul>
+</section>
+
+<hr class="sep">
+
+<!-- HONEST CAVEAT -->
+<section class="section">
+  <div class="callout">
+    <strong>What we'd want to confirm</strong>
+    Affected-row counts are upper-bounds — patterns within a fix may overlap, and the same student may be counted under multiple fixes. Real-world gain is likely 60–80% of the headline estimate. The analysis also covers 60 of 163 question clusters (83.9% of submissions); the remaining 20% of failures are not yet characterized. And adding public tests changes what students practice, not just what they see — a positive effect, but worth monitoring for unintended coaching in future terms.
+  </div>
+</section>
+
+<!-- Methodology -->
+<div class="meth">
+  <p><strong>Data</strong> — <span class="ct" onclick="openFilePopup('errors.json')">errors.json</span> (6.7 MB; 60 clusters, 16,402 non-full final submissions) + <span class="ct" onclick="openFilePopup('ERRORS.md')">ERRORS.md</span> (cluster index) + individual cluster reports.</p>
+  <p><strong>Prioritization</strong> — Impact = affected non-full rows linked to a fixable pattern family (upper-bound, may overlap). Effort = faculty/content team hours to change prompt/test JSON and evaluator behavior.</p>
+  <p><strong>Evidence base</strong> — <a href="https://doi.org/10.3102/003465430298487" target="_blank">Hattie &amp; Timperley (2007)</a> on the power of feedback; <a href="https://arxiv.org/abs/1906.08937" target="_blank">Hao et al. (2019)</a> on immediate feedback in programming education; <a href="https://arxiv.org/abs/2411.09261" target="_blank">Alkafaween et al. (2024)</a> on LLM-generated test suites; <a href="https://doi.org/10.1207/s1532690xci0201_3" target="_blank">Sweller &amp; Cooper (1985)</a> on worked examples.</p>
+  <p><strong>Cluster reports</strong> — Individual files (<code>ERRORS-cluster-c*.md</code>) contain exhaustive pattern inventories with student code samples and private-case breakdowns.</p>
+</div>
+
+</div><!-- /col -->
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const FIXES = [
+  {
+    id:'f1', priority:'P0', color:'var(--p0)',
+    label:'Anti-hardcoding sentinel public tests',
+    shortLabel:'Anti-hardcoding tests',
+    rows:1348, pct:8.2, clusters:56,
+    effort:'Same day — add 1–2 tests per question',
+    desc:'Students learn to memorize the sample examples instead of computing the general answer. Public tests that use multi-word identifiers or novel values break this shortcut.',
+    topClusters:[
+      {id:'C098',name:'Divide Number into Almost Equal Parts',rows:106,pct:'hardcoded sample outputs'},
+      {id:'C013',name:'Pangram Check',rows:77,pct:'hardcoded sample strings'},
+      {id:'C095',name:'Convert Excel Column to Index',rows:45,pct:'hardcoded column names'},
+      {id:'C085',name:'Expand Sum of Products',rows:42,pct:'hardcoded sample expressions'},
+    ],
+    before:`is_equal(expand_sum_of_products("(a+b)(c+d)"), "a*c + a*d + b*c + b*d")
+is_equal(expand_sum_of_products("(x+y)(z+w)"), "x*z + x*w + y*z + y*w")
+is_equal(expand_sum_of_products("(1+5)(10+12)"), "1*10 + 1*12 + 5*10 + 5*12")`,
+    after:`# Keep existing tests, add one lexical-shape breaker:
+is_equal(
+    expand_sum_of_products("(alpha+beta)(gamma+delta)"),
+    "alpha*gamma + alpha*delta + beta*gamma + beta*delta"
+)`,
+    afterNote:'Multi-character identifiers expose the single-char parser that 274 students wrote.',
+    impact:'Moves hidden-test failures into visible public feedback. Preserves intended concept while eliminating sample memorization wins.'
+  },
+  {
+    id:'f2', priority:'P0', color:'var(--p0)',
+    label:'Early-return trap tests + one-line prompt warning',
+    shortLabel:'Early-return trap tests',
+    rows:746, pct:4.5, clusters:3,
+    effort:'Same day — 1 prompt line + 1 trap test per question',
+    desc:'A classic novice mistake: returning or breaking out of a loop after the very first check. The function decides after one iteration instead of completing the full scan.',
+    topClusters:[
+      {id:'C013',name:'Pangram Check',rows:243,pct:'returns inside alphabet-check loop'},
+      {id:'C012',name:'Check for Arithmetic Progression',rows:183,pct:'returns inside AP-check loop'},
+      {id:'C082',name:'Check if Decreasing 4-Digit Number',rows:82,pct:'returns after first digit comparison'},
+    ],
+    before:`# C012 — public tests don't expose early return:
+is_equal(is_arithmetic_progression([2, 4, 6, 8, 10]), True)
+is_equal(is_arithmetic_progression([1, 3, 5]), True)
+is_equal(is_arithmetic_progression([1, 2, 4]), False)`,
+    after:`# Add trap: AP breaks near the END of the list
+is_equal(is_arithmetic_progression([2, 4, 6, 8, 11]), False)
+
+# C082: first comparison passes, later one fails
+is_equal(is_decreasing_4_digit_number(9431), True)
+is_equal(is_decreasing_4_digit_number(9413), False)`,
+    promptAdd:'Important: complete the full scan/check first; return only after all required elements are processed.',
+    impact:'Catches the most common novice control-flow bug before final submission. Affects 3 questions and 746 students.'
+  },
+  {
+    id:'f3', priority:'P1', color:'var(--p1)',
+    label:'Helper-level smoke tests in multi-function tasks',
+    shortLabel:'Helper smoke tests',
+    rows:816, pct:5.0, clusters:4,
+    effort:'1–2 days — reorganize existing public tests',
+    desc:'Multi-function questions bundle many helpers together. Without independent smoke tests for each helper, a student can\'t tell which one is broken — they just see aggregate failure.',
+    topClusters:[
+      {id:'C110',name:'Chess Game Analysis',rows:221,pct:'incomplete helpers'},
+      {id:'C108',name:'Batsman Performance Analysis',rows:105,pct:'partial helper implementation'},
+      {id:'C026',name:'Sales Records Analysis',rows:82,pct:'placeholder helpers'},
+      {id:'C014',name:'Book Data Analysis',rows:95,pct:'incomplete data helpers'},
+    ],
+    before:`def parse_moves(game: str) -> list:
+    ...
+
+def get_n_moves(game: str) -> int:
+    ...
+
+# 4 more helpers, all under one integrated test`,
+    after:`def parse_moves(game: str) -> list:
+    raise NotImplementedError("Implement parse_moves")
+
+# Each helper now has a tiny independent smoke test:
+# is_equal(parse_moves("1. e4 e5 2. Nf3"), [("e4","e5"), ("Nf3","?")])
+# is_equal(get_n_moves("1. e4 e5"), 1)
+# ... then integrated tests after`,
+    impact:'Better debug locality. Students can identify which helper breaks first instead of seeing only aggregate failure across 816 submissions.'
+  },
+  {
+    id:'f4', priority:'P0', color:'var(--p0)',
+    label:'Variable-length / parser edge cases in public tests',
+    shortLabel:'Parser edge-case tests',
+    rows:444, pct:2.7, clusters:3,
+    effort:'Same day — add a few edge-case test lines',
+    desc:'Students write parsers that assume single-character variables or single-digit numbers — because all the visible examples use them. Multi-character identifiers or multi-digit numbers break these parsers instantly.',
+    topClusters:[
+      {id:'C085',name:'Expand Sum of Products',rows:274,pct:'single-char parser fails multi-char cases'},
+      {id:'C099',name:'Parse Equation and Solve for x',rows:65,pct:'plus-only parsing fails minus/sign variants'},
+      {id:'C095',name:'Excel Column Name to Index',rows:24,pct:'fails on 3+ letter column names'},
+    ],
+    before:`# C099 — all examples use single-digit, positive coefficients:
+is_equal(solve_for_x("2x + 3= 11"), 4.0)
+is_equal(solve_for_x("5x - 2= 13"), 3.0)
+is_equal(solve_for_x("-3x + 10 = 1"), 3.0)`,
+    after:`# Add implied coefficient and spacing variants:
+is_equal(solve_for_x("x + 5 = -5"), -10.0)
+is_equal(solve_for_x(" 10x+20=60 "), 4.0)
+
+# C095 — add multi-letter columns:
+is_equal(excel_index("XFD"), 16384)
+is_equal(excel_index("AAAA"), 18279)`,
+    impact:'Substantial reduction in "passes public, fails private parser edge" patterns across C085, C099, C095.'
+  },
+  {
+    id:'f5', priority:'P1', color:'var(--p1)',
+    label:'Normalize non-concept formatting (case/rounding)',
+    shortLabel:'Formatting normalization',
+    rows:300, pct:1.8, clusters:4,
+    effort:'Comparator tweak or explicit public check',
+    desc:'300 students got the concept right but wrote the output in a slightly wrong format — wrong casing on a label, or a floating-point value rounded to 2 decimal places instead of 3.',
+    topClusters:[
+      {id:'C092',name:'Describe Number by Divisibility',rows:122,pct:'wrong casing: "normal" vs "Normal"'},
+      {id:'C097',name:'YouTube Video Engagement Analysis',rows:103,pct:'no 2-decimal rounding for engagement rate'},
+      {id:'C096',name:'Sales Data Analysis',rows:45,pct:'no 2-decimal rounding for average price'},
+    ],
+    before:`# C097 — no explicit precision test in public cases
+# Students write 10.8 instead of 10.81`,
+    after:`# Add precision-explicit public tests:
+is_equal(engagement_rate(video), 10.81)
+
+# C096:
+is_equal(analyse_sales_data(data, "average_product_price"), {'P1': 33.33})
+
+# Option A (if format is NOT the concept): accept case-insensitive labels
+# Option B (if format IS required): keep strict + add explicit format test`,
+    impact:'Removes avoidable failures where the algorithmic concept is correct but surface formatting diverges. 300 students affected.'
+  },
+  {
+    id:'f6', priority:'P1', color:'var(--p1)',
+    label:'Add short/empty edge cases to public tests',
+    shortLabel:'Short/empty edge cases',
+    rows:194, pct:1.2, clusters:1,
+    effort:'Same day — 3–5 extra tests',
+    desc:'String-handling questions often have edge cases involving empty strings, one-character inputs, or exact-length boundary conditions. Without public tests for these, students never test them.',
+    topClusters:[
+      {id:'C078',name:'Check For Greeting Prefix',rows:194,pct:'92 accept "Hi"/"Hello" without trailing space; 79 IndexError on short strings'},
+    ],
+    before:`is_equal(starts_with_greeting("Hello there"), True)
+is_equal(starts_with_greeting("Hi friend"), True)
+is_equal(starts_with_greeting("Hithere"), False)
+is_equal(starts_with_greeting("Welcome"), False)`,
+    after:`# Keep existing + add edge contracts explicitly:
+is_equal(starts_with_greeting(""), False)
+is_equal(starts_with_greeting("Hi"), False)
+is_equal(starts_with_greeting("Hello"), False)
+is_equal(starts_with_greeting("Hi "), True)
+is_equal(starts_with_greeting("Hello "), True)`,
+    impact:'Converts 194 hidden edge surprises into immediate visible feedback. Prevents the IndexError crash on short inputs.'
+  },
+  {
+    id:'f7', priority:'P1', color:'var(--p1)',
+    label:'Dispatch-branch coverage tests for task-driven functions',
+    shortLabel:'Branch coverage tests',
+    rows:140, pct:0.9, clusters:1,
+    effort:'Same day — add 1 minimal test per task branch',
+    desc:'Functions that dispatch on a task-string argument often have students who implement one branch but forget others. Public tests that exercise only one task string miss this entirely.',
+    topClusters:[
+      {id:'C096',name:'Sales Data Analysis',rows:140,pct:'implemented only one branch of task-string dispatch'},
+    ],
+    before:`# Only one integrated test per function call
+is_equal(analyse_sales_data(data, "total_revenue"), 1500)`,
+    after:`# One minimal test per task string:
+is_equal(analyse_sales_data(min_data, "total_revenue"), 300)
+is_equal(analyse_sales_data(min_data, "top_selling_product"), "P2")
+is_equal(analyse_sales_data(min_data, "average_product_price"), {'P1': 12.5})`,
+    impact:'Directly reduces "implemented only one branch" failures. 140 affected rows in C096 alone.'
+  },
+  {
+    id:'f0', priority:'P0', color:'var(--p0)',
+    label:'Unify file I/O contract (filename vs stdin)',
+    shortLabel:'Unify file I/O contract',
+    rows:130, pct:0.8, clusters:2,
+    effort:'Same day — prompt/template/evaluator wording alignment',
+    desc:'Two questions have ambiguous input conventions: does the student read from a file, from stdin, or both? 130 students solved the right problem but used the wrong I/O channel.',
+    topClusters:[
+      {id:'C106',name:'Uppercase Every k-th Vowel',rows:58,pct:'27 read input() instead of filename; 31 parse k from first character'},
+      {id:'C020',name:'File Content Zig-Zag Shift',rows:89,pct:'65% of one variant cohort solved a different task than evaluator expected'},
+    ],
+    before:`# Prompt says: "The first line of the input contains the integer k..."
+# Hidden harness actually writes stdin to a temp file, then passes filename
+# Students call input() — which hangs or reads nothing under the evaluator`,
+    after:`# Revised prompt addition:
+# "Input Contract: The grader writes stdin into a file at path \`filename\`.
+#  Read from \`filename\`; do not call input() for this question."
+
+# Starter snippet in template:
+with open(filename, "r", encoding="utf-8") as f:
+    lines = f.read().splitlines()
+k = int(lines[0])
+text_lines = lines[1:]`,
+    impact:'Removes contract ambiguity unrelated to algorithmic objective. 130 direct affected rows + linked parse confusion across C106 and C020.'
+  },
+  {
+    id:'f8', priority:'P2', color:'var(--p2)',
+    label:'Variant-equivalence release guardrail',
+    shortLabel:'Variant-equivalence check',
+    rows:null, pct:null, clusters:1,
+    effort:'1 day — one validation script in release pipeline',
+    desc:'When two variants of the same question drift apart — different test contracts, different evaluator behavior — an entire cohort is measured on a different effective problem. This is a catastrophic-risk issue.',
+    topClusters:[
+      {id:'C020',name:'File Content Zig-Zag Shift',rows:89,pct:'65% of one variant solved a different task family than the other variant'},
+    ],
+    before:`# No pre-release check
+# ns_25t2_py21_1 and ns_25t2_py21_2 published with divergent evaluator behavior
+# 89 students in one variant effectively sat a different exam`,
+    after:`# Pre-release checklist:
+# 1. Hash-check: prompt HTML + template + prefix/suffix + public/private tests across variants
+# 2. Fail release if any variant differs beyond allowed metadata fields
+# 3. Run one canonical reference solution against ALL variants before publish`,
+    impact:'Prevents entire variant cohorts from being measured on a different effective task. Risk category: catastrophic rather than incremental.'
+  },
+];
+
+const TOTAL_NONFULL = 16402;
+const MAX_ROWS = Math.max(...FIXES.filter(f=>f.rows).map(f=>f.rows));
+
+// Priority sort order
+const P_ORDER = {P0:0,P1:1,P2:2};
+const sortedFixes = [...FIXES].sort((a,b)=>{
+  if(a.rows===null) return 1;
+  if(b.rows===null) return -1;
+  return b.rows - a.rows;
+});
+
+// ─────────────────────────────────────────────
+// TOOLTIP
+// ─────────────────────────────────────────────
+const tip = document.getElementById('tip');
+let tipTimer = null;
+function showTip(el, html, e) {
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(()=>{
+    tip.innerHTML = html;
+    tip.classList.add('on');
+    positionTip(e);
+  }, 120);
+}
+function positionTip(e) {
+  const x = e.clientX, y = e.clientY;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  let left = x + 14, top = y - 10;
+  if(left + tw > window.innerWidth - 10) left = x - tw - 14;
+  if(top + th > window.innerHeight - 10) top = y - th - 10;
+  tip.style.left = left + 'px';
+  tip.style.top = top + 'px';
+}
+function hideTip() {
+  clearTimeout(tipTimer);
+  tip.classList.remove('on');
+}
+document.addEventListener('mousemove', e=>{
+  if(tip.classList.contains('on')) positionTip(e);
+  const el = e.target.closest('[data-tip]');
+  if(el) showTip(el, el.dataset.tip, e);
+  else hideTip();
+});
+document.addEventListener('mouseleave', hideTip);
+// Mobile tap-to-reveal
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(el && window.matchMedia('(pointer:coarse)').matches) {
+    e.stopPropagation();
+    showTip(el, el.dataset.tip, {clientX:e.clientX, clientY:e.clientY});
+    setTimeout(()=>tip.classList.remove('on'), 3000);
+  }
+});
+
+// ─────────────────────────────────────────────
+// POPUP
+// ─────────────────────────────────────────────
+const pop = document.getElementById('pop');
+let popFocusTrap = null;
+
+function openPop(title, html, footer='') {
+  document.getElementById('pop-title').textContent = title;
+  document.getElementById('pop-body').innerHTML = html;
+  const pf = document.getElementById('pop-footer');
+  if(footer){pf.style.display='';pf.innerHTML=footer;}else{pf.style.display='none';}
+  pop.classList.add('on');
+  document.body.style.overflow='hidden';
+  // Focus trap
+  const focusable = pop.querySelectorAll('button,a,[tabindex]:not([tabindex="-1"])');
+  if(focusable.length) focusable[0].focus();
+}
+
+function closePop() {
+  pop.classList.remove('on');
+  document.body.style.overflow='';
+}
+pop.addEventListener('click', e=>{ if(e.target===pop) closePop(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePop(); });
+
+// Open fix popup
+function openFixPopup(id) {
+  const fix = FIXES.find(f=>f.id===id);
+  if(!fix) return;
+  
+  const clusterChips = fix.topClusters.map(c=>
+    `<span class="pop-chip" style="border-color:${fix.color};color:${fix.color}">${c.id}</span> ${c.name} — <em>${c.pct}</em>`
+  ).join('<br>');
+  
+  const kvs = fix.rows ? `
+    <div class="pop-kv-row">
+      <div class="pop-kv"><span class="k">Affected rows</span><span class="v">${fix.rows.toLocaleString()}</span></div>
+      <div class="pop-kv"><span class="k">% of non-full</span><span class="v">${fix.pct}%</span></div>
+      <div class="pop-kv"><span class="k">Questions</span><span class="v">${fix.clusters}</span></div>
+      <div class="pop-kv"><span class="k">Priority</span><span class="v">${fix.priority}</span></div>
+    </div>` : `
+    <div class="pop-kv-row">
+      <div class="pop-kv"><span class="k">Risk category</span><span class="v">Catastrophic</span></div>
+      <div class="pop-kv"><span class="k">Priority</span><span class="v">${fix.priority}</span></div>
+      <div class="pop-kv"><span class="k">Effort</span><span class="v">1 day</span></div>
+    </div>`;
+  
+  let tabsHtml = `
+    <div class="pop-tabs">
+      <button class="pop-tab active" onclick="switchTab(this,'tab-overview')">Overview</button>
+      <button class="pop-tab" onclick="switchTab(this,'tab-code')">Before &amp; After</button>
+      <button class="pop-tab" onclick="switchTab(this,'tab-clusters')">Affected Questions</button>
+    </div>
+    <div class="pop-panel active" id="tab-overview">
+      <p>${fix.desc}</p>
+      ${kvs}
+      <div class="pop-note"><strong>Effort:</strong> ${fix.effort}</div>
+      <div class="pop-note"><strong>Expected impact:</strong> ${fix.impact}</div>
+    </div>
+    <div class="pop-panel" id="tab-code">
+      <div class="cmp-wrap">
+        <div class="cmp-block cmp-before">
+          <span class="cmp-label">❌ Current public tests</span>
+          <pre><code class="language-python">${escHtml(fix.before)}</code></pre>
+        </div>
+        <div class="cmp-block cmp-after">
+          <span class="cmp-label">✅ Revised public tests</span>
+          <pre><code class="language-python">${escHtml(fix.after)}</code></pre>
+        </div>
+      </div>
+      ${fix.promptAdd ? `<div class="pop-note"><strong>Prompt addition:</strong><br><em>"${escHtml(fix.promptAdd)}"</em></div>` : ''}
+      ${fix.afterNote ? `<div class="pop-note">${escHtml(fix.afterNote)}</div>` : ''}
+    </div>
+    <div class="pop-panel" id="tab-clusters">
+      <ul class="pop-pattern-list">
+        ${fix.topClusters.map(c=>`
+          <li>
+            <span class="pat-name"><code>${c.id}</code> — ${c.name}</span>
+            <span class="pat-n">${c.rows ? c.rows.toLocaleString() + ' rows' : ''} <em style="font-weight:400;color:#b0a79a">${c.pct}</em></span>
+          </li>`).join('')}
+      </ul>
+    </div>`;
+  
+  openPop(fix.label, tabsHtml, `<a href="ERRORS.md" target="_blank">View cluster index →</a>`);
+  // Highlight.js
+  setTimeout(()=>pop.querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el)), 50);
+}
+
+function switchTab(btn, panelId) {
+  btn.closest('.pop-body').querySelectorAll('.pop-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  btn.closest('.pop-body').querySelectorAll('.pop-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+  setTimeout(()=>document.getElementById(panelId).querySelectorAll('pre code').forEach(el=>hljs.highlightElement(el)), 50);
+}
+
+function openFilePopup(filename) {
+  const urls = {
+    'errors.json': 'https://raw.githubusercontent.com/sanand0/pyoppe/main/analysis/errors.json',
+    'ERRORS.md': 'https://raw.githubusercontent.com/sanand0/pyoppe/main/analysis/ERRORS.md',
+  };
+  const url = urls[filename] || '#';
+  openPop(filename,
+    `<div class="pop-note">This file is large and stored on GitHub. Click the link below to open it.</div>
+     <p><a href="${url}" target="_blank">Open ${filename} in a new tab →</a></p>`,
+  );
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─────────────────────────────────────────────
+// IMPACT BAR CHART
+// ─────────────────────────────────────────────
+function buildImpactChart() {
+  const tbody = document.getElementById('impact-tbody');
+  
+  sortedFixes.forEach(fix => {
+    const barWidthPct = fix.rows ? (fix.rows / MAX_ROWS * 100) : 5;
+    const priorityColor = fix.priority === 'P0' ? 'var(--p0)' : fix.priority === 'P1' ? 'var(--p1)' : 'var(--p2)';
+    const badgeClass = `badge-${fix.priority}`;
+    
+    const tipHtml = fix.rows 
+      ? `<strong>${fix.label}</strong>${fix.rows.toLocaleString()} affected rows (${fix.pct}% of non-full)<br>Priority: ${fix.priority} · ${fix.effort}`
+      : `<strong>${fix.label}</strong>Catastrophic-risk guardrail<br>Priority: ${fix.priority} · ${fix.effort}`;
+    
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-tip', tipHtml);
+    tr.setAttribute('data-fix', fix.id);
+    tr.onclick = () => openFixPopup(fix.id);
+    tr.innerHTML = `
+      <td class="fix-label">
+        <span class="badge ${badgeClass}">${fix.priority}</span>
+        ${fix.shortLabel}
+        <small>${fix.effort}</small>
+      </td>
+      <td class="fix-bar-cell">
+        <div class="fix-bar-wrap">
+          <div class="fix-bar" style="width:0;background:${priorityColor};opacity:.85" data-target="${barWidthPct}"></div>
+          <span class="fix-pct">${fix.pct ? fix.pct+'%' : '⚠ risk'}</span>
+        </div>
+      </td>
+      <td class="fix-rows">${fix.rows ? fix.rows.toLocaleString() : '—'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  
+  // Animate bars on load
+  setTimeout(() => {
+    document.querySelectorAll('.fix-bar').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 200);
+}
+
+// ─────────────────────────────────────────────
+// FIX CARDS (scrollytelling P0 + biggest P1)
+// ─────────────────────────────────────────────
+const CARD_FIXES = [
+  {fix: FIXES.find(f=>f.id==='f1'), icon:'🎭', title:'The Mimic', subtitle:'8.2% of failures'},
+  {fix: FIXES.find(f=>f.id==='f2'), icon:'🔁', title:'The Early Quitter', subtitle:'4.5% of failures'},
+  {fix: FIXES.find(f=>f.id==='f3'), icon:'🧩', title:'The Invisible Break', subtitle:'5.0% of failures'},
+  {fix: FIXES.find(f=>f.id==='f4'), icon:'📏', title:'The Single-Width Trap', subtitle:'2.7% of failures'},
+];
+
+function buildFixCards() {
+  const container = document.getElementById('fix-cards');
+  
+  CARD_FIXES.forEach(({fix, icon, title, subtitle}) => {
+    const card = document.createElement('div');
+    card.className = 'fix-card';
+    card.style.color = fix.color;
+    card.innerHTML = `
+      <div class="fix-card-header">
+        <div class="fix-card-num">${icon}</div>
+        <div class="fix-card-meta">
+          <div class="fix-card-title"><span class="badge badge-${fix.priority}">${fix.priority}</span> ${title}: ${fix.shortLabel}</div>
+          <div class="fix-card-desc">${subtitle} · ${fix.rows.toLocaleString()} students · ${fix.effort}</div>
+        </div>
+      </div>
+      <p style="font-family:var(--body);font-size:1rem;line-height:1.6;color:var(--text);margin-bottom:14px">${getCardNarrative(fix)}</p>
+      <div class="fix-card-impact">
+        ${fix.topClusters.slice(0,3).map(c=>`
+          <div class="fix-metric" style="border-top:3px solid ${fix.color}">
+            <span class="m-n" style="color:${fix.color}">${c.rows ? c.rows : '89'}</span>
+            <span class="m-l">${c.id} — ${c.name.split(' ').slice(0,3).join(' ')}</span>
+          </div>
+        `).join('')}
+      </div>
+      <button class="fix-card-btn" onclick="openFixPopup('${fix.id}')">See before &amp; after code examples →</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function getCardNarrative(fix) {
+  const narratives = {
+    f1: `Across <strong>${fix.clusters} questions</strong>, students discovered they could memorize the sample output and hard-code it. The visible tests rewarded this. The hidden tests punished it. Add one test with a novel identifier — <code>alpha</code> instead of <code>a</code>, <code>XFD</code> instead of <code>A</code> — and that entire strategy collapses in the public round, where feedback still helps.`,
+    f2: `Loops that scan a sequence and return a verdict have a natural but wrong shortcut: return after the first item. The code looks right. It often passes the first few tests. Then a trap test with a failing element <em>near the end</em> of the list exposes the pattern. Add one such test and one line to the prompt. ${fix.rows.toLocaleString()} students would have seen their bug before it counted.`,
+    f3: `When a question bundles five or six helper functions, a student who breaks one can't tell which one failed — they see only the aggregate. Reorganize the public tests so each helper has one tiny smoke case before the integration tests run. Students gain a diagnostic they never had. ${fix.rows.toLocaleString()} placeholder or incomplete-helper submissions across four questions.`,
+    f4: `Students write parsers that work for the examples they can see. Every sample has one-character variable names — <code>a</code>, <code>b</code>, <code>x</code>, <code>y</code>. So every parser they write indexes character by character. Add <code>alpha</code> and <code>beta</code> as terms, and 274 parsers in C085 alone break instantly — in the public round, where it still helps.`,
+  };
+  return narratives[fix.id] || fix.desc;
+}
+
+// ─────────────────────────────────────────────
+// SCROLLYTELLING
+// ─────────────────────────────────────────────
+function initScrollytel() {
+  const cards = document.querySelectorAll('.fix-card');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, {threshold: 0.15});
+  cards.forEach(c => io.observe(c));
+}
+
+// ─────────────────────────────────────────────
+// CUMULATIVE IMPACT TOOL
+// ─────────────────────────────────────────────
+function buildImpactTool() {
+  const grid = document.getElementById('fix-toggles');
+  const result = document.getElementById('impact-result');
+  
+  // Build toggle checkboxes
+  sortedFixes.forEach(fix => {
+    const isP0 = fix.priority === 'P0';
+    const label = document.createElement('label');
+    label.className = 'fix-toggle' + (isP0 ? ' active' : '');
+    label.innerHTML = `
+      <input type="checkbox" ${isP0 ? 'checked' : ''} value="${fix.id}" onchange="updateImpact()">
+      <span class="fix-toggle-lbl">
+        <strong><span class="badge badge-${fix.priority}">${fix.priority}</span> ${fix.shortLabel}</strong>
+        <span>${fix.rows ? fix.rows.toLocaleString() + ' rows · ' + fix.pct + '%' : 'Catastrophic-risk guardrail'}</span>
+      </span>
+    `;
+    label.querySelector('input').addEventListener('change', function() {
+      label.classList.toggle('active', this.checked);
+    });
+    grid.appendChild(label);
+  });
+  
+  // Initial result
+  result.innerHTML = buildResultHtml();
+  updateImpact();
+}
+
+function updateImpact() {
+  const checked = [...document.querySelectorAll('#fix-toggles input:checked')].map(i=>i.value);
+  const total = checked.reduce((sum, id) => {
+    const fix = FIXES.find(f=>f.id===id);
+    return sum + (fix && fix.rows ? fix.rows : 0);
+  }, 0);
+  const pct = (total / TOTAL_NONFULL * 100).toFixed(1);
+  
+  // Animate number
+  const result = document.getElementById('impact-result');
+  result.innerHTML = buildResultHtml(total, pct, checked);
+}
+
+function buildResultHtml(total=0, pct='0.0', checked=[]) {
+  const p0Count = checked.filter(id=>FIXES.find(f=>f.id===id && f.priority==='P0')).length;
+  const p1Count = checked.filter(id=>FIXES.find(f=>f.id===id && f.priority==='P1')).length;
+  const p2Count = checked.filter(id=>FIXES.find(f=>f.id===id && f.priority==='P2')).length;
+  
+  const p0Rows = checked.reduce((s,id)=>{const f=FIXES.find(x=>x.id===id&&x.priority==='P0');return s+(f&&f.rows?f.rows:0);},0);
+  const p1Rows = checked.reduce((s,id)=>{const f=FIXES.find(x=>x.id===id&&x.priority==='P1');return s+(f&&f.rows?f.rows:0);},0);
+  
+  const p0Pct = (p0Rows / TOTAL_NONFULL * 100);
+  const p1Pct = (p1Rows / TOTAL_NONFULL * 100);
+  const otherPct = Math.max(0, parseFloat(pct) - p0Pct - p1Pct);
+  
+  const p0W = Math.min(p0Pct * 4, 100);
+  const p1W = Math.min(p1Pct * 4, 40);
+  const othW = Math.min(otherPct * 4, 20);
+  
+  return `
+    <div class="impact-gauge">
+      <div>
+        <span class="impact-big">${pct}%</span>
+        <div class="impact-sub">${total.toLocaleString()} of ${TOTAL_NONFULL.toLocaleString()} non-full rows<br>potentially addressable</div>
+      </div>
+    </div>
+    <div class="impact-bar-wrap" style="flex:1;min-width:240px">
+      <div class="impact-stacked">
+        <div class="impact-stacked-seg" style="width:${p0W}%;background:var(--p0)"></div>
+        <div class="impact-stacked-seg" style="width:${p1W}%;background:var(--p1)"></div>
+        <div class="impact-stacked-seg" style="width:${othW}%;background:var(--p2)"></div>
+        <div class="impact-stacked-seg" style="flex:1;background:#e2ddd6"></div>
+      </div>
+      <div class="impact-legend">
+        <div class="imp-leg"><div class="imp-leg-dot" style="background:var(--p0)"></div> P0 fixes (${p0Count} selected)</div>
+        <div class="imp-leg"><div class="imp-leg-dot" style="background:var(--p1)"></div> P1 fixes (${p1Count} selected)</div>
+        <div class="imp-leg"><div class="imp-leg-dot" style="background:#e2ddd6"></div> Remaining</div>
+      </div>
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  buildImpactChart();
+  buildFixCards();
+  initScrollytel();
+  buildImpactTool();
+});
+</script>
+</body>
+</html>

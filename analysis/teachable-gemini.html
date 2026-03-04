@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Teachable 1,311 | Process-First Intervention Targeting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f7f2;--bg-alt:#f0ede5;--text:#1c1917;--muted:#6b6560;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--purple:#6d28d9;--blue:#1d4ed8;
+  --rule:#d6cfc4;
+  --serif:'Playfair Display',Georgia,serif;
+  --body:'Crimson Pro',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--bg);color:var(--text);font-size:20px;line-height:1.68;-webkit-font-smoothing:antialiased}
+
+/* Layout */
+.col{max-width:700px;margin:0 auto;padding:0 28px}
+.wide{max-width:1100px;margin:0 auto;padding:0 28px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+/* Header */
+header{padding:60px 0 20px}
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+h1{font-family:var(--serif);font-size:clamp(2.5rem,6vw,4.2rem);font-weight:900;line-height:1.06;letter-spacing:-.025em;margin-bottom:18px}
+.dek{font-family:var(--serif);font-size:1.35rem;font-style:italic;color:var(--muted);line-height:1.45;margin-bottom:28px}
+.byline{font-family:var(--sans);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-bottom:28px;border-bottom:1px solid var(--rule)}
+
+/* Stats hero */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--rule);margin:44px 0}
+.stat{padding:28px 12px;text-align:center}
+.stat:not(:last-child){border-right:1px solid var(--rule)}
+.stat-n{font-family:var(--sans);font-size:2.6rem;font-weight:700;line-height:1;letter-spacing:-.03em;display:block}
+.stat-n.focus{color:var(--green)}
+.stat-l{font-family:var(--sans);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:7px;display:block}
+
+/* Typography */
+p{margin-bottom:1.45em}
+.section{margin:80px 0}
+.act{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+h2{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.4rem);font-weight:700;line-height:1.18;margin-bottom:22px;letter-spacing:-.015em}
+h3{font-family:var(--serif);font-size:1.4rem;font-weight:700;margin:32px 0 12px}
+
+/* Highlights & Interactions */
+.h-t1{color:var(--amber);font-weight:600;cursor:help;border-bottom:1px dotted currentColor}
+.h-t2{color:var(--blue);font-weight:600;cursor:help;border-bottom:1px dotted currentColor}
+.h-t3{color:var(--green);font-weight:600;cursor:help;border-bottom:1px dotted currentColor}
+.xref{border-bottom:1px dashed currentColor;cursor:pointer;transition:opacity .15s;color:var(--purple)}
+.xref:hover{opacity:.7}
+
+/* Scrollytelling Container */
+.scrolly-container{display:grid;grid-template-columns:1fr 1fr;gap:40px;position:relative;margin:60px auto}
+.scrolly-steps{position:relative;z-index:10}
+.step{min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:20px;transition:opacity .4s}
+.step-card{background:rgba(255,255,255,0.95);border:1px solid var(--rule);padding:24px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.05);backdrop-filter:blur(4px)}
+.step-card h4{font-family:var(--sans);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px}
+.step.is-active .step-card{border-color:#1c1917;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+.scrolly-vis{position:sticky;top:40px;height:90vh;display:flex;align-items:center;justify-content:center}
+#funnel-chart{width:100%;height:100%}
+
+/* Track Cards */
+.track-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:40px 0}
+.track-card{background:#fff;border:1px solid var(--rule);border-radius:6px;padding:24px;transition:transform .2s,box-shadow .2s;cursor:pointer;position:relative;overflow:hidden}
+.track-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(0,0,0,0.08)}
+.track-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:currentColor}
+.track-card.t1{color:var(--amber)}.track-card.t2{color:var(--blue)}.track-card.t3{color:var(--green)}
+.tc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.tc-title{font-family:var(--sans);font-weight:700;font-size:1.4rem;color:var(--text)}
+.tc-sub{font-family:var(--sans);font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+.tc-metric{font-family:var(--sans);font-size:2.8rem;font-weight:700;line-height:1;margin-bottom:4px}
+.tc-metric-label{font-family:var(--sans);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tc-desc{font-size:15px;line-height:1.5;margin-top:16px;color:var(--muted)}
+
+/* Concept Chart */
+.concept-chart-wrap{margin:60px 0}
+.bar-group text{font-family:var(--sans);font-size:11px;fill:var(--text)}
+.bar-rect{transition:width 1s cubic-bezier(0.25, 1, 0.5, 1)}
+
+/* Student Table */
+.student-table-wrap{border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:40px 0;background:#fff}
+.st-tools{padding:12px 16px;border-bottom:1px solid var(--rule);display:flex;gap:12px;background:var(--bg-alt)}
+.st-btn{font-family:var(--sans);font-size:11px;border:1px solid var(--rule);background:#fff;padding:6px 12px;border-radius:99px;cursor:pointer;transition:all .1s}
+.st-btn:hover,.st-btn.active{border-color:#1c1917;background:#1c1917;color:#fff}
+table.st{width:100%;border-collapse:collapse;font-size:13px;font-family:var(--sans)}
+table.st th{text-align:left;padding:12px 16px;border-bottom:1px solid var(--rule);background:var(--bg);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+table.st td{padding:12px 16px;border-bottom:1px solid #eee;vertical-align:middle}
+table.st tr{cursor:pointer;transition:background .1s}
+table.st tr:hover{background:var(--bg-alt)}
+.badge{display:inline-block;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.b-t1{background:#fffbeb;color:var(--amber);border:1px solid #fcd34d}
+.b-t2{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe}
+.b-t3{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0}
+
+/* Footer */
+.meth{border-top:1px solid var(--rule);padding:36px 0;margin-top:80px}
+.meth p{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:.8em}
+
+/* Tooltip & Popup (Copied from errors.html) */
+#tip{position:fixed;background:#1c1917;color:#f9f7f2;padding:11px 15px;border-radius:4px;font-family:var(--sans);font-size:12px;line-height:1.5;pointer-events:none;z-index:1000;max-width:290px;opacity:0;transition:opacity .12s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+#tip.on{opacity:1}#tip strong{color:#f9d4a0;display:block;margin-bottom:3px}
+#pop{position:fixed;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(4px);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+#pop.on{opacity:1;pointer-events:all}
+.pop-card{background:#1e1b16;border-radius:8px;max-width:900px;width:94vw;max-height:88vh;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column}
+.pop-head{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid #333}
+.pop-title{font-family:var(--sans);font-size:12px;font-weight:600;color:#f9d4a0;text-transform:uppercase;letter-spacing:.08em}
+.pop-x{background:none;border:none;color:#888;font-size:24px;cursor:pointer;line-height:1;padding:4px}
+.pop-x:hover{color:#fff}
+.pop-body{padding:24px;overflow-y:auto;color:#ece7de;font-family:var(--sans);font-size:14px;line-height:1.6}
+.pop-body h2{font-family:var(--serif);font-size:1.6rem;color:#f4e8cf;margin:0 0 16px}
+.pop-body h3{font-family:var(--sans);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#a89b88;margin:24px 0 12px;border-bottom:1px solid #333;padding-bottom:8px}
+
+/* Mobile */
+@media(max-width:800px){
+  .scrolly-container{grid-template-columns:1fr;display:block}
+  .scrolly-vis{position:sticky;top:0;height:40vh;background:var(--bg);z-index:5;margin-bottom:20px;border-bottom:1px solid var(--rule)}
+  .step{min-height:auto;margin-bottom:60vh;padding:10px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2){border-right:none}
+  .stat{border-bottom:1px solid var(--rule)}
+  h1{font-size:2.4rem}
+}
+</style>
+</head>
+<body>
+
+<header class="col">
+  <div class="kicker">Analysis Report</div>
+  <h1>The Teachable 1,311</h1>
+  <div class="dek">Why we stopped chasing exam scores and started measuring the struggle itself.</div>
+  <div class="byline">March 2026 • Process Mining Team</div>
+</header>
+
+<div class="wide">
+  <div class="stats-row">
+    <div class="stat">
+      <span class="stat-n">13,761</span>
+      <span class="stat-l">Active Students</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n focus">1,311</span>
+      <span class="stat-l">Teachable Now</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n">9.5%</span>
+      <span class="stat-l">Of Cohort</span>
+    </div>
+    <div class="stat">
+      <span class="stat-n">3</span>
+      <span class="stat-l">Target Tracks</span>
+    </div>
+  </div>
+</div>
+
+<main class="col">
+  <div class="act">Act I: The Wrong Metric</div>
+  <h2>Marks Are a Lagging Indicator</h2>
+  <p>For years, we identified "at-risk" students by their exam scores. It makes intuitive sense: if a student scores 0 on a question, they need help.</p>
+  <p>But a score of 0 hides everything that matters. Did they stare at the screen for 30 minutes? Did they write 50 lines of code that just happened to have a syntax error? Did they run the code 40 times, debugging furiously, but miss one edge case?</p>
+  <p>We found that <strong><a href="#" class="xref" onclick="showSource('csv')">process traces</a></strong>—the invisible logs of runs, edits, and errors—tell a different story. By ignoring the final score and looking only at <em>how</em> they struggled, we found a hidden cohort of 1,311 students who are failing, but are primed to learn.</p>
+</main>
+
+<div class="wide scrolly-container">
+  <div class="scrolly-steps">
+    <div class="step" data-step="0">
+      <div class="step-card">
+        <h4>The Full Cohort</h4>
+        <p>We start with <strong>13,761 active students</strong>. These are students who attempted the recent exams. If we used scores, 8,000 of them would look "at risk." But we can't coach 8,000 students at once.</p>
+      </div>
+    </div>
+    <div class="step" data-step="1">
+      <div class="step-card">
+        <h4>Filter 1: The Stable (D2)</h4>
+        <p>First, we remove the <strong>7,869 students (57%)</strong> who are actually fine. They might have missed a question, but their process is healthy. They edit, run, and fix errors efficiently. They don't need intervention.</p>
+      </div>
+    </div>
+    <div class="step" data-step="2">
+      <div class="step-card">
+        <h4>Filter 2: The Ghosts (D0)</h4>
+        <p>Next, we identify the <strong>911 students (6.6%)</strong> who barely engaged. They are "One-Shotters"—they pasted code once, failed, and quit. Or they wrote nothing. Coaching on syntax won't help them; they need re-engagement campaigns.</p>
+      </div>
+    </div>
+    <div class="step" data-step="3">
+      <div class="step-card">
+        <h4>Filter 3: The Chaos (D1)</h4>
+        <p>Then there are the <strong>992 students (7.2%)</strong> in deep distress. Their logs show "thrashing"—rapid, random edits that make the code worse. They are stuck in loops of confusion. They need high-touch, human diagnostic triage, not standard tutorials.</p>
+      </div>
+    </div>
+    <div class="step" data-step="4">
+      <div class="step-card">
+        <h4>Filter 4: The Mixed Bag (D3)</h4>
+        <p>We set aside <strong>2,678 students (19.5%)</strong> with ambiguous patterns. They struggle a bit, but also succeed a bit. They are the "watch list."</p>
+      </div>
+    </div>
+    <div class="step" data-step="5">
+      <div class="step-card">
+        <h4>The Prize: The Teachable 1,311</h4>
+        <p>This leaves us with exactly <strong>1,311 students (9.5%)</strong>. These are the goldilocks zone. They are trying hard (high runs/edits). They aren't thrashing. But they are stuck on specific, fixable barriers. We can help them <em>now</em>.</p>
+      </div>
+    </div>
+    <div class="step" data-step="6">
+      <div class="step-card">
+        <h4>The Three Tracks</h4>
+        <p>We don't just dump them in a bucket. We split them into three distinct intervention tracks based on their dominant error profile: Syntax, Runtime, or Logic.</p>
+      </div>
+    </div>
+  </div>
+  <div class="scrolly-vis">
+    <div id="funnel-chart"></div>
+  </div>
+</div>
+
+<div class="col">
+  <div class="act">Act III: The Playbooks</div>
+  <h2>Three Distinct Interventions</h2>
+  <p>Because we know <em>why</em> they are failing, we can assign a specific "playbook"—a 25-minute coaching recipe designed to unblock their specific barrier.</p>
+</div>
+
+<div class="wide">
+  <div class="track-grid">
+    <div class="track-card t1" onclick="showPlaybook('T1')">
+      <div class="tc-head">
+        <span class="tc-title">Track T1</span>
+        <span class="tc-sub">Syntax Foundations</span>
+      </div>
+      <div class="tc-metric">232</div>
+      <div class="tc-metric-label">Students</div>
+      <div class="tc-desc">
+        <strong>The Grammar Fixers.</strong> These students have good ideas but can't get past the parser. They spend 36 minutes fighting colons and indentation.
+      </div>
+    </div>
+    <div class="track-card t2" onclick="showPlaybook('T2')">
+      <div class="tc-head">
+        <span class="tc-title">Track T2</span>
+        <span class="tc-sub">Runtime Debugging</span>
+      </div>
+      <div class="tc-metric">655</div>
+      <div class="tc-metric-label">Students</div>
+      <div class="tc-desc">
+        <strong>The Bug Detectives.</strong> Their code runs, but crashes. They treat errors as random bad luck rather than clues. They need a debugging protocol.
+      </div>
+    </div>
+    <div class="track-card t3" onclick="showPlaybook('T3')">
+      <div class="tc-head">
+        <span class="tc-title">Track T3</span>
+        <span class="tc-sub">Logic & Edge Cases</span>
+      </div>
+      <div class="tc-metric">424</div>
+      <div class="tc-metric-label">Students</div>
+      <div class="tc-desc">
+        <strong>The Edge-Case Engineers.</strong> Their code works for the example, but fails the hidden tests. They need to learn how to break their own code.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col">
+  <div class="act">Act IV: The Content</div>
+  <h2>What They Struggle With</h2>
+  <p>It’s not random. Each track struggles with specific concepts. T1s get stuck on the basics of input parsing. T2s crash on data aggregation. T3s fail on the logic of loops.</p>
+</div>
+
+<div class="wide concept-chart-wrap" id="concept-chart"></div>
+
+<div class="col">
+  <div class="act">Act V: The Faces</div>
+  <h2>Meet the Students</h2>
+  <p>These aren't just numbers. Below is a sample of real students from the cohort. Click any row to see their detailed error profile and intervention plan.</p>
+</div>
+
+<div class="wide">
+  <div class="student-table-wrap">
+    <div class="st-tools">
+      <button class="st-btn active" onclick="filterTable('all')">All Tracks</button>
+      <button class="st-btn" onclick="filterTable('T1')">T1: Syntax</button>
+      <button class="st-btn" onclick="filterTable('T2')">Runtime</button>
+      <button class="st-btn" onclick="filterTable('T3')">Logic</button>
+    </div>
+    <div class="table-scroll">
+      <table class="st" id="student-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Term</th>
+            <th>Track</th>
+            <th>Top Concept Struggle</th>
+            <th>Avg Runs</th>
+            <th>Avg Edits</th>
+            <th>Mins/Q</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="col meth">
+  <h3>Methodology & Sources</h3>
+  <p>Data derived from <a href="#" class="xref" onclick="showSource('md')">analysis/teachable.md</a>.</p>
+  <p>Based on 13,761 student-term profiles from 2025 Terms 1, 2, and 3. Full dataset available in <a href="#" class="xref" onclick="showSource('csv')">analysis/teachable.csv</a>.</p>
+</div>
+
+<div id="tip"></div>
+<div id="pop">
+  <div class="pop-card">
+    <div class="pop-head">
+      <span class="pop-title" id="pop-title"></span>
+      <button class="pop-x" onclick="closePop()">×</button>
+    </div>
+    <div class="pop-body" id="pop-body"></div>
+  </div>
+</div>
+
+<script>
+// Data
+const DATA = {"pathData": {"total": 13761, "counts": {"D2": 7869, "D3": 2678, "D1": 992, "D0": 911, "T2": 655, "T3": 424, "T1": 232}, "pct": {"D2": 57.2, "D3": 19.5, "D1": 7.2, "D0": 6.6, "T2": 4.8, "T3": 3.1, "T1": 1.7}}, "termData": {"25t1": {"D0": 417, "D1": 438, "D2": 3000, "D3": 1165, "T1": 139, "T2": 163, "T3": 148}, "25t2": {"D0": 271, "D1": 315, "D2": 2303, "D3": 821, "T1": 47, "T2": 316, "T3": 168}, "25t3": {"D0": 223, "D1": 239, "D2": 2566, "D3": 692, "T1": 46, "T2": 176, "T3": 108}}, "trackMetrics": {"T1": {"n": 232, "runs": 11.28, "edits": 12.54, "mins": 36.71, "parseable": 0.44, "runtime": 0.73, "syntax": 0.42, "logic": 0.08, "productive": 0.3}, "T2": {"n": 655, "runs": 12.29, "edits": 14.47, "mins": 41.47, "parseable": 0.74, "runtime": 0.6, "syntax": 0.02, "logic": 0.15, "productive": 0.3}, "T3": {"n": 424, "runs": 14.71, "edits": 16.98, "mins": 41.66, "parseable": 0.85, "runtime": 0.12, "syntax": 0.01, "logic": 0.34, "productive": 0.33}}, "conceptData": {"T1": [{"name": "Arithmetic / conditionals", "count": 164}, {"name": "Input parsing / output formatting", "count": 112}, {"name": "Loops and iteration", "count": 98}, {"name": "String manipulation", "count": 93}, {"name": "Data analysis / aggregation", "count": 67}], "T2": [{"name": "Arithmetic / conditionals", "count": 367}, {"name": "Input parsing / output formatting", "count": 349}, {"name": "Loops and iteration", "count": 302}, {"name": "String manipulation", "count": 270}, {"name": "Data analysis / aggregation", "count": 245}], "T3": [{"name": "Input parsing / output formatting", "count": 286}, {"name": "Loops and iteration", "count": 249}, {"name": "String manipulation", "count": 157}, {"name": "Data analysis / aggregation", "count": 156}, {"name": "Arithmetic / conditionals", "count": 120}]}, "studentSamples": [{"id": "d7c2a7d1", "full_id": "d7c2a7d1d3d14616b921bd1f494035c5", "term": "25t3", "track": "T1", "bucket": "Syntax gated", "concepts": ["String manipulation", "Input parsing / output formatting", "Loops and iteration"], "runs": 5.4, "edits": 6.3, "mins": 36.3, "productive": 0.14, "runtime_ratio": 0.71, "syntax_ratio": 0.71, "logic_ratio": 0.29}, {"id": "62ce0d28", "full_id": "62ce0d28095b4086a496ccd0f7e2c080", "term": "25t1", "track": "T1", "bucket": "Syntax gated", "concepts": ["File operations", "Input parsing / output formatting", "List / tuple operations"], "runs": 12.0, "edits": 12.8, "mins": 34.9, "productive": 0.25, "runtime_ratio": 0.5, "syntax_ratio": 0.5, "logic_ratio": 0.25}, {"id": "10584803", "full_id": "10584803759840c49a135e6464e508b9", "term": "25t1", "track": "T1", "bucket": "Syntax gated", "concepts": ["File operations", "Input parsing / output formatting", "List / tuple operations"], "runs": 7.2, "edits": 8.2, "mins": 45.8, "productive": 0.5, "runtime_ratio": 0.5, "syntax_ratio": 0.5, "logic_ratio": 0.25}, {"id": "b351e826", "full_id": "b351e82614dd4903ba7452ccccd69c0f", "term": "25t2", "track": "T1", "bucket": "Submitted, zero", "concepts": ["Input parsing / output formatting", "Loops and iteration", "Arithmetic / conditionals"], "runs": 8.2, "edits": 10.0, "mins": 30.0, "productive": 0.4, "runtime_ratio": 0.8, "syntax_ratio": 0.2, "logic_ratio": 0.0}, {"id": "179b329a", "full_id": "179b329a4ed44da69a1d561ef4ea5b1b", "term": "25t1", "track": "T1", "bucket": "Syntax gated", "concepts": ["Arithmetic / conditionals", "Data analysis / aggregation", "Input parsing / output formatting"], "runs": 5.7, "edits": 6.3, "mins": 21.9, "productive": 0.29, "runtime_ratio": 1.0, "syntax_ratio": 0.57, "logic_ratio": 0.0}, {"id": "729b004b", "full_id": "729b004b2719409d8272f83ddeab6b8c", "term": "25t3", "track": "T1", "bucket": "Syntax gated", "concepts": ["List / tuple operations", "String manipulation", "Arithmetic / conditionals"], "runs": 8.5, "edits": 9.5, "mins": 9.9, "productive": 0.5, "runtime_ratio": 0.83, "syntax_ratio": 0.5, "logic_ratio": 0.17}, {"id": "24ffcfb6", "full_id": "24ffcfb67c9a4509b74390c58f938cb9", "term": "25t1", "track": "T1", "bucket": "Runtime error", "concepts": ["Loops and iteration", "Pattern printing", "Arithmetic / conditionals"], "runs": 7.4, "edits": 8.4, "mins": 34.6, "productive": 0.2, "runtime_ratio": 0.8, "syntax_ratio": 0.2, "logic_ratio": 0.2}, {"id": "5c76cc77", "full_id": "5c76cc772b174c9b876c970f6d850b14", "term": "25t3", "track": "T1", "bucket": "Syntax gated", "concepts": ["Input parsing / output formatting", "Loops and iteration", "String manipulation"], "runs": 11.0, "edits": 13.2, "mins": 69.7, "productive": 0.25, "runtime_ratio": 1.0, "syntax_ratio": 0.75, "logic_ratio": 0.0}, {"id": "4c0bdf8b", "full_id": "4c0bdf8bf0e1429498c2a1ff37e3064b", "term": "25t2", "track": "T1", "bucket": "Runtime error", "concepts": ["Arithmetic / conditionals", "String manipulation", "List / tuple operations"], "runs": 11.8, "edits": 11.8, "mins": 18.9, "productive": 0.25, "runtime_ratio": 1.0, "syntax_ratio": 0.25, "logic_ratio": 0.0}, {"id": "ed76ac83", "full_id": "ed76ac8325cc4f4aac9b3627817a5f14", "term": "25t1", "track": "T1", "bucket": "Syntax gated", "concepts": ["Arithmetic / conditionals", "Input parsing / output formatting", "Loops and iteration"], "runs": 16.0, "edits": 16.2, "mins": 53.9, "productive": 0.25, "runtime_ratio": 0.5, "syntax_ratio": 0.5, "logic_ratio": 0.25}, {"id": "cb55ce4b", "full_id": "cb55ce4b93a0474196e2be538a64be50", "term": "25t3", "track": "T1", "bucket": "Syntax gated", "concepts": ["Arithmetic / conditionals", "String manipulation"], "runs": 16.0, "edits": 17.5, "mins": 31.2, "productive": 0.25, "runtime_ratio": 0.75, "syntax_ratio": 0.5, "logic_ratio": 0.0}, {"id": "225bb410", "full_id": "225bb41045fc45a68a02d24caa73bd5c", "term": "25t1", "track": "T1", "bucket": "Runtime error", "concepts": ["Loops and iteration", "Dictionary operations", "Input parsing / output formatting"], "runs": 5.8, "edits": 6.4, "mins": 49.6, "productive": 0.2, "runtime_ratio": 0.8, "syntax_ratio": 0.2, "logic_ratio": 0.0}, {"id": "7fc0a730", "full_id": "7fc0a73064bd45f58d0e79f053b25eda", "term": "25t2", "track": "T2", "bucket": "Submitted, zero", "concepts": ["Loops and iteration", "Data analysis / aggregation", "Dictionary operations"], "runs": 6.1, "edits": 7.0, "mins": 28.4, "productive": 0.14, "runtime_ratio": 0.57, "syntax_ratio": 0.0, "logic_ratio": 0.29}, {"id": "77b0941b", "full_id": "77b0941b3de04bc28cdbb75da573a160", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["Arithmetic / conditionals", "String manipulation", "Input parsing / output formatting"], "runs": 8.8, "edits": 9.0, "mins": 25.9, "productive": 0.5, "runtime_ratio": 0.75, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "27421d03", "full_id": "27421d03c7cc4fe7a038349bca4ee67a", "term": "25t3", "track": "T2", "bucket": "Submitted, zero", "concepts": ["String manipulation", "Input parsing / output formatting", "Loops and iteration"], "runs": 9.3, "edits": 11.4, "mins": 25.8, "productive": 0.14, "runtime_ratio": 0.71, "syntax_ratio": 0.0, "logic_ratio": 0.14}, {"id": "5e54207e", "full_id": "5e54207e3c554c7388b16cfb077eee1f", "term": "25t2", "track": "T2", "bucket": "Submitted, zero", "concepts": ["List / tuple operations", "Arithmetic / conditionals", "Dictionary operations"], "runs": 15.3, "edits": 28.3, "mins": 84.8, "productive": 0.33, "runtime_ratio": 0.67, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "9579b68a", "full_id": "9579b68a5a8d4577a5e0cbdb8d6635d0", "term": "25t2", "track": "T2", "bucket": "Submitted, zero", "concepts": ["Arithmetic / conditionals", "String manipulation", "Input parsing / output formatting"], "runs": 8.8, "edits": 11.5, "mins": 17.7, "productive": 0.25, "runtime_ratio": 1.0, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "fc56cb38", "full_id": "fc56cb38062a4a42846ec5151fedd9be", "term": "25t3", "track": "T2", "bucket": "Submitted, zero", "concepts": ["Arithmetic / conditionals", "String manipulation", "Data analysis / aggregation"], "runs": 7.8, "edits": 10.0, "mins": 27.9, "productive": 0.17, "runtime_ratio": 0.83, "syntax_ratio": 0.0, "logic_ratio": 0.17}, {"id": "4d3bcdc9", "full_id": "4d3bcdc9238f4b73a8697ba78c1aeffe", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["Loops and iteration", "Input parsing / output formatting", "Data analysis / aggregation"], "runs": 7.9, "edits": 8.9, "mins": 18.9, "productive": 0.14, "runtime_ratio": 0.57, "syntax_ratio": 0.0, "logic_ratio": 0.14}, {"id": "632a8636", "full_id": "632a86362b214eaaa75f7f10eb696fdf", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["Loops and iteration", "Input parsing / output formatting", "Data analysis / aggregation"], "runs": 11.2, "edits": 12.2, "mins": 23.8, "productive": 0.33, "runtime_ratio": 0.5, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "ee2b73d7", "full_id": "ee2b73d7ae5d47ff8bedeeb4ff701a5a", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["String manipulation", "Arithmetic / conditionals", "Input parsing / output formatting"], "runs": 15.7, "edits": 16.8, "mins": 60.8, "productive": 0.17, "runtime_ratio": 0.67, "syntax_ratio": 0.17, "logic_ratio": 0.0}, {"id": "4d1fab04", "full_id": "4d1fab04a1ff427e90cdc0ff7574adce", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["String manipulation", "Arithmetic / conditionals", "Input parsing / output formatting"], "runs": 7.2, "edits": 9.2, "mins": 24.4, "productive": 0.5, "runtime_ratio": 1.0, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "37389f8c", "full_id": "37389f8c8890457786fc7bae0fe4e33f", "term": "25t2", "track": "T2", "bucket": "Runtime error", "concepts": ["String manipulation", "Data analysis / aggregation", "Input parsing / output formatting"], "runs": 18.3, "edits": 18.7, "mins": 25.0, "productive": 0.17, "runtime_ratio": 0.5, "syntax_ratio": 0.0, "logic_ratio": 0.17}, {"id": "798b76f6", "full_id": "798b76f60b6e48f6b76ddd08870ac4bd", "term": "25t1", "track": "T2", "bucket": "Runtime error", "concepts": ["Loops and iteration", "Data analysis / aggregation", "List / tuple operations"], "runs": 10.7, "edits": 11.7, "mins": 38.3, "productive": 0.33, "runtime_ratio": 0.67, "syntax_ratio": 0.17, "logic_ratio": 0.0}, {"id": "f871bc4e", "full_id": "f871bc4e7bb74082ba00d0441a516a47", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Loops and iteration", "Data analysis / aggregation", "Pattern printing"], "runs": 10.6, "edits": 11.9, "mins": 41.1, "productive": 0.43, "runtime_ratio": 0.29, "syntax_ratio": 0.0, "logic_ratio": 0.0}, {"id": "c710f6d5", "full_id": "c710f6d50c254f89bc1e629c2da74bcd", "term": "25t2", "track": "T3", "bucket": "Submitted, zero", "concepts": ["Dictionary operations", "Mathematical / algorithmic", "Data analysis / aggregation"], "runs": 29.0, "edits": 59.0, "mins": 74.3, "productive": 0.25, "runtime_ratio": 0.25, "syntax_ratio": 0.0, "logic_ratio": 0.25}, {"id": "31098193", "full_id": "31098193a387456eae394272a86a738f", "term": "25t2", "track": "T3", "bucket": "Submitted, zero", "concepts": ["Input parsing / output formatting", "Loops and iteration", "Data analysis / aggregation"], "runs": 15.3, "edits": 17.2, "mins": 40.9, "productive": 0.17, "runtime_ratio": 0.17, "syntax_ratio": 0.17, "logic_ratio": 0.67}, {"id": "8493a9ac", "full_id": "8493a9ac3a54436e8d5adecc6600c4c2", "term": "25t3", "track": "T3", "bucket": "Submitted, zero", "concepts": ["String manipulation", "Input parsing / output formatting", "Loops and iteration"], "runs": 10.8, "edits": 13.0, "mins": 76.5, "productive": 0.2, "runtime_ratio": 0.2, "syntax_ratio": 0.0, "logic_ratio": 0.4}, {"id": "fc073988", "full_id": "fc0739882afb4c888047076d6f2d6c75", "term": "25t3", "track": "T3", "bucket": "Submitted, zero", "concepts": ["String manipulation", "Data analysis / aggregation", "Input parsing / output formatting"], "runs": 13.0, "edits": 15.3, "mins": 52.6, "productive": 0.5, "runtime_ratio": 0.17, "syntax_ratio": 0.0, "logic_ratio": 0.33}, {"id": "8ecf469a", "full_id": "8ecf469ad88d45ada63c7b457d29c0ec", "term": "25t1", "track": "T3", "bucket": "Wrong output - logic", "concepts": ["Loops and iteration", "Pattern printing", "File operations"], "runs": 10.7, "edits": 11.8, "mins": 33.7, "productive": 0.17, "runtime_ratio": 0.17, "syntax_ratio": 0.17, "logic_ratio": 0.67}, {"id": "e63f647f", "full_id": "e63f647f1c67473ba67857ee3fd9667e", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Input parsing / output formatting", "Loops and iteration", "Mathematical / algorithmic"], "runs": 6.7, "edits": 8.0, "mins": 15.6, "productive": 0.43, "runtime_ratio": 0.0, "syntax_ratio": 0.0, "logic_ratio": 0.14}, {"id": "ea910f12", "full_id": "ea910f125b2a4d6bbf330f598a3295bd", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Arithmetic / conditionals", "String manipulation", "Input parsing / output formatting"], "runs": 10.7, "edits": 11.8, "mins": 36.6, "productive": 0.5, "runtime_ratio": 0.17, "syntax_ratio": 0.17, "logic_ratio": 0.17}, {"id": "351038d2", "full_id": "351038d2f20a4ef5942f4dc5eada4e70", "term": "25t1", "track": "T3", "bucket": "Wrong output - logic", "concepts": ["Loops and iteration", "Data analysis / aggregation", "Dictionary operations"], "runs": 7.0, "edits": 7.2, "mins": 10.1, "productive": 0.17, "runtime_ratio": 0.17, "syntax_ratio": 0.0, "logic_ratio": 0.5}, {"id": "8da57dcd", "full_id": "8da57dcd5ed94e3988a3eefdc0561737", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Arithmetic / conditionals", "Input parsing / output formatting", "Loops and iteration"], "runs": 16.2, "edits": 19.0, "mins": 85.4, "productive": 0.5, "runtime_ratio": 0.0, "syntax_ratio": 0.0, "logic_ratio": 0.25}, {"id": "8be07cf8", "full_id": "8be07cf822054876a43f61957f92caa8", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Loops and iteration", "Pattern printing", "Data analysis / aggregation"], "runs": 9.9, "edits": 11.1, "mins": 41.1, "productive": 0.57, "runtime_ratio": 0.0, "syntax_ratio": 0.0, "logic_ratio": 0.14}, {"id": "a91ad859", "full_id": "a91ad859de1d493498da5e3a8c790814", "term": "25t1", "track": "T3", "bucket": "Wrong output - edge/partial", "concepts": ["Arithmetic / conditionals", "Input parsing / output formatting", "List / tuple operations"], "runs": 16.2, "edits": 17.8, "mins": 17.1, "productive": 0.5, "runtime_ratio": 0.25, "syntax_ratio": 0.0, "logic_ratio": 0.0}]};
+
+// Colors
+const C = {
+  bg: '#f9f7f2',
+  muted: '#6b6560',
+  red: '#b91c1c',
+  amber: '#b45309',
+  green: '#15803d',
+  blue: '#1d4ed8',
+  rule: '#d6cfc4',
+  t1: '#b45309',
+  t2: '#1d4ed8',
+  t3: '#15803d'
+};
+
+// Tooltip Logic
+const tip = document.getElementById('tip');
+let tipTimer;
+function showTip(e, html) {
+  clearTimeout(tipTimer);
+  tip.innerHTML = html;
+  tip.classList.add('on');
+  moveTip(e);
+}
+function moveTip(e) {
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const tw = tip.offsetWidth, th = tip.offsetHeight;
+  tip.style.left = (x + tw > window.innerWidth - 10 ? e.clientX - tw - 14 : x) + 'px';
+  tip.style.top  = (y + th > window.innerHeight - 10 ? e.clientY - th - 10 : y) + 'px';
+}
+function hideTip() { tip.classList.remove('on'); }
+
+// Popup Logic
+const pop = document.getElementById('pop');
+const popTitle = document.getElementById('pop-title');
+const popBody = document.getElementById('pop-body');
+function closePop() { pop.classList.remove('on'); document.body.style.overflow = ''; }
+pop.addEventListener('click', e => { if(e.target === pop) closePop(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closePop(); });
+
+// D3 Scrollytelling Chart
+function initFunnel() {
+  const container = document.getElementById('funnel-chart');
+  const w = container.offsetWidth, h = container.offsetHeight;
+  const svg = d3.select(container).append('svg').attr('width', w).attr('height', h);
+  
+  // Base State: 1 bar
+  const total = DATA.pathData.total;
+  
+  // States defs
+  const states = [
+    { id: 0, label: "Cohort",   count: 13761, y: 0.1, h: 0.8 }, // All
+    { id: 1, label: "Stable",   count: 7869,  y: 0.1, h: 0.45, color: '#999', xOff: -100, fade: true }, // D2
+    { id: 2, label: "Ghosts",   count: 911,   y: 0.6, h: 0.1,  color: '#ccc', xOff: -100, fade: true }, // D0
+    { id: 3, label: "Chaos",    count: 992,   y: 0.75, h: 0.1, color: C.red, xOff: -100, fade: true }, // D1
+    { id: 4, label: "Mixed",    count: 2678,  y: 0.88, h: 0.1, color: '#bbb', xOff: -100, fade: true }, // D3
+    { id: 5, label: "Target",   count: 1311,  y: 0.4, h: 0.3,  color: C.green }, // Teachable
+  ];
+
+  // We draw a "Stack" of rects. 
+  // Step 0: One big rect.
+  // Step 1: D2 moves left/fades. Remainder stays.
+  // Step 2: D0 moves left/fades.
+  // ...
+  
+  // Let's implement this as a set of bars that change position/opacity based on step.
+  // Bar 1: D2 (Stable)
+  // Bar 2: D0 (Ghosts)
+  // Bar 3: D1 (Chaos)
+  // Bar 4: D3 (Mixed)
+  // Bar 5: T1 (Syntax)
+  // Bar 6: T2 (Runtime)
+  // Bar 7: T3 (Logic)
+  
+  const bars = [
+    { id: 'd2', count: 7869, color: '#aaa', label: 'Stable (D2)' },
+    { id: 'd0', count: 911,  color: '#ddd', label: 'Ghosts (D0)' },
+    { id: 'd1', count: 992,  color: C.red,  label: 'Chaos (D1)' },
+    { id: 'd3', count: 2678, color: '#ccc', label: 'Mixed (D3)' },
+    { id: 't1', count: 232,  color: C.t1,   label: 'T1' },
+    { id: 't2', count: 655,  color: C.t2,   label: 'T2' },
+    { id: 't3', count: 424,  color: C.t3,   label: 'T3' },
+  ];
+  
+  // Calculate relative heights
+  let cy = 0;
+  bars.forEach(b => {
+    b.h = (b.count / total) * (h * 0.8);
+    b.y0 = cy;
+    cy += b.h;
+  });
+  
+  const g = svg.append('g').attr('transform', `translate(${w/2 - 100}, ${h*0.1})`);
+  
+  const rects = g.selectAll('rect').data(bars).enter().append('rect')
+    .attr('width', 200)
+    .attr('height', d => d.h)
+    .attr('fill', d => d.color)
+    .attr('rx', 4)
+    .attr('stroke', '#fff')
+    .attr('stroke-width', 1);
+
+  const labels = g.selectAll('text').data(bars).enter().append('text')
+    .attr('x', 210)
+    .attr('y', 0)
+    .text(d => d.label)
+    .attr('font-family', 'var(--sans)')
+    .attr('font-size', '11px')
+    .attr('fill', '#666')
+    .attr('opacity', 0);
+    
+  function update(step) {
+    // Logic for positions based on step
+    // 0: All stacked in center.
+    // 1: D2 slides left and fades. Others slide up.
+    // 2: D0 slides left and fades.
+    // ...
+    
+    rects.transition().duration(600).attr('transform', d => {
+      let x = 0, y = d.y0;
+      let op = 1;
+      
+      if (step >= 1 && d.id === 'd2') { x = -150; op = 0.3; } // Peel D2
+      if (step >= 1 && d.id !== 'd2') { y -= bars[0].h; } // Shift up
+      
+      if (step >= 2 && d.id === 'd0') { x = -150; op = 0.3; } // Peel D0
+      if (step >= 2 && d.id !== 'd2' && d.id !== 'd0') { y -= bars[1].h; }
+      
+      if (step >= 3 && d.id === 'd1') { x = -150; op = 0.3; } // Peel D1
+      if (step >= 3 && d.id !== 'd2' && d.id !== 'd0' && d.id !== 'd1') { y -= bars[2].h; }
+      
+      if (step >= 4 && d.id === 'd3') { x = -150; op = 0.3; } // Peel D3
+      if (step >= 4 && ['t1','t2','t3'].includes(d.id)) { y -= bars[3].h; }
+      
+      if (step >= 6 && d.id === 't1') { x = -100; y += 50; }
+      if (step >= 6 && d.id === 't2') { x = 0; y += 50; }
+      if (step >= 6 && d.id === 't3') { x = 100; y += 50; }
+      
+      return `translate(${x},${y})`;
+    })
+    .attr('opacity', d => {
+       if (step === 0) return 1;
+       if (step === 5 && ['t1','t2','t3'].includes(d.id)) return 1;
+       if (step === 6 && ['t1','t2','t3'].includes(d.id)) return 1;
+       if (['d2','d0','d1','d3'].includes(d.id) && step >= 1) return 0.15;
+       return 1;
+    });
+    
+    labels.transition().duration(600)
+      .attr('y', d => d.y0 + d.h/2 + 4) // simple center
+      .attr('transform', d => {
+        // match rect logic simplified for label
+         let x = 0, y = 0;
+         if (step >= 1 && d.id === 'd2') { x = -150; } 
+         if (step >= 1 && d.id !== 'd2') { y -= bars[0].h; }
+         if (step >= 2 && d.id === 'd0') { x = -150; }
+         if (step >= 2 && d.id !== 'd2' && d.id !== 'd0') { y -= bars[1].h; }
+         if (step >= 3 && d.id === 'd1') { x = -150; }
+         if (step >= 3 && d.id !== 'd2' && d.id !== 'd0' && d.id !== 'd1') { y -= bars[2].h; }
+         if (step >= 4 && d.id === 'd3') { x = -150; }
+         if (step >= 4 && ['t1','t2','t3'].includes(d.id)) { y -= bars[3].h; }
+         
+         if (step >= 6 && d.id === 't1') { x = -100; y += 50; }
+         if (step >= 6 && d.id === 't2') { x = 0; y += 50; }
+         if (step >= 6 && d.id === 't3') { x = 100; y += 50; }
+         return `translate(${x},${y})`;
+      })
+      .attr('opacity', d => {
+        if (step === 6 && ['t1','t2','t3'].includes(d.id)) return 1;
+        if (['d2','d0','d1','d3'].includes(d.id) && step > 0) return 1; 
+        return 0;
+      });
+  }
+
+  // Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) update(parseInt(entry.target.dataset.step));
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.step').forEach(el => observer.observe(el));
+  
+  update(0);
+}
+
+// Concept Chart
+function initConceptChart() {
+  const container = document.getElementById('concept-chart');
+  // Simple HTML bars
+  let html = '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px">';
+  ['T1', 'T2', 'T3'].forEach(track => {
+    const data = DATA.conceptData[track];
+    const color = track === 'T1' ? C.t1 : (track === 'T2' ? C.t2 : C.t3);
+    html += `<div><h4 style="color:${color};border-bottom:1px solid ${C.rule};padding-bottom:8px;margin-bottom:12px;font-family:var(--sans)">${track} Top Struggles</h4>`;
+    data.forEach(d => {
+      const pct = Math.min(100, (d.count / (track==='T1'?232:(track==='T2'?655:424))) * 100).toFixed(0);
+      html += `
+        <div style="margin-bottom:8px;font-family:var(--sans);font-size:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <span>${d.name}</span>
+            <span style="color:${C.muted}">${d.count}</span>
+          </div>
+          <div style="background:#eee;height:6px;border-radius:3px;overflow:hidden">
+            <div style="width:${pct}%;background:${color};height:100%"></div>
+          </div>
+        </div>
+      `;
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// Student Table
+function initStudentTable() {
+  const tbody = document.querySelector('#student-table tbody');
+  
+  window.filterTable = (track) => {
+    const rows = DATA.studentSamples.filter(s => track === 'all' || s.track === track);
+    tbody.innerHTML = rows.map(s => {
+      const cls = s.track === 'T1' ? 'b-t1' : (s.track === 'T2' ? 'b-t2' : 'b-t3');
+      return `
+        <tr onclick="showStudent('${s.full_id}')">
+          <td style="font-family:var(--mono);color:var(--muted)">${s.id}</td>
+          <td>${s.term}</td>
+          <td><span class="badge ${cls}">${s.track}</span></td>
+          <td>${s.concepts[0] || '-'}</td>
+          <td style="text-align:right">${s.runs}</td>
+          <td style="text-align:right">${s.edits}</td>
+          <td style="text-align:right">${s.mins}</td>
+        </tr>
+      `;
+    }).join('');
+    
+    document.querySelectorAll('.st-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  };
+  filterTable('all');
+}
+
+// Popups
+function showPlaybook(track) {
+  const titles = {T1: "T1: Syntax Foundations", T2: "T2: Runtime Debugging", T3: "T3: Logic & Edge Cases"};
+  const recipes = {
+    T1: "1. <strong>Read Error (5m)</strong>: Predict source.<br>2. <strong>Tiny Fix (10m)</strong>: One change, run, observe.<br>3. <strong>Rewrite (10m)</strong>: Use sub-goal template.",
+    T2: "1. <strong>Name Crash (5m)</strong>: State hypothesis.<br>2. <strong>Trace Table (10m)</strong>: Paper trace on small input.<br>3. <strong>Diagnostics (10m)</strong>: Add 2 print statements.",
+    T3: "1. <strong>Restate (5m)</strong>: Input -> Output sentence.<br>2. <strong>Test Design (10m)</strong>: 5 cases (boundary, empty, etc).<br>3. <strong>Compare (10m)</strong>: Expected vs Actual."
+  };
+  const coach = {
+    T1: "Let's make the code readable by Python first. Correct structure now, smart logic next.",
+    T2: "Don't guess. We investigate like detectives: predict, trace, prove, then fix.",
+    T3: "Your engine runs. Now we teach it to handle surprise roads."
+  };
+  
+  const html = `
+    <h2>${titles[track]}</h2>
+    <h3>The Intervention Recipe (25 mins)</h3>
+    <p style="background:#222;padding:16px;border-radius:6px;font-family:var(--mono);font-size:13px">${recipes[track]}</p>
+    
+    <h3>Why This Works</h3>
+    <p>These students are failing not because they lack aptitude, but because they have a bad process loop. This recipe forces a better loop.</p>
+    
+    <h3>Coach Line</h3>
+    <p class="xref" style="font-size:1.2em;font-style:italic">"${coach[track]}"</p>
+  `;
+  
+  popTitle.textContent = "Playbook";
+  popBody.innerHTML = html;
+  pop.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function showStudent(fid) {
+  const s = DATA.studentSamples.find(x => x.full_id === fid);
+  if(!s) return;
+  
+  const html = `
+    <h2>Student ${s.id}</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+      <div>
+        <div style="font-size:11px;color:#888;text-transform:uppercase">Dominant Profile</div>
+        <div style="font-size:18px;font-weight:600">${s.bucket}</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;text-transform:uppercase">Track</div>
+        <div style="font-size:18px;font-weight:600;color:${s.track==='T1'?C.t1:(s.track==='T2'?C.t2:C.t3)}">${s.track}</div>
+      </div>
+    </div>
+    
+    <h3>Metrics (Ratio)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+      <div style="background:#222;padding:10px;border-radius:4px">
+        <div style="font-size:20px;font-weight:700">${(s.syntax_ratio*100).toFixed(0)}%</div>
+        <div style="font-size:10px;color:#888">Syntax Gated</div>
+      </div>
+      <div style="background:#222;padding:10px;border-radius:4px">
+        <div style="font-size:20px;font-weight:700">${(s.runtime_ratio*100).toFixed(0)}%</div>
+        <div style="font-size:10px;color:#888">Runtime Err</div>
+      </div>
+      <div style="background:#222;padding:10px;border-radius:4px">
+        <div style="font-size:20px;font-weight:700">${(s.logic_ratio*100).toFixed(0)}%</div>
+        <div style="font-size:10px;color:#888">Logic Fail</div>
+      </div>
+    </div>
+
+    <h3>Top Concept Struggles</h3>
+    <ul>
+      ${s.concepts.map(c => `<li>${c}</li>`).join('')}
+    </ul>
+  `;
+  popTitle.textContent = "Student Details";
+  popBody.innerHTML = html;
+  pop.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function showSource(type) {
+  const path = type === 'md' ? 'teachable.md' : 'teachable.csv';
+  popTitle.textContent = 'analysis/' + path;
+  popBody.innerHTML = '<div class="loading">Loading...</div>';
+  pop.classList.add('on');
+  
+  fetch(path)
+    .then(r => r.text())
+    .then(text => {
+      if(type === 'md') {
+        popBody.innerHTML = marked.parse(text);
+      } else {
+        // Simple CSV preview (first 20 lines)
+        const lines = text.split('\\n').slice(0, 20);
+        const headers = lines[0].split(',');
+        let html = '<div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:11px;font-family:var(--mono)">';
+        html += '<thead><tr>' + headers.map(h => `<th style="text-align:left;padding:4px;border-bottom:1px solid #444;color:#888">${h}</th>`).join('') + '</tr></thead><tbody>';
+        html += lines.slice(1).map(l => {
+          const cols = l.split(',');
+          if(cols.length < 2) return '';
+          return '<tr>' + cols.map(c => `<td style="padding:4px;border-bottom:1px solid #333;color:#ccc">${c}</td>`).join('') + '</tr>';
+        }).join('');
+        html += '</tbody></table></div><p style="margin-top:10px;color:#888;font-size:11px">Showing first 20 rows.</p>';
+        popBody.innerHTML = html;
+      }
+    })
+    .catch(e => {
+      popBody.innerHTML = `<p style="color:var(--red)">Could not load file. It might need a web server.</p><p><a href="${path}" target="_blank" style="color:var(--blue)">Open raw file</a></p>`;
+    });
+}
+
+// Init
+initFunnel();
+initConceptChart();
+initStudentTable();
+
+</script>
+</body>
+</html>
