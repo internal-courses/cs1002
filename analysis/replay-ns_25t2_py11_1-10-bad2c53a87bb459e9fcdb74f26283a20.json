@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t2_py11_1-10-bad2c53a87bb459e9fcdb74f26283a20",
+  "title": "Replace Consonants: Incremental Debugging to Full Score",
+  "description": "A stepwise debugging path with setbacks, then a clean convergence to passing public and private tests.",
+  "why_interesting": "Good positive model: iterative testing and correction eventually produce a stable, fully correct submission.",
+  "tags": [
+    "incremental debugger",
+    "runtime-to-logic transition",
+    "stable convergence",
+    "full pass"
+  ],
+  "source": {
+    "namespace": "ns_25t2_py11_1",
+    "problem_id": 10,
+    "student_id": "bad2c53a87bb459e9fcdb74f26283a20",
+    "question_title": "Replace Consonants with Hash",
+    "primary_archetype": "Incremental debugger",
+    "outcome_category": "Full pass"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t2_py11_1-10-bad2c53a87bb459e9fcdb74f26283a20.rec",
+    "event_count": 83,
+    "duration_seconds": 101.101,
+    "base_speed": 18,
+    "max_idle_seconds": 2.0,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Task: transform text by replacing consonants. The student begins with runtime errors."
+    },
+    {
+      "timestamp": 21.638,
+      "event_index": 16,
+      "speed": 1.4,
+      "kind": "observation",
+      "text": "Runtime issues reduce, but now logic mismatches dominate. This is a healthy shift: code runs, but behavior is still off."
+    },
+    {
+      "timestamp": 54.454,
+      "event_index": 42,
+      "speed": 1.8,
+      "kind": "observation",
+      "text": "A temporary relapse into runtime errors appears after edits. They seem to keep testing in small loops."
+    },
+    {
+      "timestamp": 80.691,
+      "event_index": 63,
+      "speed": 1.8,
+      "kind": "observation",
+      "text": "Wrong-answer phase: likely refining condition checks and character handling edge cases."
+    },
+    {
+      "timestamp": 95.416,
+      "event_index": 74,
+      "speed": 1.0,
+      "kind": "breakthrough",
+      "text": "Public tests all pass. The core logic is now coherent."
+    },
+    {
+      "timestamp": 95.657,
+      "event_index": 75,
+      "speed": 1.0,
+      "kind": "breakthrough",
+      "text": "Private tests also pass immediately after. That usually means the fix generalized, not just overfit samples."
+    },
+    {
+      "timestamp": 101.101,
+      "event_index": 83,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Final submission reaches 100. A strong teaching example of incremental debugging discipline."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

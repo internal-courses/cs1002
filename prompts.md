@@ -1773,3 +1773,21 @@ Keep in mind that we'll have more analysis - and other things, not just analysis
 ---
 
 Commit all changes (including prompts.md) and push to GitHub.
+
+# Student replays (Codex, gpt-5.3-codex, xhigh)
+
+I want to help people understand student learning and error patterns - with examples where they can actually "watch" students solve them via asciicasts.
+
+These will be accompanied by narrative commentary. For example, beginning with what the problem is, explaining what learning or error pattern we're about to see, showing how the student begins, what they do and what they might be thinking while doing that, what worked but what failed, fast-forwarding to a later key moment, explaining what happened then that changed, etc.
+
+The structure of this will be an asciinema recording of a student solving a question, along with a JSON narrative commentary with {text, timestamp, speed, ...} that can be rendered as a synchronized commentary alongside the video.
+
+What would be the BEST examples, i.e. specific namespace/question/student combinations of solving a single problem that would be the most illustrative of the patterns we want to show?
+
+Go through all relevant content in this repository and identify the best examples, generate the asciicasts and the narrative commentary for each, and save these in `analysis/replay-<namespace>-<question>-<student>.{json,rec}`. Ensure that there's enough metadata associated with each replay, e.g. a title, a description, reason why this example is interesting, etc.
+
+## Student replay visualization
+
+Create an `analysis/replays.html` that lists all the student replays with their metadata, and allows users to click on any replay to watch the asciicast with the synchronized narrative commentary. Ensure that the interface is user-friendly and engaging, allowing users to easily understand the context of each replay and the insights it provides about student learning and error patterns.
+
+Update README.md and index.html with recent changes. Commit (including prompts.md) and push.

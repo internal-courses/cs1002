@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t3_py13_1-10-ee012cee3fa5491d8db37141d2a954fe",
+  "title": "Find Repeating Characters: Early Win, Long Regression",
+  "description": "A student reaches public success early, then repeatedly regresses and finishes with a partial private score.",
+  "why_interesting": "Strong example of regression: apparent progress does not hold under hidden tests or later edits.",
+  "tags": [
+    "regression",
+    "public-pass illusion",
+    "partial private score",
+    "unstable edits"
+  ],
+  "source": {
+    "namespace": "ns_25t3_py13_1",
+    "problem_id": 10,
+    "student_id": "ee012cee3fa5491d8db37141d2a954fe",
+    "question_title": "Find Characters Appearing More Than Once",
+    "primary_archetype": "Regression",
+    "outcome_category": "Partial pass"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t3_py13_1-10-ee012cee3fa5491d8db37141d2a954fe.rec",
+    "event_count": 218,
+    "duration_seconds": 60.23,
+    "base_speed": 30,
+    "max_idle_seconds": 1.2,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Goal: return characters that repeat. The session opens with runtime issues, common in first drafts."
+    },
+    {
+      "timestamp": 18.363,
+      "event_index": 26,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Public tests all pass surprisingly early. It may feel “done” at this point."
+    },
+    {
+      "timestamp": 18.654,
+      "event_index": 27,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Immediate private failure (33). Hidden cases likely include duplicates/order behavior not captured in public checks."
+    },
+    {
+      "timestamp": 25.814,
+      "event_index": 55,
+      "speed": 2.5,
+      "kind": "observation",
+      "text": "Now public quality drops too. This suggests the fix attempts are destabilizing previously working parts."
+    },
+    {
+      "timestamp": 33.603,
+      "event_index": 109,
+      "speed": 2.5,
+      "kind": "observation",
+      "text": "Private remains at zero in the middle phase. They may be changing code structure without re-validating invariants."
+    },
+    {
+      "timestamp": 46.949,
+      "event_index": 164,
+      "speed": 2.5,
+      "kind": "observation",
+      "text": "Still wrong-answer heavy deep into the session. Effort is high, but feedback loops are weak."
+    },
+    {
+      "timestamp": 58.515,
+      "event_index": 200,
+      "speed": 1.5,
+      "kind": "observation",
+      "text": "Late-stage private checks still fail. A key lesson: repeated execution is not the same as targeted debugging."
+    },
+    {
+      "timestamp": 60.23,
+      "event_index": 218,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Final submission ends at 33. Useful example for teaching regression control and checkpoint-based debugging."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

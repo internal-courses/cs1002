@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t2_py22_1-17-a970a89d08064dccb13e8d51ae6a07b5",
+  "title": "Reversed Squares: High Effort, Repeated Runtime Failures",
+  "description": "Very high activity with multiple submissions, but no successful pass state.",
+  "why_interesting": "Shows why sheer effort is not enough: repeated runs and submissions can still end in zero without targeted diagnosis.",
+  "tags": [
+    "thrasher",
+    "runtime-heavy",
+    "multiple failed submissions",
+    "high effort low yield"
+  ],
+  "source": {
+    "namespace": "ns_25t2_py22_1",
+    "problem_id": 17,
+    "student_id": "a970a89d08064dccb13e8d51ae6a07b5",
+    "question_title": "Reversed Squares of List Elements",
+    "primary_archetype": "Thrasher",
+    "outcome_category": "Submitted, zero"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t2_py22_1-17-a970a89d08064dccb13e8d51ae6a07b5.rec",
+    "event_count": 213,
+    "duration_seconds": 146.756,
+    "base_speed": 30,
+    "max_idle_seconds": 1.0,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Task: transform a list into reversed squared values. The session begins with runtime errors."
+    },
+    {
+      "timestamp": 36.137,
+      "event_index": 50,
+      "speed": 3.0,
+      "kind": "observation",
+      "text": "After dozens of attempts, runtime errors still dominate. Likely editing without isolating the first failing case."
+    },
+    {
+      "timestamp": 70.311,
+      "event_index": 100,
+      "speed": 3.0,
+      "kind": "observation",
+      "text": "Midway status is still similar: many attempts, little stability. A classic thrashing signature."
+    },
+    {
+      "timestamp": 104.774,
+      "event_index": 150,
+      "speed": 3.0,
+      "kind": "observation",
+      "text": "Late in the session, the same failure mode persists. They may be trying broad rewrites instead of minimal reproducible checks."
+    },
+    {
+      "timestamp": 140.393,
+      "event_index": 200,
+      "speed": 1.5,
+      "kind": "observation",
+      "text": "Some runs shift from runtime to wrong answer, but still no pass. Progress exists but is not consolidated."
+    },
+    {
+      "timestamp": 145.772,
+      "event_index": 210,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "First submission still has runtime failure (score 0)."
+    },
+    {
+      "timestamp": 145.772,
+      "event_index": 212,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Another submission also fails at runtime. This is a useful moment for discussing “stop-and-diagnose” interventions."
+    },
+    {
+      "timestamp": 146.756,
+      "event_index": 213,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Session ends without recovery. Strong example for coaching protocols that reduce unproductive loops."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

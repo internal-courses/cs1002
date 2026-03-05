@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t2_py22_1-15-60f6e5f27899406ea16a5470210db8d1",
+  "title": "Greeting Prefix: Thrashing to Stability",
+  "description": "Many rapid attempts with oscillation before converging to a correct final solution.",
+  "why_interesting": "Shows high-effort thrashing behavior that eventually self-corrects, useful for discussing process quality vs effort.",
+  "tags": [
+    "thrasher",
+    "high iteration",
+    "oscillation",
+    "eventual success"
+  ],
+  "source": {
+    "namespace": "ns_25t2_py22_1",
+    "problem_id": 15,
+    "student_id": "60f6e5f27899406ea16a5470210db8d1",
+    "question_title": "Check For Greeting Prefix",
+    "primary_archetype": "Thrasher",
+    "outcome_category": "Full pass"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t2_py22_1-15-60f6e5f27899406ea16a5470210db8d1.rec",
+    "event_count": 168,
+    "duration_seconds": 110.073,
+    "base_speed": 25,
+    "max_idle_seconds": 1.5,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Task: detect whether input starts with a greeting prefix. The student starts with runtime failures."
+    },
+    {
+      "timestamp": 27.375,
+      "event_index": 42,
+      "speed": 2.2,
+      "kind": "observation",
+      "text": "Even after many runs, still runtime-heavy. They may be “trying one more edit” without a stable debugging checkpoint."
+    },
+    {
+      "timestamp": 59.725,
+      "event_index": 81,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "First all-public pass appears. This often creates confidence, but private validation is the real gate."
+    },
+    {
+      "timestamp": 59.883,
+      "event_index": 82,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Private score drops to partial (67). Hidden inputs likely violate a string-handling assumption."
+    },
+    {
+      "timestamp": 89.835,
+      "event_index": 126,
+      "speed": 2.0,
+      "kind": "observation",
+      "text": "Regression phase: public correctness slips again. This is a hallmark of volatile code changes."
+    },
+    {
+      "timestamp": 106.549,
+      "event_index": 157,
+      "speed": 1.0,
+      "kind": "breakthrough",
+      "text": "Private all-pass arrives. The student finally aligns the logic for both visible and hidden cases."
+    },
+    {
+      "timestamp": 110.073,
+      "event_index": 166,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "First successful submission lands. The core problem is solved and verified."
+    },
+    {
+      "timestamp": 110.073,
+      "event_index": 168,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Repeat successful submission confirms stability. Good clip for discussing “thrashing can still recover, but at high cost.”"
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

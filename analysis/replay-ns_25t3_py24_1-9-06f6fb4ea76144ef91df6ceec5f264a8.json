@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t3_py24_1-9-06f6fb4ea76144ef91df6ceec5f264a8",
+  "title": "Vowels vs Consonants: Near Progress, No Submission",
+  "description": "Long attempt history with visible improvement late in the session, but no final submission.",
+  "why_interesting": "Important workflow pattern: students can get close (4/5) yet fail to convert progress into a submission.",
+  "tags": [
+    "thrasher",
+    "no submission",
+    "workflow gap",
+    "late improvement"
+  ],
+  "source": {
+    "namespace": "ns_25t3_py24_1",
+    "problem_id": 9,
+    "student_id": "06f6fb4ea76144ef91df6ceec5f264a8",
+    "question_title": "Count Strings With More Vowels Than Consonants",
+    "primary_archetype": "Thrasher",
+    "outcome_category": "Active, never submitted"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t3_py24_1-9-06f6fb4ea76144ef91df6ceec5f264a8.rec",
+    "event_count": 195,
+    "duration_seconds": 76.331,
+    "base_speed": 28,
+    "max_idle_seconds": 1.0,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Problem asks for counting strings where vowels exceed consonants. The student starts in runtime-error territory."
+    },
+    {
+      "timestamp": 18.829,
+      "event_index": 49,
+      "speed": 2.8,
+      "kind": "observation",
+      "text": "Still runtime-heavy after many runs. This suggests repeated edits without a stable debug baseline."
+    },
+    {
+      "timestamp": 38.296,
+      "event_index": 98,
+      "speed": 2.4,
+      "kind": "observation",
+      "text": "The mode shifts to wrong answers on public tests, which is progress: code runs, but logic is still incomplete."
+    },
+    {
+      "timestamp": 47.159,
+      "event_index": 120,
+      "speed": 2.4,
+      "kind": "observation",
+      "text": "Private checks are still failing. Hidden-case robustness remains unresolved."
+    },
+    {
+      "timestamp": 58.283,
+      "event_index": 147,
+      "speed": 2.0,
+      "kind": "observation",
+      "text": "Another runtime relapse appears, indicating instability under continued edits."
+    },
+    {
+      "timestamp": 67.336,
+      "event_index": 170,
+      "speed": 1.2,
+      "kind": "inflection",
+      "text": "Late breakthrough: public reaches 4/5. They may be one edge case away from a complete solution."
+    },
+    {
+      "timestamp": 75.577,
+      "event_index": 190,
+      "speed": 1.2,
+      "kind": "observation",
+      "text": "Private remains at zero, so confidence is still low or unresolved."
+    },
+    {
+      "timestamp": 76.331,
+      "event_index": 195,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Session ends at 4/5 public with no submission. This replay is ideal for discussing “last-mile” submission coaching."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

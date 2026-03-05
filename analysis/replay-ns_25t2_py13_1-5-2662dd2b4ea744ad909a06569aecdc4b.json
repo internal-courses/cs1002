@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t2_py13_1-5-2662dd2b4ea744ad909a06569aecdc4b",
+  "title": "Decreasing 4-Digit Number: Minimal-Change Solver",
+  "description": "A compact solving session with quick correction and fast finalization.",
+  "why_interesting": "Useful baseline example of efficient progress: few conceptual detours and rapid stabilization.",
+  "tags": [
+    "minimal-change solver",
+    "efficient path",
+    "quick recovery",
+    "full pass"
+  ],
+  "source": {
+    "namespace": "ns_25t2_py13_1",
+    "problem_id": 5,
+    "student_id": "2662dd2b4ea744ad909a06569aecdc4b",
+    "question_title": "Check If a Number is a Decreasing 4-Digit Number",
+    "primary_archetype": "Minimal-change solver",
+    "outcome_category": "Full pass"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t2_py13_1-5-2662dd2b4ea744ad909a06569aecdc4b.rec",
+    "event_count": 24,
+    "duration_seconds": 43.959,
+    "base_speed": 10,
+    "max_idle_seconds": 2.5,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Goal: validate whether digits strictly decrease left to right. The student starts with a runtime issue."
+    },
+    {
+      "timestamp": 12.5,
+      "event_index": 6,
+      "speed": 1.3,
+      "kind": "observation",
+      "text": "Still runtime-heavy early on, likely input parsing or indexing details."
+    },
+    {
+      "timestamp": 22.5,
+      "event_index": 10,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Public tests reach full pass quickly. The base rule is implemented correctly."
+    },
+    {
+      "timestamp": 30.0,
+      "event_index": 13,
+      "speed": 1.0,
+      "kind": "observation",
+      "text": "A brief regression (2/3). They may be testing a refinement that accidentally broke one case."
+    },
+    {
+      "timestamp": 40.234,
+      "event_index": 18,
+      "speed": 1.0,
+      "kind": "breakthrough",
+      "text": "Private tests pass at 100, indicating the fix generalized."
+    },
+    {
+      "timestamp": 43.959,
+      "event_index": 24,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Final submission also scores 100. This clip contrasts nicely with high-oscillation sessions."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}

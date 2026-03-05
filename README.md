@@ -19,6 +19,7 @@ Direct report/story pages:
 - Error-pattern story: https://sanand0.github.io/pyoppe/analysis/errors.html
 - Teachable cohort story: https://sanand0.github.io/pyoppe/analysis/teachable.html
 - Quick-fixes story: https://sanand0.github.io/pyoppe/analysis/quick-fixes.html
+- Replay gallery (asciicasts + synced commentary): https://sanand0.github.io/pyoppe/analysis/replays.html
 
 ## Purpose
 
@@ -30,6 +31,7 @@ This repo exists to answer practical exam-quality and student-learning questions
 - which intervention groups are most teachable now
 
 The project emphasizes reproducibility: generated analysis should be rerunnable from checked-in scripts + raw data.
+It also includes narrative replay artifacts so readers can watch concrete student problem-solving traces, not just aggregate metrics.
 
 ## Repository Structure
 
@@ -91,6 +93,9 @@ Additional focused outputs:
 - `analysis/thrashers_language.*`
 - `analysis/buddy_program_evaluation.*`
 - `analysis/quick-fixes.*`
+- `analysis/replays.html` (interactive replay catalog and player)
+- `analysis/replay-<namespace>-<question>-<student>.rec` (asciinema recordings)
+- `analysis/replay-<namespace>-<question>-<student>.json` (synced narrative + metadata)
 - `analysis/ERRORS-cluster-*.md` (detailed error writeups by question cluster)
 
 ## Data Model (quick view)
@@ -154,7 +159,25 @@ uv run analysis/generate_top4_cluster_error_reports.py
 uv run analysis/export_errors_json.py
 ```
 
-### 4) Build question catalog HTML (from question JSON)
+### 4) Generate student replay asciicasts
+
+Create a replay for one student-question attempt:
+
+```bash
+uv run --script analysis/generate_asciinema.py \
+  --namespace ns_25t2_py21_2 \
+  --problem-id 18 \
+  --student-id 2ee6740d56614ebbb3e68f6fe2992f28 \
+  --output analysis/replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28.rec
+```
+
+Then pair it with a narrative JSON (`analysis/replay-*.json`) containing:
+
+- replay metadata (`title`, `description`, `why_interesting`, tags, archetype/outcome)
+- playback pointers (`playback.rec_file`, duration, event_count)
+- synchronized commentary timeline entries (`timestamp`, `kind`, `text`, optional `speed`)
+
+### 5) Build question catalog HTML (from question JSON)
 
 ```bash
 cd problems
@@ -170,6 +193,7 @@ Start here:
 3. `analysis/ERRORS.md` + `analysis/ERRORS-cluster-*.md` for question-specific failure patterns.
 4. `analysis/quick-fixes.md` / `analysis/quick-fixes.html` for highest-impact low-effort test/prompt fixes.
 5. `analysis/teachable.md` / `analysis/teachable.html` for intervention targeting.
+6. `analysis/replays.html` for concrete, time-aligned examples of individual student processes.
 
 Interpretation notes:
 

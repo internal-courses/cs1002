@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PyOPPE Replays | Watch Student Problem Solving</title>
+  <meta name="description" content="Browse student problem-solving replays with synchronized commentary to understand learning patterns and error archetypes.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.css">
+  <style>
+    :root {
+      --bg: #f9f6ed;
+      --panel: #fffdf8;
+      --panel-strong: #ffffff;
+      --line: #d9d6cc;
+      --ink: #152229;
+      --muted: #5f6c73;
+      --accent: #0f776f;
+      --accent-soft: #e5f4f2;
+      --accent-2: #1f5b9e;
+      --warn: #ae5f11;
+      --shadow: 0 14px 36px rgba(21, 34, 41, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Outfit", sans-serif;
+      color: var(--ink);
+      line-height: 1.5;
+      background:
+        radial-gradient(70rem 30rem at 8% -10%, #d9ece8 0%, transparent 62%),
+        radial-gradient(56rem 28rem at 95% -5%, #f7e7cb 0%, transparent 60%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    .page {
+      width: min(1240px, 94vw);
+      margin: 0 auto;
+      padding: 2.4rem 0 2rem;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(2px);
+      animation: heroIn 650ms ease-out both;
+    }
+
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      border: 1px solid rgba(15, 119, 111, 0.36);
+      background: var(--accent-soft);
+      padding: 0.26rem 0.52rem;
+      border-radius: 999px;
+      display: inline-flex;
+      margin-bottom: 0.7rem;
+    }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.8rem, 4.5vw, 3.1rem);
+      line-height: 1.07;
+      margin-bottom: 0.7rem;
+      max-width: 22ch;
+    }
+
+    .lead {
+      color: var(--muted);
+      max-width: 74ch;
+      margin-bottom: 0.9rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .hero-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+
+    .hero-card h2 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .hero-card p {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(150px, 1fr));
+      gap: 0.6rem;
+      margin: 1rem 0;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.58rem 0.68rem;
+      font: inherit;
+      color: var(--ink);
+      background: var(--panel-strong);
+    }
+
+    .toolbar label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.24rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 390px) minmax(0, 1fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .catalog {
+      padding: 0.8rem;
+      max-height: calc(100vh - 160px);
+      overflow: auto;
+      position: sticky;
+      top: 0.8rem;
+    }
+
+    .catalog-header {
+      margin-bottom: 0.65rem;
+    }
+
+    .catalog-header h2 {
+      font-family: "Fraunces", serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .catalog-header p {
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .count-line {
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--accent-2);
+      font-size: 0.77rem;
+      margin: 0.55rem 0 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .card-list {
+      display: grid;
+      gap: 0.58rem;
+    }
+
+    .replay-card {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-strong);
+      text-align: left;
+      padding: 0.72rem;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .replay-card:hover {
+      transform: translateY(-1px);
+      border-color: rgba(15, 119, 111, 0.45);
+      box-shadow: 0 8px 14px rgba(21, 34, 41, 0.08);
+    }
+
+    .replay-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(15, 119, 111, 0.18);
+      background: #fbfffe;
+    }
+
+    .replay-card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.28rem;
+      line-height: 1.3;
+    }
+
+    .meta-line {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .chip {
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.44rem;
+      border: 1px solid rgba(31, 91, 158, 0.25);
+      background: #edf4fe;
+      color: #1f5b9e;
+    }
+
+    .chip.outcome {
+      border-color: rgba(174, 95, 17, 0.28);
+      background: #fff1df;
+      color: #8d4e10;
+    }
+
+    .chip.tag {
+      border-color: rgba(15, 119, 111, 0.3);
+      background: #e8f7f5;
+      color: #0f776f;
+      text-transform: none;
+    }
+
+    .replay-card p {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 12px;
+      padding: 0.9rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      background: #fff;
+    }
+
+    .viewer {
+      padding: 0.95rem;
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .viewer-head {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .viewer-head h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.35rem, 2.2vw, 2rem);
+      line-height: 1.18;
+    }
+
+    .viewer-head p {
+      color: var(--muted);
+      max-width: 88ch;
+    }
+
+    .stat-line {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      color: var(--accent-2);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .legend-item {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.73rem;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      padding: 0.2rem 0.4rem;
+      color: #1f2a2d;
+    }
+
+    .legend-item.save {
+      background: #8be9e4;
+      border-color: #60c8c2;
+    }
+
+    .legend-item.test {
+      background: #ffe08a;
+      border-color: #dfbc57;
+    }
+
+    .legend-item.submit {
+      background: #f5b4ff;
+      border-color: #d47ede;
+    }
+
+    .player-shell {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #0f1a1e;
+      min-height: 260px;
+    }
+
+    #playerMount {
+      min-height: 260px;
+    }
+
+    .commentary {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .commentary-head {
+      border-bottom: 1px solid var(--line);
+      padding: 0.72rem 0.84rem;
+      background: #f7fafb;
+    }
+
+    .commentary-head h3 {
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .commentary-head p {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .timeline-list {
+      max-height: 360px;
+      overflow: auto;
+      display: grid;
+      gap: 0.4rem;
+      padding: 0.75rem;
+    }
+
+    .timeline-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      padding: 0.55rem 0.6rem;
+      cursor: pointer;
+      display: grid;
+      gap: 0.24rem;
+      transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+    }
+
+    .timeline-item:hover {
+      border-color: rgba(15, 119, 111, 0.48);
+      transform: translateY(-1px);
+    }
+
+    .timeline-item.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(15, 119, 111, 0.18);
+      background: #fbfffe;
+    }
+
+    .timeline-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.73rem;
+      color: var(--accent-2);
+    }
+
+    .kind {
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 0.16rem 0.36rem;
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kind.intro {
+      background: #e6f1ff;
+      color: #1e5192;
+    }
+
+    .kind.observation {
+      background: #efe9ff;
+      color: #5f3ba4;
+    }
+
+    .kind.inflection {
+      background: #fff0de;
+      color: #95550f;
+    }
+
+    .kind.breakthrough {
+      background: #ddf8ec;
+      color: #0a7052;
+    }
+
+    .kind.outcome {
+      background: #fde8ef;
+      color: #a33857;
+    }
+
+    .timeline-text {
+      color: var(--ink);
+      font-size: 0.86rem;
+    }
+
+    .loading,
+    .error {
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 0.75rem;
+      color: var(--muted);
+      background: #fff;
+      font-size: 0.9rem;
+    }
+
+    .error {
+      border-color: #f2b5b5;
+      background: #fff6f6;
+      color: #7b2e2e;
+    }
+
+    .back-link {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.78rem;
+      margin-bottom: 0.55rem;
+      display: inline-flex;
+      text-decoration: none;
+    }
+
+    @keyframes heroIn {
+      from {
+        opacity: 0;
+        transform: translateY(9px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog {
+        max-height: none;
+        position: static;
+      }
+
+      .timeline-list {
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-label="Replay overview">
+      <a class="back-link" href="../index.html">&larr; Back to PyOPPE home</a>
+      <span class="kicker">Student Replay Gallery</span>
+      <h1>Watch how students actually solve coding questions</h1>
+      <p class="lead">
+        Each replay combines a real terminal timeline (save, test run, and submission events) with synchronized commentary. These examples make learning patterns visible: what students try first, where they get stuck, and what changes when progress finally happens.
+      </p>
+      <div class="hero-grid">
+        <article class="hero-card">
+          <h2>What you are seeing</h2>
+          <p>An anonymized, time-accurate reconstruction of one student solving one question.</p>
+        </article>
+        <article class="hero-card">
+          <h2>How to read it</h2>
+          <p>Use commentary markers to jump to key moments and understand the learning or error pattern.</p>
+        </article>
+        <article class="hero-card">
+          <h2>Why this matters</h2>
+          <p>Concrete examples help educators move from abstract metrics to actionable teaching choices.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Replay filters">
+      <label for="searchInput">Search
+        <input id="searchInput" type="search" placeholder="Search by title, question, tag, pattern...">
+      </label>
+      <label for="archetypeSelect">Archetype
+        <select id="archetypeSelect">
+          <option value="">All archetypes</option>
+        </select>
+      </label>
+      <label for="outcomeSelect">Outcome
+        <select id="outcomeSelect">
+          <option value="">All outcomes</option>
+        </select>
+      </label>
+    </section>
+
+    <section class="layout" aria-label="Replay browser and player">
+      <aside class="panel catalog" aria-label="Replay list">
+        <div class="catalog-header">
+          <h2>Replay Catalog</h2>
+          <p>Pick a replay to open the cast and timeline commentary.</p>
+        </div>
+        <div id="resultCount" class="count-line">Loading replays...</div>
+        <div id="replayCards" class="card-list" role="list"></div>
+      </aside>
+
+      <article class="panel viewer" aria-label="Replay viewer">
+        <div class="viewer-head">
+          <h2 id="viewerTitle">Select a replay</h2>
+          <p id="viewerDescription">Choose any replay card to start watching with synchronized notes.</p>
+          <div id="viewerStats" class="stat-line"></div>
+          <div class="legend" aria-label="Event legend">
+            <span class="legend-item save">SAVE event marker</span>
+            <span class="legend-item test">TEST RUN marker</span>
+            <span class="legend-item submit">SUBMISSION marker</span>
+          </div>
+        </div>
+
+        <div class="player-shell">
+          <div id="playerMount" class="loading">Loading player...</div>
+        </div>
+
+        <section class="commentary" aria-label="Synchronized narrative commentary">
+          <header class="commentary-head">
+            <h3>Synchronized Commentary</h3>
+            <p>Click a note to jump to that moment in the replay.</p>
+          </header>
+          <div id="timelineList" class="timeline-list"></div>
+        </section>
+      </article>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.min.js"></script>
+  <script>
+    const REPLAY_MANIFEST = [
+      "replay-ns_25t2_py11_1-10-bad2c53a87bb459e9fcdb74f26283a20.json",
+      "replay-ns_25t2_py13_1-5-2662dd2b4ea744ad909a06569aecdc4b.json",
+      "replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28.json",
+      "replay-ns_25t2_py22_1-15-60f6e5f27899406ea16a5470210db8d1.json",
+      "replay-ns_25t2_py22_1-17-a970a89d08064dccb13e8d51ae6a07b5.json",
+      "replay-ns_25t3_py13_1-10-ee012cee3fa5491d8db37141d2a954fe.json",
+      "replay-ns_25t3_py24_1-9-06f6fb4ea76144ef91df6ceec5f264a8.json"
+    ];
+
+    const state = {
+      replays: [],
+      filtered: [],
+      selectedId: null,
+      player: null,
+      syncTimer: null,
+      activeTimelineIndex: -1
+    };
+
+    const replayCardsEl = document.getElementById("replayCards");
+    const timelineListEl = document.getElementById("timelineList");
+    const resultCountEl = document.getElementById("resultCount");
+    const viewerTitleEl = document.getElementById("viewerTitle");
+    const viewerDescriptionEl = document.getElementById("viewerDescription");
+    const viewerStatsEl = document.getElementById("viewerStats");
+    const playerMountEl = document.getElementById("playerMount");
+    const searchInputEl = document.getElementById("searchInput");
+    const archetypeSelectEl = document.getElementById("archetypeSelect");
+    const outcomeSelectEl = document.getElementById("outcomeSelect");
+
+    function formatSeconds(seconds) {
+      const safe = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+      const total = Math.round(safe);
+      const mins = Math.floor(total / 60);
+      const secs = total % 60;
+      return `${mins}:${secs.toString().padStart(2, "0")}`;
+    }
+
+    function normalizeRecPath(recPath) {
+      if (!recPath) return "";
+      return recPath.startsWith("analysis/") ? recPath.slice("analysis/".length) : recPath;
+    }
+
+    function replaySearchText(replay) {
+      const source = replay.source || {};
+      const all = [
+        replay.title,
+        replay.description,
+        replay.why_interesting,
+        source.question_title,
+        source.primary_archetype,
+        source.outcome_category,
+        source.namespace,
+        String(source.problem_id || ""),
+        ...(replay.tags || [])
+      ].filter(Boolean);
+      return all.join(" ").toLowerCase();
+    }
+
+    function getSelectedReplay() {
+      return state.replays.find((replay) => replay.id === state.selectedId) || null;
+    }
+
+    function setError(message) {
+      replayCardsEl.innerHTML = `<div class="error">${message}</div>`;
+      resultCountEl.textContent = "Replay load failed";
+      viewerTitleEl.textContent = "Unable to load replays";
+      viewerDescriptionEl.textContent = "Check console for details and confirm replay JSON files are committed.";
+      playerMountEl.className = "error";
+      playerMountEl.textContent = message;
+      timelineListEl.innerHTML = "";
+    }
+
+    function fillFilterOptions() {
+      const archetypes = [...new Set(state.replays.map((replay) => replay.source?.primary_archetype).filter(Boolean))].sort();
+      const outcomes = [...new Set(state.replays.map((replay) => replay.source?.outcome_category).filter(Boolean))].sort();
+
+      archetypes.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        archetypeSelectEl.appendChild(option);
+      });
+
+      outcomes.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        outcomeSelectEl.appendChild(option);
+      });
+    }
+
+    function applyFilters() {
+      const query = searchInputEl.value.trim().toLowerCase();
+      const archetype = archetypeSelectEl.value;
+      const outcome = outcomeSelectEl.value;
+
+      state.filtered = state.replays.filter((replay) => {
+        const source = replay.source || {};
+        const matchesQuery = !query || replaySearchText(replay).includes(query);
+        const matchesArchetype = !archetype || source.primary_archetype === archetype;
+        const matchesOutcome = !outcome || source.outcome_category === outcome;
+        return matchesQuery && matchesArchetype && matchesOutcome;
+      });
+
+      renderReplayCards();
+
+      if (!state.filtered.some((replay) => replay.id === state.selectedId)) {
+        if (state.filtered.length > 0) {
+          selectReplay(state.filtered[0].id);
+        } else {
+          clearViewerForEmptyFilters();
+        }
+      } else {
+        markActiveCard();
+      }
+    }
+
+    function clearViewerForEmptyFilters() {
+      stopSyncTimer();
+      state.selectedId = null;
+      state.activeTimelineIndex = -1;
+      viewerTitleEl.textContent = "No replay matches your filters";
+      viewerDescriptionEl.textContent = "Try removing some filters or searching for a different pattern.";
+      viewerStatsEl.textContent = "";
+      playerMountEl.className = "empty";
+      playerMountEl.textContent = "No replay selected.";
+      timelineListEl.innerHTML = "<div class=\"empty\">No commentary to show.</div>";
+    }
+
+    function renderReplayCards() {
+      if (state.filtered.length === 0) {
+        replayCardsEl.innerHTML = "<div class=\"empty\">No replays found for this filter combination.</div>";
+        resultCountEl.textContent = "0 replays";
+        return;
+      }
+
+      resultCountEl.textContent = `${state.filtered.length} replay${state.filtered.length === 1 ? "" : "s"} shown`;
+      replayCardsEl.innerHTML = "";
+
+      state.filtered.forEach((replay) => {
+        const source = replay.source || {};
+        const playback = replay.playback || {};
+        const card = document.createElement("button");
+        card.type = "button";
+        card.className = "replay-card";
+        card.setAttribute("role", "listitem");
+        card.dataset.id = replay.id;
+        card.innerHTML = `
+          <h3>${replay.title}</h3>
+          <div class="meta-line">${source.namespace || "unknown namespace"} · Q${source.problem_id || "?"} · ${formatSeconds(playback.duration_seconds || 0)}</div>
+          <div class="chip-row">
+            <span class="chip">${source.primary_archetype || "Unknown archetype"}</span>
+            <span class="chip outcome">${source.outcome_category || "Unknown outcome"}</span>
+          </div>
+          <p>${replay.why_interesting || replay.description || ""}</p>
+          <div class="chip-row">
+            ${(replay.tags || []).slice(0, 3).map((tag) => `<span class="chip tag">${tag}</span>`).join("")}
+          </div>
+        `;
+        card.addEventListener("click", () => selectReplay(replay.id));
+        replayCardsEl.appendChild(card);
+      });
+
+      markActiveCard();
+    }
+
+    function markActiveCard() {
+      replayCardsEl.querySelectorAll(".replay-card").forEach((card) => {
+        const active = card.dataset.id === state.selectedId;
+        card.classList.toggle("active", active);
+        card.setAttribute("aria-pressed", active ? "true" : "false");
+      });
+    }
+
+    function disposePlayer() {
+      if (state.player && typeof state.player.dispose === "function") {
+        state.player.dispose();
+      }
+      state.player = null;
+      stopSyncTimer();
+      playerMountEl.innerHTML = "";
+      playerMountEl.className = "";
+    }
+
+    function stopSyncTimer() {
+      if (state.syncTimer) {
+        window.clearInterval(state.syncTimer);
+      }
+      state.syncTimer = null;
+    }
+
+    function renderTimeline(timeline) {
+      if (!timeline || timeline.length === 0) {
+        timelineListEl.innerHTML = "<div class=\"empty\">No commentary timeline found for this replay.</div>";
+        return;
+      }
+
+      timelineListEl.innerHTML = "";
+      timeline.forEach((note, index) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "timeline-item";
+        item.dataset.index = String(index);
+        item.dataset.timestamp = String(note.timestamp || 0);
+
+        const kind = String(note.kind || "observation").toLowerCase();
+        item.innerHTML = `
+          <div class="timeline-top">
+            <span>${formatSeconds(note.timestamp || 0)}</span>
+            <span class="kind ${kind}">${kind}</span>
+          </div>
+          <div class="timeline-text">${note.text || ""}</div>
+        `;
+
+        item.addEventListener("click", () => {
+          if (state.player && typeof state.player.seek === "function") {
+            state.player.seek(Number(note.timestamp || 0));
+            syncTimelineHighlight(true);
+          }
+        });
+
+        timelineListEl.appendChild(item);
+      });
+    }
+
+    function getPlayerCurrentTime() {
+      if (!state.player || typeof state.player.getCurrentTime !== "function") return 0;
+      const value = Number(state.player.getCurrentTime());
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    function findActiveTimelineIndex(timeline, timeSeconds) {
+      if (!timeline || timeline.length === 0) return -1;
+      let chosen = 0;
+      for (let i = 0; i < timeline.length; i += 1) {
+        if (Number(timeline[i].timestamp || 0) <= timeSeconds + 0.05) {
+          chosen = i;
+        } else {
+          break;
+        }
+      }
+      return chosen;
+    }
+
+    function syncTimelineHighlight(forceScroll) {
+      const replay = getSelectedReplay();
+      if (!replay) return;
+      const timeline = replay.timeline || [];
+      const now = getPlayerCurrentTime();
+      const nextIndex = findActiveTimelineIndex(timeline, now);
+
+      if (nextIndex === state.activeTimelineIndex && !forceScroll) return;
+      state.activeTimelineIndex = nextIndex;
+
+      timelineListEl.querySelectorAll(".timeline-item").forEach((item, index) => {
+        const isActive = index === nextIndex;
+        item.classList.toggle("active", isActive);
+        if (isActive && forceScroll) {
+          item.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      });
+    }
+
+    function startSyncTimer() {
+      stopSyncTimer();
+      state.syncTimer = window.setInterval(() => syncTimelineHighlight(false), 200);
+      syncTimelineHighlight(true);
+
+      if (state.player && typeof state.player.addEventListener === "function") {
+        ["seeked", "playing", "pause", "ended"].forEach((name) => {
+          state.player.addEventListener(name, () => syncTimelineHighlight(true));
+        });
+      }
+    }
+
+    function selectReplay(replayId) {
+      const replay = state.replays.find((candidate) => candidate.id === replayId);
+      if (!replay) return;
+
+      state.selectedId = replayId;
+      state.activeTimelineIndex = -1;
+      markActiveCard();
+
+      const source = replay.source || {};
+      const playback = replay.playback || {};
+      viewerTitleEl.textContent = replay.title || "Replay";
+      const detail = replay.description || "";
+      const why = replay.why_interesting ? ` Why this example matters: ${replay.why_interesting}` : "";
+      viewerDescriptionEl.textContent = `${detail}${why}`.trim();
+      viewerStatsEl.textContent = `${source.namespace || "unknown namespace"} · question ${source.problem_id || "?"} · ${source.question_title || "Unknown question"} · ${playback.event_count || 0} events · ${formatSeconds(playback.duration_seconds || 0)} replay`;
+
+      renderTimeline(replay.timeline || []);
+      disposePlayer();
+
+      const recPath = normalizeRecPath(playback.rec_file || `${replay.id}.rec`);
+      if (!window.AsciinemaPlayer || !recPath) {
+        playerMountEl.className = "error";
+        playerMountEl.textContent = "Asciinema player failed to initialize.";
+        return;
+      }
+
+      try {
+        state.player = window.AsciinemaPlayer.create(recPath, playerMountEl, {
+          fit: "width",
+          autoPlay: false,
+          preload: true,
+          controls: true,
+          loop: false,
+          speed: 1,
+          idleTimeLimit: 2,
+          cols: playback.terminal_width || 140,
+          rows: playback.terminal_height || 40
+        });
+        startSyncTimer();
+      } catch (error) {
+        console.error(error);
+        playerMountEl.className = "error";
+        playerMountEl.textContent = `Could not load cast file: ${recPath}`;
+      }
+    }
+
+    async function loadReplayJson(path) {
+      const response = await fetch(path, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${path}: ${response.status}`);
+      }
+      return response.json();
+    }
+
+    async function initialize() {
+      playerMountEl.className = "loading";
+      playerMountEl.textContent = "Loading replay catalog...";
+      timelineListEl.innerHTML = "<div class=\"loading\">Loading synchronized commentary...</div>";
+
+      try {
+        const data = await Promise.all(REPLAY_MANIFEST.map((path) => loadReplayJson(path)));
+        state.replays = data.sort((a, b) => {
+          const aEvents = Number(a.playback?.event_count || 0);
+          const bEvents = Number(b.playback?.event_count || 0);
+          return bEvents - aEvents;
+        });
+
+        fillFilterOptions();
+        applyFilters();
+
+        if (state.filtered.length > 0) {
+          selectReplay(state.filtered[0].id);
+        } else {
+          clearViewerForEmptyFilters();
+        }
+      } catch (error) {
+        console.error(error);
+        setError("Replay files could not be loaded. Verify replay JSON and REC files exist in analysis/.");
+      }
+    }
+
+    searchInputEl.addEventListener("input", applyFilters);
+    archetypeSelectEl.addEventListener("change", applyFilters);
+    outcomeSelectEl.addEventListener("change", applyFilters);
+
+    initialize();
+  </script>
+</body>
+</html>

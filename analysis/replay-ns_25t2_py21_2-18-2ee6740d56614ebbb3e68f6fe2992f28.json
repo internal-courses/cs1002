@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "id": "replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28",
+  "title": "Pangram Check: Public Pass, Private Miss, Then Fix",
+  "description": "A student repeatedly gets close, hits private-test edge cases, and eventually closes the gap.",
+  "why_interesting": "Classic “public tests pass but private tests fail” journey, with visible recovery and final success.",
+  "tags": [
+    "public-vs-private gap",
+    "edge-case debugging",
+    "volatile reworker",
+    "eventual mastery"
+  ],
+  "source": {
+    "namespace": "ns_25t2_py21_2",
+    "problem_id": 18,
+    "student_id": "2ee6740d56614ebbb3e68f6fe2992f28",
+    "question_title": "Pangram Check",
+    "primary_archetype": "Volatile reworker",
+    "outcome_category": "Full pass"
+  },
+  "playback": {
+    "rec_file": "analysis/replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28.rec",
+    "event_count": 107,
+    "duration_seconds": 71.443,
+    "base_speed": 22,
+    "max_idle_seconds": 1.8,
+    "terminal_width": 140,
+    "terminal_height": 40
+  },
+  "timeline": [
+    {
+      "timestamp": 0.0,
+      "event_index": 1,
+      "speed": 1.0,
+      "kind": "intro",
+      "text": "Problem setup: determine whether a sentence is a pangram (contains every letter). The student starts close but not fully correct."
+    },
+    {
+      "timestamp": 3.947,
+      "event_index": 5,
+      "speed": 1.0,
+      "kind": "observation",
+      "text": "First visible wobble: a runtime error appears. They may be thinking, “I broke something simple while trying to patch logic.”"
+    },
+    {
+      "timestamp": 24.555,
+      "event_index": 27,
+      "speed": 1.8,
+      "kind": "observation",
+      "text": "Long stretch of local edits: still stuck around partial public correctness. This is a pattern of patching symptoms, not yet the rule."
+    },
+    {
+      "timestamp": 46.974,
+      "event_index": 61,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Big moment: all public tests pass. It looks done, but this is often a false summit."
+    },
+    {
+      "timestamp": 47.223,
+      "event_index": 62,
+      "speed": 1.0,
+      "kind": "inflection",
+      "text": "Immediately after that, private tests fail. Hidden cases expose an assumption that public tests did not challenge."
+    },
+    {
+      "timestamp": 56.543,
+      "event_index": 81,
+      "speed": 2.0,
+      "kind": "observation",
+      "text": "Another loop: public looks green again, private is still unstable. They may be checking outputs instead of re-checking the core condition."
+    },
+    {
+      "timestamp": 70.647,
+      "event_index": 103,
+      "speed": 1.0,
+      "kind": "breakthrough",
+      "text": "Breakthrough: private tests finally pass. The underlying logic is now robust, not just sample-friendly."
+    },
+    {
+      "timestamp": 71.443,
+      "event_index": 107,
+      "speed": 1.0,
+      "kind": "outcome",
+      "text": "Final submission succeeds (100). This replay is useful for teaching why hidden-edge reasoning matters."
+    }
+  ],
+  "generated_at_utc": "2026-03-05T03:21:07+00:00"
+}
