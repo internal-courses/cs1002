@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PyOPPE | Coding Exam Analysis Home</title>
+  <meta name="description" content="PyOPPE explains what coding exam data says about where students get stuck, what helps, and how assessments can improve.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Manrope:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3e7;
+      --bg-soft: #e8f1ec;
+      --card: #fffdfa;
+      --ink: #1f2a2d;
+      --muted: #536167;
+      --line: #d6d8d4;
+      --teal: #0c7c72;
+      --blue: #2f69a8;
+      --orange: #c95e24;
+      --shadow: 0 10px 30px rgba(31, 42, 45, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Manrope", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(80rem 40rem at 8% -12%, #dbece5 0%, transparent 60%),
+        radial-gradient(58rem 30rem at 96% -8%, #f4e6ce 0%, transparent 58%),
+        var(--bg);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 3.8rem 0 2rem;
+      animation: enter 700ms ease-out both;
+    }
+
+    .kicker {
+      display: inline-block;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--teal);
+      border: 1px solid rgba(12, 124, 114, 0.3);
+      border-radius: 999px;
+      padding: 0.35rem 0.7rem;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2rem, 5.1vw, 4rem);
+      line-height: 1.08;
+      margin-bottom: 0.9rem;
+      max-width: 18ch;
+    }
+
+    .lead {
+      max-width: 64ch;
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      color: var(--muted);
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.62rem 1rem;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: white;
+      box-shadow: 0 8px 22px rgba(12, 124, 114, 0.26);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    section {
+      margin-top: 2.4rem;
+    }
+
+    h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.4rem, 2.2vw, 2rem);
+      margin-bottom: 0.6rem;
+    }
+
+    .subtle {
+      color: var(--muted);
+      max-width: 72ch;
+      margin-bottom: 1rem;
+    }
+
+    .explain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 0.8rem;
+    }
+
+    .explain-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .explain-card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .explain-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .section-stack {
+      display: grid;
+      gap: 1.25rem;
+      margin-top: 0.9rem;
+    }
+
+    .catalog-section {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1rem;
+      backdrop-filter: blur(2px);
+    }
+
+    .catalog-head {
+      margin-bottom: 0.7rem;
+    }
+
+    .catalog-head h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .catalog-head p {
+      color: var(--muted);
+      font-size: 0.94rem;
+      max-width: 84ch;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .story-card {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.9rem;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow);
+      transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .story-card.reveal {
+      animation: card-enter 420ms ease forwards;
+    }
+
+    .story-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(12, 124, 114, 0.45);
+      box-shadow: 0 14px 24px rgba(31, 42, 45, 0.12);
+    }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+      padding: 0.3rem 0.52rem;
+      color: var(--ink);
+      background: #e5f4f1;
+    }
+
+    .card-tag.alt {
+      background: #e8eef8;
+      color: #234a78;
+    }
+
+    .card-tag.other {
+      background: #f7eadf;
+      color: #7b3f1e;
+    }
+
+    .story-card h4 {
+      font-size: 1.02rem;
+      line-height: 1.25;
+      margin-bottom: 0.35rem;
+    }
+
+    .story-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .story-card .link-line {
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--blue);
+      font-size: 0.79rem;
+      word-break: break-all;
+    }
+
+    .future-box {
+      margin-top: 0.9rem;
+      border: 1px dashed rgba(12, 124, 114, 0.45);
+      border-radius: 14px;
+      padding: 0.9rem;
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    .future-box code {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      color: var(--blue);
+      background: #edf3fd;
+      border-radius: 6px;
+      padding: 0.1rem 0.36rem;
+    }
+
+    footer {
+      margin: 2.7rem 0 2.2rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--line);
+      padding-top: 0.95rem;
+    }
+
+    @keyframes enter {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes card-enter {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .explain-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <span class="kicker">PyOPPE · Home</span>
+      <h1>A plain-language guide to what coding exam data reveals</h1>
+      <p class="lead">
+        This project studies anonymized Python exam activity from 2025. It helps non-technical readers understand where students get stuck, what kinds of mistakes repeat, and what exam improvements may help real learners.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#explore">Explore the analysis stories</a>
+        <a class="btn btn-secondary" href="README.md">Read repository overview</a>
+      </div>
+    </header>
+
+    <section aria-labelledby="what-is-this">
+      <h2 id="what-is-this">What this repository does</h2>
+      <p class="subtle">
+        Think of this as a research notebook plus public report site: it starts from raw logs, rebuilds metrics with scripts, and publishes easy-to-read findings for educators and program teams.
+      </p>
+      <div class="explain-grid">
+        <article class="explain-card">
+          <h3>1) Collects evidence</h3>
+          <p>Uses anonymous event data like test runs and submissions from coding exams.</p>
+        </article>
+        <article class="explain-card">
+          <h3>2) Rebuilds results reproducibly</h3>
+          <p>All major numbers and tables come from scripts in this repo, so they can be rerun and audited.</p>
+        </article>
+        <article class="explain-card">
+          <h3>3) Turns data into decisions</h3>
+          <p>Publishes stories and practical recommendations: teaching support, exam design fixes, and intervention targeting.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="explore" aria-labelledby="explore-stories">
+      <h2 id="explore-stories">Explore pages</h2>
+      <p class="subtle">
+        Start with the core stories. Then browse alternate drafts and other resources.
+      </p>
+      <div class="section-stack" id="catalog-root"></div>
+    </section>
+
+    <section aria-labelledby="future-ready">
+      <h2 id="future-ready">Built for future additions</h2>
+      <p class="subtle">
+        This home page is data-driven: to add new cards or new sections (analysis or non-analysis), update a single list in the page script.
+      </p>
+      <div class="future-box">
+        Edit <code>HOME_SECTIONS</code> in this file to add more destinations.
+      </div>
+    </section>
+
+    <footer>
+      PyOPPE on GitHub Pages: <a href="https://sanand0.github.io/pyoppe/">sanand0.github.io/pyoppe</a>
+    </footer>
+  </main>
+
+  <script>
+    const HOME_SECTIONS = [
+      {
+        title: "Core Analysis Stories",
+        description: "Best starting points for a first-time reader with no prior context.",
+        items: [
+          {
+            kind: "analysis",
+            title: "Inside the Exam",
+            href: "analysis/report.html",
+            summary: "High-level story of what the full exam dataset says: where students succeed, where they struggle, and why."
+          },
+          {
+            kind: "analysis",
+            title: "The Error Fingerprints",
+            href: "analysis/errors.html",
+            summary: "Catalog of recurring student mistake patterns, with practical interpretation for instruction and assessment."
+          },
+          {
+            kind: "analysis",
+            title: "The Teachable 10%",
+            href: "analysis/teachable.html",
+            summary: "A process-first view of which students are most ready for targeted help right now."
+          },
+          {
+            kind: "analysis",
+            title: "Fix the Test, Not the Student",
+            href: "analysis/quick-fixes.html",
+            summary: "Low-effort, high-impact improvements to prompts and test cases that can reduce avoidable failures."
+          }
+        ]
+      },
+      {
+        title: "Alternative Analysis Views",
+        description: "Companion drafts/variants of the analysis stories that may still be useful for comparison.",
+        items: [
+          {
+            kind: "alternate",
+            title: "Error Fingerprints (Codex version)",
+            href: "analysis/errors-codex.html",
+            summary: "Alternate storytelling layout for the error-pattern analysis."
+          },
+          {
+            kind: "alternate",
+            title: "Teachable 1,311 (Gemini version)",
+            href: "analysis/teachable-gemini.html",
+            summary: "Alternative narrative of teachable-cohort targeting and intervention design."
+          },
+          {
+            kind: "alternate",
+            title: "Nine Fixes. Four Thousand Students.",
+            href: "analysis/quick-fixes-2.html",
+            summary: "Another quick-fix presentation focused on practical exam improvement priorities."
+          }
+        ]
+      },
+      {
+        title: "Other Resources",
+        description: "Pages beyond analysis stories, included here so this homepage can grow into a broader project index.",
+        items: [
+          {
+            kind: "other",
+            title: "Question Bank Browser",
+            href: "problems/all_questions.html",
+            summary: "Browse exam questions across namespaces and variants in one place."
+          }
+        ]
+      }
+    ];
+
+    const root = document.getElementById("catalog-root");
+
+    function tagClass(kind) {
+      if (kind === "alternate") return "card-tag alt";
+      if (kind === "other") return "card-tag other";
+      return "card-tag";
+    }
+
+    function tagText(kind) {
+      if (kind === "alternate") return "Alternate";
+      if (kind === "other") return "Resource";
+      return "Analysis";
+    }
+
+    HOME_SECTIONS.forEach((section) => {
+      const sectionEl = document.createElement("section");
+      sectionEl.className = "catalog-section";
+
+      const head = document.createElement("div");
+      head.className = "catalog-head";
+      head.innerHTML = `<h3>${section.title}</h3><p>${section.description}</p>`;
+      sectionEl.appendChild(head);
+
+      const grid = document.createElement("div");
+      grid.className = "card-grid";
+
+      section.items.forEach((item) => {
+        const card = document.createElement("a");
+        card.className = "story-card";
+        card.href = item.href;
+        card.innerHTML = `
+          <span class="${tagClass(item.kind)}">${tagText(item.kind)}</span>
+          <h4>${item.title}</h4>
+          <p>${item.summary}</p>
+          <div class="link-line">${item.href}</div>
+        `;
+        grid.appendChild(card);
+      });
+
+      sectionEl.appendChild(grid);
+      root.appendChild(sectionEl);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("reveal");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll(".story-card").forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

@@ -1740,3 +1740,36 @@ Plan like an expert. In this context, first think about:
 - What problems / failures would an expert anticipate that beginners may not be aware of?
 
 ... and then use your thoughts to create the AGENTS.md file.
+
+# Update README.md (Codex, gpt-5.3-codex, xhigh)
+
+Update README.md with details of this repository, including:
+
+- The purpose of the repository
+- The structure of the repository and what each folder/file contains
+- How to use the repository, including how to run the scripts, how to interpret the reports
+- Any other relevant information for users of the repository
+
+This repo is hosted via GitHub pages at https://sanand0.github.io/pyoppe/
+
+# Asciinema (Codex, gpt-5.3-codex, xhigh)
+
+Write a script `analysis/generate_asciinema.py` that generates an asciinema recording of a student solving a specific question.
+Include all save points, test runs, submissions, etc. in the recording.
+Include prominent and consistent indicators for each type of event (e.g. save, test run, submission) in the recording, so that it's easy to follow the student's process.
+Use the timestamps for accurate timing.
+Run and test it.
+
+This will be used later to embed asciicasts of specific students solving questions - as illustrations of specific error patterns, archetypes, etc. in the data stories.
+
+# Update home page (Codex, gpt-5.3-codex, xhigh)
+
+Create an index.html that acts as a home page for the analysis in this repo.
+Explain the purpose of this repo. (Read what material you need to understand this better.)
+Write for a layman who has no context.
+Link to the analysis/*.html pages as cards, with brief explanations.
+Keep in mind that we'll have more analysis - and other things, not just analysis - so structure it for extensibility.
+
+---
+
+Commit all changes (including prompts.md) and push to GitHub.
