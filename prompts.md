@@ -1423,7 +1423,7 @@ Write for a lay audience. ELI15.
 Convert the data in `analysis/ERRORS-cluster-*` into a structured `analysis/errors.json` for all the errors analyzed so far.
 Think carefully about the best data structure for this JSON to ensure it captures all the relevant information in a way that can be easily queried and visualized.
 
-## Visualize
+# Visualize
 
 Using analysis/README.md, prompts.md, analysis/evaluation.json, analysis/\* any other available content, write a **Narrative-driven Data Story** that synthesizes the patterns of student errors into a compelling narrative.
 
@@ -1445,7 +1445,7 @@ Beauty and aesthetics are key.
 
 Create this as a single errors.html (under analysis/) that loads errors.json and renders the narrative.
 
-### Update visualization with table and popups
+## Update visualization with table and popups
 
 I renamed `analysis/errors.html` to `analysis/errors-codex.html` and had Claude Code create a new `analysis/errors.html`. Read this new `analysis/errors.html` and update it to include a table covering the Cluster List from analysis/ERRORS.md. Show
 
@@ -1468,13 +1468,13 @@ Any reference to an archetype/fingerprint in the narrative should open the same 
 Update the chart under `What went wrong — 665 failing pangram submissions, broken down` so that clicking on any error pattern opens a popup showing examples of actual student code snippets that exhibit that error pattern, along with any other relevant data.
 Any reference to an error pattern for a question in the narrative should open the same popup.
 
-### Improve the narrative
+## Improve the narrative
 
 - Ensure that the table in Cluster List is in a wide column. Allow sorting it by any column.
 - Instead of rendering the Markdown when any row in the Cluster List table is clicked, open a popup with the same information rendered via `analysis/errors.json`, structured in a similar but much richer, hyperlinked way. Remove the "(from analysis/ERRORS.md)" part from the title but clicking on it should render `analysis/ERRORS.md` in the popup with syntax highlighting.
 - In the popup for the archetypes/fingerprints, include actual examples of student timelines (along with readable timestamps, e.g. 1:30 pm) that exemplify each archetype, along with annotations explaining how the timeline illustrates the archetype's characteristics / steps. Literally show one below the other, for a student, the sequence: the step (and step description), timestamp, the code, the test results, and any other relevant data. This will make the archetype descriptions much more concrete and actionable.
 
-### Improve the narrative 2
+## Improve the narrative 2
 
 - In the popup for the archetypes/fingerprints, when showing actual examples of student timelines, show it using a stepper. We should be able to see only one step (i.e. save, submission, etc.) at a time, with the code on the right and the other details on the left. Clicking on a "next" button or any stepper should update to the appropriate step. But the data we want to show remains the same.
 - When a popup is opened, ensure that the scroll is at the top. Otherwise, after scrolling down and clicking to open a popup, the new popup opens scrolled down, which is confusing.
@@ -1482,7 +1482,7 @@ Any reference to an error pattern for a question in the narrative should open th
 - Instead of showing popup notes like "Question context popup" or "Error pattern popup" showing up as cards in .pop-main, show a small tag at the right of the .pop-toolbar indicating "Question context" or "Error pattern" with a tooltip that explains what it means.
 - In the "What Should Change" section, link to popups wherever relevant - or introduce relevant examples in brackets with popups where that will help the reader understand the context better. Don't over-do this, though. Smooth flow of the narrative is key, so only add popups where they will clearly add value and insight.
 
-## Visualize report
+# Visualize report
 
 Using analysis/REPORT.md using any supporting material you need into a **Narrative-driven Data Story** that synthesizes the findings from the report.
 
@@ -1504,7 +1504,7 @@ Beauty and aesthetics are key.
 
 Create this as a single report.html (under analysis/) that loads required files and renders the narrative.
 
-## No private submissions analysis, 4 Mar 2026 (Codex, gpt-5.3-codex, xhigh)
+# No private submissions analysis, 4 Mar 2026 (Codex, gpt-5.3-codex, xhigh)
 
 Create a report analysis/no-private-submissions.csv that lists all student, namespace, question combinations where the student has made a public submission but not a private submission. Then create a no-private-submissions.md file that summarizes the findings in a human-readable format. Specifically:
 
@@ -1520,13 +1520,13 @@ NOTE: This question may be naive. Plan like an expert. In this context, first th
 
 ... and THEN answer.
 
-### Documentations
+## Documentations
 
 I've formatted `analysis/no-private-submissions.md` with prettier. No other changes.
 
 Prefix `analysis/no-private-submissions.md` with a simple, layman-friendly summary of the findings (ELI15) for an administrator, explaining what it means for a student to have only public submissions and no private submissions, and what implications this has for their learning and performance in the course. Then, summarize the findings in a simple way. Then recommend investigations / actions based on the findings.
 
-### Clarifications
+## Clarifications
 
 Does this mean that there were some students who, for a given question in a given namespace, ONLY made public submissions and NO private submissions for that question? This question came to my mind when I read `analysis/no-private-submissions.md`. So clarify this in the report - ideally with real examples of what you mean by showing a student's submission history that illustrates the point.
 
@@ -1534,7 +1534,7 @@ Does this mean that there were some students who, for a given question in a give
 
 Wait, we lost the ELI15 explanations - the quick summary for administrators, recommendations, etc. Ensure those are retained in re-runs.
 
-## Teachable 10% analysis
+# Teachable 10% analysis
 
 /compact
 
@@ -1555,7 +1555,7 @@ Ensure that the documentation in `analysis/teachable.md` is clear and accessible
 
 This ask ask may be naive. Plan like an expert - look for patterns, questions, problems / failures and expert would ask that a beginner would miss, reframe, then answer the real intent here.
 
-### Redefine teachability
+## Redefine teachability
 
 No, no, don't base the "Teachability" on scores. Based it on the pattern of errors they make, the way they engage with the platform, the concepts they struggle with, etc. - in other words, the rich data we have about their learning process and error patterns, not their scores. The next OPPE might contain completely different questions! So, write a decision tree explaining how to identify the most teachable (which might be about 10% - that's not the important point) and how to teach them with targeted interventions.
 
@@ -1565,11 +1565,11 @@ BY THE WAY, show who some of these students are and how many there are by decisi
 
 Using this, rewrite `analysis/teachable.*` and run.
 
-### Explain how to teach
+## Explain how to teach
 
 Update `analysis/teachable.md` via `analysis/teachable.py` to include a section that explains HOW to teach each segment of the teachable students. Just a few examples of specific interventions (ELI15, evocatively) for each segment.
 
-## Quick fixes
+# Quick fixes
 
 /compact
 
@@ -1581,7 +1581,7 @@ For example, if many students fail a question with multiple functions because th
 
 Think carefully about all such opportunities for quick wins. Research all the analysis in this folder, search online as required, and document these changes in `analysis/quick-fixes.md` with clear explanations of the problem, the proposed fix (original vs revised), and the expected impact. Prioritize these quick fixes based on their potential impact and ease of implementation.
 
-## Transcript analysis
+# Transcript analysis
 
 /compact
 
@@ -1595,7 +1595,7 @@ Document these proposed analyses in `analysis/2026-02-25-next-steps.md` with cle
 
 Write in simple language (ELI15) to be accessible to non-technical stakeholders, administrators, students, and laymen unfamiliar with this exam system.
 
-## Teachable Data Story (Codex, gpt-5.3-codex, xhigh)
+# Teachable Data Story (Codex, gpt-5.3-codex, xhigh)
 
 <!-- Tried GitHub Copilot CLI Yolo, Claude Sonnet 4.6, high: But it timed out. Twice. -->
 
@@ -1639,25 +1639,25 @@ Use tooltips, popups, interactions, and animations as informative and engaging a
 
 Plan the design and layout carefully before coding. Sketch the information architecture, interaction inventory, design tokens, performance sensitive paths, responsive breakpoints, etc.
 
-## Quick Fixes Data Story (GitHub Copilot CLI Yolo, Claude Sonnet 4.6, high)
+# Quick Fixes Data Story (GitHub Copilot CLI Yolo, Claude Sonnet 4.6, high)
 
 Write a data story `analysis/quick-fixes.html` explaining the insights from the quick-fixes analysis in `analysis/quick-fixes.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
 
 [Repeat interactions prompt fragment]
 
-## Quick Fixes Data Story 2 (Claude Code - Sonnet 4.6, high)
+# Quick Fixes Data Story 2 (Claude Code - Sonnet 4.6, high)
 
 Write a data story `analysis/quick-fixes-2.html` explaining the insights from the quick-fixes analysis in `analysis/quick-fixes.md`. Use all available data, code, reports, etc. as required to explain this to a lay audience in simple terms. Use the data story skill. Write in the same style as `analysis/errors.html` and `analysis/report.html`.
 
 [Repeat interactions prompt fragment]
 
-## Thrashers' language comprehension analysis
+# Thrashers' language comprehension analysis
 
 Is there any indication that the thrashers didn't understand the question, e.g. it's too complex for a native Hindi speaker to understand? Is this a statistically significant result?
 
 Save the analysis/answer in analysis/thrashers_language.{py,md,csv,...} with evidence.
 
-## Buddy program evaluation
+# Buddy program evaluation
 
 We're running a buddy program for repeaters. Based on the analysis we've done so far, comment on this program, i.e. what's good and should be strengthened, what's not as good and should be improved, what's missing that should be introduced, etc.
 
@@ -1714,8 +1714,29 @@ A few students seem to be focused only on attendance (aEUR")
 
 Save the results in buddy_program_evaluation.{py,md,csv,...} with evidence.
 
-### Simplify
+## Simplify
 
 This explanation is too complex. Rewrite the .md file (via the .py) to be layman friendly, ELI15, explaining terms like "thrashers", "success gap", "self-loop rate", etc. for a first-time reader. Use examples to illustrate the points. Make it engaging and easy to understand for someone who is not familiar with the course or the data.
 
 Commit as you go. Include prompts.md in your commit. Then push to GitHub.
+
+# Create agents (Codex, gpt-5.3-codex, xhigh)
+
+/compact
+
+---
+
+Create a minimal AGENTS.md that includes only:
+
+- Are non-obvious, i.e. instructions that an AI coding agent can't pick up from other sources in this repo or from its own common sense
+- Are invariant, i.e likely to stay relevant in the future
+- Are useful, i.e. patterns that have been used multiple times in the past
+
+Going through prompts.md, past conversations, repo structure, etc. may help with this.
+
+Plan like an expert. In this context, first think about:
+- What patterns would an expert in this field check / recognize that beginners would miss?
+- What questions would an expert ask that a beginner would not know to?
+- What problems / failures would an expert anticipate that beginners may not be aware of?
+
+... and then use your thoughts to create the AGENTS.md file.
