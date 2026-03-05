@@ -39,6 +39,7 @@ DEFAULT_OUT_DIR = ANALYSIS_DIR / "asciinema"
 
 CLEAR_SCREEN = "\x1b[2J\x1b[H"
 RESET = "\x1b[0m"
+EOL = "\r\n"
 
 EVENT_STYLE: dict[str, tuple[str, str]] = {
     "saved_code": ("SAVE", "\x1b[1;30;46m"),
@@ -332,7 +333,7 @@ def build_frame_text(
     else:
         lines.append("End of event timeline")
     lines.append("")
-    return "\n".join(lines)
+    return EOL.join(lines)
 
 
 def event_times(
