@@ -813,9 +813,14 @@
     }
 
     function getPlayerCurrentTime() {
-      if (!state.player || typeof state.player.getCurrentTime !== "function") return 0;
-      const value = Number(state.player.getCurrentTime());
-      return Number.isFinite(value) ? value : 0;
+      if (!state.player || typeof state.player.getCurrentTime !== "function") return null;
+      try {
+        const value = Number(state.player.getCurrentTime());
+        return Number.isFinite(value) ? value : null;
+      } catch (error) {
+        // asciinema can briefly report null internals during initial mount/loading.
+        return null;
+      }
     }
 
     function findActiveTimelineIndex(timeline, timeSeconds) {
@@ -836,6 +841,7 @@
       if (!replay) return;
       const timeline = replay.timeline || [];
       const now = getPlayerCurrentTime();
+      if (now === null) return;
       const nextIndex = findActiveTimelineIndex(timeline, now);
 
       if (nextIndex === state.activeTimelineIndex && !forceScroll) return;
@@ -853,7 +859,7 @@
     function startSyncTimer() {
       stopSyncTimer();
       state.syncTimer = window.setInterval(() => syncTimelineHighlight(false), 200);
-      syncTimelineHighlight(true);
+      window.setTimeout(() => syncTimelineHighlight(true), 0);
 
       if (state.player && typeof state.player.addEventListener === "function") {
         ["seeked", "playing", "pause", "ended"].forEach((name) => {
@@ -900,12 +906,14 @@
           cols: playback.terminal_width || 140,
           rows: playback.terminal_height || 40
         });
-        startSyncTimer();
       } catch (error) {
         console.error(error);
         playerMountEl.className = "error";
         playerMountEl.textContent = `Could not load cast file: ${recPath}`;
+        return;
       }
+
+      startSyncTimer();
     }
 
     async function loadReplayJson(path) {
