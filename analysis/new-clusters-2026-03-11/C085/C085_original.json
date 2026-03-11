@@ -1,0 +1,19 @@
+{
+  "public_testcase": [
+    {
+      "input": "is_equal(expand_sum_of_products('(a+b)(c+d)'), 'a*c + a*d + b*c + b*d')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(x+y)(z+w)'), 'x*z + x*w + y*z + y*w')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(1+5)(10+12)'), '1*10 + 1*12 + 5*10 + 5*12')\n",
+      "output": "True\n",
+      "weight": 1.0
+    }
+  ]
+}

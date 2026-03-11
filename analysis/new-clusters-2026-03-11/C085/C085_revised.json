@@ -1,0 +1,34 @@
+{
+  "public_testcase": [
+    {
+      "input": "is_equal(expand_sum_of_products('(p+q)(r+s)'), 'p*r + p*s + q*r + q*s')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(m+n)(u+v)'), 'm*u + m*v + n*u + n*v')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(x+y)(a+b)'), 'x*a + x*b + y*a + y*b')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(alpha+beta)(gamma+delta)'), 'alpha*gamma + alpha*delta + beta*gamma + beta*delta')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(123+45)(67+890)'), '123*67 + 123*890 + 45*67 + 45*890')\n",
+      "output": "True\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(expand_sum_of_products('(cat+dog)(sun+moon)'), 'cat*sun + cat*moon + dog*sun + dog*moon')\n",
+      "output": "True\n",
+      "weight": 1.0
+    }
+  ]
+}

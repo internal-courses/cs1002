@@ -1,0 +1,14 @@
+{
+  "public_testcase": [
+    {
+      "input": "is_equal(shuffle_sentence('apple banana orange', (0,2,1)))\n",
+      "output": "'apple orange banana'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('cat dog mouse', (2,1,0)))\n",
+      "output": "'mouse dog cat'\n",
+      "weight": 1.0
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "public_testcase": [
+    {
+      "input": "is_equal(shuffle_sentence('apple banana orange', (0,2,1)))\n",
+      "output": "'apple orange banana'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('cat dog mouse', (2,1,0)))\n",
+      "output": "'mouse dog cat'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('red blue green', (1,0,2)))\n",
+      "output": "'blue red green'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('alpha beta gamma', (2,0,1)))\n",
+      "output": "'gamma alpha beta'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('one two three', (1,2,0)))\n",
+      "output": "'two three one'\n",
+      "weight": 1.0
+    },
+    {
+      "input": "is_equal(shuffle_sentence('sun moon star', (0,1,2)))\n",
+      "output": "'sun moon star'\n",
+      "weight": 1.0
+    }
+  ]
+}
