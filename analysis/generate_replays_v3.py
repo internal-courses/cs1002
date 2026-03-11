@@ -2,7 +2,8 @@
 """
 Generate analysis/replays-v3.html - a slideshow walkthrough of 7 student replays.
 """
-import json, re, html, difflib
+import json, re, html, difflib, tokenize, io
+import token as _tk
 
 def parse_rec(fname):
     events = []
@@ -62,7 +63,86 @@ def compute_diff_highlights(code_a, code_b):
             changed.extend(range(j1+1, j2+1))
     return added, changed
 
-# ─── SLIDE DATA ───────────────────────────────────────────────────────────────
+# ─── PYTHON SYNTAX HIGHLIGHTER ────────────────────────────────────────────────
+
+_PY_KEYWORDS = frozenset({
+    'False','None','True','and','as','assert','async','await','break',
+    'class','continue','def','del','elif','else','except','finally',
+    'for','from','global','if','import','in','is','lambda','nonlocal',
+    'not','or','pass','raise','return','try','while','with','yield',
+})
+_PY_BUILTINS = frozenset({
+    'abs','all','any','bin','bool','callable','chr','dict','dir','divmod',
+    'enumerate','eval','exec','filter','float','format','getattr','globals',
+    'hasattr','hash','help','hex','id','input','int','isinstance','issubclass',
+    'iter','len','list','locals','map','max','min','next','object','oct',
+    'open','ord','pow','print','property','range','repr','reversed','round',
+    'set','setattr','slice','sorted','staticmethod','str','sum','super',
+    'tuple','type','vars','zip',
+})
+
+def _classify(tok_type, tok_string):
+    if tok_type == _tk.COMMENT:   return 'tk-cmt'
+    if tok_type == _tk.STRING:    return 'tk-str'
+    if tok_type == _tk.NUMBER:    return 'tk-num'
+    if tok_type == _tk.NAME:
+        if tok_string in _PY_KEYWORDS: return 'tk-kw'
+        if tok_string in _PY_BUILTINS: return 'tk-bi'
+        return None
+    if tok_type == _tk.OP:
+        if tok_string in '()[]{}': return 'tk-brk'
+        return 'tk-op'
+    return None
+
+def highlight_python(code):
+    """Return list of per-line HTML strings with syntax highlighting spans."""
+    raw_lines = code.split('\n')
+    result = [html.escape(l) if l else '' for l in raw_lines]
+    try:
+        toks = list(tokenize.generate_tokens(io.StringIO(code).readline))
+    except tokenize.TokenError:
+        return result
+
+    # Map token positions back to lines
+    skip = {_tk.NEWLINE, _tk.NL, _tk.ENDMARKER, _tk.ENCODING,
+            _tk.INDENT, _tk.DEDENT, _tk.ERRORTOKEN}
+    line_spans = [[] for _ in raw_lines]  # list of (scol, ecol, class) per line
+
+    for tok in toks:
+        ttype, tstring, (sr, sc), (er, ec), _ = tok
+        if ttype in skip:
+            continue
+        cls = _classify(ttype, tstring)
+        if not cls:
+            continue
+        # Handle tokens spanning multiple lines (e.g. triple-quoted strings)
+        for row in range(sr, min(er + 1, len(raw_lines) + 1)):
+            li = row - 1
+            if li < 0 or li >= len(raw_lines):
+                continue
+            line = raw_lines[li]
+            s = sc if row == sr else 0
+            e = ec if row == er else len(line)
+            line_spans[li].append((s, e, cls))
+
+    for li, spans in enumerate(line_spans):
+        if not spans:
+            continue
+        line = raw_lines[li]
+        parts = []
+        cur = 0
+        for s, e, cls in sorted(spans):
+            if s > cur:
+                parts.append(html.escape(line[cur:s]))
+            parts.append(f'<span class="{cls}">{html.escape(line[s:e])}</span>')
+            cur = e
+        if cur < len(line):
+            parts.append(html.escape(line[cur:]))
+        result[li] = ''.join(parts)
+
+    return result
+
+# ─── SLIDE DATA ────────────────────────────────────────────────────────────────
 
 BASE = '/home/vscode/code/pyoppe/analysis'
 
@@ -87,6 +167,7 @@ def make_code_slide(ev, prev_ev=None, heading='', body='', manual_highlight=None
     prev_code = prev_ev.get('code', '') if prev_ev else None
     added, changed = compute_diff_highlights(prev_code, code) if prev_code else ([], [])
     hi = manual_highlight or []
+    time_val = elapsed if elapsed is not None else (ev['time'] if ev else 0)
     return {
         'type': 'code',
         'code': code,
@@ -97,7 +178,8 @@ def make_code_slide(ev, prev_ev=None, heading='', body='', manual_highlight=None
         'tests_pass': ev.get('tests_pass', 0) if ev else 0,
         'tests_total': ev.get('tests_total', 0) if ev else 0,
         'visibility': ev.get('visibility', 'public') if ev else 'public',
-        'time_label': f"{elapsed or (ev['time'] if ev else 0):.0f}s",
+        'time_val': time_val,
+        'time_label': f"{time_val:.0f}s",
         'heading': heading,
         'body': body,
     }
@@ -117,6 +199,7 @@ REPLAY1 = {
     'question': 'Replace Consonants with Hash',
     'namespace': 'ns_25t2_py11_1',
     'duration': '1:41',
+    'total_duration': 101,
     'outcome': 'Score 100 ✓',
     'outcome_class': 'pass',
     'insight': 'A patient debugger who cycled through many failures before landing a clean, generalised solution. The key? Each bug fix moved toward understanding, not just passing tests.',
@@ -192,6 +275,7 @@ REPLAY2 = {
     'question': 'Check If a Number is a Decreasing 4-Digit Number',
     'namespace': 'ns_25t2_py13_1',
     'duration': '0:44',
+    'total_duration': 44,
     'outcome': 'Score 100 ✓',
     'outcome_class': 'pass',
     'insight': 'A lean, focused session. Fix one thing, test, repeat. No over-engineering, no thrashing. This is what good debugging rhythm looks like — and it\'s rare.',
@@ -263,6 +347,7 @@ REPLAY3 = {
     'question': 'Pangram Check',
     'namespace': 'ns_25t2_py21_2',
     'duration': '1:11',
+    'total_duration': 71,
     'outcome': 'Score 100 ✓',
     'outcome_class': 'pass',
     'insight': 'The classic "false summit." The student passed all public tests but failed private ones — then had to figure out why without seeing the hidden test cases.',
@@ -339,6 +424,7 @@ REPLAY4 = {
     'question': 'Check For Greeting Prefix',
     'namespace': 'ns_25t2_py22_1',
     'duration': '1:50',
+    'total_duration': 110,
     'outcome': 'Score 100 ✓',
     'outcome_class': 'pass',
     'insight': 'High oscillation, high eventual success. The student spent 60 seconds runtime-looping before stabilizing. The final solution — after all the complexity — is just two startswith() calls.',
@@ -414,6 +500,7 @@ REPLAY5 = {
     'question': 'Reversed Squares of List Elements',
     'namespace': 'ns_25t2_py22_1',
     'duration': '2:27',
+    'total_duration': 147,
     'outcome': 'Score 0 ✗',
     'outcome_class': 'fail',
     'insight': 'The session that never stabilized. 213 attempts, no passing submission. A master class in unproductive loops — and why "try more" is not the same as "debug more."',
@@ -485,6 +572,7 @@ REPLAY6 = {
     'question': 'Find Characters Appearing More Than Once',
     'namespace': 'ns_25t3_py13_1',
     'duration': '1:00',
+    'total_duration': 60,
     'outcome': 'Score 33 ✗',
     'outcome_class': 'partial',
     'insight': 'A working solution at 18 seconds — then dismantled. The student passed all public tests, then "improved" the code until it broke, and never recovered their early success.',
@@ -561,6 +649,7 @@ REPLAY7 = {
     'question': 'Count Strings With More Vowels Than Consonants',
     'namespace': 'ns_25t3_py24_1',
     'duration': '1:16',
+    'total_duration': 76,
     'outcome': 'No submission',
     'outcome_class': 'none',
     'insight': 'The student never submitted — not because they ran out of time, but because they never felt confident enough to commit. A case study in the "last-mile gap" between near-working code and pressing submit.',
@@ -650,51 +739,59 @@ def status_icon(summary):
     if 'wrong' in s: return '✗'
     return '?'
 
-def render_code_block(code, added, changed, highlight):
-    """Render code with line highlights.
-    If manual highlight lines are given, suppress diff highlights (they'd be noise).
-    """
+def render_code_block(code, added, changed, highlight, annotation=''):
+    """Render code with syntax highlighting, line highlights, and inline annotation callout."""
     if not code or not code.strip():
-        return '<div class="code-empty">No code changes in this event.</div>'
+        return '<div class="code-empty">No code yet.</div>'
     lines = code.split('\n')
-    # Suppress diff colours when manual focus lines are specified
     show_diff = not highlight
+    hi_set = set(highlight)
+    add_set = set(added)
+    chg_set = set(changed)
+    last_hi = max(highlight) if highlight else None
+
+    hl_lines = highlight_python(code)
+
     out = ['<pre class="code-block"><code>']
-    for i, line in enumerate(lines):
+    for i, raw in enumerate(lines):
         ln = i + 1
-        classes = ['code-line']
-        if ln in highlight:
-            classes.append('hl-focus')
-        elif show_diff and ln in added:
-            classes.append('hl-added')
-        elif show_diff and ln in changed:
-            classes.append('hl-changed')
-        line_esc = esc(line) if line else '\u00a0'  # non-breaking space for empty lines
-        out.append(f'<span class="{" ".join(classes)}" data-ln="{ln}">{line_esc}</span>')
+        cls = ['code-line']
+        if ln in hi_set:          cls.append('hl-focus')
+        elif show_diff and ln in add_set: cls.append('hl-added')
+        elif show_diff and ln in chg_set: cls.append('hl-changed')
+        inner = hl_lines[i] if i < len(hl_lines) else html.escape(raw)
+        if not inner: inner = '\u00a0'
+        out.append(f'<span class="{" ".join(cls)}" data-ln="{ln}">{inner}</span>')
+        # Inject inline annotation callout immediately after the last highlighted line
+        if ln == last_hi and annotation:
+            ann_html = html.escape(annotation)
+            out.append(f'<span class="code-ann" role="note" aria-label="Annotation">'
+                        f'<span class="code-ann-arrow">▲</span>'
+                        f'<span class="code-ann-text">{ann_html}</span>'
+                        f'</span>')
     out.append('</code></pre>')
-    return '\n'.join(out)
+    return ''.join(out)
 
 def render_slide(slide, slide_idx, replay_id):
     stype = slide['type']
-    
+    sid = f'{replay_id}-s{slide_idx}'
+
     if stype == 'intro':
-        wlf = ''.join(f'<li>{item}</li>' for item in slide.get('what_to_look_for', []))
+        wlf = ''.join(f'<li>{esc(item)}</li>' for item in slide.get('what_to_look_for', []))
         return f'''
-<div class="slide slide-intro" id="{replay_id}-s{slide_idx}">
-  <div class="slide-content slide-content-intro">
-    <div class="slide-left">
-      <div class="slide-badge badge-intro">The Problem</div>
-      <h2 class="slide-heading">{esc(slide["heading"])}</h2>
-      <div class="question-desc">{slide["question_desc"]}</div>
-      <div class="why-box">
-        <div class="why-label">Why this replay?</div>
-        <p>{esc(slide["why"])}</p>
-      </div>
+<div class="slide slide-intro" id="{sid}">
+  <div class="intro-layout">
+    <div class="intro-top">
+      <h2 class="intro-heading">{slide["question_desc"]}</h2>
     </div>
-    <div class="slide-right slide-right-intro">
-      <div class="look-for-box">
-        <div class="look-for-label">👁 What to look for</div>
-        <ul class="look-for-list">{wlf}</ul>
+    <div class="intro-cols">
+      <div class="intro-col intro-why">
+        <div class="intro-col-label">Why this replay?</div>
+        <p class="intro-col-text">{esc(slide["why"])}</p>
+      </div>
+      <div class="intro-col intro-look">
+        <div class="intro-col-label">👁 What to watch for</div>
+        <ul class="intro-look-list">{wlf}</ul>
       </div>
     </div>
   </div>
@@ -709,92 +806,102 @@ def render_slide(slide, slide_idx, replay_id):
         sc = status_class(status)
         si = status_icon(status)
         code_html = render_code_block(
-            slide.get('code',''),
-            slide.get('added',[]),
-            slide.get('changed',[]),
-            slide.get('highlight',[])
+            slide.get('code', ''),
+            slide.get('added', []),
+            slide.get('changed', []),
+            slide.get('highlight', []),
+            annotation=slide.get('heading', ''),
         )
+        legend = ''
+        if not slide.get('highlight'):
+            legend = '<span class="leg"><span class="leg-sw hl-added"></span>New</span><span class="leg"><span class="leg-sw hl-changed"></span>Changed</span>'
         return f'''
-<div class="slide slide-code" id="{replay_id}-s{slide_idx}">
-  <div class="slide-content slide-content-code">
-    <div class="slide-code-panel">
-      <div class="code-header">
-        <div class="code-header-left">
-          <span class="time-badge">{esc(time_label)}</span>
-          <span class="vis-badge vis-{vis}">{vis}</span>
-        </div>
-        <div class="{sc} status-badge">{si} {esc(status)} &nbsp; {tests_pass}/{tests_total}</div>
-      </div>
-      <div class="code-scroll-area" data-first-focus="{(slide.get('highlight') or [None])[0] or ''}">{code_html}</div>
+<div class="slide slide-code" id="{sid}">
+  <div class="code-scroll-area">{code_html}</div>
+  <div class="commentary-strip">
+    <div class="strip-meta">
+      <span class="s-time">{esc(time_label)}</span>
+      <span class="s-vis s-vis-{vis}">{vis}</span>
+      <span class="s-status {sc}">{si} {esc(status)} &thinsp; <strong>{tests_pass}/{tests_total}</strong></span>
+      {legend}
     </div>
-    <div class="slide-commentary">
-      <h3 class="commentary-heading">{esc(slide["heading"])}</h3>
-      <div class="commentary-body">{slide["body"]}</div>
-      <div class="diff-legend">
-        <span class="legend-item"><span class="legend-swatch hl-focus-sw"></span>Focus</span>
-        {'<span class="legend-item"><span class="legend-swatch hl-added-sw"></span>New</span><span class="legend-item"><span class="legend-swatch hl-changed-sw"></span>Changed</span>' if not slide.get('highlight') else ''}
-      </div>
-    </div>
+    <div class="strip-body">{slide.get("body", "")}</div>
   </div>
 </div>'''
 
     elif stype == 'summary':
-        bullets = ''.join(f'<li>{b}</li>' for b in slide.get('bullets', []))
+        cards = ''.join(
+            f'<div class="summary-card">{b}</div>'
+            for b in slide.get('bullets', [])
+        )
+        intervention = slide.get('intervention', '')
+        int_block = f'<div class="intervention-box"><span class="int-icon">💡</span><div class="int-text">{intervention}</div></div>' if intervention else ''
         return f'''
-<div class="slide slide-summary" id="{replay_id}-s{slide_idx}">
-  <div class="slide-content slide-content-summary">
-    <div class="slide-left">
-      <div class="slide-badge badge-summary">Key Takeaways</div>
-      <h2 class="slide-heading">{esc(slide["heading"])}</h2>
-      <ul class="summary-bullets">{bullets}</ul>
-    </div>
-    <div class="slide-right">
-      <div class="intervention-box">
-        <div class="intervention-label">💡 Instructor Intervention</div>
-        <p>{slide.get("intervention","")}</p>
-      </div>
-    </div>
+<div class="slide slide-summary" id="{sid}">
+  <div class="summary-layout">
+    <h2 class="summary-heading">{esc(slide["heading"])}</h2>
+    <div class="summary-cards">{cards}</div>
+    {int_block}
   </div>
 </div>'''
     return ''
 
 def render_replay_section(replay):
     rid = replay['id']
+    rnum = rid[1]
     slides_html = []
     for i, slide in enumerate(replay['slides']):
         slides_html.append(render_slide(slide, i, rid))
-    
+
     oc = replay.get('outcome_class', 'pass')
-    outcome_cls = f'outcome-{oc}'
-    tags = ' '.join(f'<span class="tag">{esc(t)}</span>' for t in replay.get('tags', []))
-    
+    total_dur = replay.get('total_duration', 60)
+
+    # Build timeline dots from code slides (those with time_val)
+    timeline_dots = []
+    code_slide_times = []
+    for i, slide in enumerate(replay['slides']):
+        tv = slide.get('time_val')
+        if tv is not None:
+            pct = min(100, max(0, tv / total_dur * 100))
+            code_slide_times.append({'idx': i, 'pct': pct, 'label': slide.get('time_label', '')})
+    # Store as JSON attr for JS
+    import json as _json
+    tl_json = _json.dumps(code_slide_times)
+
     return f'''
 <!-- ═══ REPLAY: {esc(replay["title"])} ═══ -->
-<section class="replay-section" id="replay-{rid}" data-replay="{rid}" data-slide-count="{len(replay['slides'])}">
+<section class="replay-section" id="replay-{rid}"
+  data-replay="{rid}" data-slide-count="{len(replay['slides'])}"
+  data-rnum="{rnum}" data-timeline='{tl_json}' data-total-dur="{total_dur}">
   <div class="replay-header">
-    <div class="replay-header-left">
-      <div class="replay-number">Replay {rid[1]}/7</div>
-      <div class="replay-meta-row">
-        <span class="replay-question">{esc(replay.get("question",""))}</span>
-        <span class="replay-duration">⏱ {esc(replay.get("duration",""))}</span>
-        <span class="replay-outcome {outcome_cls}">{esc(replay.get("outcome",""))}</span>
-      </div>
-      <h2 class="replay-title">{esc(replay["title"])}</h2>
-      <p class="replay-subtitle">{esc(replay["subtitle"])}</p>
-      <div class="replay-tags">{tags}</div>
+    <div class="rh-left">
+      <button class="rh-back" onclick="showCover()" title="All replays">← Index</button>
+      <span class="rh-num">Replay {rnum}/7</span>
+      <span class="rh-sep">·</span>
+      <span class="rh-title">{esc(replay["title"])}</span>
+      <span class="rh-sep">·</span>
+      <span class="rh-question">{esc(replay.get("question",""))}</span>
     </div>
-    <button class="toc-back-btn" onclick="showCover()">← All Replays</button>
+    <div class="rh-right">
+      <span class="rh-dur">⏱ {esc(replay.get("duration",""))}</span>
+      <span class="rh-outcome outcome-{oc}">{esc(replay.get("outcome",""))}</span>
+    </div>
   </div>
-  
+  <div class="timeline-bar" id="tl-{rid}">
+    <div class="tl-track">
+      <div class="tl-fill" id="tl-fill-{rid}"></div>
+    </div>
+    <div class="tl-dots" id="tl-dots-{rid}"></div>
+    <div class="tl-label" id="tl-label-{rid}">0s</div>
+  </div>
   <div class="slides-container" id="slides-{rid}">
     {"".join(slides_html)}
   </div>
-  
   <div class="slide-nav" id="nav-{rid}">
-    <button class="nav-btn" id="prev-{rid}" onclick="prevSlide('{rid}')" disabled>← Prev</button>
+    <button class="nav-btn" id="prev-{rid}" onclick="prevSlide('{rid}')" disabled>&#8592;</button>
     <div class="slide-dots" id="dots-{rid}"></div>
-    <div class="slide-counter" id="counter-{rid}">1 / {len(replay['slides'])}</div>
-    <button class="nav-btn" id="next-{rid}" onclick="nextSlide('{rid}')">Next →</button>
+    <span class="slide-counter" id="counter-{rid}">1&thinsp;/&thinsp;{len(replay['slides'])}</span>
+    <button class="nav-btn" id="next-{rid}" onclick="nextSlide('{rid}')">&#8594;</button>
   </div>
 </section>'''
 
@@ -857,666 +964,432 @@ HTML_HEAD = '''<!DOCTYPE html>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ── Reset & Variables ─────────────────────────── */
+    /* ── Reset & Vars ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg:          #f5f2e9;
-      --surface:     #fffdf8;
-      --surface2:    #ffffff;
-      --border:      #ddd9cf;
-      --ink:         #152229;
-      --muted:       #5a6670;
-      --accent:      #0f776f;
-      --accent-lite: #e0f4f2;
-      --accent2:     #1b5da3;
-      --warn:        #a05400;
-      --warn-lite:   #fef3e2;
-      --err:         #b92035;
-      --err-lite:    #fde8ea;
-      --ok:          #1a7d44;
-      --ok-lite:     #e0f5ea;
-      --code-bg:     #0d1117;
-      --code-ink:    #c9d1d9;
-      --shadow:      0 8px 32px rgba(21,34,41,0.12);
-      --shadow-lg:   0 20px 60px rgba(21,34,41,0.18);
-      --radius:      16px;
-      --radius-sm:   8px;
+      --bg:       #1a1f2e;
+      --ink:      #e8ecf0;
+      --muted:    #8b9bb4;
+      --border:   #2d3548;
+      --surface:  #222736;
+      --surface2: #2a3042;
+      --accent:   #3dd6c8;
+      --accent2:  #5b9cf6;
+      --warn:     #f0a842;
+      --err:      #f05869;
+      --ok:       #3dd68c;
+      --code-bg:  #0d1117;
+      --code-ink: #c9d1d9;
+      --ann-bg:   #1c2b3a;
+      --ann-border: #3dd6c8;
+      --ann-ink:  #e8ecf0;
+      --strip-bg: #1e2535;
+      --strip-border: #2d3548;
+      --hdr-bg:   #141824;
+      --hdr-ink:  #c8d0de;
+      --tl-bg:    #111622;
+      --r: 10px;
     }
-
-    html, body { height: 100%; }
+    html, body { height: 100%; overflow: hidden; }
     body {
       font-family: "Outfit", sans-serif;
+      font-size: 18px;
       color: var(--ink);
       background: var(--bg);
-      min-height: 100vh;
-      overflow-x: hidden;
     }
+    .app { height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-    /* ── App Shell ─────────────────────────────────── */
-    .app { min-height: 100vh; }
-
-    /* ── Cover / TOC ───────────────────────────────── */
-    .cover-section {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 3rem 2rem 4rem;
+    /* ── Cover / TOC ───────────────────────────────────────────── */
+    #cover {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2.5rem 2rem 3rem;
+      background: var(--bg);
     }
-    .cover-hero {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
+    .cover-hero { text-align: center; margin-bottom: 2rem; }
     .cover-kicker {
       font-family: "IBM Plex Mono", monospace;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      background: var(--accent-lite);
-      border: 1px solid rgba(15,119,111,0.3);
-      padding: 0.28rem 0.7rem;
-      border-radius: 999px;
-      display: inline-block;
-      margin-bottom: 1.2rem;
+      font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); background: rgba(61,214,200,0.12);
+      border: 1px solid rgba(61,214,200,0.3);
+      padding: 0.25rem 0.8rem; border-radius: 999px;
+      display: inline-block; margin-bottom: 1rem;
     }
     .cover-title {
       font-family: "Fraunces", serif;
-      font-size: clamp(2.4rem, 6vw, 4.2rem);
-      line-height: 1.05;
-      margin-bottom: 1rem;
-      color: var(--ink);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      line-height: 1.1; color: var(--ink); margin-bottom: 0.8rem;
     }
     .cover-lead {
-      color: var(--muted);
-      font-size: 1.1rem;
-      max-width: 68ch;
-      margin: 0 auto 1.8rem;
-      line-height: 1.7;
+      font-size: clamp(1rem, 1.8vw, 1.15rem); color: var(--muted);
+      max-width: 680px; margin: 0 auto 1.5rem; line-height: 1.6;
     }
     .cover-stats {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      margin-bottom: 0.5rem;
+      display: flex; gap: 2rem; justify-content: center; margin-bottom: 2rem;
     }
-    .cover-stat { text-align: center; }
+    .cover-stat { display: flex; flex-direction: column; align-items: center; }
     .cover-stat-num {
-      display: block;
-      font-family: "Fraunces", serif;
-      font-size: 2.4rem;
-      color: var(--accent);
-      line-height: 1;
+      font-family: "Fraunces", serif; font-size: 2.2rem;
+      color: var(--accent); line-height: 1;
     }
-    .cover-stat-label {
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* TOC Grid */
+    .cover-stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
     .toc-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1rem; max-width: 1300px; margin: 0 auto;
     }
     .toc-card {
-      display: flex;
-      gap: 1rem;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.2rem;
-      text-align: left;
-      cursor: pointer;
-      transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
-      box-shadow: 0 2px 8px rgba(21,34,41,0.06);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 0; cursor: pointer;
+      text-align: left; display: flex; gap: 0;
+      transition: border-color 160ms, transform 160ms, box-shadow 160ms;
     }
     .toc-card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
-      border-color: var(--accent);
+      border-color: var(--accent); transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
     .toc-card-num {
-      font-family: "Fraunces", serif;
-      font-size: 2.8rem;
-      color: var(--accent);
-      line-height: 1;
-      min-width: 2rem;
-      padding-top: 0.1rem;
+      font-family: "Fraunces", serif; font-size: 2rem; font-weight: 700;
+      color: var(--accent); padding: 1rem 1rem;
+      border-right: 1px solid var(--border);
+      min-width: 56px; display: flex; align-items: flex-start;
+      justify-content: center;
     }
-    .toc-card-body { flex: 1; }
-    .toc-card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.4rem;
-    }
-    .toc-outcome {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.18rem 0.5rem;
-      border-radius: 999px;
-    }
-    .toc-outcome.pass   { background: var(--ok-lite);   color: var(--ok); }
-    .toc-outcome.fail   { background: var(--err-lite);  color: var(--err); }
-    .toc-outcome.partial{ background: var(--warn-lite); color: var(--warn); }
-    .toc-outcome.none   { background: #f0f0f0;          color: var(--muted); }
-    .toc-duration { font-size: 0.78rem; color: var(--muted); }
-    .toc-title {
-      font-family: "Fraunces", serif;
-      font-size: 1.15rem;
-      margin-bottom: 0.15rem;
-      color: var(--ink);
-    }
-    .toc-subtitle {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-    .toc-insight {
-      font-size: 0.9rem;
-      color: var(--ink);
-      line-height: 1.55;
-      margin-bottom: 0.7rem;
-    }
-    .toc-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .toc-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .toc-card-body { padding: 0.9rem 1rem; flex: 1; }
+    .toc-card-header { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.4rem; }
+    .toc-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.2rem; }
+    .toc-subtitle { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .toc-insight { font-size: 0.82rem; color: #9aa8c0; line-height: 1.5; margin-bottom: 0.5rem; }
+    .toc-footer { display: flex; justify-content: space-between; align-items: center; }
+    .toc-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .toc-slides { font-size: 0.72rem; color: var(--muted); }
+    .toc-duration { font-size: 0.75rem; color: var(--muted); }
+    .toc-outcome { font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.45rem;
+      border-radius: 999px; }
+    .toc-outcome.pass  { background: rgba(61,214,140,0.15); color: #3dd68c; }
+    .toc-outcome.fail  { background: rgba(240,88,105,0.15); color: #f05869; }
+    .toc-outcome.partial { background: rgba(240,168,66,0.15); color: #f0a842; }
+    .toc-outcome.none  { background: rgba(139,155,180,0.15); color: var(--muted); }
+    .cover-footer { text-align: center; margin-top: 1.5rem; font-size: 0.8rem; color: var(--muted); }
+
+    /* ── Tags ──────────────────────────────────────────────────── */
     .tag, .tag-sm {
-      font-size: 0.72rem;
-      padding: 0.18rem 0.5rem;
-      background: var(--accent-lite);
-      color: var(--accent);
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-    .toc-slides { font-size: 0.75rem; color: var(--muted); }
-    .cover-footer {
-      text-align: center;
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-family: "IBM Plex Mono", monospace; font-size: 0.67rem;
+      background: rgba(91,156,246,0.12); color: var(--accent2);
+      border: 1px solid rgba(91,156,246,0.25);
+      padding: 0.1rem 0.45rem; border-radius: 999px; white-space: nowrap;
     }
 
-    /* ── Replay Section ────────────────────────────── */
+    /* ── Replay section (full-screen) ──────────────────────────── */
     .replay-section {
-      display: none;
-      flex-direction: column;
-      min-height: 100vh;
+      display: none; flex-direction: column;
+      height: 100vh; overflow: hidden;
     }
     .replay-section.active { display: flex; }
 
+    /* ── Compact replay header ─────────────────────────────────── */
     .replay-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 1.2rem 2rem 1rem;
-      background: var(--surface2);
+      flex-shrink: 0;
+      background: var(--hdr-bg);
       border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-      gap: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1rem;
+      height: 44px;
+      gap: 0.6rem;
     }
-    .replay-header-left { flex: 1; }
-    .replay-number {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      margin-bottom: 0.25rem;
+    .rh-left { display: flex; align-items: center; gap: 0.55rem; min-width: 0; }
+    .rh-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+    .rh-back {
+      background: none; border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.78rem; padding: 0.25rem 0.6rem;
+      border-radius: 6px; cursor: pointer; white-space: nowrap; flex-shrink: 0;
+      transition: color 120ms, border-color 120ms;
     }
-    .replay-meta-row {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 0.3rem;
-      flex-wrap: wrap;
+    .rh-back:hover { color: var(--ink); border-color: var(--muted); }
+    .rh-num {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.78rem;
+      color: var(--accent); flex-shrink: 0;
     }
-    .replay-question { font-size: 0.82rem; color: var(--muted); }
-    .replay-duration { font-size: 0.78rem; color: var(--muted); }
-    .replay-outcome {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
+    .rh-sep { color: var(--border); flex-shrink: 0; }
+    .rh-title {
+      font-weight: 700; font-size: 0.95rem; color: var(--ink);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      flex-shrink: 1;
     }
-    .replay-outcome.outcome-pass    { background: var(--ok-lite);   color: var(--ok); }
-    .replay-outcome.outcome-fail    { background: var(--err-lite);  color: var(--err); }
-    .replay-outcome.outcome-partial { background: var(--warn-lite); color: var(--warn); }
-    .replay-outcome.outcome-none    { background: #f0f0f0;          color: var(--muted); }
-    .replay-title {
-      font-family: "Fraunces", serif;
-      font-size: 1.6rem;
-      line-height: 1.1;
-      margin-bottom: 0.15rem;
+    .rh-question {
+      font-size: 0.8rem; color: var(--muted); white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; flex-shrink: 2;
     }
-    .replay-subtitle {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
+    .rh-dur { font-size: 0.78rem; color: var(--muted); }
+    .rh-outcome {
+      font-size: 0.75rem; font-weight: 600;
+      padding: 0.15rem 0.55rem; border-radius: 999px;
     }
-    .replay-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-    .toc-back-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.5rem 1rem;
-      font: 0.84rem "Outfit", sans-serif;
-      color: var(--muted);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 120ms, color 120ms;
-      flex-shrink: 0;
-      margin-top: 0.3rem;
-    }
-    .toc-back-btn:hover { background: var(--border); color: var(--ink); }
+    .rh-outcome.outcome-pass    { background: rgba(61,214,140,0.15); color: #3dd68c; }
+    .rh-outcome.outcome-fail    { background: rgba(240,88,105,0.15); color: #f05869; }
+    .rh-outcome.outcome-partial { background: rgba(240,168,66,0.15); color: #f0a842; }
+    .rh-outcome.outcome-none    { background: rgba(139,155,180,0.1); color: var(--muted); }
 
-    /* ── Slides Container ──────────────────────────── */
+    /* ── Timeline bar ──────────────────────────────────────────── */
+    .timeline-bar {
+      flex-shrink: 0; height: 28px;
+      background: var(--tl-bg);
+      border-bottom: 1px solid var(--border);
+      position: relative; padding: 0 12px;
+      display: flex; align-items: center;
+    }
+    .tl-track {
+      flex: 1; height: 3px; background: rgba(255,255,255,0.1);
+      border-radius: 2px; position: relative;
+    }
+    .tl-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: var(--accent); border-radius: 2px;
+      width: 0%; transition: width 0.4s ease;
+    }
+    .tl-dots { position: absolute; left: 12px; right: 60px; top: 0; bottom: 0; pointer-events: none; }
+    .tl-dot {
+      position: absolute; top: 50%; transform: translate(-50%, -50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.35);
+      transition: background 0.3s, transform 0.3s;
+      pointer-events: all; cursor: pointer;
+    }
+    .tl-dot.active {
+      background: var(--accent); border-color: var(--accent);
+      transform: translate(-50%, -50%) scale(1.5);
+    }
+    .tl-dot:hover { background: var(--accent2); }
+    .tl-label {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.65rem;
+      color: var(--accent); min-width: 48px; text-align: right;
+      transition: all 0.3s;
+    }
+
+    /* ── Slides container ──────────────────────────────────────── */
     .slides-container {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
+      flex: 1; position: relative; overflow: hidden;
     }
     .slide {
-      display: none;
-      height: 100%;
-      min-height: calc(100vh - 200px);
+      position: absolute; inset: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      display: flex; flex-direction: column;
     }
-    .slide.active { display: flex; }
+    .slide.active { opacity: 1; pointer-events: all; }
 
-    /* ── Slide Content Layouts ─────────────────────── */
-    .slide-content {
-      display: flex;
-      width: 100%;
-      height: 100%;
-    }
-    
-    /* Intro slide */
-    .slide-content-intro {
-      padding: 2.5rem 2rem;
-      gap: 3rem;
-    }
-    .slide-left {
-      flex: 1.1;
-      max-width: 560px;
-    }
-    .slide-right { flex: 1; }
-    .slide-right-intro {
-      display: flex;
-      align-items: flex-start;
-    }
-    .slide-badge {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.25rem 0.65rem;
-      border-radius: 999px;
-      display: inline-block;
-      margin-bottom: 0.8rem;
-    }
-    .badge-intro  { background: var(--accent-lite); color: var(--accent); }
-    .badge-summary{ background: #eef1ff; color: #3044c9; }
-    .slide-heading {
-      font-family: "Fraunces", serif;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      line-height: 1.15;
-      margin-bottom: 0.8rem;
-      color: var(--ink);
-    }
-    .question-desc {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: var(--ink);
-      background: var(--surface2);
-      border-left: 3px solid var(--accent);
-      padding: 0.8rem 1rem;
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      margin-bottom: 1.2rem;
-    }
-    .why-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 1rem;
-    }
-    .why-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-    .why-box p { font-size: 0.95rem; color: var(--ink); line-height: 1.65; }
-    .look-for-box {
-      background: var(--surface2);
-      border: 1.5px solid var(--accent);
-      border-radius: var(--radius-sm);
-      padding: 1.2rem;
-      width: 100%;
-    }
-    .look-for-label {
-      font-weight: 600;
-      font-size: 0.88rem;
-      color: var(--accent);
-      margin-bottom: 0.7rem;
-    }
-    .look-for-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-    .look-for-list li {
-      font-size: 0.92rem;
-      padding-left: 1.2rem;
-      position: relative;
-      line-height: 1.5;
-      color: var(--ink);
-    }
-    .look-for-list li::before {
-      content: "→";
-      position: absolute;
-      left: 0;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    /* Code slide */
-    .slide-content-code {
-      flex-direction: row;
-      height: 100%;
-      min-height: calc(100vh - 200px);
-    }
-    .slide-code-panel {
-      flex: 1.3;
-      background: var(--code-bg);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border-right: 1px solid #1e2935;
-    }
-    .code-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.65rem 1rem;
-      background: #161b22;
-      border-bottom: 1px solid #21262d;
-      flex-shrink: 0;
-    }
-    .code-header-left { display: flex; gap: 0.5rem; align-items: center; }
-    .time-badge {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.7rem;
-      background: #21262d;
-      color: #8b949e;
-      padding: 0.2rem 0.5rem;
-      border-radius: 4px;
-    }
-    .vis-badge {
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 0.18rem 0.5rem;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .vis-public  { background: #1f4068; color: #79c0ff; }
-    .vis-private { background: #3d2b1f; color: #ffa657; }
-    .status-badge {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 0.2rem 0.65rem;
-      border-radius: 4px;
-    }
-    .status-pass    { background: #0d3321; color: #3fb950; }
-    .status-runtime { background: #2d1117; color: #f85149; }
-    .status-wrong   { background: #2d2000; color: #e3b341; }
-    .status-other   { background: #21262d; color: #8b949e; }
-
+    /* ── Code slide ────────────────────────────────────────────── */
     .code-scroll-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0.8rem 0;
-      max-height: calc(100vh - 320px);
-      min-height: 300px;
+      flex: 1; overflow-y: auto; background: var(--code-bg);
+      max-height: calc(100vh - 44px - 28px - 50px - 120px);
     }
     .code-block {
       font-family: "IBM Plex Mono", monospace;
-      font-size: 0.82rem;
-      line-height: 1.65;
-      color: var(--code-ink);
-      white-space: pre;
+      font-size: 15px; line-height: 1.45;
+      color: var(--code-ink); white-space: pre;
     }
     .code-block code { display: block; }
     .code-line {
-      display: block;
-      padding: 0 1.2rem;
-      position: relative;
+      display: block; padding: 0 1rem;
+      border-left: 3px solid transparent;
       transition: background 0.2s;
     }
     .code-line::before {
       content: attr(data-ln);
-      display: inline-block;
-      width: 2.2em;
-      color: #484f58;
-      text-align: right;
-      margin-right: 1em;
-      user-select: none;
-      font-size: 0.78rem;
+      display: inline-block; width: 2.5em;
+      color: #3d4451; text-align: right; margin-right: 1em;
+      font-size: 0.8em; user-select: none;
     }
-    .hl-focus {
-      background: rgba(210, 153, 34, 0.22);
-      box-shadow: inset 3px 0 0 #d29922;
+    .hl-focus  { background: rgba(210,153,34,0.2);  border-left-color: #d29922; }
+    .hl-added  { background: rgba(61,214,140,0.12); border-left-color: #3dd68c; }
+    .hl-changed{ background: rgba(91,156,246,0.12); border-left-color: #5b9cf6; }
+
+    /* ── Inline code annotation ────────────────────────────────── */
+    .code-ann {
+      display: block; margin: 0 1rem 0 calc(1rem + 2.5em + 1em + 3px);
+      background: var(--ann-bg); border: 1px solid var(--ann-border);
+      border-radius: 6px; padding: 0.55rem 0.9rem;
+      border-left: 3px solid var(--ann-border);
+      position: relative;
     }
-    .hl-added {
-      background: rgba(63, 185, 80, 0.15);
-      box-shadow: inset 3px 0 0 #3fb950;
+    .code-ann-arrow {
+      position: absolute; left: 1.2rem; top: -0.7rem;
+      font-size: 0.9rem; color: var(--ann-border);
+      line-height: 1;
     }
-    .hl-changed {
-      background: rgba(121, 192, 255, 0.12);
-      box-shadow: inset 3px 0 0 #79c0ff;
-    }
-    .code-empty {
-      padding: 2rem;
-      color: #484f58;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.84rem;
+    .code-ann-text {
+      font-family: "Outfit", sans-serif;
+      font-size: 16px; font-weight: 600;
+      color: var(--ann-ink); white-space: normal; display: block;
     }
 
-    /* Commentary panel */
-    .slide-commentary {
-      width: 380px;
-      min-width: 320px;
-      max-width: 420px;
-      padding: 2rem 1.8rem;
-      background: var(--surface);
+    /* ── Commentary strip (bottom of code slide) ───────────────── */
+    .commentary-strip {
+      flex-shrink: 0;
+      background: var(--strip-bg); border-top: 1px solid var(--strip-border);
+      padding: 0.5rem 1.2rem 0.55rem;
+      min-height: 100px; max-height: 140px;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      flex-shrink: 0;
     }
-    .commentary-heading {
+    .strip-meta {
+      display: flex; gap: 0.6rem; align-items: center;
+      margin-bottom: 0.35rem; flex-wrap: wrap;
+    }
+    .s-time {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
+      color: var(--accent); background: rgba(61,214,200,0.1);
+      padding: 0.15rem 0.5rem; border-radius: 4px;
+    }
+    .s-vis {
+      font-size: 0.72rem; padding: 0.1rem 0.45rem; border-radius: 4px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .s-vis-public  { background: rgba(91,156,246,0.12); color: var(--accent2); }
+    .s-vis-private { background: rgba(240,168,66,0.12); color: var(--warn); }
+    .s-status { font-size: 0.82rem; padding: 0.1rem 0.55rem; border-radius: 4px; }
+    .status-pass    { background: rgba(61,214,140,0.15); color: #3dd68c; }
+    .status-wrong   { background: rgba(240,88,105,0.15); color: #f05869; }
+    .status-runtime { background: rgba(240,168,66,0.15); color: #f0a842; }
+    .status-other   { background: rgba(139,155,180,0.1); color: var(--muted); }
+    .leg { font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.25rem; }
+    .leg-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+    .strip-body {
+      font-size: 15px; line-height: 1.55; color: #b0bdcf;
+    }
+    .strip-body strong { color: var(--ink); }
+    .strip-body code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
+      border-radius: 3px; color: #e8c888;
+    }
+    .strip-body em { color: var(--accent2); font-style: normal; font-weight: 500; }
+
+    /* ── Intro slide ───────────────────────────────────────────── */
+    .slide-intro { display: flex; flex-direction: column; }
+    .intro-layout {
+      flex: 1; display: flex; flex-direction: column; padding: 1.8rem 2rem 1.2rem;
+      gap: 1.2rem; overflow-y: auto;
+    }
+    .intro-top {}
+    .intro-heading {
       font-family: "Fraunces", serif;
-      font-size: 1.3rem;
-      line-height: 1.25;
-      color: var(--ink);
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      line-height: 1.25; color: var(--ink); margin-bottom: 0;
     }
-    .commentary-body {
-      font-size: 0.92rem;
-      line-height: 1.72;
-      color: var(--ink);
+    .intro-cols {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; flex: 1;
     }
-    .commentary-body code {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.82em;
-      background: #e8e4d8;
-      padding: 0.1em 0.35em;
-      border-radius: 3px;
+    .intro-col {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.2rem 1.4rem;
     }
-    .commentary-body strong { color: var(--ink); font-weight: 700; }
-    .commentary-body em { color: var(--muted); }
-    .diff-legend {
-      display: flex;
-      gap: 1rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid var(--border);
-      margin-top: auto;
+    .intro-col-label {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--accent); margin-bottom: 0.6rem;
     }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      color: var(--muted);
+    .intro-col-text { font-size: 16px; line-height: 1.6; color: #b0bdcf; }
+    .intro-look-list {
+      font-size: 16px; line-height: 1.6; color: #b0bdcf;
+      padding-left: 1.1em; display: flex; flex-direction: column; gap: 0.4rem;
     }
-    .legend-swatch {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-    }
-    .hl-focus-sw   { background: rgba(210,153,34,0.5); border-left: 3px solid #d29922; }
-    .hl-added-sw   { background: rgba(63,185,80,0.3);  border-left: 3px solid #3fb950; }
-    .hl-changed-sw { background: rgba(121,192,255,0.2);border-left: 3px solid #79c0ff; }
+    .intro-look-list li::marker { color: var(--accent); }
 
-    /* Summary slide */
-    .slide-content-summary {
-      padding: 2.5rem 2rem;
-      gap: 3rem;
+    /* ── Summary slide ─────────────────────────────────────────── */
+    .slide-summary { display: flex; flex-direction: column; }
+    .summary-layout {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 1.6rem 2rem 1.2rem; gap: 1rem; overflow-y: auto;
     }
-    .summary-bullets {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
+    .summary-heading {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      color: var(--accent); margin-bottom: 0;
     }
-    .summary-bullets li {
-      font-size: 0.98rem;
-      padding: 0.7rem 0.9rem 0.7rem 1.1rem;
-      background: var(--surface2);
-      border-left: 3px solid var(--accent);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      line-height: 1.6;
+    .summary-cards {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; flex: 1;
     }
-    .summary-bullets li em { color: var(--muted); }
+    .summary-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1rem 1.2rem;
+      font-size: 15px; line-height: 1.55; color: #b0bdcf;
+    }
+    .summary-card strong { color: var(--ink); }
+    .summary-card code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
+      border-radius: 3px; color: #e8c888;
+    }
+    .summary-card em { color: var(--accent2); font-style: normal; }
     .intervention-box {
-      background: linear-gradient(135deg, #fffdf0, #fff8e1);
-      border: 1.5px solid #f5c518;
-      border-radius: var(--radius-sm);
-      padding: 1.4rem;
+      background: rgba(61,214,200,0.07); border: 1px solid rgba(61,214,200,0.3);
+      border-radius: var(--r); padding: 1rem 1.4rem;
+      display: flex; gap: 0.8rem; align-items: flex-start; flex-shrink: 0;
     }
-    .intervention-label {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #8a6000;
-      margin-bottom: 0.6rem;
-    }
-    .intervention-box p {
-      font-size: 0.93rem;
-      color: var(--ink);
-      line-height: 1.7;
-    }
-    .intervention-box code {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.82em;
-      background: rgba(0,0,0,0.08);
-      padding: 0.1em 0.35em;
-      border-radius: 3px;
+    .int-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .int-text { font-size: 15px; line-height: 1.55; color: #b0bdcf; }
+    .int-text strong { color: var(--ink); }
+    .int-text code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
+      border-radius: 3px; color: #e8c888;
     }
 
-    /* ── Navigation Bar ────────────────────────────── */
+    /* ── Bottom nav ────────────────────────────────────────────── */
     .slide-nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 0.8rem 2rem;
-      background: var(--surface2);
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
+      flex-shrink: 0; height: 50px;
+      background: var(--hdr-bg); border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+      padding: 0 1rem;
     }
     .nav-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.52rem 1.2rem;
-      font: 0.88rem "Outfit", sans-serif;
-      color: var(--ink);
-      cursor: pointer;
-      transition: background 120ms, transform 80ms;
+      background: none; border: 1px solid var(--border); color: var(--muted);
+      font-size: 1.3rem; width: 38px; height: 34px; border-radius: 6px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 120ms, color 120ms;
     }
-    .nav-btn:hover:not(:disabled) { background: var(--accent-lite); color: var(--accent); }
-    .nav-btn:active:not(:disabled) { transform: scale(0.97); }
-    .nav-btn:disabled { opacity: 0.35; cursor: default; }
-    .slide-dots {
-      display: flex;
-      gap: 0.45rem;
-      flex: 1;
-    }
+    .nav-btn:hover:not(:disabled) { background: var(--surface2); color: var(--ink); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+    .slide-dots { display: flex; gap: 6px; align-items: center; }
     .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--border);
-      cursor: pointer;
-      transition: background 200ms, transform 200ms;
-      flex-shrink: 0;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--border); border: none; cursor: pointer; padding: 0;
+      transition: background 0.25s, transform 0.25s;
     }
     .dot.active { background: var(--accent); transform: scale(1.4); }
-    .dot:hover:not(.active) { background: var(--muted); }
     .slide-counter {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.78rem;
-      color: var(--muted);
-      white-space: nowrap;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.78rem;
+      color: var(--muted); min-width: 44px; text-align: center;
     }
 
-    /* ── Keyboard hint ─────────────────────────────── */
+    /* ── Syntax highlighting ───────────────────────────────────── */
+    .tk-kw  { color: #c792ea; font-weight: 500; }  /* purple — keywords */
+    .tk-bi  { color: #82aaff; }                     /* blue — builtins */
+    .tk-str { color: #c3e88d; }                     /* green — strings */
+    .tk-num { color: #f78c6c; }                     /* orange — numbers */
+    .tk-cmt { color: #546e7a; font-style: italic; } /* grey — comments */
+    .tk-op  { color: #89ddff; }                     /* cyan — operators */
+    .tk-brk { color: #89ddff; }                     /* cyan — brackets */
+
+    /* ── Keyboard hint ─────────────────────────────────────────── */
     .kbd-hint {
-      position: fixed;
-      bottom: 5rem;
-      right: 1.5rem;
-      font-size: 0.72rem;
-      color: var(--muted);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      padding: 0.35rem 0.7rem;
-      border-radius: var(--radius-sm);
-      opacity: 0;
-      transition: opacity 0.5s;
-      pointer-events: none;
+      position: fixed; bottom: 60px; right: 1.5rem; z-index: 99;
+      background: rgba(30,36,55,0.9); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.4rem 0.8rem;
+      font-size: 0.8rem; color: var(--muted); pointer-events: none;
+      opacity: 0; transition: opacity 0.4s;
     }
     .kbd-hint.visible { opacity: 1; }
-    kbd {
-      background: var(--border);
-      border-radius: 3px;
-      padding: 0.1em 0.35em;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 0.85em;
+    .kbd-hint kbd {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.78rem;
     }
 
-    /* ── Responsive ────────────────────────────────── */
-    @media (max-width: 900px) {
-      .slide-content-code { flex-direction: column; }
-      .slide-commentary {
-        width: 100%;
-        max-width: none;
-        min-height: 200px;
-      }
-      .slide-code-panel { min-height: 40vh; }
-      .toc-grid { grid-template-columns: 1fr; }
-      .slide-content-intro,
-      .slide-content-summary { flex-direction: column; }
-    }
-    @media (max-width: 640px) {
-      .replay-header { flex-wrap: wrap; }
-      .cover-stats { gap: 1rem; }
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .intro-cols { grid-template-columns: 1fr; }
+      .summary-cards { grid-template-columns: 1fr; }
+      .rh-question { display: none; }
     }
   </style>
 </head>
@@ -1524,19 +1397,22 @@ HTML_HEAD = '''<!DOCTYPE html>
 <div class="app" id="app">
 '''
 
+
 HTML_JS = '''
 </div><!-- /app -->
 
-<div class="kbd-hint" id="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate</div>
+<div class="kbd-hint" id="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate &nbsp; <kbd>Esc</kbd> index</div>
 
 <script>
-// ─── State ────────────────────────────────────────────────────────────────────
+// ── State ────────────────────────────────────────────────────────────────────
 let currentReplay = null;
-const slideState = {};  // rid -> slideIndex
+const slideState = {};       // rid -> slideIndex
+const REPLAY_ORDER = ['r1','r2','r3','r4','r5','r6','r7'];
 
-// ─── Navigation ───────────────────────────────────────────────────────────────
+// ── Cover ────────────────────────────────────────────────────────────────────
 function showCover() {
-  document.getElementById('cover').style.display = 'block';
+  const cover = document.getElementById('cover');
+  cover.style.display = 'block';
   if (currentReplay) {
     document.getElementById(`replay-${currentReplay}`).classList.remove('active');
   }
@@ -1544,7 +1420,10 @@ function showCover() {
   history.pushState({}, '', '#');
 }
 
-function showReplay(rid) {
+// ── Show replay at slide idx ─────────────────────────────────────────────────
+function showReplay(rid, idx) {
+  idx = idx === undefined ? (slideState[rid] || 0) : idx;
+
   document.getElementById('cover').style.display = 'none';
   if (currentReplay && currentReplay !== rid) {
     document.getElementById(`replay-${currentReplay}`).classList.remove('active');
@@ -1552,20 +1431,20 @@ function showReplay(rid) {
   currentReplay = rid;
   const section = document.getElementById(`replay-${rid}`);
   section.classList.add('active');
-  
+
   if (!(rid in slideState)) {
-    slideState[rid] = 0;
     initDots(rid);
+    initTimeline(rid);
   }
-  goToSlide(rid, slideState[rid]);
-  history.pushState({replay: rid}, '', `#${rid}`);
-  
-  // Show keyboard hint briefly
+  goToSlide(rid, idx, false);   // no push — handled below
+  history.pushState({replay: rid, idx}, '', `#${rid}/${idx + 1}`);
+
   const hint = document.getElementById('kbd-hint');
   hint.classList.add('visible');
-  setTimeout(() => hint.classList.remove('visible'), 2500);
+  setTimeout(() => hint.classList.remove('visible'), 2800);
 }
 
+// ── Init nav dots ────────────────────────────────────────────────────────────
 function initDots(rid) {
   const section = document.getElementById(`replay-${rid}`);
   const count = parseInt(section.dataset.slideCount);
@@ -1573,39 +1452,78 @@ function initDots(rid) {
   dotsEl.innerHTML = '';
   for (let i = 0; i < count; i++) {
     const d = document.createElement('button');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.setAttribute('aria-label', `Slide ${i+1}`);
-    d.onclick = () => goToSlide(rid, i);
+    d.className = 'dot';
+    d.setAttribute('aria-label', `Slide ${i + 1}`);
+    d.onclick = () => { goToSlide(rid, i); pushHash(rid, i); };
     dotsEl.appendChild(d);
   }
 }
 
-function goToSlide(rid, idx) {
+// ── Init timeline ────────────────────────────────────────────────────────────
+function initTimeline(rid) {
+  const section = document.getElementById(`replay-${rid}`);
+  const tl = JSON.parse(section.dataset.timeline || '[]');
+  const dotsEl = document.getElementById(`tl-dots-${rid}`);
+  dotsEl.innerHTML = '';
+  tl.forEach(({idx, pct, label}) => {
+    const d = document.createElement('button');
+    d.className = 'tl-dot';
+    d.style.left = pct + '%';
+    d.title = label;
+    d.onclick = () => { goToSlide(rid, idx); pushHash(rid, idx); };
+    dotsEl.appendChild(d);
+  });
+}
+
+// ── Update timeline state ────────────────────────────────────────────────────
+function updateTimeline(rid, idx) {
+  const section = document.getElementById(`replay-${rid}`);
+  const tl = JSON.parse(section.dataset.timeline || '[]');
+  const totalDur = parseFloat(section.dataset.totalDur || '60');
+
+  // Find which code slide corresponds to this slide index
+  const entry = tl.find(e => e.idx === idx);
+  const fill = document.getElementById(`tl-fill-${rid}`);
+  const label = document.getElementById(`tl-label-${rid}`);
+  const dots = document.querySelectorAll(`#tl-dots-${rid} .tl-dot`);
+
+  if (entry) {
+    fill.style.width = entry.pct + '%';
+    label.textContent = entry.label;
+    dots.forEach((d, i) => d.classList.toggle('active', tl[i]?.idx === idx));
+  } else {
+    // Intro or summary: no timeline position; don't change fill
+    dots.forEach(d => d.classList.remove('active'));
+  }
+}
+
+// ── Go to a slide ────────────────────────────────────────────────────────────
+function goToSlide(rid, idx, push) {
   const section = document.getElementById(`replay-${rid}`);
   const slides = section.querySelectorAll('.slide');
   const count = slides.length;
   if (idx < 0 || idx >= count) return;
-  
+
   slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-  
+
   const dots = document.querySelectorAll(`#dots-${rid} .dot`);
   dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-  
-  document.getElementById(`counter-${rid}`).textContent = `${idx+1} / ${count}`;
+
+  document.getElementById(`counter-${rid}`).innerHTML = `${idx + 1}&thinsp;/&thinsp;${count}`;
   document.getElementById(`prev-${rid}`).disabled = idx === 0;
   document.getElementById(`next-${rid}`).disabled = idx === count - 1;
-  
   slideState[rid] = idx;
 
-  // Auto-scroll the code panel to show the first focused line.
-  // Use requestAnimationFrame to ensure layout is computed after display:flex applied.
+  updateTimeline(rid, idx);
+  if (push !== false) pushHash(rid, idx);
+
+  // Auto-scroll code panel to first highlighted line
   const activeSlide = slides[idx];
   if (activeSlide) {
     requestAnimationFrame(() => {
       const scrollArea = activeSlide.querySelector('.code-scroll-area');
       const firstFocus = scrollArea && scrollArea.querySelector('.hl-focus');
       if (firstFocus && scrollArea) {
-        // scrollIntoView scrolls the nearest scrollable ancestor (code-scroll-area)
         firstFocus.scrollIntoView({block: 'center', behavior: 'instant'});
       } else if (scrollArea) {
         scrollArea.scrollTop = 0;
@@ -1614,35 +1532,52 @@ function goToSlide(rid, idx) {
   }
 }
 
+function pushHash(rid, idx) {
+  history.pushState({replay: rid, idx}, '', `#${rid}/${idx + 1}`);
+}
+
+// ── Sequential replay navigation ─────────────────────────────────────────────
 function nextSlide(rid) {
   const idx = slideState[rid] || 0;
-  goToSlide(rid, idx + 1);
+  const section = document.getElementById(`replay-${rid}`);
+  const count = parseInt(section.dataset.slideCount);
+  if (idx < count - 1) {
+    goToSlide(rid, idx + 1);
+  } else {
+    // End of this replay → go to next replay or cover
+    const pos = REPLAY_ORDER.indexOf(rid);
+    if (pos >= 0 && pos < REPLAY_ORDER.length - 1) {
+      showReplay(REPLAY_ORDER[pos + 1], 0);
+    } else {
+      showCover();
+    }
+  }
 }
 
 function prevSlide(rid) {
   const idx = slideState[rid] || 0;
-  goToSlide(rid, idx - 1);
+  if (idx > 0) goToSlide(rid, idx - 1);
 }
 
-// ─── Keyboard Navigation ──────────────────────────────────────────────────────
+// ── Keyboard ─────────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { showCover(); return; }
   if (!currentReplay) return;
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-    e.preventDefault();
-    nextSlide(currentReplay);
+    e.preventDefault(); nextSlide(currentReplay);
   } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-    e.preventDefault();
-    prevSlide(currentReplay);
-  } else if (e.key === 'Escape') {
-    showCover();
+    e.preventDefault(); prevSlide(currentReplay);
   }
 });
 
-// ─── Handle hash navigation ───────────────────────────────────────────────────
+// ── Hash routing: #r2/3 → replay r2, slide 3 (1-indexed) ────────────────────
 function handleHash() {
   const h = location.hash.replace('#', '');
-  if (h && document.getElementById(`replay-${h}`)) {
-    showReplay(h);
+  if (!h) return;
+  const [rid, sidxStr] = h.split('/');
+  const sidx = sidxStr ? Math.max(0, parseInt(sidxStr) - 1) : 0;
+  if (rid && document.getElementById(`replay-${rid}`)) {
+    showReplay(rid, sidx);
   }
 }
 window.addEventListener('popstate', handleHash);
