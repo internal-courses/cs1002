@@ -142,6 +142,15 @@ def highlight_python(code):
 
     return result
 
+# ─── UTILITIES ────────────────────────────────────────────────────────────────
+
+def fmt_time(t):
+    """Format seconds as mm:ss (for ≥60s) or Xs."""
+    t = int(round(t))
+    if t >= 60:
+        return f"{t//60}:{t%60:02d}"
+    return f"{t}s"
+
 # ─── SLIDE DATA ────────────────────────────────────────────────────────────────
 
 BASE = '/home/vscode/code/pyoppe/analysis'
@@ -162,7 +171,7 @@ R5 = load_events('ns_25t2_py22_1-17-a970a89d08064dccb13e8d51ae6a07b5')
 R6 = load_events('ns_25t3_py13_1-10-ee012cee3fa5491d8db37141d2a954fe')
 R7 = load_events('ns_25t3_py24_1-9-06f6fb4ea76144ef91df6ceec5f264a8')
 
-def make_code_slide(ev, prev_ev=None, heading='', body='', manual_highlight=None, elapsed=None):
+def make_code_slide(ev, prev_ev=None, heading='', body='', note='', manual_highlight=None, elapsed=None):
     code = ev.get('code', '') if ev else ''
     prev_code = prev_ev.get('code', '') if prev_ev else None
     added, changed = compute_diff_highlights(prev_code, code) if prev_code else ([], [])
@@ -179,9 +188,10 @@ def make_code_slide(ev, prev_ev=None, heading='', body='', manual_highlight=None
         'tests_total': ev.get('tests_total', 0) if ev else 0,
         'visibility': ev.get('visibility', 'public') if ev else 'public',
         'time_val': time_val,
-        'time_label': f"{time_val:.0f}s",
+        'time_label': fmt_time(time_val),
         'heading': heading,
         'body': body,
+        'note': note,
     }
 
 # ─── Build replay 1: Replace Consonants ───────────────────────────────────────
@@ -208,55 +218,62 @@ REPLAY1 = {
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Given N strings, replace all consonants with <code>#</code> and print the result. Vowels (a, e, i, o, u — upper and lower) stay unchanged.',
-            'why': 'This student took 83 attempts over 101 seconds and eventually scored 100 — but the path was anything but straight. Watch how they cycled through typos, wrong data structures, variable confusion, and then finally cracked it.',
+            'question_desc': 'Given N strings, replace all consonants with <code>#</code> and print each result. Vowels (a, e, i, o, u — upper and lower) stay unchanged.',
+            'question_code': 'Input:    3\n          hello\n          Python\n          World\n\nOutput:   #e##o\n          #y##o#\n          #o###',
+            'why': 'This student eventually got full marks — but took over 80 attempts to get there. Watch how three completely different bugs appear right from the start, and how the student layers on complexity until finally landing on a clean, correct solution.',
             'what_to_look_for': [
-                'Three distinct bugs in the very first submission',
-                'The shift from RuntimeError → WrongAnswer (a healthy sign)',
-                'A brief relapse into runtime errors mid-session',
-                'How the final clean solution looked very different from the first attempt',
+                'Three separate bugs in the very first submission — typo, wrong variable name, and an invalid operation',
+                'The shift from "code crashes" to "code runs but gives wrong answer" — this is actually <em>progress</em>',
+                'A brief relapse midway through, where old bugs reappear in new clothing',
+                'The final solution is built completely differently from the first attempt',
             ],
         },
         make_code_slide(r1_e0, None,
             heading='Three Bugs, One Shot',
-            body='The very first submission is a goldmine for instructors. <strong>Line 4: <code>whille</code></strong> — a typo that causes a SyntaxError before anything runs. <strong>Line 10: <code>CH==\'U\'</code></strong> — capital CH is undefined (Python is case-sensitive). <strong>Line 13: <code>s[ch]=\'#\'</code></strong> — you can\'t assign to a string index; strings are immutable in Python.',
+            body='<strong>Line 4:</strong> <code>whille</code> is a typo — Python crashes before the code even starts. <strong>Line 10:</strong> <code>CH</code> is a new variable name, but <code>ch</code> (lowercase) is what the loop gives us — Python treats these as different names. <strong>Line 13:</strong> You cannot change a single letter in a Python string by position — strings are locked once created.',
+            note='Mental model: "I can modify a string the same way I\'d write to an array slot." This is the most common beginner Python misconception.',
             manual_highlight=[4, 10, 13],
         ),
         make_code_slide(r1_e1, r1_e0,
-            heading='Runtime → Logic: A Healthy Shift',
-            body='By event #16 (~22s in), the student fixed the <code>while</code> typo. But now a subtler bug appears: <strong>Line 29: <code>i=\'#\'</code></strong> — they\'re trying to replace a character by mutating the loop variable <code>i</code>. That doesn\'t work; <code>i</code> is a local copy. The original string is untouched. This is the "wrong mental model of loops" error — extremely common in beginners.',
-            manual_highlight=[25, 26, 29, 30],
+            heading='Runtime → Wrong Answer: Progress!',
+            body='The typo is fixed — now the code at least <em>runs</em>. But it still gives the wrong output. <strong>Line 29:</strong> <code>i = \'#\'</code> — the student is updating the loop variable <code>i</code>, but that doesn\'t change the original string. <code>i</code> is a temporary copy for each step through the loop. The string itself is untouched.',
+            note='Mental model: "If I change the loop variable, the original data changes too." This is a misunderstanding of how Python\'s for-loop works.',
+            manual_highlight=[29],
         ),
         make_code_slide(r1_e2, r1_e1,
-            heading='Complexity Spiral',
-            body='Around 54 seconds in, the code has ballooned to 42 lines. The student is now building a separate string <code>ss</code>, using print statements inside loops, and commenting out old attempts. Notice <strong>Line 35: <code>ss[i]=\'#\'</code></strong> — the same string-immutability bug, just on a different variable. They haven\'t yet identified the root cause; they\'ve just added layers.',
-            manual_highlight=[35, 29, 30, 31, 32, 33, 34],
+            heading='Adding Complexity Without Progress',
+            body='The code has grown from 15 lines to 42. There are now print statements inside loops, commented-out old attempts, and a new variable <code>ss</code> — but <strong>Line 35:</strong> <code>ss[i] = \'#\'</code> hits the exact same wall as before: you still can\'t overwrite a character in a string by index.',
+            note='Mental model: "My approach is right, I just need to do it on a different variable." The real issue (strings can\'t be changed in place) hasn\'t been understood yet.',
+            manual_highlight=[35],
         ),
         make_code_slide(r1_e3, r1_e2,
-            heading='Almost There',
-            body='At event #71 (~92s in), 1 out of 3 public tests pass. The core idea is emerging: build the output string one character at a time. <strong>The key fix is on lines 36–37</strong>: instead of modifying the loop variable or indexing a string, they now do <code>s[i]=\'#\'</code> where <code>s</code> is a list — so assignment actually works. Getting closer.',
+            heading='One Test Passes — The Insight Arrives',
+            body='1 out of 3 test cases passes. The key change: <strong>Lines 36–38</strong> — instead of trying to modify the string directly, the student now converts it to a list first. Lists <em>can</em> be changed by position. This is the breakthrough — the algorithm is now fundamentally correct.',
+            note='Mental model shifting to: "Convert to list, change the item, convert back." This is the correct approach.',
             manual_highlight=[36, 37, 38],
         ),
         make_code_slide(r1_e4, r1_e3,
-            heading='Public Tests: All Green 🟢',
-            body='At 95 seconds, all 3 public tests pass. The logic is now: (1) convert string to list, (2) replace non-vowel, non-space characters with <code>\'#\'</code>, (3) rebuild and print each line. Notice the massive commented-out section — the student kept their old attempts around "just in case." The actual solution is lines 49–52.',
+            heading='All Public Tests Pass 🟢',
+            body='All 3 public tests pass. <strong>Lines 49–52</strong> contain the actual solution — everything above is commented-out old attempts the student kept "just in case." The logic: convert to list → replace non-vowels → join back and print.',
+            note='Common behaviour: students keep old code around even after it\'s superseded, in case they need to "go back."',
             manual_highlight=[49, 50, 51, 52],
         ),
         make_code_slide(r1_e5, r1_e4,
             heading='Private Tests Pass Too ✓',
-            body='Just 2 seconds later, the student ran private tests and passed all 3. Notice how the final code (lines 1–35) is much cleaner — they removed the dead commented code. The private pass is the real signal: the logic <em>generalised</em>, not just overfit to the 3 public examples. This is a textbook model of "incremental debugging that eventually converges."',
+            body='The student cleaned up the code and submitted to the harder private tests. All passed. <strong>Lines 8–13</strong> show the final, lean version — the logic generalised correctly, not just matched the visible examples.',
+            note='This is what real learning looks like: the student arrived at a solution they understand, not just one they copied.',
             manual_highlight=[8, 9, 10, 11, 12, 13],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'Three concurrent bugs in the first submission — typo, case sensitivity, and string immutability. Each needed to be discovered separately.',
-                'The shift from RuntimeError to WrongAnswer is <em>progress</em>: it means the code at least runs. Students shouldn\'t treat this as "still failing."',
-                'Mutation via loop variable (<code>i = \'#\'</code>) is one of the most common Python misconceptions. It needs direct instruction.',
-                'The final solution was algorithmically different from the first attempt — the student genuinely learned, not just patched.',
+                '<strong>Strings are immutable.</strong> Students often assume they can change a character in a string the same way they\'d change a value in a list. This misconception shows up constantly and needs direct, explicit teaching.',
+                '<strong>Crashes → wrong answers → correct answers</strong> is the healthy debugging arc. When students move from crashes to wrong output, celebrate — it means the code is actually running.',
+                '<strong>Layering complexity hides the root cause.</strong> Adding more variables and print statements doesn\'t fix a wrong mental model. It just delays the moment of clarity.',
+                '<strong>Simplicity is the destination.</strong> The final 5-line solution looks nothing like the 40-line intermediate versions. Clean code usually emerges from understanding, not from polish.',
             ],
-            'intervention': 'When you see a student with 15+ RuntimeErrors, ask: "What does Python say the error is?" Then ask: "What does that mean about your code?" — don\'t just tell them the fix. For the string-immutability bug specifically, a one-line demo (<code>s = list(s)</code>) changes everything.',
+            'intervention': 'When a student tries to modify a string by position, don\'t just correct them — <em>demonstrate</em> the error in a blank Python shell: <code>s = "hello"; s[0] = "H"</code>. Then show the fix: <code>s = list(s); s[0] = "H"; s = "".join(s)</code>. A 30-second live demo is worth ten explanations.',
         }
     ]
 }
@@ -284,50 +301,56 @@ REPLAY2 = {
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Given a 4-digit integer, check whether its digits are strictly decreasing from left to right. For example, 9876 → True, 4321 → True, 4312 → False.',
-            'why': 'This 44-second session is a contrast to the others. The student makes exactly the right changes at exactly the right time. No thrashing, no spiralling complexity. Compare this to Replay 5 (Reversed Squares) — same difficulty level, completely different outcome.',
+            'question_desc': 'Given a 4-digit integer, check whether its digits are strictly decreasing from left to right.',
+            'question_code': '9876  →  True   (9 > 8 > 7 > 6)\n4321  →  True\n4312  →  False  (3 > 1, but 1 < 2 at the end)\n1234  →  False',
+            'why': 'This 44-second session is a masterclass in focused debugging. The student makes small, deliberate changes and tests after each one. Compare this to Replay 5 where 213 attempts achieve nothing — same problem difficulty, opposite behaviour.',
             'what_to_look_for': [
-                'How quickly the runtime errors resolve (just 3 attempts)',
-                'The brief regression at 30s — they "improved" and accidentally broke it',
-                'The final solution is remarkably compact',
-                'What separates an efficient session from a thrashing one',
+                'Two bugs in the first attempt — a wrong variable name and a wrong loop approach — fixed in just 3 tries',
+                'A brief regression at 30 seconds: the student "improved" the code and accidentally broke it',
+                'The final solution has a hidden flaw — but the tests don\'t catch it',
+                'What makes this session efficient: one change at a time, test immediately',
             ],
         },
         make_code_slide(r2_e0, None,
-            heading='Runtime Error: Two Bugs, Adjacent Lines',
-            body='The first attempt has the right algorithm structure — convert to string, iterate, compare. But <strong>Line 26: <code>list(string)</code></strong> — the variable is <code>string1</code>, not <code>string</code>. NameError. And <strong>Line 28: <code>if list1[k] > list1[k+1]</code></strong> — <code>k</code> is the character itself (from <code>for k in list1</code>), not an index. So this would fail at runtime even if line 26 was fixed.',
-            manual_highlight=[25, 26, 27, 28],
+            heading='Two Bugs, Adjacent Lines',
+            body='The algorithm is on the right track — convert to string, compare digits. But <strong>Line 26:</strong> the variable is <code>string1</code>, but the code writes <code>list(string)</code> — wrong name, causing a crash. And <strong>Line 28:</strong> <code>k</code> comes from the for-loop and is a <em>character</em>, not an index, so <code>list1[k]</code> would fail even if line 26 were fixed.',
+            note='Mental model: "I know what I want to do, I just need to figure out the right variable names." The student is close — understanding is there, execution is off.',
+            manual_highlight=[26, 28],
         ),
         make_code_slide(r2_e1, r2_e0,
-            heading='Still Stuck: Iterating the Number Directly',
-            body='After 10 seconds, they fixed the variable name but introduced a new bug: <strong>Line 26: <code>list(n)</code></strong> — you can\'t convert an integer directly to a list. The mental model here is "I want the digits as a list" but the path there is <code>list(str(n))</code>. The student is one function call away from success.',
-            manual_highlight=[25, 26, 27, 28],
+            heading='Still Stuck: Can\'t List an Integer',
+            body='Variable name is fixed, but now <strong>Line 26:</strong> <code>list(n)</code> — you can\'t turn an integer directly into a list of its digits. The path to digits is: integer → string → list of character digits. The student is one step away.',
+            note='Mental model: "I should be able to break the number into parts directly." They\'re not yet thinking of the integer→string→list conversion chain.',
+            manual_highlight=[26],
         ),
         make_code_slide(r2_e2, r2_e1,
-            heading='All Tests Pass — But Wait...',
-            body='At 22.5 seconds, all 3 tests pass! The fix was <code>list(string1)</code>. But look at <strong>Line 28</strong>: <code>if list1[0] > list1[1]</code> — this only checks the <em>first two digits</em>, not all four. It happened to pass the public tests (which probably don\'t have edge cases like 9811), but the logic is incomplete. The student doesn\'t know this yet.',
-            manual_highlight=[27, 28, 29, 30, 31],
+            heading='All Tests Pass — But Is It Right?',
+            body='All 3 public tests pass. But <strong>Line 28</strong> only compares the first two digits: <code>list1[0] > list1[1]</code>. A truly "decreasing" number needs all four consecutive pairs checked. The student doesn\'t know this yet — the public tests happened to pass anyway.',
+            note='This is the "lucky pass" — code that works on the visible examples but is incomplete. A teachable moment: passing tests doesn\'t prove correctness.',
+            manual_highlight=[28],
         ),
         make_code_slide(r2_e3, r2_e2,
-            heading='Brief Regression: 2/3',
-            body='30 seconds in, the student tries to "fix" the comparison and accidentally breaks it: <strong>Line 28: <code>if list1[2] > list1[1]</code></strong> — checking the wrong pair of digits now. This is a common pattern: student passes tests, decides to "improve" the solution, introduces a regression. The impulse to improve is good; the missing step is re-running tests immediately after each change.',
-            manual_highlight=[27, 28, 29, 30, 31],
+            heading='Regression: Fixing What Wasn\'t Broken',
+            body='The student tries to improve the comparison and accidentally swaps the indices — <strong>Line 28:</strong> now reads <code>list1[2] > list1[1]</code> (checking the wrong pair). This is a classic trap: the impulse to "clean up" code that\'s working, without re-running tests after each change.',
+            note='Mental model: "More changes = more correct." The safer habit: make one change, test, then continue.',
+            manual_highlight=[28],
         ),
         make_code_slide(r2_e4, r2_e3,
             heading='Back to Passing — Final Submission ✓',
-            body='40 seconds in, all tests pass again and the student submits. The final code still only checks one pair of adjacent digits (not all four strictly), but it happens to pass both public and private tests — suggesting the test cases don\'t stress this edge case. A useful discussion point: <em>can you write a test case that would break this?</em>',
-            manual_highlight=[27, 28, 29, 30, 31],
+            body='All tests pass again. The code still only checks one pair of adjacent digits — and gets away with it because the test set doesn\'t expose the gap. A rich classroom discussion: <em>can you write a test case that would break this?</em>',
+            note='The student\'s mental model is now "check if first digit > second digit = decreasing number." This works for the tests given, but isn\'t the full rule.',
+            manual_highlight=[27, 28],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'Minimal change strategy: this student changed one or two lines between attempts, making it easy to pinpoint what broke.',
-                'The brief regression at 30s is instructive — improving code without testing after every change is risky.',
-                'The final solution has a hidden bug (only checks two digits), but passes tests. This is worth discussing with the class: "how would you find this bug?"',
-                'Short sessions aren\'t necessarily good sessions — but this one was. The student had a clear mental model and executed it efficiently.',
+                '<strong>One change at a time.</strong> This student\'s short session succeeded because each attempt changed only one or two things. When something broke, it was easy to see why.',
+                '<strong>Tests can lie by omission.</strong> The final solution only checks two of the four digit comparisons — and passes both public and private tests anyway. This is a gap in the test design worth discussing.',
+                '<strong>Regression by improvement.</strong> The 30-second dip shows how improving working code without testing can introduce new bugs. Teach: "test after every change."',
+                '<strong>Efficiency comes from clarity.</strong> This student had a clear algorithm in mind from the start. The errors were mechanical (wrong names, wrong conversion), not conceptual.',
             ],
-            'intervention': 'Use this replay as a "good debugging" model. Show it alongside Replay 5 (Reversed Squares) which has 213 attempts and no success. Ask students: "What is this student doing differently?"',
+            'intervention': 'Use this replay alongside Replay 5 (which takes 213 attempts and fails). Ask students: "What is this student doing differently?" The answer — making small, testable changes — is the debugging skill worth teaching explicitly.',
         }
     ]
 }
@@ -356,55 +379,62 @@ REPLAY3 = {
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'A <em>pangram</em> is a sentence that contains every letter of the alphabet at least once. "The quick brown fox jumps over the lazy dog" is the classic example. Return True if the input is a pangram, False otherwise.',
-            'why': 'This replay demonstrates the "false summit" trap — the student passes all visible tests (3/3) but immediately fails private tests. Then they have to reason about what the hidden test cases might be testing, without being able to see them. This is a crucial skill: building code that\'s correct by construction, not just by example-matching.',
+            'question_desc': 'A <em>pangram</em> is a sentence that uses every letter of the alphabet at least once.',
+            'question_code': '"The quick brown fox jumps over the lazy dog"  →  True\n"Hello world"                                  →  False\n"Pack my box with five dozen liquor jugs"      →  True',
+            'why': 'This replay shows the "false summit" trap. At 47 seconds the student passes all visible tests — and feels done. But hidden tests fail immediately, and now they must figure out why without being able to see those hidden tests. This skill — reasoning about invisible cases — is rarely taught directly.',
             'what_to_look_for': [
-                'The first approach has the wrong logic direction (iterating text instead of checking alphabet)',
-                'The "false summit" moment: all public tests pass at 47s',
-                'The private failure exposes a counting bug: repeat characters inflate the count past 26',
-                'The final fix uses a set — elegant and robust',
+                'The first approach has the logic <em>backwards</em>: checking if each character is in the alphabet, rather than if the alphabet is in the text',
+                'The "false summit": all public tests pass at 47 seconds',
+                'A counting bug that repeat characters can exploit',
+                'The elegant final fix using a Python <code>set</code>',
             ],
         },
         make_code_slide(r3_e0, None,
-            heading='Wrong Logic Direction',
-            body='The first attempt checks "for each character in the text, is it in the alphabet?" — but that\'s the <em>opposite</em> of pangram logic. A pangram requires every letter of the alphabet to appear in the text, not every character in the text to be a letter. Also, <strong>Line 25: return True inside the loop</strong> — this returns on the first character, ignoring the rest. Logic is fundamentally backwards.',
-            manual_highlight=[21, 22, 23, 24, 25, 26],
+            heading='Logic Backwards From the Start',
+            body='The question is "does the text contain all 26 letters?" But the code asks "is each character a letter?" — the opposite direction. Also, <strong>Line 25:</strong> the <code>return True</code> is inside the loop, so the function stops and returns after checking just the first character.',
+            note='Mental model: "I need to check the text against the alphabet" — but implementing it as "for each letter in text, check if it\'s in the alphabet" rather than "for each letter in the alphabet, check if it\'s in the text."',
+            manual_highlight=[21, 22, 23, 24, 25],
         ),
         make_code_slide(r3_e1, r3_e0,
-            heading='Making It Worse',
-            body='4 seconds in, the student tries to patch: <strong>Line 24: <code>if i not in alphabets and int(i)=False</code></strong> — this is not valid Python (syntax error: <code>int(i)=False</code>). They\'re trying to exclude non-letter characters, but the approach is wrong and the syntax is broken. This is "patching symptoms without fixing the root cause."',
+            heading='Patching a Broken Approach',
+            body='The student tries to exclude non-letter characters: <strong>Line 24:</strong> <code>int(i)=False</code> — this isn\'t valid Python at all. You can\'t assign to a function call. They\'re trying to filter out numbers and punctuation, but the approach (checking each character instead of checking all 26 letters) is still fundamentally off.',
+            note='Mental model: "My loop structure is correct, I just need to exclude the wrong kinds of characters." The loop structure itself is the problem.',
             manual_highlight=[24],
         ),
         make_code_slide(r3_e2, r3_e1,
-            heading='New Approach: Counting Characters',
-            body='Around 25 seconds in, the student strips spaces and counts how many characters are in the alphabet. The reasoning: "if 26 or more chars are in the alphabet, it\'s a pangram." This is better — but has a subtle bug. <strong>What if the text has repeated letters?</strong> "aaaaaaaaa...a" (26 a\'s) would count as 26 alphabet hits and return True.',
+            heading='Better Idea — With a Hidden Bug',
+            body='A fresh approach: strip spaces, count how many characters are in the alphabet. If the count reaches 26, it\'s a pangram. This is much closer! But <strong>Lines 12–17</strong> count <em>every</em> character that appears in the alphabet, including repeats. A string like "aaa...a" (repeated 26 times) would wrongly count as a pangram.',
+            note='Mental model: "If I\'ve seen 26 alphabet letters in the text, I\'ve seen all of them." True if each letter counted once — false if repeats inflate the count.',
             manual_highlight=[12, 13, 14, 15, 16, 17, 18],
         ),
         make_code_slide(r3_e3, r3_e2,
-            heading='False Summit: Public Tests All Green 🟢',
-            body='At 47 seconds, all 3 public tests pass. The student might feel done. But the counting approach (<code>count >= 26</code>) will fail for inputs with repeated letters. The public test cases happened not to test this edge case. This is the "false summit" — visible success masking hidden failure.',
-            manual_highlight=[11, 12, 13, 14, 15, 16, 17, 18],
+            heading='False Summit: All Public Tests Pass 🟢',
+            body='All 3 public tests pass at 47 seconds. The counting logic works for the visible test cases — they don\'t include repeated-letter inputs. But the hidden tests do, and they will expose the bug. The student doesn\'t know this moment of confidence is about to break.',
+            note='This is the "false summit" — visible success masking hidden failure. A crucial concept: passing tests proves the code works for those inputs, not for all inputs.',
+            manual_highlight=[11, 12, 13, 14, 15],
         ),
         make_code_slide(r3_e4, r3_e3,
-            heading='Private Tests Expose the Bug: 1/3',
-            body='Immediately after the public pass, private tests reveal only 1/3. The hidden test cases likely include repeated-letter inputs like "aaabbbccc..." (26+ chars, all alphabet, but not a pangram). The student\'s counting logic inflates the count for repeated chars. The fix: count <em>unique</em> letters, not total letters.',
+            heading='Hidden Tests Reveal the Bug: 1/3',
+            body='Private tests: only 1/3 pass. The hidden cases almost certainly include inputs with repeated letters. <strong>Lines 6–12:</strong> the student is now reasoning — "why does 3/3 public become 1/3 private?" They need to think of an input that would fool their count logic. This is adversarial thinking — rare and valuable.',
+            note='The gap between 3/3 public and 1/3 private is the signal. The question is whether the student can reason about it without seeing the hidden tests.',
             manual_highlight=[6, 7, 8, 9, 10, 11, 12],
         ),
         make_code_slide(r3_e5, r3_e4,
             heading='The Fix: Unique Letters via Set ✓',
-            body='The elegant solution at 71s: use a <code>set()</code> to collect unique letters encountered. If the set reaches size 26, it\'s a pangram. This is both more correct and more Pythonic. Notice how the student cleaned up the code — the old commented section is gone. This is convergence through insight, not through exhaustion.',
-            manual_highlight=[6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+            body='The solution: use a <code>set</code> to collect unique letters. Sets automatically discard duplicates. If the set contains all 26 letters, it\'s a pangram. <strong>Lines 6–15</strong> — cleaner, more correct, and more Pythonic than the counting approach.',
+            note='The insight: "I don\'t want to count letters, I want to collect unique letters." This is what a set is made for.',
+            manual_highlight=[6, 7, 8, 9, 10, 11, 12, 13, 14],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'The "false summit" — passing public tests but failing private ones — is one of the most common and instructive failure modes.',
-                'The counting bug (<code>count >= 26</code>) fails when letters repeat. This requires reasoning about edge cases, not just running the public examples.',
-                'Sets are the natural tool for "have I seen all 26 letters?" — this is worth teaching explicitly.',
-                'The student improved on each iteration, even if it took a while. The final solution is correct and clean.',
+                '<strong>The "false summit" is a real teaching moment.</strong> Passing all visible tests creates false confidence. Students need to learn: "passing tests means it works for these cases, not for all cases." Ask them to imagine a case that would break their logic.',
+                '<strong>Logic direction matters.</strong> "For each character, is it a letter?" is not the same as "for each letter, is it in the text?" These are different loops over different things. Drawing the logic on paper first helps.',
+                '<strong>Sets are the right tool for uniqueness.</strong> When the question involves "have I seen all X?" — whether it\'s letters, numbers, or anything else — a set is almost always the correct data structure.',
+                '<strong>Reasoning about hidden tests is a learnable skill.</strong> Ask: "Can you think of an input that would pass the public tests but fail your logic?" This builds robustness, not just correctness on examples.',
             ],
-            'intervention': 'Ask students: "Can you construct an input that passes the public tests but would fail your logic?" This builds the skill of adversarial test design — crucial for writing robust code.',
+            'intervention': 'Before students run tests, ask: "Can you describe an input that would trick your solution?" This builds the habit of adversarial thinking. For the set insight: show <code>len(set("the quick brown fox...")) == 26</code> — one line, correct, idiomatic Python.',
         }
     ]
 }
@@ -433,55 +463,62 @@ REPLAY4 = {
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Return True if the input string starts with <code>\'Hello \'</code> (with a space) or <code>\'Hi \'</code> (with a space). Return False otherwise. <code>\'HiThere\'</code> → False, <code>\'Hi there\'</code> → True.',
-            'why': 'This student took 168 attempts over 110 seconds. The problem has a simple two-line solution (<code>s.startswith(\'Hello \') or s.startswith(\'Hi \')</code>). Watch how they over-engineered it, kept adding complexity, and only simplified at the end. A case study in why simpler is usually better.',
+            'question_desc': 'Return <code>True</code> if the input string starts with <code>"Hello "</code> or <code>"Hi "</code> (with a space after each). Return <code>False</code> otherwise.',
+            'question_code': '"Hello there"   →  True\n"Hi there"      →  True\n"HiThere"       →  False  (no space)\n"hello there"   →  False  (lowercase)\n"Hey there"     →  False',
+            'why': 'The correct solution is two lines. This student took 168 attempts over 110 seconds, building complex code before arriving at the simple answer. A case study in why beginners over-engineer: they don\'t know what built-in tools exist, so they implement everything manually.',
             'what_to_look_for': [
-                'The first attempt uses invalid Python: <code>startswith(\'Hello\'|| \'Hi\')</code>',
-                'After 27 seconds and 42 events, still hitting runtime errors',
-                'A brief public-all-pass moment that misleads — full of special cases',
-                'The final clean solution is dramatically simpler than the intermediate ones',
+                'The very first attempt uses <code>||</code> — the "or" from other programming languages, not Python',
+                'By 27 seconds, still stuck — now manually checking character positions one by one',
+                'A brief moment where all tests pass, built on hard-coded special cases',
+                'The final solution is dramatically simpler than anything in between',
             ],
         },
         make_code_slide(r4_e0, None,
-            heading='Invalid Syntax from the Start',
-            body='The very first attempt uses <strong>Line 22: <code>s.startswith(\'Hello\'|| \'Hi\')</code></strong> — <code>||</code> is not Python (it\'s JavaScript/C). Python uses <code>or</code>. This causes a SyntaxError. A language confusion error, very common when students switch between languages or guess syntax.',
+            heading='Wrong Language: <code>||</code> Is Not Python',
+            body='<strong>Line 22:</strong> <code>s.startswith(\'Hello\'|| \'Hi\')</code> — <code>||</code> is the "or" operator in JavaScript and C, not Python. Python uses the word <code>or</code>. This causes a crash before anything runs. A common error when students switch between languages or guess syntax.',
+            note='Mental model: "or" works like in other languages I\'ve used. Students who\'ve coded in JavaScript or C++ bring their syntax with them.',
             manual_highlight=[22],
         ),
         make_code_slide(r4_e1, r4_e0,
-            heading='Tab Characters and Single-Character Logic',
-            body='27 seconds and 42 events in, still failing. The student is now checking <strong>Line 23: <code>if s[5]="\\t"</code></strong> — (1) <code>=</code> should be <code>==</code>, (2) <code>\\t</code> is a tab, not a space. They\'ve also split "Hello" and "Hi" into separate if-blocks. This is over-engineering — the problem just needs to check the prefix. They\'re checking character positions manually.',
-            manual_highlight=[22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+            heading='Manual Character Checking',
+            body='27 seconds and 42 attempts in. The student has split the logic into separate blocks for "Hello" and "Hi". But <strong>Line 23:</strong> <code>if s[5]="\\t"</code> has two bugs: <code>=</code> should be <code>==</code>, and <code>\\t</code> is a tab character, not a space. They\'re trying to check whether there\'s a space after the greeting — but using the wrong character.',
+            note='Mental model: "I\'ll check each character by position." Instead of using a built-in like <code>startswith()</code>, they\'re reimplementing what it already does.',
+            manual_highlight=[22, 23, 24, 25],
         ),
         make_code_slide(r4_e2, r4_e1,
-            heading='Public All-Pass — But Look at the Code',
-            body='At 59.7s, all 4 public tests pass. But look at <strong>Line 22: <code>if s==\'Hithere\'</code></strong> — a hardcoded special case! And <strong>Line 24: <code>startswith(\'Hello\' or \'Hi\' or \'hello\' or \'hi\')</code></strong> — <code>\'Hello\' or \'Hi\'</code> evaluates to <code>\'Hello\'</code> in Python (the first truthy string), so this only checks for \'Hello\'. The public pass is fragile.',
-            manual_highlight=[22, 23, 24, 25, 26, 27, 28, 29, 30],
+            heading='All Tests Pass — But Look at the Code',
+            body='All 4 public tests pass. But the code works by accident. <strong>Line 22:</strong> <code>if s==\'Hithere\'</code> — a hard-coded special case for one specific string. <strong>Line 24:</strong> <code>startswith(\'Hello\' or \'Hi\')</code> — in Python, <code>\'Hello\' or \'Hi\'</code> evaluates to just <code>\'Hello\'</code> (Python returns the first "true" value). So this only checks for Hello, not Hi.',
+            note='Mental model: "or inside the function means check both." But Python evaluates <code>\'Hello\' or \'Hi\'</code> as an expression <em>before</em> passing it to the function — and it simplifies to <code>\'Hello\'</code>.',
+            manual_highlight=[22, 24],
         ),
         make_code_slide(r4_e3, r4_e2,
-            heading='Regression: Private Fails, Public Slips',
-            body='After the public pass, private tests reveal only 2/3. The student tries to fix it and drops to 3/4 public. <strong>Line 27: <code>if len(s[2])==0</code></strong> — <code>s[2]</code> is a single character (not a list), so <code>len()</code> of it is always 1, never 0. This never triggers. They\'re still trying to check the character after "Hi" manually — but the built-in <code>startswith(\'Hi \')</code> already handles this.',
-            manual_highlight=[23, 24, 26, 27, 28, 29, 30, 31, 32],
+            heading='Private Tests Fail — Complexity Grows',
+            body='After the public pass, private tests reveal only 2/3. The student adds more conditions, but now public tests also slip. <strong>Line 27:</strong> <code>if len(s[2])==0</code> — <code>s[2]</code> is always a single character (length 1, never 0). This condition never triggers. The code is getting longer but not more correct.',
+            note='Mental model: "Adding more conditions will cover more cases." But the core logic is still wrong, so adding conditions just creates new failure modes.',
+            manual_highlight=[27],
         ),
         make_code_slide(r4_e4, r4_e3,
-            heading='Over-Engineering Phase',
-            body='At 106.3s, 4/4 public pass again — but notice the complexity! The student is splitting the string, checking word counts, using a list. <strong>Lines 22–29</strong> are doing far more work than necessary. Still, the logic works for public cases. The private test is likely checking edge cases that the word-count logic mishandles.',
-            manual_highlight=[22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+            heading='Over-Engineering Peak',
+            body='<strong>Lines 22–31:</strong> the student is now splitting the string, counting words, using lists. This is far more complex than needed. The code works for public tests but fails private ones. Notice how far the code has drifted from the original simple idea.',
+            note='The student has lost sight of the problem. When code grows this complex for a simple rule, it\'s usually a sign the core approach needs to change, not expand.',
+            manual_highlight=[22, 23, 24, 25, 26, 27, 28, 29],
         ),
         make_code_slide(r4_e5, r4_e4,
             heading='The Simple Solution ✓',
-            body='At 107.5s, all tests pass. After 159 events and 107 seconds of struggle, the student arrives at... two <code>startswith()</code> calls. <strong>Lines 23–27</strong> is all it needed to be. The lesson: in Python, there\'s usually a built-in that does exactly what you need. The instinct to manually parse strings character-by-character adds bugs, not precision.',
-            manual_highlight=[22, 23, 24, 25, 26, 27, 28, 29, 30],
+            body='After 159 attempts: two <code>startswith()</code> calls. <strong>Lines 23–24</strong>. That\'s it. The entire 107-second journey ends at the two-line solution that was available from the start.',
+            note='This is what happens when a student discovers the right built-in at the end: everything they built manually becomes unnecessary. The lesson: look for built-in functions before implementing manually.',
+            manual_highlight=[23, 24],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'Over-engineering is a real failure mode. 110 seconds of complexity, and the answer was 2 lines.',
-                '<code>||</code> is not Python. Language confusion is common — students need to learn to read error messages carefully.',
-                'The "or" short-circuit: <code>\'Hello\' or \'Hi\'</code> evaluates to <code>\'Hello\'</code>. This is a Python gotcha worth teaching explicitly.',
-                'Hardcoded special cases (<code>if s == \'Hithere\'</code>) are a red flag — they suggest the student is pattern-matching test outputs, not solving the problem.',
+                '<strong>Over-engineering is a symptom of not knowing the vocabulary.</strong> Students who don\'t know <code>startswith()</code> implement it manually — and get it wrong. Teaching built-in string methods directly prevents this whole class of errors.',
+                '<strong>Language syntax carries over.</strong> <code>||</code> for "or" is valid in several other languages. When students switch to Python, they bring their syntax habits. Error messages that say "invalid syntax" don\'t explain <em>why</em> — students need to be told explicitly.',
+                '<strong>"A or B" in Python is not what it looks like.</strong> <code>\'Hello\' or \'Hi\'</code> evaluates to <code>\'Hello\'</code> — the first truthy value. This surprises beginners who expect it to mean "either of these." Worth teaching as a distinct concept.',
+                '<strong>Hard-coded special cases are a red flag.</strong> When a student writes <code>if s == \'Hithere\'</code>, they\'re matching test output, not solving the problem. This pattern deserves a gentle but direct conversation.',
             ],
-            'intervention': 'When a student has 30+ attempts on a problem, ask: "Can you explain the core rule in one sentence?" If they can\'t, the algorithm is wrong. A simple rule leads to simple code. Show them: <code>return s.startswith(\'Hello \') or s.startswith(\'Hi \')</code> — done.',
+            'intervention': 'Show students the Python documentation for string methods — or just demo <code>"Hello there".startswith("Hello ")</code> in a Python shell. Ask: "What does this return? What about <code>"Hi there".startswith("Hi ")</code>?" Then: "How would you combine these two checks?" The student often solves it in under a minute once they know the tool exists.',
         }
     ]
 }
@@ -503,56 +540,62 @@ REPLAY5 = {
     'total_duration': 147,
     'outcome': 'Score 0 ✗',
     'outcome_class': 'fail',
-    'insight': 'The session that never stabilized. 213 attempts, no passing submission. A master class in unproductive loops — and why "try more" is not the same as "debug more."',
-    'tags': ['thrashing', 'no recovery', 'runtime loops', 'unproductive effort'],
+    'insight': '213 attempts. Zero passing tests. This student worked harder than anyone else in this set — and got nowhere. A defining example of "thrashing": effort without traction. The session illuminates why teaching <em>how</em> to debug matters as much as teaching syntax.',
+    'tags': ['thrashing', 'no recovery', 'mutation bug', 'missing vocabulary'],
     'slides': [
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Given a list of numbers, return a new list containing the squares of the elements in <em>reverse order</em>. So <code>[1, 2, 3]</code> → <code>[9, 4, 1]</code>.',
-            'why': 'The correct solution is one line: <code>return [x**2 for x in reversed(l)]</code>. This student took 213 attempts over 147 seconds and never got there. This is the canonical "thrashing" pattern — high effort, no progress. Understanding why helps instructors intervene before students disengage completely.',
+            'question_desc': 'Given a list of numbers, return a <em>new list</em> with each number squared, but in <em>reverse order</em>. The original list should not be changed.',
+            'question_code': '[1, 2, 3]  →  [9, 4, 1]   (3²=9, 2²=4, 1²=1)\n[2, 4]     →  [16, 4]',
+            'why': 'The complete solution is one short line. This student made 213 attempts over 147 seconds and never reached a passing score. This is the "thrashing" pattern — lots of activity, no progress. Watching this session reveals a specific knowledge gap: the student never understood how to build a new list from an old one.',
             'what_to_look_for': [
-                'The first attempt calls a non-existent function <code>squares()</code>',
-                'By 36 seconds, the same fundamental confusion persists — iterating but mutating the wrong thing',
-                'The student keeps rewriting the same broken pattern with minor variations',
-                'No single attempt lasted more than a few seconds before being replaced',
+                'First attempt calls <code>squares()</code> — a function that does not exist in Python',
+                'Every attempt after that tries to modify the <em>original</em> list instead of building a new one',
+                'The student keeps cycling through slight variations of the same broken idea',
+                'No attempt ever produces a correct result — 147 seconds of sincere, unproductive effort',
             ],
         },
         make_code_slide(r5_e0, None,
-            heading='Calling a Function That Doesn\'t Exist',
-            body='The first attempt: <strong>Line 21: <code>return squares(l[::-2])</code></strong>. There is no built-in or imported <code>squares()</code> function in Python. The student seems to be imagining the API rather than looking at what\'s actually available. Also, <code>l[::-2]</code> is reverse-stepping by 2, not reversing the whole list. Both the function and the slicing are wrong.',
+            heading='Imagining a Function That Doesn\'t Exist',
+            body='<strong>Line 21:</strong> <code>return squares(l[::-2])</code>. Python has no built-in <code>squares()</code> function. The student is guessing at the API — inventing a function name that sounds right. Also, <code>l[::-2]</code> steps backwards by 2 (skipping every other element), not a full reversal. Both ideas are wrong from the start.',
+            note='Mental model: "There must be a built-in that does this." When students don\'t know the right tools, they invent plausible-sounding names. This is a vocabulary gap, not a logic gap.',
             manual_highlight=[21],
         ),
         make_code_slide(r5_e1, r5_e0,
-            heading='36 Seconds In: Still Stuck on Mutation',
-            body='After 50 events and 36 seconds, the student is now iterating over the list and trying to modify it in-place: <strong>Line 23: <code>l=l[i]**l[i]</code></strong> — they\'re squaring the element with itself (not just squaring it), then assigning the result back to <code>l</code> (replacing the whole list with a number!). There\'s even dead code below: an unreachable second loop (line 25). The mental model of list operations is broken.',
-            manual_highlight=[22, 23, 24, 25, 26],
+            heading='Overwriting the List Instead of Building a New One',
+            body='36 seconds in. Now using a loop — but <strong>Line 23:</strong> <code>l = l[i] ** l[i]</code> replaces the entire list <code>l</code> with a single number (the element squared by itself, not even <code>x²</code>). After the first iteration, <code>l</code> is no longer a list at all. The loop then crashes trying to access a number like a list.',
+            note='Mental model: "I can update the list as I go." Students who haven\'t yet learned to build a new, separate result list will try to modify the original — which destroys it during iteration.',
+            manual_highlight=[23],
         ),
         make_code_slide(r5_e2, r5_e1,
-            heading='70 Seconds: Using \'int\' as a Variable Name',
-            body='At 70 seconds, <strong>Line 22: <code>for int in l</code></strong> — the student has named their loop variable <code>int</code>, which shadows Python\'s built-in <code>int()</code> function. If anything else in the code uses <code>int()</code>, it will break. They\'re still assigning to <code>l</code> inside the loop, replacing the list. This is the same fundamental bug as 36 seconds ago, just rearranged.',
-            manual_highlight=[22, 23, 24],
+            heading='Using a Built-in Word as a Variable Name',
+            body='70 seconds in. <strong>Line 23:</strong> <code>int = l[i] ** 2</code> — the student named their variable <code>int</code>, which is Python\'s built-in for converting things to whole numbers. Using it as a variable name hides the built-in — if anything else needs <code>int()</code>, it will fail. The deeper bug is still there: assigning to <code>int</code> (or <code>l</code>) instead of collecting results into a new list.',
+            note='Mental model: "<code>int</code> is just a word I can use for a number." Students don\'t always know which words are "reserved" or built-in in Python.',
+            manual_highlight=[23],
         ),
         make_code_slide(r5_e3, r5_e2,
-            heading='110 Seconds: Switching to range() — Same Bug',
-            body='Now using <code>range()</code> instead of iterating the list directly, but <strong>Line 23: <code>l=l[i]**2</code></strong> is still assigning to <code>l</code> (the whole list), not <code>l[i]</code>. Also, <code>i</code> comes from <code>if i in range()</code> — not valid Python (should be <code>for i in range()</code>). They\'re cycling through syntactic variations without understanding the core issue: building a <em>new list</em>.',
-            manual_highlight=[21, 22, 23, 24],
+            heading='Same Bug, Different Syntax',
+            body='110 seconds in, trying a different approach with <code>range()</code>. But <strong>Line 23:</strong> <code>l = l[i] ** 2</code> is the same overwrite-the-list bug as before. The structure has changed (using index <code>i</code> now) but the core mistake — assigning to <code>l</code> instead of building a new list — persists. The student is iterating through syntax changes without fixing the logic.',
+            note='Mental model: "If I change how the loop works, maybe it\'ll produce the right answer." Thrashing often looks like this: surface-level variation without diagnosing the root cause.',
+            manual_highlight=[23],
         ),
         make_code_slide(r5_e4, r5_e3,
-            heading='Final Submission: Still Runtime Error',
-            body='The last submission at 145.8s: <strong>Line 23: <code>for m in range(0, m-1)</code></strong> — <code>m</code> is used both as the range-bound (defined from <code>m=len(l)</code>) and as the loop variable. The loop variable overwrites <code>m</code> on the first iteration, corrupting the range. Score: 0. This session never found a working solution.',
-            manual_highlight=[22, 23, 24, 25, 26, 27],
+            heading='Final Submission: Never Found the Pattern',
+            body='Last attempt before time runs out. <strong>Line 22:</strong> <code>m = len(l)</code> sets the range size, but <strong>Line 23:</strong> <code>for m in range(0, m-1)</code> immediately overwrites <code>m</code> with the loop counter — so the range calculation is corrupted on the first step. Score: 0. After 213 attempts, the student never discovered that the answer needed a <em>new list</em>.',
+            note='This is what "thrashing" looks like at the end: the code is now more complex than at the start, and still broken. The student needed a conceptual reset, not more attempts.',
+            manual_highlight=[22, 23],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'The correct solution is one line. The student never thought to write it that way, because they never asked: "how do I build a new list?"',
-                'Mutating <code>l</code> inside a loop over <code>l</code> is a classic mistake — the student never built a temporary result list.',
-                'Shadowing built-ins (<code>int</code>, <code>list</code>, <code>str</code>) as variable names breaks code in non-obvious ways.',
-                'After 213 attempts with no progress, the student had exhausted their repertoire. More attempts alone don\'t produce new insight.',
+                '<strong>"Try harder" is not a debugging strategy.</strong> 213 attempts with the same broken mental model produces 213 failures. Students need to learn how to <em>diagnose</em> errors, not just vary their code.',
+                '<strong>The "build a new list" pattern is a key milestone.</strong> Students who don\'t know how to accumulate results into a new list will always try to modify the original — and run into the same crash. Teaching this pattern explicitly prevents whole families of bugs.',
+                '<strong>Thrashing is a signal for instructor intervention.</strong> When a student makes many rapid attempts with no progress, it usually means a conceptual gap that more attempts won\'t fix. The student needs a conversation, not more time.',
+                '<strong>Invented API names reveal missing vocabulary.</strong> When a student writes <code>squares()</code> or <code>reverse_list()</code>, they\'re showing you what they wish Python could do. That\'s a teaching opportunity: show them the tool that actually does it.',
             ],
-            'intervention': 'When a student is in this spiral, stop the loop. Ask: "What should this function return? Show me on paper." Then: "How do you create a new list in Python?" Walk them through list comprehension: <code>[x**2 for x in reversed(l)]</code>. Sometimes the bottleneck is not debugging skill but vocabulary.',
+            'intervention': 'Stop the loop early. Ask: "What should come back from this function — walk me through one example." Then: "How would you make a new list in Python?" Demonstrate: <code>result = []</code> followed by <code>result.append(x**2)</code> in a loop, or just <code>[x**2 for x in reversed(l)]</code>. One minute of explanation here is worth more than 100 more attempts.',
         }
     ]
 }
@@ -575,61 +618,68 @@ REPLAY6 = {
     'total_duration': 60,
     'outcome': 'Score 33 ✗',
     'outcome_class': 'partial',
-    'insight': 'A working solution at 18 seconds — then dismantled. The student passed all public tests, then "improved" the code until it broke, and never recovered their early success.',
-    'tags': ['early win', 'regression', 'set semantics', 'ordering bug'],
+    'insight': 'At 18 seconds, this student had code that passed most tests. Then they tried to make it better — and broke it. They never recovered the early working version. A quiet cautionary tale about changing code without checkpoints.',
+    'tags': ['early win', 'regression', 'set ordering', 'over-editing'],
     'slides': [
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Given a string, return a list of characters that appear more than once. The order of characters in the return value matters.',
-            'why': 'At 18 seconds, this student had working public-pass code. The private tests revealed an ordering issue. Then they tried to fix it — and broke both public and private tests. They never recovered. This is "regression by improvement": a cautionary tale about making changes without checkpoints.',
+            'question_desc': 'Given a string, return a list of all characters that appear <em>more than once</em>. The characters must appear in the <em>same order</em> as they first appear in the string.',
+            'question_code': '"banana"  →  ["a", "n"]   (a appears 3×, n appears 2×)\n"hello"   →  ["l"]        (l appears 2×)',
+            'why': 'Eighteen seconds in, the student had code that passed 2 out of 3 public tests. They were close. Then they kept changing it, and each change made things worse. They ended with a score of 33 — below where they started. This is "regression by improvement": tinkering with code that\'s mostly working until it no longer works at all.',
             'what_to_look_for': [
-                'The very first attempt — set subtraction — is conceptually elegant but wrong in Python',
-                'By 18 seconds, a clean set-based solution passes 2/3 public tests',
-                'Private tests fail immediately — ordering matters',
-                'Every subsequent attempt is worse than the best intermediate solution',
+                'The first attempt (set subtraction) is creative but uses Python incorrectly',
+                'At 18 seconds, a clean working approach passes 2/3 tests — the student is nearly there',
+                'The remaining issue is subtle: sets in Python don\'t preserve the order characters appear',
+                'Every change after 18 seconds makes things worse rather than better',
             ],
         },
         make_code_slide(r6_e0, None,
-            heading='Elegant but Wrong: Set Subtraction',
-            body='First attempt: convert to list (<code>x</code>), convert to set (<code>s</code>), then <strong>Line 6: <code>y = x - s</code></strong>. The idea is "subtract the unique chars from all chars to get repeats." But you can\'t subtract a set from a list in Python — you\'d need <code>x - s</code> where both are sets, and even then, set subtraction isn\'t the right operation here. Causes a TypeError.',
-            manual_highlight=[4, 5, 6],
+            heading='Creative Idea, Wrong Syntax',
+            body='<strong>Line 6:</strong> <code>y = x - s</code>. The student is thinking: "all characters minus unique characters = repeated characters." The idea is clever! But you can\'t subtract a set from a list in Python — they\'re different types. This crashes immediately. Still, the thinking is more sophisticated than most first attempts.',
+            note='Mental model: "Subtracting sets gives me the duplicates." The idea is borrowed from math (set difference), but Python requires both sides to be the same type.',
+            manual_highlight=[6],
         ),
         make_code_slide(r6_e1, r6_e0,
-            heading='One Change: List Minus Set Still Fails',
-            body='The student changes line 6 to <code>y = x</code> — just returning the full list. That\'s not the right answer either (returns all characters, not repeats). The set construction on line 5 is now unused. They\'re feeling their way forward one small change at a time.',
-            manual_highlight=[4, 5, 6],
+            heading='Trying Something, Anything',
+            body='1 second later, the student changes <strong>Line 6</strong> to just <code>y = x</code> — returning the full list of characters, not the repeating ones. This isn\'t the answer either, but shows they\'re feeling around for what works. The set <code>s</code> is now built but never used.',
+            note='Mental model: "Maybe if I simplify it, something will click." Students sometimes reduce code to make it run at all, even if incorrectly, before building back up.',
+            manual_highlight=[5, 6],
         ),
         make_code_slide(r6_e2, r6_e1,
-            heading='A Working Approach — 2/3 Public Tests Pass',
-            body='Around 18 seconds, the student discovers: iterate over the <em>set</em> of unique characters, check if each appears 2+ times in the original list. This is logically correct! <strong>Lines 7–9</strong> work. But private tests give 1/3. Why? Because iterating over a <code>set</code> gives results in <em>arbitrary order</em> — the expected output likely requires the characters in first-occurrence order.',
+            heading='18 Seconds: A Real Working Approach',
+            body='Now the logic is clear: <strong>Lines 7–9</strong> iterate over each unique character, check if it appears more than once in the original string, and collect it. This is correct! It passes 2/3 public tests. The remaining failure is an ordering issue: when you loop over a <em>set</em>, the characters come back in random order — not in the order they first appeared in the string.',
+            note='Mental model: "I\'ll check each unique character." Sound logic! But sets in Python shuffle their contents — the output order is unpredictable, and the test expects a specific order.',
             manual_highlight=[7, 8, 9, 10],
         ),
         make_code_slide(r6_e3, r6_e2,
-            heading='Iteration Order: set vs. list',
-            body='The student switches: <strong>Line 7: <code>for y in x</code></strong> — now iterating over the original list <code>x</code> instead of the set <code>z</code>. This preserves insertion order! But now duplicates get appended multiple times. If "a" appears 3 times, "a" gets appended 3 times to <code>p</code>. The output has duplicate entries in the result list itself.',
-            manual_highlight=[6, 7, 8, 9, 10, 11, 12, 13, 14],
+            heading='Fixing Order — But Creating Duplicates',
+            body='The student switches to looping over the original list <code>x</code> instead of the set: <strong>Line 7: <code>for y in x</code></strong>. This preserves order! But now, if "a" appears 3 times, "a" gets appended 3 times to the result. Instead of <code>["a", "n"]</code>, you\'d get <code>["a", "a", "a", "n", "n"]</code>. Fixing one problem introduced another.',
+            note='Mental model: "If I loop over the original, I\'ll get the right order." True — but without a check for "have I already added this?", duplicates pile up.',
+            manual_highlight=[7, 8, 9, 10],
         ),
         make_code_slide(r6_e4, r6_e3,
-            heading='Late-Stage Complexity: Two-Pass Filter',
-            body='46 seconds in, the student adds a second pass to deduplicate. But the logic is now convoluted: first pass removes singletons, second pass removes duplicates from the remaining list. <strong>Line 20: <code>z.append(p), q.remove(p)</code></strong> — this is a tuple, not two statements. Python will append the tuple itself to z, not the character. The output is broken in a new way.',
-            manual_highlight=[10, 11, 12, 18, 19, 20],
+            heading='Adding Complexity Instead of a Simple Check',
+            body='46 seconds in: the student adds a second loop to de-duplicate the result. But <strong>Line 20:</strong> <code>z.append(p), q.remove(p)</code> — this is a Python <em>tuple expression</em>, not two separate statements. Python will run both, but the comma creates a tuple which is appended to <code>z</code> rather than the character itself. The output is now a list of tuples instead of characters.',
+            note='Mental model: "I\'ll clean up the result in a second pass." The approach would work conceptually, but a comma between two function calls doesn\'t mean "do both" — it creates a tuple.',
+            manual_highlight=[20],
         ),
         make_code_slide(r6_e5, r6_e4,
-            heading='Back to a Solution — But 56 Seconds Late',
-            body='At 56.8s, public tests pass again (3/3). But the private tests still fail, and the final submission scores 33. The student found a solution similar to their 18-second version — but with the same ordering issue. The early solution at 18s was the closest they got to correct. They would have needed to preserve order (iterate over <code>s</code> in original order) to fully solve it.',
+            heading='Public Tests Pass Again — But Private Still Fail',
+            body='56 seconds in, 3/3 public tests pass again. But private tests still fail, and the final score is 33. The solution at this point is similar to the one at 18 seconds — close, but still with the ordering issue. The best version of the code existed 38 seconds ago. All the changes since then were net-negative.',
+            note='The student never saved their best version. If they\'d submitted at 18 seconds with 2/3 public, they might have done better than 33 — or at least kept a working foundation to improve from.',
             manual_highlight=[10, 11, 12, 15, 16, 17],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'Sets don\'t preserve order. If the problem requires a specific output order, collecting into a set and returning it will fail.',
-                'The student had a near-correct solution at 18 seconds. Every subsequent change made things worse.',
-                'Lesson: when you pass all public tests, <em>save that version before changing anything</em>. Test incrementally.',
-                'The correct approach: iterate over the original string in order, append to result if count > 1 and not already in result.',
+                '<strong>Sets don\'t preserve order — a lesson worth teaching explicitly.</strong> <code>set("banana")</code> might give <code>{\'b\', \'n\', \'a\'}</code> in any order. Students who rely on sets for ordered output will fail tests that check order. The fix: loop over the original string, not the set.',
+                '<strong>The "regression by improvement" pattern is common and costly.</strong> Students who keep editing passing code often end up worse off. Teaching them to <em>save checkpoints</em> — or at least note down what was working — prevents hours of backtracking.',
+                '<strong>Commas between expressions create tuples, not separate statements.</strong> <code>f(a), g(b)</code> runs both but produces a tuple. This is a subtle Python behavior that trips up students coming from other languages.',
+                '<strong>Partial credit is often better than zero, but students don\'t always know to stop.</strong> A submission at 18 seconds with 2/3 public tests might have earned more than the final 33 score.',
             ],
-            'intervention': 'Teach set-vs-list ordering explicitly. Show: <code>list(set("banana"))</code> gives a different order every run. Then: "How would you preserve the original order?" This is a great moment for dict.fromkeys() or collections.OrderedDict as an advanced concept.',
+            'intervention': 'Demo set ordering explicitly: run <code>for c in set("banana"): print(c)</code> several times and show that the order changes. Then ask: "How would you loop over the characters in the order they appear?" Lead them to: iterate over the string, check the count, and use an <code>if c not in result</code> guard to avoid duplicates.',
         }
     ]
 }
@@ -652,61 +702,68 @@ REPLAY7 = {
     'total_duration': 76,
     'outcome': 'No submission',
     'outcome_class': 'none',
-    'insight': 'The student never submitted — not because they ran out of time, but because they never felt confident enough to commit. A case study in the "last-mile gap" between near-working code and pressing submit.',
-    'tags': ['no submission', 'last-mile gap', 'misconceptions', 'confusion compounding'],
+    'insight': 'This student reached 4 out of 5 public tests multiple times — and never submitted. Not because time ran out, but because they never felt certain enough to commit. A lesson in what the "last-mile gap" looks like from the inside.',
+    'tags': ['no submission', 'confidence gap', 'nested loops', 'confusion compounding'],
     'slides': [
         {
             'type': 'intro',
             'heading': 'The Problem',
-            'question_desc': 'Given a list of strings, count how many strings have more vowel characters than consonant characters. Return that count.',
-            'why': 'The student reached 4/5 public tests multiple times — close enough to suspect they could solve it. But they never submitted. This happens when students lose confidence in the middle of a session and keep trying to "make sure" without ever committing. The question for instructors: when and how do you intervene?',
+            'question_desc': 'Given a list of strings, count how many strings have <em>more vowels than consonants</em>. Return that count as a number.',
+            'question_code': '["hello", "sky", "area"]  →  2\n  # "hello": 2 vowels (e,o), 3 consonants → no\n  # "sky":   0 vowels, 3 consonants → no\n  # "area":  3 vowels (a,e,a), 1 consonant → yes\n  # → count is 1... wait, "hello" is tricky!\n  # Result: 1 (only "area")',
+            'why': 'The student gets 4/5 public tests passing — they\'re so close! But their "working" solution is actually returning a fixed value by accident, not solving the problem correctly. And they never submit. This replay explores two things: how students get fooled by lucky test results, and why confidence matters as much as correctness at submission time.',
             'what_to_look_for': [
-                'Fundamental misunderstanding: treating the whole list as a single string',
-                'Using <code>help()</code> in the middle of a contest — unusual, and probably ineffective here',
-                'Code inside docstrings — the student "commented out" logic by wrapping it in a string',
-                'Near-breakthrough: 4/5 public, then runtime relapse',
+                'First attempt: treating the whole list as if it were a single string',
+                'Calling <code>help()</code> during a timed session — a sign of panic',
+                'Code inside triple-quoted strings (the student "comments out" by accident)',
+                'Getting 4/5 tests by always returning the number 1 — a coincidence, not a solution',
             ],
         },
         make_code_slide(r7_e0, None,
-            heading='Wrong Input: Treating a List as Strings',
-            body='The first attempt: <strong>Line 8: <code>for word in words</code></strong> — but the parameter is <code>strings</code>, not <code>words</code>. NameError. Also, <strong>Lines 9–12</strong>: the logic checks <code>if word in \'aeiou\'</code> — this tests whether the <em>whole word</em> is a vowel (i.e., is the word one of the vowel characters?). The correct logic should iterate over each character within each word.',
-            manual_highlight=[7, 8, 9, 10, 11, 12, 13],
+            heading='Wrong Level: Words vs. Characters',
+            body='<strong>Lines 9–12:</strong> the student loops over each word, then checks <code>if word in "aeiou"</code>. This asks: "is this entire word the letter a, e, i, o, or u?" A word like "hello" is never in "aeiou" — only single vowel characters are. The student needs two loops: one over words, and one over <em>characters inside each word</em>.',
+            note='Mental model: "I\'m checking if the word contains a vowel." But <code>in</code> checks for exact membership — "hello" is not in the string "aeiou". They need to loop over each letter in the word.',
+            manual_highlight=[9, 10, 11, 12],
         ),
         make_code_slide(r7_e1, r7_e0,
-            heading='18 Seconds: Calling a Non-Existent count()',
-            body='Now using <code>strings</code> (correct), but <strong>Line 12: <code>c = count(strings)</code></strong> — there\'s no built-in <code>count()</code> function that takes a list. They might be thinking of <code>list.count()</code>, but that counts specific elements. And the logic is still wrong: it still checks <code>if word in \'aeiou\'</code> — testing whole words against the vowel string. The student is confused about the problem structure: "list of strings" vs "characters in a string."',
-            manual_highlight=[9, 10, 11, 12, 13, 14, 15, 16, 17],
+            heading='Calling a Built-In That Doesn\'t Exist This Way',
+            body='18 seconds in. <strong>Line 12:</strong> <code>c = count(strings)</code> — there is no free-standing <code>count()</code> function. Python has <code>list.count(value)</code> to count how many times a specific item appears in a list, but that\'s different. The student is imagining a shortcut. Also, the <code>if word in "aeiou"</code> bug persists on line 9.',
+            note='Mental model: "There should be a <code>count()</code> function that counts things for me." When students don\'t know the right tool, they guess names that sound reasonable.',
+            manual_highlight=[12],
         ),
         make_code_slide(r7_e2, r7_e1,
-            heading='38 Seconds: A Docstring Misused as Comments',
-            body='Lines 4–7 are now inside a docstring — the student effectively "commented out" logic by wrapping it in triple quotes. But the active code (<strong>Lines 8–17</strong>) now checks <code>if strings[0:n] == "aeiou"</code> — comparing a slice of the <em>list</em> to a string "aeiou". This will never be True. The logic of counting vowels per string is still completely absent.',
-            manual_highlight=[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            heading='Triple Quotes as Accidental "Comments"',
+            body='38 seconds in. <strong>Lines 4–7</strong> are now inside a triple-quoted string — the student\'s old logic has been "commented out" by wrapping it. But it\'s not really a comment: it\'s a string literal that Python creates and immediately throws away. The active code now does <strong>Line 8:</strong> <code>if strings[0:n] == "aeiou"</code> — comparing a slice of the <em>list</em> to the word "aeiou". This will always be False.',
+            note='Mental model: "Triple quotes turns things into comments." In Python, triple-quoted strings are just string values. They don\'t comment out code unless assigned to nothing — and even then they\'re not quite comments.',
+            manual_highlight=[4, 5, 6, 7],
         ),
         make_code_slide(r7_e3, r7_e2,
-            heading='4/5 Public Tests: A Surprising Near-Success',
-            body='At 53.5 seconds, 4/5 public tests pass — despite the logic being fundamentally wrong! <strong>Line 6: <code>return strings.count("aeiou") + 1</code></strong> — this counts occurrences of the substring "aeiou" in the list... which will always be 0 since "aeiou" is not a string in the list. Adding 1 gives... 1. So the function always returns 1. And 4 of the 5 public test cases apparently expect the answer 1.',
-            manual_highlight=[5, 6, 7],
+            heading='4/5 Public Tests — By Accident',
+            body='53 seconds in. <strong>Line 6:</strong> <code>return strings.count("aeiou") + 1</code>. This counts how many times the string <code>"aeiou"</code> appears as an element in the list — which is always 0 (no list element is exactly "aeiou"). So the function always returns <code>0 + 1 = 1</code>. Four of the five public test cases expect the answer to be 1. So 4/5 tests "pass" — but not because the logic is right.',
+            note='Mental model: "count() tells me how many vowels there are." But <code>list.count(x)</code> counts how many times <em>x</em> appears as a list element — not characters inside elements.',
+            manual_highlight=[6],
         ),
         make_code_slide(r7_e4, r7_e3,
-            heading='67 Seconds: Still 4/5, Private Still 0',
-            body='The same broken code persists: always returning 1. The 4/5 public score is luck, not logic. Private tests expose this immediately — 0/2 private. The student might think they\'re close; they\'re not. The gap between 4/5 and a correct solution is enormous. Without being able to see the private test cases, they can\'t even verify what\'s wrong.',
+            heading='Still 4/5 Public, 0 Private',
+            body='67 seconds in, nothing has changed in the logic. The function still returns 1 unconditionally. Private tests reveal the truth: 0/2. The student is stuck — they can see 4/5 working, but they don\'t understand why the 5th fails, and they can\'t see the private tests. Without visibility into what\'s failing, they can\'t fix it.',
+            note='The 4/5 public score creates a false signal: "I\'m almost there." But the solution is fundamentally wrong. 4/5 here doesn\'t mean "one edge case away from correct."',
             manual_highlight=[5, 6, 7],
         ),
         make_code_slide(r7_e5, r7_e4,
-            heading='75 Seconds: Private Still 0, No Submission',
-            body='Right before the session ends, the student is still at 4/5 public, 0 private. The code (not shown — empty frame) hasn\'t changed meaningfully in the last 8 seconds. They may have run out of ideas, lost confidence, or simply run out of time. No submission is made. The "last-mile gap" — functional code is possible, but confidence isn\'t there to commit.',
-            manual_highlight=[5, 6, 7, 8, 9],
+            heading='Time Up — Nothing Submitted',
+            body='75 seconds in. The session ends with no submission. The student had 4/5 public tests passing for the last 20 seconds but never committed. This is the "confidence gap": even partial credit (which a submission would earn) is better than zero, but the student doesn\'t feel ready to submit and keeps trying to improve a solution they don\'t fully understand.',
+            note='No submission is often a signal of low confidence, not lack of effort. Students may feel that submitting "wrong" code is worse than not submitting — especially under test conditions.',
+            manual_highlight=[5, 6, 7],
         ),
         {
             'type': 'summary',
             'heading': 'Key Takeaways',
             'bullets': [
-                'A score of 4/5 public can be achieved by a function that always returns 1 — public test sets can be misleadingly easy to "game."',
-                'The core confusion: the problem asks about <em>characters in a string</em>, not about <em>strings in a list</em>. Two nested loops were needed but never attempted.',
-                'The docstring-as-comment pattern shows the student doesn\'t know how to properly comment out code.',
-                'No submission at the end of the session is often a confidence issue, not a technical one.',
+                '<strong>Test scores can be misleading.</strong> 4/5 public tests passing doesn\'t mean the logic is 80% correct — it can mean a completely wrong solution happened to match 4 test cases. Students and instructors should look at the logic, not just the score.',
+                '<strong>The "list vs. string" distinction trips up many beginners.</strong> The problem requires looping over words <em>and</em> over letters inside each word. Students who only do one level of looping will never solve it. Teaching "nested loops for nested data" explicitly helps.',
+                '<strong>No submission often means low confidence, not no solution.</strong> Students who don\'t submit near a deadline usually need encouragement: "Submit what you have — partial credit is better than zero." This is a simple, high-impact nudge.',
+                '<strong>Python\'s <code>in</code> operator checks exact membership.</strong> <code>"hello" in "aeiou"</code> is False because "hello" is not a single character in that string. Students need explicit examples of the difference between <code>"h" in "hello"</code> (True) and <code>"hello" in "aeiou"</code> (False).',
             ],
-            'intervention': 'Before coding, ask students to trace through an example on paper: "Given [\'hello\', \'sky\'], walk me through what the function should do step by step." This surfaces the "characters vs strings" confusion before a single line of code is written. And when a student is near the deadline with partial credit, encourage them to submit — partial credit is better than zero.',
+            'intervention': 'Draw it out: "Your function gets a <em>list</em> of <em>strings</em>. Each string has <em>letters</em>. How many loops do you need?" Then walk through: <code>for word in strings:</code> → <code>for letter in word:</code> → <code>if letter in "aeiou":</code>. Seeing the three levels labeled explicitly helps students map code to concept. Then remind them: always submit something near the deadline.',
         }
     ]
 }
@@ -739,7 +796,7 @@ def status_icon(summary):
     if 'wrong' in s: return '✗'
     return '?'
 
-def render_code_block(code, added, changed, highlight, annotation=''):
+def render_code_block(code, added, changed, highlight, annotation='', body='', note=''):
     """Render code with syntax highlighting, line highlights, and inline annotation callout."""
     if not code or not code.strip():
         return '<div class="code-empty">No code yet.</div>'
@@ -764,11 +821,15 @@ def render_code_block(code, added, changed, highlight, annotation=''):
         out.append(f'<span class="{" ".join(cls)}" data-ln="{ln}">{inner}</span>')
         # Inject inline annotation callout immediately after the last highlighted line
         if ln == last_hi and annotation:
-            ann_html = html.escape(annotation)
-            out.append(f'<span class="code-ann" role="note" aria-label="Annotation">'
-                        f'<span class="code-ann-arrow">▲</span>'
-                        f'<span class="code-ann-text">{ann_html}</span>'
-                        f'</span>')
+            body_part = f'<span class="ann-body">{body}</span>' if body else ''
+            note_part = f'<span class="ann-note">💭 {note}</span>' if note else ''
+            out.append(
+                f'<span class="code-ann" role="note">'
+                f'<span class="ann-heading">{annotation}</span>'
+                f'{body_part}'
+                f'{note_part}'
+                f'</span>'
+            )
     out.append('</code></pre>')
     return ''.join(out)
 
@@ -777,17 +838,21 @@ def render_slide(slide, slide_idx, replay_id):
     sid = f'{replay_id}-s{slide_idx}'
 
     if stype == 'intro':
-        wlf = ''.join(f'<li>{esc(item)}</li>' for item in slide.get('what_to_look_for', []))
+        # Use raw HTML (trusted author content) — do NOT escape
+        wlf = ''.join(f'<li>{item}</li>' for item in slide.get('what_to_look_for', []))
+        q_code = slide.get('question_code', '')
+        q_code_block = f'<pre class="intro-code">{html.escape(q_code)}</pre>' if q_code else ''
         return f'''
 <div class="slide slide-intro" id="{sid}">
   <div class="intro-layout">
     <div class="intro-top">
       <h2 class="intro-heading">{slide["question_desc"]}</h2>
+      {q_code_block}
     </div>
     <div class="intro-cols">
       <div class="intro-col intro-why">
         <div class="intro-col-label">Why this replay?</div>
-        <p class="intro-col-text">{esc(slide["why"])}</p>
+        <p class="intro-col-text">{slide["why"]}</p>
       </div>
       <div class="intro-col intro-look">
         <div class="intro-col-label">👁 What to watch for</div>
@@ -811,6 +876,8 @@ def render_slide(slide, slide_idx, replay_id):
             slide.get('changed', []),
             slide.get('highlight', []),
             annotation=slide.get('heading', ''),
+            body=slide.get('body', ''),
+            note=slide.get('note', ''),
         )
         legend = ''
         if not slide.get('highlight'):
@@ -825,11 +892,11 @@ def render_slide(slide, slide_idx, replay_id):
       <span class="s-status {sc}">{si} {esc(status)} &thinsp; <strong>{tests_pass}/{tests_total}</strong></span>
       {legend}
     </div>
-    <div class="strip-body">{slide.get("body", "")}</div>
   </div>
 </div>'''
 
     elif stype == 'summary':
+        # Use raw HTML (trusted author content)
         cards = ''.join(
             f'<div class="summary-card">{b}</div>'
             for b in slide.get('bullets', [])
@@ -1181,7 +1248,7 @@ HTML_HEAD = '''<!DOCTYPE html>
     /* ── Code slide ────────────────────────────────────────────── */
     .code-scroll-area {
       flex: 1; overflow-y: auto; background: var(--code-bg);
-      max-height: calc(100vh - 44px - 28px - 50px - 120px);
+      max-height: calc(100vh - 44px - 28px - 50px - 38px);
     }
     .code-block {
       font-family: "IBM Plex Mono", monospace;
@@ -1206,34 +1273,63 @@ HTML_HEAD = '''<!DOCTYPE html>
 
     /* ── Inline code annotation ────────────────────────────────── */
     .code-ann {
-      display: block; margin: 0 1rem 0 calc(1rem + 2.5em + 1em + 3px);
-      background: var(--ann-bg); border: 1px solid var(--ann-border);
-      border-radius: 6px; padding: 0.55rem 0.9rem;
-      border-left: 3px solid var(--ann-border);
-      position: relative;
+      display: block;
+      margin: 0.4rem 1rem 0.4rem calc(1rem + 2.5em + 1em + 3px);
+      background: rgba(26,22,10,0.7);
+      border-left: 3px solid #d29922;
+      padding: 0.6rem 0.9rem 0.65rem;
+      white-space: normal;
     }
-    .code-ann-arrow {
-      position: absolute; left: 1.2rem; top: -0.7rem;
-      font-size: 0.9rem; color: var(--ann-border);
-      line-height: 1;
-    }
-    .code-ann-text {
+    .ann-heading {
+      display: block;
       font-family: "Outfit", sans-serif;
-      font-size: 16px; font-weight: 600;
-      color: var(--ann-ink); white-space: normal; display: block;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.01em;
+      color: #e8c888; margin-bottom: 0.3rem;
+      text-transform: none;
     }
+    .ann-heading code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.32em;
+      border-radius: 3px; color: #f0d080; display: inline;
+    }
+    .ann-body {
+      display: block;
+      font-family: "Outfit", sans-serif;
+      font-size: 14px; line-height: 1.55; color: #b0bdcf;
+    }
+    .ann-body strong { color: var(--ink); }
+    .ann-body code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.32em;
+      border-radius: 3px; color: #e8c888; display: inline;
+    }
+    .ann-body em { color: #89b4fa; font-style: normal; font-weight: 500; display: inline; }
+    .ann-note {
+      display: block;
+      font-family: "Outfit", sans-serif;
+      font-size: 13px; line-height: 1.45;
+      color: #7a8499; margin-top: 0.35rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 0.3rem;
+    }
+    .ann-note code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.06); padding: 0.05em 0.32em;
+      border-radius: 3px; color: #8a9ab0; display: inline;
+    }
+    .ann-note em { font-style: italic; color: #6a7a8f; display: inline; }
 
-    /* ── Commentary strip (bottom of code slide) ───────────────── */
+    /* ── Commentary strip (bottom of code slide) — meta only ──── */
     .commentary-strip {
       flex-shrink: 0;
       background: var(--strip-bg); border-top: 1px solid var(--strip-border);
-      padding: 0.5rem 1.2rem 0.55rem;
-      min-height: 100px; max-height: 140px;
-      overflow-y: auto;
+      padding: 0.35rem 1.2rem;
+      min-height: 0; height: 38px;
+      display: flex; align-items: center;
     }
     .strip-meta {
       display: flex; gap: 0.6rem; align-items: center;
-      margin-bottom: 0.35rem; flex-wrap: wrap;
+      flex-wrap: wrap;
     }
     .s-time {
       font-family: "IBM Plex Mono", monospace; font-size: 0.75rem;
@@ -1253,53 +1349,67 @@ HTML_HEAD = '''<!DOCTYPE html>
     .status-other   { background: rgba(139,155,180,0.1); color: var(--muted); }
     .leg { font-size: 0.72rem; color: var(--muted); display: flex; align-items: center; gap: 0.25rem; }
     .leg-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
-    .strip-body {
-      font-size: 15px; line-height: 1.55; color: #b0bdcf;
-    }
-    .strip-body strong { color: var(--ink); }
-    .strip-body code {
-      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
-      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
-      border-radius: 3px; color: #e8c888;
-    }
-    .strip-body em { color: var(--accent2); font-style: normal; font-weight: 500; }
 
     /* ── Intro slide ───────────────────────────────────────────── */
-    .slide-intro { display: flex; flex-direction: column; }
+    .slide-intro { display: flex; flex-direction: column; justify-content: center; }
     .intro-layout {
-      flex: 1; display: flex; flex-direction: column; padding: 1.8rem 2rem 1.2rem;
-      gap: 1.2rem; overflow-y: auto;
+      max-width: 960px; width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column; padding: 1.6rem 2.5rem 1.4rem;
+      gap: 1rem; overflow-y: auto;
     }
     .intro-top {}
     .intro-heading {
       font-family: "Fraunces", serif;
       font-size: clamp(1.4rem, 2.5vw, 1.9rem);
-      line-height: 1.25; color: var(--ink); margin-bottom: 0;
+      line-height: 1.25; color: var(--ink); margin-bottom: 0.4rem;
+    }
+    .intro-heading code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.08); padding: 0.1em 0.4em;
+      border-radius: 4px; color: #e8c888;
+    }
+    .intro-code {
+      font-family: "IBM Plex Mono", monospace; font-size: 13px;
+      line-height: 1.5; color: #b0bdcf;
+      background: var(--code-bg); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 0.6rem 1rem;
+      margin-top: 0.3rem; white-space: pre;
     }
     .intro-cols {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; flex: 1;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;
     }
     .intro-col {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 1.2rem 1.4rem;
+      border-radius: var(--r); padding: 1rem 1.2rem;
     }
     .intro-col-label {
       font-family: "IBM Plex Mono", monospace; font-size: 0.72rem;
       text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--accent); margin-bottom: 0.6rem;
+      color: var(--accent); margin-bottom: 0.5rem;
     }
-    .intro-col-text { font-size: 16px; line-height: 1.6; color: #b0bdcf; }
+    .intro-col-text { font-size: 15px; line-height: 1.6; color: #b0bdcf; }
+    .intro-col-text code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
+      border-radius: 3px; color: #e8c888;
+    }
     .intro-look-list {
-      font-size: 16px; line-height: 1.6; color: #b0bdcf;
-      padding-left: 1.1em; display: flex; flex-direction: column; gap: 0.4rem;
+      font-size: 15px; line-height: 1.6; color: #b0bdcf;
+      padding-left: 1.1em; display: flex; flex-direction: column; gap: 0.35rem;
     }
     .intro-look-list li::marker { color: var(--accent); }
+    .intro-look-list code {
+      font-family: "IBM Plex Mono", monospace; font-size: 0.85em;
+      background: rgba(255,255,255,0.07); padding: 0.05em 0.35em;
+      border-radius: 3px; color: #e8c888;
+    }
 
     /* ── Summary slide ─────────────────────────────────────────── */
-    .slide-summary { display: flex; flex-direction: column; }
+    .slide-summary { display: flex; flex-direction: column; justify-content: center; }
     .summary-layout {
-      flex: 1; display: flex; flex-direction: column;
-      padding: 1.6rem 2rem 1.2rem; gap: 1rem; overflow-y: auto;
+      max-width: 1100px; width: 100%; margin: 0 auto;
+      display: flex; flex-direction: column;
+      padding: 1.6rem 2.5rem 1.4rem; gap: 1rem; overflow-y: auto;
     }
     .summary-heading {
       font-family: "Fraunces", serif;
@@ -1307,7 +1417,7 @@ HTML_HEAD = '''<!DOCTYPE html>
       color: var(--accent); margin-bottom: 0;
     }
     .summary-cards {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; flex: 1;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem;
     }
     .summary-card {
       background: var(--surface); border: 1px solid var(--border);
