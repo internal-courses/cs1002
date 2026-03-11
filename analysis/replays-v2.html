@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Replay Walkthroughs | PyOPPE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.css">
+  <style>
+    /* ── Variables ─────────────────────────────────────────── */
+    :root {
+      --bg: #f9f6ed;
+      --bg-dark: #0f1a1e;
+      --panel: #fffdf8;
+      --line: #d9d6cc;
+      --ink: #152229;
+      --muted: #5f6c73;
+      --accent: #0f776f;
+      --accent-soft: #e5f4f2;
+      --accent-2: #1f5b9e;
+      --warn: #ae5f11;
+      --warn-soft: #fff3e0;
+      --red: #b33a3a;
+      --red-soft: #fdeaea;
+      --green: #1a7a4a;
+      --green-soft: #e4f5ec;
+      --shadow: 0 16px 48px rgba(15,26,30,.13);
+      --slide-pad: clamp(2rem, 5vw, 5rem);
+    }
+
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: "Outfit", sans-serif; color: var(--ink); background: var(--bg-dark); }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Slideshow Shell ───────────────────────────────────── */
+    #deck {
+      position: fixed; inset: 0;
+      display: grid;
+    }
+    .slide {
+      grid-area: 1 / 1;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      opacity: 0; pointer-events: none;
+      transition: opacity 350ms ease, transform 350ms ease;
+      transform: translateY(12px);
+    }
+    .slide.active {
+      opacity: 1; pointer-events: all;
+      transform: translateY(0);
+    }
+    .slide.exit-up   { opacity: 0; transform: translateY(-12px); }
+    .slide.exit-down { opacity: 0; transform: translateY(12px); }
+
+    /* ── Slide Themes ──────────────────────────────────────── */
+    .slide-title   { background: var(--bg-dark); color: #fff; }
+    .slide-toc     { background: var(--bg); color: var(--ink); }
+    .slide-intro   { background: var(--bg); color: var(--ink); }
+    .slide-step    { background: #fff; color: var(--ink); }
+    .slide-summary { background: var(--ink); color: #fff; }
+
+    /* ── Top Bar ───────────────────────────────────────────── */
+    .top-bar {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 1.1rem;
+      z-index: 10;
+    }
+    .slide-title .top-bar, .slide-summary .top-bar { color: rgba(255,255,255,.55); }
+    .slide-toc .top-bar, .slide-intro .top-bar, .slide-step .top-bar { color: var(--muted); }
+    .section-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .08em;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .section-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      display: inline-block; flex-shrink: 0;
+    }
+    .slide-counter {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .68rem;
+    }
+
+    /* ── Navigation ────────────────────────────────────────── */
+    .nav-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      padding: .75rem 1.5rem;
+      z-index: 100;
+      background: linear-gradient(transparent, rgba(15,26,30,.55));
+      pointer-events: none;
+    }
+    .nav-btn {
+      pointer-events: all;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,.12); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; border: 1px solid rgba(255,255,255,.18);
+      transition: background .15s;
+      backdrop-filter: blur(6px);
+    }
+    .nav-btn:hover { background: rgba(255,255,255,.25); }
+    .nav-btn:disabled { opacity: .25; cursor: not-allowed; }
+    .progress-dots {
+      display: flex; gap: .35rem; align-items: center;
+      pointer-events: all;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,.3);
+      transition: background .2s, transform .2s, width .2s;
+      cursor: pointer; border: none;
+      flex-shrink: 0;
+    }
+    .dot.active { background: #fff; width: 18px; border-radius: 3px; }
+    .dot.section-start { background: rgba(255,255,255,.18); border: 1px solid rgba(255,255,255,.4); }
+
+    /* ── Keyboard hint ─────────────────────────────────────── */
+    .key-hint {
+      position: fixed; bottom: 3rem; right: 1.2rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .62rem; color: rgba(255,255,255,.3);
+      pointer-events: none;
+    }
+
+    /* ── TITLE SLIDE ───────────────────────────────────────── */
+    .title-content {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.5rem; padding: var(--slide-pad);
+      text-align: center;
+      background: radial-gradient(ellipse 120% 80% at 50% 40%, #1a3a44 0%, transparent 70%), var(--bg-dark);
+    }
+    .title-kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .75rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--accent); border: 1px solid rgba(15,119,111,.4);
+      background: rgba(15,119,111,.12); padding: .3rem .7rem; border-radius: 999px;
+    }
+    .title-h1 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(2.4rem, 7vw, 5rem);
+      line-height: 1.05; max-width: 14ch;
+      color: #fff;
+    }
+    .title-h1 em { font-style: italic; color: #7fd8d1; }
+    .title-sub {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: rgba(255,255,255,.65); max-width: 48ch;
+    }
+    .title-stats {
+      display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    }
+    .stat-pill {
+      text-align: center;
+    }
+    .stat-num {
+      font-family: "Fraunces", serif;
+      font-size: 2.2rem; color: #7fd8d1; display: block;
+    }
+    .stat-lbl {
+      font-size: .82rem; color: rgba(255,255,255,.5);
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .title-cta {
+      display: flex; align-items: center; gap: .5rem;
+      color: rgba(255,255,255,.5); font-size: .88rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+
+    /* ── TOC SLIDE ─────────────────────────────────────────── */
+    .toc-content {
+      flex: 1; display: flex; flex-direction: column;
+      padding: var(--slide-pad); gap: 1.2rem; overflow-y: auto;
+    }
+    .toc-header h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem); margin-bottom: .4rem;
+    }
+    .toc-header p { color: var(--muted); max-width: 60ch; font-size: .95rem; }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: .75rem;
+    }
+    .toc-card {
+      border: 1.5px solid var(--line); border-radius: 14px;
+      background: var(--panel); padding: 1rem 1.1rem;
+      cursor: pointer; text-align: left;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .toc-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+    .toc-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em;
+    }
+    .toc-title { font-weight: 700; font-size: .97rem; line-height: 1.3; }
+    .toc-insight { font-size: .85rem; color: var(--muted); line-height: 1.4; }
+    .toc-badges { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .2rem; }
+    .badge {
+      border-radius: 999px; font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .04em;
+      padding: .18rem .45rem; border: 1px solid;
+    }
+    .badge-arch { background: #edf4fe; color: #1f5b9e; border-color: rgba(31,91,158,.25); }
+    .badge-outcome-pass { background: var(--green-soft); color: var(--green); border-color: rgba(26,122,74,.25); }
+    .badge-outcome-partial { background: var(--warn-soft); color: var(--warn); border-color: rgba(174,95,17,.3); }
+    .badge-outcome-fail { background: var(--red-soft); color: var(--red); border-color: rgba(179,58,58,.25); }
+    .badge-outcome-none { background: #f0f0f0; color: #666; border-color: #ccc; }
+
+    /* ── INTRO SLIDE ───────────────────────────────────────── */
+    .intro-content {
+      flex: 1; display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .intro-left {
+      padding: var(--slide-pad);
+      display: flex; flex-direction: column; justify-content: center; gap: 1.2rem;
+      border-right: 1px solid var(--line);
+    }
+    .intro-right {
+      padding: var(--slide-pad);
+      display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+      background: #f3f0e8;
+    }
+    .replay-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--accent); display: flex; align-items: center; gap: .5rem;
+    }
+    .intro-h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.5rem, 3vw, 2.5rem); line-height: 1.12;
+    }
+    .intro-desc { color: var(--muted); font-size: .95rem; line-height: 1.6; max-width: 50ch; }
+    .meta-grid { display: grid; gap: .45rem; }
+    .meta-row { display: flex; gap: .6rem; align-items: baseline; font-size: .88rem; }
+    .meta-key { color: var(--muted); min-width: 7rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    .meta-val { font-weight: 600; }
+    .watch-for-box {
+      border: 1px solid var(--accent); border-radius: 12px;
+      background: var(--accent-soft); padding: 1rem 1.1rem;
+    }
+    .watch-for-box h4 {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--accent); margin-bottom: .55rem;
+    }
+    .watch-for-box ul { padding-left: 1.2rem; }
+    .watch-for-box li { font-size: .88rem; color: var(--ink); line-height: 1.6; margin-bottom: .3rem; }
+    .timeline-preview {
+      display: flex; flex-direction: column; gap: .35rem;
+    }
+    .tp-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+      margin-bottom: .1rem;
+    }
+    .tp-item {
+      display: flex; gap: .7rem; align-items: flex-start; font-size: .82rem;
+    }
+    .tp-time {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .72rem; color: var(--accent-2); min-width: 3rem; flex-shrink: 0;
+      padding-top: .1rem;
+    }
+    .tp-text { color: var(--muted); line-height: 1.4; }
+    .tp-kind {
+      font-size: .6rem; font-weight: 700; text-transform: uppercase;
+      border-radius: 999px; padding: .12rem .35rem; flex-shrink: 0;
+      align-self: flex-start;
+    }
+    .tp-kind.intro { background: #e6f1ff; color: #1e5192; }
+    .tp-kind.observation { background: #efe9ff; color: #5f3ba4; }
+    .tp-kind.inflection { background: #fff0de; color: #95550f; }
+    .tp-kind.breakthrough { background: #ddf8ec; color: #0a7052; }
+    .tp-kind.outcome { background: #fde8ef; color: #a33857; }
+
+    /* ── STEP SLIDE ────────────────────────────────────────── */
+    .step-content {
+      flex: 1; display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .step-left {
+      padding: var(--slide-pad);
+      display: flex; flex-direction: column; justify-content: center; gap: 1.1rem;
+      overflow-y: auto;
+    }
+    .step-right {
+      background: #0f1a1e;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .step-num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted);
+    }
+    .step-h3 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.3rem, 2.5vw, 2rem); line-height: 1.18; color: var(--ink);
+    }
+    .step-body { font-size: .93rem; line-height: 1.65; color: var(--ink); max-width: 52ch; }
+    .step-body p + p { margin-top: .7rem; }
+    .step-body strong { color: var(--accent); }
+    .step-body em { font-style: normal; color: var(--warn); }
+
+    .insight-box {
+      border-left: 3px solid var(--accent); padding: .65rem .9rem;
+      background: var(--accent-soft); border-radius: 0 10px 10px 0;
+    }
+    .insight-box .ib-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .65rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--accent); margin-bottom: .3rem;
+    }
+    .insight-box p { font-size: .87rem; color: var(--ink); line-height: 1.5; }
+
+    .warn-box {
+      border-left: 3px solid var(--warn); padding: .65rem .9rem;
+      background: var(--warn-soft); border-radius: 0 10px 10px 0;
+    }
+    .warn-box .ib-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .65rem; text-transform: uppercase; letter-spacing: .08em;
+      color: var(--warn); margin-bottom: .3rem;
+    }
+    .warn-box p { font-size: .87rem; color: var(--ink); line-height: 1.5; }
+
+    /* Player panel inside step-right */
+    .player-panel {
+      display: flex; flex-direction: column; height: 100%;
+    }
+    .player-header {
+      padding: .7rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .player-title {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .7rem; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .08em;
+    }
+    .player-mount {
+      flex: 1; min-height: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .player-mount .ap-player { width: 100% !important; }
+    .player-placeholder {
+      color: rgba(255,255,255,.2);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .8rem; text-align: center; padding: 2rem;
+    }
+    .jump-buttons {
+      padding: .6rem .9rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: flex; flex-wrap: wrap; gap: .4rem;
+      align-items: center;
+    }
+    .jump-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .62rem; color: rgba(255,255,255,.35);
+      text-transform: uppercase; letter-spacing: .07em;
+    }
+    .jump-btn {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .72rem; padding: .25rem .55rem;
+      border-radius: 6px; border: 1px solid rgba(255,255,255,.15);
+      color: rgba(255,255,255,.8);
+      background: rgba(255,255,255,.08);
+      transition: background .15s;
+      cursor: pointer;
+    }
+    .jump-btn:hover { background: rgba(15,119,111,.3); border-color: var(--accent); color: #fff; }
+    .jump-btn.active { background: rgba(15,119,111,.4); border-color: var(--accent); color: #fff; }
+
+    /* ── SUMMARY SLIDE ─────────────────────────────────────── */
+    .summary-content {
+      flex: 1; padding: var(--slide-pad);
+      display: flex; flex-direction: column; gap: 1.4rem;
+      overflow-y: auto;
+      background: radial-gradient(ellipse 100% 80% at 0% 100%, #1a3038 0%, transparent 60%), var(--ink);
+    }
+    .summary-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .7rem; text-transform: uppercase; letter-spacing: .12em;
+      color: rgba(255,255,255,.4);
+    }
+    .summary-h2 {
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.8rem); color: #fff; line-height: 1.1;
+    }
+    .summary-h2 em { color: #7fd8d1; font-style: italic; }
+    .insights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: .75rem;
+    }
+    .insight-card {
+      border: 1px solid rgba(255,255,255,.1); border-radius: 12px;
+      background: rgba(255,255,255,.05); padding: .9rem 1rem;
+      display: flex; flex-direction: column; gap: .4rem;
+    }
+    .ic-icon { font-size: 1.4rem; }
+    .ic-title { font-weight: 700; font-size: .9rem; color: #fff; }
+    .ic-body { font-size: .83rem; color: rgba(255,255,255,.6); line-height: 1.5; }
+    .takeaway-box {
+      border: 1px solid rgba(127,216,209,.3); border-radius: 12px;
+      background: rgba(15,119,111,.15); padding: .9rem 1.1rem;
+      display: flex; gap: .8rem; align-items: flex-start;
+    }
+    .takeaway-box .tk-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+    .takeaway-box .tk-text { font-size: .9rem; color: rgba(255,255,255,.85); line-height: 1.55; }
+    .takeaway-box strong { color: #7fd8d1; }
+    .next-link {
+      align-self: flex-start;
+      display: flex; align-items: center; gap: .5rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .72rem; color: rgba(255,255,255,.4);
+      text-transform: uppercase; letter-spacing: .07em;
+      padding: .35rem .7rem; border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px; background: rgba(255,255,255,.05);
+      cursor: pointer; transition: background .15s, color .15s;
+    }
+    .next-link:hover { background: rgba(255,255,255,.12); color: rgba(255,255,255,.9); }
+
+    /* ── Section color coding ──────────────────────────────── */
+    .c1 { color: #7fd8d1; } .c1-bg { background: rgba(127,216,209,.15); } .c1-dot { background: #7fd8d1; }
+    .c2 { color: #ffcf77; } .c2-bg { background: rgba(255,207,119,.15); } .c2-dot { background: #ffcf77; }
+    .c3 { color: #c3a6ff; } .c3-bg { background: rgba(195,166,255,.15); } .c3-dot { background: #c3a6ff; }
+    .c4 { color: #ff9e7a; } .c4-bg { background: rgba(255,158,122,.15); } .c4-dot { background: #ff9e7a; }
+    .c5 { color: #ff7a7a; } .c5-bg { background: rgba(255,122,122,.15); } .c5-dot { background: #ff7a7a; }
+    .c6 { color: #aad8a8; } .c6-bg { background: rgba(170,216,168,.15); } .c6-dot { background: #aad8a8; }
+    .c7 { color: #f5b8e0; } .c7-bg { background: rgba(245,184,224,.15); } .c7-dot { background: #f5b8e0; }
+
+    /* ── Misc helpers ──────────────────────────────────────── */
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+    @media (max-width: 700px) {
+      .intro-content, .step-content { grid-template-columns: 1fr; }
+      .intro-right, .step-right { display: none; }
+      .toc-grid { grid-template-columns: 1fr; }
+      .insights-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="deck" role="main" aria-label="Slideshow presentation">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SLIDE 0 · TITLE
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-title active" data-section="title" data-section-label="Intro" data-section-color="0">
+    <div class="top-bar">
+      <span class="section-label">PyOPPE · Student Replay Walkthroughs</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="title-content">
+      <span class="title-kicker">7 Replays · Annotated for Educators</span>
+      <h1 class="title-h1">How students <em>really</em> solve coding problems</h1>
+      <p class="title-sub">Seven unedited terminal recordings, step by step. Watch the thinking unfold — the wrong turns, the breakthroughs, and the missed moments where teaching could have made a difference.</p>
+      <div class="title-stats">
+        <div class="stat-pill"><span class="stat-num">7</span><span class="stat-lbl">Replays</span></div>
+        <div class="stat-pill"><span class="stat-num">5</span><span class="stat-lbl">Archetypes</span></div>
+        <div class="stat-pill"><span class="stat-num">49</span><span class="stat-lbl">Slides</span></div>
+      </div>
+      <div class="title-cta">Press <kbd style="background:rgba(255,255,255,.15);padding:.1rem .35rem;border-radius:4px;font-family:monospace">→</kbd> or click below to begin</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SLIDE 1 · TABLE OF CONTENTS
+  ════════════════════════════════════════════════════════════ -->
+  <div class="slide slide-toc" data-section="toc" data-section-label="Overview" data-section-color="0">
+    <div class="top-bar">
+      <span class="section-label">Overview</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="toc-content">
+      <div class="toc-header">
+        <h2>Seven stories of learning under pressure</h2>
+        <p>Each replay captures a different learning pattern. Click any card to jump straight to that replay — or press → to go through them in order.</p>
+      </div>
+      <div class="toc-grid">
+
+        <button class="toc-card" onclick="goToSlide(2)">
+          <span class="toc-num">Replay 01 · Incremental Debugger · Full Pass</span>
+          <span class="toc-title">Replace Consonants: Debugging That Actually Works</span>
+          <span class="toc-insight">This student makes steady, deliberate progress — moving from runtime errors to logic errors to passing both public and private tests. A rare, clean model of how iterative debugging is supposed to go.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Incremental Debugger</span>
+            <span class="badge badge-outcome-pass">Full Pass · 100%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(9)">
+          <span class="toc-num">Replay 02 · Minimal-Change Solver · Full Pass</span>
+          <span class="toc-title">Decreasing 4-Digit Number: Efficiency in 44 Seconds</span>
+          <span class="toc-insight">A compact session with just one small hiccup. This student figures out what they need, makes the smallest possible changes, and gets to 100% quickly. A useful baseline for what efficient problem-solving looks like.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Minimal-Change Solver</span>
+            <span class="badge badge-outcome-pass">Full Pass · 100%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(15)">
+          <span class="toc-num">Replay 03 · Volatile Reworker · Full Pass</span>
+          <span class="toc-title">Pangram Check: The Dangerous False Summit</span>
+          <span class="toc-insight">Public tests pass — and the student almost stops there. But private tests reveal hidden edge cases that expose a fragile assumption. Watch how "it works on the examples" can be a trap, and how this student eventually escapes it.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Volatile Reworker</span>
+            <span class="badge badge-outcome-pass">Full Pass · 100%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(22)">
+          <span class="toc-num">Replay 04 · Thrasher · Full Pass</span>
+          <span class="toc-title">Greeting Prefix: 110 Seconds of Controlled Chaos</span>
+          <span class="toc-insight">High activity, many attempts, and a confidence-destroying public regression halfway through — yet this student recovers. Thrashing doesn't always mean failure, but it always means wasted time. Where could a nudge have helped?</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Thrasher</span>
+            <span class="badge badge-outcome-pass">Full Pass · 100%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(29)">
+          <span class="toc-num">Replay 05 · Thrasher · Submitted Zero</span>
+          <span class="toc-title">Reversed Squares: Effort Without Direction</span>
+          <span class="toc-insight">The same thrashing pattern — but without the lucky recovery. Dozens of attempts, two failed submissions, and a session that ends at zero. This is what happens when students keep trying the same thing expecting different results.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Thrasher</span>
+            <span class="badge badge-outcome-fail">Submitted · 0%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(36)">
+          <span class="toc-num">Replay 06 · Regression · Partial Pass</span>
+          <span class="toc-title">Find Repeating Characters: When Early Success Becomes a Trap</span>
+          <span class="toc-insight">Public tests pass in the first 18 seconds — exciting! Then everything falls apart. Every attempt to improve private performance breaks what was already working. This is regression in action: fixing without a net.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Regression</span>
+            <span class="badge badge-outcome-partial">Partial Pass · 33%</span>
+          </div>
+        </button>
+
+        <button class="toc-card" onclick="goToSlide(43)">
+          <span class="toc-num">Replay 07 · Thrasher · Never Submitted</span>
+          <span class="toc-title">Vowels vs Consonants: So Close, Yet No Submission</span>
+          <span class="toc-insight">After 76 seconds of struggle, this student gets to 4/5 on public tests — just one edge case away from a complete solution. Then the session ends. No submit button was ever pressed. A poignant look at the "last-mile" workflow gap.</span>
+          <div class="toc-badges">
+            <span class="badge badge-arch">Thrasher</span>
+            <span class="badge badge-outcome-none">Never Submitted</span>
+          </div>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 1 · REPLACE CONSONANTS
+       Slides 2–8 (intro + 5 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 2 · Intro -->
+  <div class="slide slide-intro" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replay 1 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c1">🟢 Incremental Debugger · Full Pass</span>
+        <h2 class="intro-h2">Replace Consonants with Hash</h2>
+        <p class="intro-desc">Transform text by replacing every consonant with a <code>#</code> symbol. Vowels and spaces stay unchanged.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t2 · Q10 (py11)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">101 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--green)">100% — Full Pass</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Incremental Debugger</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>The <strong>runtime → logic error transition</strong> — a sign of real progress</li>
+            <li>A brief runtime <strong>relapse</strong> after some edits — then recovery</li>
+            <li>How a fix that <strong>generalizes</strong> solves both public and private tests at once</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Starts with runtime errors — normal for first drafts</span></div>
+          <div class="tp-item"><span class="tp-time">0:22</span><span class="tp-kind observation">observe</span><span class="tp-text">Shifts to logic errors — runtime issues resolved</span></div>
+          <div class="tp-item"><span class="tp-time">0:54</span><span class="tp-kind observation">observe</span><span class="tp-text">Brief runtime relapse after an edit</span></div>
+          <div class="tp-item"><span class="tp-time">1:20</span><span class="tp-kind observation">observe</span><span class="tp-text">Wrong-answer phase: refining character conditions</span></div>
+          <div class="tp-item"><span class="tp-time">1:35</span><span class="tp-kind breakthrough">break</span><span class="tp-text">All public tests pass!</span></div>
+          <div class="tp-item"><span class="tp-time">1:35</span><span class="tp-kind breakthrough">break</span><span class="tp-text">Private tests pass too — the fix generalized</span></div>
+          <div class="tp-item"><span class="tp-time">1:41</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Final submission: 100%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3 · Step 1 -->
+  <div class="slide slide-step" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replace Consonants · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 5</span>
+        <h3 class="step-h3">The first draft: almost always broken</h3>
+        <div class="step-body">
+          <p>At <strong>0:00</strong>, the student opens the problem and writes their first attempt. It throws a runtime error — and that's completely normal. Every programmer, beginner or expert, writes code that breaks on the first run.</p>
+          <p>What matters here isn't the error. It's <em>what kind of error it is</em>. A runtime error tells you the code couldn't even execute. That's actually useful information: the problem is structural, not conceptual.</p>
+          <p>The student doesn't panic. They keep editing — small changes, quick re-runs — the classic incremental debug loop.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Teaching moment</div>
+          <p>Runtime errors at the start are expected and healthy. The right response is to <strong>read the error message carefully</strong> and fix one thing at a time — exactly what this student does.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header">
+            <span class="player-title">▶ asciinema replay · r1</span>
+          </div>
+          <div class="player-mount" id="player-r1"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r1" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r1" data-t="21.638">0:22 shift</button>
+            <button class="jump-btn" data-replay="r1" data-t="54.454">0:54 relapse</button>
+            <button class="jump-btn" data-replay="r1" data-t="80.691">1:21 logic</button>
+            <button class="jump-btn" data-replay="r1" data-t="95.416">1:35 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4 · Step 2 -->
+  <div class="slide slide-step" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replace Consonants · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 5</span>
+        <h3 class="step-h3">A healthy transition: runtime → logic errors</h3>
+        <div class="step-body">
+          <p>At <strong>0:22</strong>, something important shifts. The runtime errors disappear — meaning the code can now <em>actually run</em> from start to finish. But now it's producing wrong answers instead.</p>
+          <p>This is <strong>genuine progress</strong>, even if it doesn't feel like it. The student has moved from "my code is broken" to "my code runs but does the wrong thing." That's a completely different problem to debug.</p>
+          <p>The typical beginner mistake here is to panic and start rewriting everything. This student doesn't. They observe the wrong outputs and try targeted changes.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The runtime-to-logic shift</div>
+          <p>When students stop getting runtime errors and start getting wrong answers, they often feel like they're going backwards. <strong>They're not</strong> — they're leveling up. This is worth explicitly naming in the classroom.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r1</span></div>
+          <div class="player-mount" id="player-r1-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r1" data-t="0">0:00 start</button>
+            <button class="jump-btn active" data-replay="r1" data-t="21.638">0:22 shift</button>
+            <button class="jump-btn" data-replay="r1" data-t="54.454">0:54 relapse</button>
+            <button class="jump-btn" data-replay="r1" data-t="80.691">1:21 logic</button>
+            <button class="jump-btn" data-replay="r1" data-t="95.416">1:35 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5 · Step 3 -->
+  <div class="slide slide-step" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replace Consonants · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 5</span>
+        <h3 class="step-h3">A brief relapse — then back on track</h3>
+        <div class="step-body">
+          <p>At <strong>0:54</strong>, something unexpected happens: runtime errors return. The student had been making good progress on logic errors, but an edit introduced a new structural bug.</p>
+          <p>This is a classic "two steps forward, one step back" moment. The student may have been exploring a slightly different approach — perhaps restructuring their string-checking logic — and accidentally broke syntax.</p>
+          <p>Notice how <em>quickly</em> they catch it. The relapse is brief. By <strong>1:21</strong>, they're back to wrong-answer mode, now refining their condition checks for vowels vs. consonants.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ When small edits break working code</div>
+          <p>Students often feel frustrated when a "small" change causes a runtime error again. Normalize this: <strong>it means they're experimenting</strong>, which is exactly what we want. The danger is if they stop experimenting and just sit still.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r1</span></div>
+          <div class="player-mount" id="player-r1-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r1" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r1" data-t="21.638">0:22 shift</button>
+            <button class="jump-btn active" data-replay="r1" data-t="54.454">0:54 relapse</button>
+            <button class="jump-btn" data-replay="r1" data-t="80.691">1:21 logic</button>
+            <button class="jump-btn" data-replay="r1" data-t="95.416">1:35 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6 · Step 4 -->
+  <div class="slide slide-step" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replace Consonants · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 5</span>
+        <h3 class="step-h3">The logic puzzle: what counts as a consonant?</h3>
+        <div class="step-body">
+          <p>From <strong>1:21</strong>, the student is deep in wrong-answer territory. The code runs cleanly — no crashes — but the outputs are incorrect for some inputs. This phase is about getting the character classification logic right.</p>
+          <p>Common issues at this stage: <strong>case sensitivity</strong> (is 'A' a vowel?), <strong>spaces</strong> (should they be left alone?), and <strong>boundary conditions</strong> (what about punctuation, digits?)</p>
+          <p>The student is likely testing with print statements or carefully reading the test case outputs, comparing expected vs. actual character by character. This is patient, methodical work.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 What makes this archetype successful</div>
+          <p>The Incremental Debugger doesn't try to solve everything at once. They fix one bug at a time, verify the fix, then move on. This reduces the risk of introducing <strong>new bugs while fixing old ones</strong> — exactly what trips up Thrashers.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r1</span></div>
+          <div class="player-mount" id="player-r1-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r1" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r1" data-t="21.638">0:22 shift</button>
+            <button class="jump-btn" data-replay="r1" data-t="54.454">0:54 relapse</button>
+            <button class="jump-btn active" data-replay="r1" data-t="80.691">1:21 logic</button>
+            <button class="jump-btn" data-replay="r1" data-t="95.416">1:35 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7 · Step 5: Breakthrough -->
+  <div class="slide slide-step" data-section="r1" data-replay-id="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c1-dot"></span>Replace Consonants · Step 5</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 5 of 5</span>
+        <h3 class="step-h3">Breakthrough: public and private pass together</h3>
+        <div class="step-body">
+          <p>At <strong>1:35</strong>, public tests go green. One heartbeat later — private tests pass too.</p>
+          <p>This is the most telling moment in the whole replay. When a student's fix <em>simultaneously</em> solves both public and private tests, it means the fix was correct in principle, not just fitted to the visible examples. The student understood the problem, not just the test cases.</p>
+          <p>The final submission at <strong>1:41</strong> confirms it: <strong>100%</strong>. The session ends cleanly, with no wasted attempts.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Simultaneous public + private pass</div>
+          <p>When both pass at the same time, it almost always means the student reasoned from <strong>first principles</strong>, not from the examples. This is the gold standard of debugging. It's rare — and worth celebrating when it happens.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r1</span></div>
+          <div class="player-mount" id="player-r1-5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r1" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r1" data-t="21.638">0:22 shift</button>
+            <button class="jump-btn" data-replay="r1" data-t="54.454">0:54 relapse</button>
+            <button class="jump-btn" data-replay="r1" data-t="80.691">1:21 logic</button>
+            <button class="jump-btn active" data-replay="r1" data-t="95.416">1:35 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8 · Summary R1 -->
+  <div class="slide slide-summary" data-section="r1" data-section-label="Replay 1" data-section-color="1">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c1-dot"></span>Replay 1 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Replace Consonants</span>
+      <h2 class="summary-h2">What <em>good</em> incremental debugging looks like</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">🔄</span>
+          <span class="ic-title">Runtime → Logic → Pass is a healthy arc</span>
+          <p class="ic-body">Errors changed type across the session: first structural (runtime), then semantic (wrong answers), then resolved. Each phase is a step up, not a setback.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">⚡</span>
+          <span class="ic-title">Small iterations, steady progress</span>
+          <p class="ic-body">The student made small, frequent edits and tested after each one. This discipline keeps the problem space small and the feedback fast.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🎯</span>
+          <span class="ic-title">Generalized fix = deep understanding</span>
+          <p class="ic-body">Passing both public and private simultaneously shows the student understood the rule, not just the examples. No overfitting, no guess-and-check on test cases.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Use this replay as a positive model. When discussing debugging, show students this arc explicitly — especially the "runtime to logic" transition, which students often misread as going backwards. Praise the discipline of small, testable changes.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(9)">Next: Replay 2 — Decreasing 4-Digit Number →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 2–7: PLACEHOLDER SECTIONS (to be filled in Layer 2-4)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 2 · DECREASING 4-DIGIT NUMBER
+       Slides 9–14 (intro + 4 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 9 · Intro -->
+  <div class="slide slide-intro" data-section="r2" data-replay-id="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c2-dot"></span>Replay 2 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c2">🟡 Minimal-Change Solver · Full Pass</span>
+        <h2 class="intro-h2">Check If a Number is a Decreasing 4-Digit Number</h2>
+        <p class="intro-desc">Given a 4-digit number, determine whether each digit is strictly smaller than the one before it: e.g. <code>9742</code> is valid, <code>9752</code> is not.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t2 · Q5 (py13)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">44 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--green)">100% — Full Pass</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Minimal-Change Solver</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>How <strong>quickly</strong> the student resolves their initial issues</li>
+            <li>A <strong>brief regression</strong> — one test case drops — but recovery is fast</li>
+            <li>The contrast with high-effort sessions: <strong>same result, much less stress</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Starts with runtime error — likely input parsing</span></div>
+          <div class="tp-item"><span class="tp-time">0:13</span><span class="tp-kind observation">observe</span><span class="tp-text">Still runtime-heavy; working through parsing/indexing</span></div>
+          <div class="tp-item"><span class="tp-time">0:23</span><span class="tp-kind inflection">inflect</span><span class="tp-text">Public tests: full pass! Core logic clicks into place</span></div>
+          <div class="tp-item"><span class="tp-time">0:30</span><span class="tp-kind observation">observe</span><span class="tp-text">Brief regression: 2/3 public. A refinement backfired</span></div>
+          <div class="tp-item"><span class="tp-time">0:40</span><span class="tp-kind breakthrough">break</span><span class="tp-text">Private tests pass at 100% — fix generalized</span></div>
+          <div class="tp-item"><span class="tp-time">0:44</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Final submission: 100%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 10 · Step 1 -->
+  <div class="slide slide-step" data-section="r2" data-replay-id="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c2-dot"></span>Decreasing 4-Digit · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 4</span>
+        <h3 class="step-h3">Input parsing: the first hurdle</h3>
+        <div class="step-body">
+          <p>The session opens at <strong>0:00</strong> with a runtime error. The most likely culprit: the student is reading the number as a string and indexing into it, or converting it to an integer when they shouldn't — or vice versa.</p>
+          <p>This is a very common first-draft trap for digit-by-digit problems. Python's <code>int()</code> and string indexing interact in non-obvious ways when you're thinking in terms of "the first digit" vs. "the first character."</p>
+          <p>By <strong>0:13</strong> they're still wrestling with it — but watch how short this phase is compared to Thrashers. They're not guessing randomly; they're isolating the input handling specifically.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Input vs. logic</div>
+          <p>Many beginner bugs are <strong>input handling bugs</strong>, not logic bugs. Teaching students to separate "read input" from "process input" as two distinct steps eliminates a huge class of errors early.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r2</span></div>
+          <div class="player-mount" id="player-r2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r2" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r2" data-t="12.5">0:13 runtime</button>
+            <button class="jump-btn" data-replay="r2" data-t="22.5">0:23 public✓</button>
+            <button class="jump-btn" data-replay="r2" data-t="30">0:30 wobble</button>
+            <button class="jump-btn" data-replay="r2" data-t="40.234">0:40 private✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 11 · Step 2 -->
+  <div class="slide slide-step" data-section="r2" data-replay-id="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c2-dot"></span>Decreasing 4-Digit · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 4</span>
+        <h3 class="step-h3">Public tests: a swift, clean pass</h3>
+        <div class="step-body">
+          <p>At <strong>0:23</strong>, all public tests pass. Less than 25 seconds into the session.</p>
+          <p>What just happened? The student figured out how to extract individual digits and compare them sequentially. In Python, the cleanest way is to treat the number as a string and compare adjacent characters — since string comparison of single digits works correctly for <code>'9' &gt; '7' &gt; '4' &gt; '2'</code>.</p>
+          <p>The beauty of this moment is its speed. Compare this to sessions where public tests take 90 seconds to pass. Same problem, same result — but completely different stress levels and learning experiences.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Speed as a signal</div>
+          <p>Fast public passes often indicate the student has a clear <strong>mental model</strong> before they start coding. They're translating a known strategy into code, not discovering the strategy through trial and error.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r2</span></div>
+          <div class="player-mount" id="player-r2-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r2" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r2" data-t="12.5">0:13 runtime</button>
+            <button class="jump-btn active" data-replay="r2" data-t="22.5">0:23 public✓</button>
+            <button class="jump-btn" data-replay="r2" data-t="30">0:30 wobble</button>
+            <button class="jump-btn" data-replay="r2" data-t="40.234">0:40 private✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 12 · Step 3 -->
+  <div class="slide slide-step" data-section="r2" data-replay-id="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c2-dot"></span>Decreasing 4-Digit · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 4</span>
+        <h3 class="step-h3">One wobble — and a quick recovery</h3>
+        <div class="step-body">
+          <p>At <strong>0:30</strong>, there's a brief dip: a public test drops from 3/3 to 2/3. Something the student changed — probably trying to handle an edge case or simplify their approach — accidentally broke one test case.</p>
+          <p>This could be a scenario like: the student switched from comparing digits as strings to comparing them as integers, and the index math shifted by one. Or they tightened a boundary condition that was previously implicit.</p>
+          <p>Crucially, they notice and respond fast. By <strong>0:40</strong>, private tests pass at 100% — meaning the fix not only recovered the public case but generalized correctly to hidden inputs too.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ The danger of "improving" working code</div>
+          <p>Even Minimal-Change Solvers sometimes break working code by trying to be clever. The key difference: they notice quickly and revert or fix immediately rather than spiraling into deeper rewrites.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r2</span></div>
+          <div class="player-mount" id="player-r2-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r2" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r2" data-t="12.5">0:13 runtime</button>
+            <button class="jump-btn" data-replay="r2" data-t="22.5">0:23 public✓</button>
+            <button class="jump-btn active" data-replay="r2" data-t="30">0:30 wobble</button>
+            <button class="jump-btn" data-replay="r2" data-t="40.234">0:40 private✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 13 · Step 4 -->
+  <div class="slide slide-step" data-section="r2" data-replay-id="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c2-dot"></span>Decreasing 4-Digit · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 4</span>
+        <h3 class="step-h3">44 seconds. 100%. Done.</h3>
+        <div class="step-body">
+          <p>The final submission at <strong>0:44</strong> earns a perfect score. The entire session — from blank file to 100% — fit inside a single minute.</p>
+          <p>What can we learn from this? The student likely came in with a <em>plan</em>. They knew how digit comparison works. They knew how to read input. Their debugging was targeted because their mental model was accurate.</p>
+          <p>This is what mastery of fundamentals looks like in practice: not impressive complexity, just clean, confident execution. There's elegance in the brevity.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The minimal-change philosophy</div>
+          <p>The best solution is often the one that changes the fewest things. Students who thrash often <strong>over-engineer</strong> their fixes. Teaching students to make the smallest possible change that could work is a high-leverage skill.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r2</span></div>
+          <div class="player-mount" id="player-r2-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r2" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r2" data-t="12.5">0:13 runtime</button>
+            <button class="jump-btn" data-replay="r2" data-t="22.5">0:23 public✓</button>
+            <button class="jump-btn" data-replay="r2" data-t="30">0:30 wobble</button>
+            <button class="jump-btn active" data-replay="r2" data-t="40.234">0:40 private✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 14 · Summary R2 -->
+  <div class="slide slide-summary" data-section="r2" data-section-label="Replay 2" data-section-color="2">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c2-dot"></span>Replay 2 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Decreasing 4-Digit Number</span>
+      <h2 class="summary-h2">What <em>efficiency</em> looks like in practice</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">⚡</span>
+          <span class="ic-title">Speed reflects preparation</span>
+          <p class="ic-body">A 44-second session to 100% isn't luck — it's what happens when a student has internalized the core concepts before they start typing. Mental models precede good code.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🎯</span>
+          <span class="ic-title">Targeted fixes, not rewrites</span>
+          <p class="ic-body">Even when the brief regression appeared, the student made a small, specific correction — not a full rewrite. This preserves what works while fixing what doesn't.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">📐</span>
+          <span class="ic-title">The simplest approach usually wins</span>
+          <p class="ic-body">Digit comparison via string indexing in Python is clean and readable. Students who overthink this problem often end up with more complex, buggier code.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Use this as a contrast replay alongside high-effort failures. Ask: <em>what did this student know before they started that others didn't?</em> The answer points to specific conceptual gaps to address in teaching — not debugging skills, but foundational understanding.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(15)">Next: Replay 3 — Pangram Check →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 3 · PANGRAM CHECK
+       Slides 15–21 (intro + 5 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 15 · Intro -->
+  <div class="slide slide-intro" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Replay 3 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c3">🟣 Volatile Reworker · Full Pass</span>
+        <h2 class="intro-h2">Pangram Check</h2>
+        <p class="intro-desc">A pangram is a sentence that contains every letter of the alphabet at least once. Famously: "The quick brown fox jumps over the lazy dog."</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t2 · Q18 (py21)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">71 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--green)">100% — Full Pass</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Volatile Reworker</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>The <strong>false summit</strong> at 0:47 — public pass, but private fails immediately</li>
+            <li>How the student handles the shock of <strong>hidden edge cases</strong></li>
+            <li>What "public tests pass" actually means — and what it <em>doesn't</em> guarantee</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Opens with runtime errors — structural issues</span></div>
+          <div class="tp-item"><span class="tp-time">0:04</span><span class="tp-kind observation">observe</span><span class="tp-text">Runtime error from something broken while editing</span></div>
+          <div class="tp-item"><span class="tp-time">0:25</span><span class="tp-kind observation">observe</span><span class="tp-text">Long plateau: stuck around partial public correctness</span></div>
+          <div class="tp-item"><span class="tp-time">0:47</span><span class="tp-kind inflection">inflect</span><span class="tp-text">🎉 All public tests pass! But…</span></div>
+          <div class="tp-item"><span class="tp-time">0:47</span><span class="tp-kind inflection">inflect</span><span class="tp-text">💥 Private tests fail immediately. Hidden assumptions exposed.</span></div>
+          <div class="tp-item"><span class="tp-time">0:57</span><span class="tp-kind observation">observe</span><span class="tp-text">Public green again, private still unstable</span></div>
+          <div class="tp-item"><span class="tp-time">1:11</span><span class="tp-kind breakthrough">break</span><span class="tp-text">Private tests finally pass — robust logic achieved</span></div>
+          <div class="tp-item"><span class="tp-time">1:11</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Final submission: 100%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 16 · Step 1 -->
+  <div class="slide slide-step" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Pangram Check · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 5</span>
+        <h3 class="step-h3">Early noise: runtime errors, then a long plateau</h3>
+        <div class="step-body">
+          <p>The session opens at <strong>0:00</strong> with runtime errors. At <strong>0:04</strong>, an edit introduces another one — perhaps an unmatched bracket or incorrect method name. These early wobbles are normal.</p>
+          <p>What's more interesting is the <strong>long plateau from 0:04 to 0:47</strong>. The student spends about 43 seconds stuck in partial-correctness territory: some public tests pass, some don't. They're iterating, but the core logic isn't quite right yet.</p>
+          <p>This is a Volatile Reworker signature: lots of activity, lots of small edits, but without a stable debugging strategy. Each fix attempts to patch a specific failing case rather than reasoning about the underlying rule.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ The patch-and-pray cycle</div>
+          <p>When students iterate without a clear hypothesis about <em>why</em> their code fails, they often end up in a patch cycle: fix one test case, break another. The exit strategy is to reason about the general rule, not the specific failing examples.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r3</span></div>
+          <div class="player-mount" id="player-r3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r3" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r3" data-t="3.947">0:04 error</button>
+            <button class="jump-btn" data-replay="r3" data-t="24.555">0:25 plateau</button>
+            <button class="jump-btn" data-replay="r3" data-t="46.974">0:47 public✓</button>
+            <button class="jump-btn" data-replay="r3" data-t="47.223">0:47 private✗</button>
+            <button class="jump-btn" data-replay="r3" data-t="70.647">1:11 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 17 · Step 2 -->
+  <div class="slide slide-step" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Pangram Check · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 5</span>
+        <h3 class="step-h3">The long middle: chasing partial correctness</h3>
+        <div class="step-body">
+          <p>From <strong>0:25</strong>, the student is in a grinding middle phase. They have some public tests passing, some not. Every edit targets the visible failures without fully stepping back to rethink the approach.</p>
+          <p>Likely issue: their pangram check is working for some letters but missing others. Common mistakes here include <strong>case sensitivity</strong> (failing to normalize to lowercase before checking), or checking the wrong set of letters (e.g., not including all 26).</p>
+          <p>The student's instinct is to keep tweaking rather than pausing to re-read the problem statement or write out their logic on paper. This is an opportunity for an educator to intervene: <em>"Stop. Tell me, in words, what you're checking for."</em></p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The value of articulation</div>
+          <p>Asking students to <strong>explain their algorithm in plain English</strong> before looking at code often immediately surfaces the logical gap. It's faster than five more failed test runs.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r3</span></div>
+          <div class="player-mount" id="player-r3-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r3" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r3" data-t="3.947">0:04 error</button>
+            <button class="jump-btn active" data-replay="r3" data-t="24.555">0:25 plateau</button>
+            <button class="jump-btn" data-replay="r3" data-t="46.974">0:47 public✓</button>
+            <button class="jump-btn" data-replay="r3" data-t="47.223">0:47 private✗</button>
+            <button class="jump-btn" data-replay="r3" data-t="70.647">1:11 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 18 · Step 3: False Summit -->
+  <div class="slide slide-step" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Pangram Check · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 5</span>
+        <h3 class="step-h3" style="color:#b33a3a">The false summit</h3>
+        <div class="step-body">
+          <p>At <strong>0:47</strong>, all public tests pass. In just 47 seconds! The student might feel done — this is a common response, and it's emotionally reasonable. But 0.25 seconds later, private tests return a failure.</p>
+          <p>What could the private tests be checking that the public ones don't? Most likely: <strong>uppercase letters</strong> (is "THE QUICK BROWN FOX..." a pangram?), <strong>mixed-case</strong> sentences, <strong>sentences with numbers or punctuation</strong>, or <strong>empty strings</strong>.</p>
+          <p>The public examples likely only cover straightforward lowercase pangrams. The private tests stress the assumption that all inputs are neatly formatted lowercase. They're not.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ "It works on the examples" is not enough</div>
+          <p>This is one of the most important lessons in software. <strong>Public tests are a sample, not a specification.</strong> Students who only think about passing the visible examples inevitably hit private test failures. Teaching students to read the problem spec — not just the examples — is a game-changer.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r3</span></div>
+          <div class="player-mount" id="player-r3-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r3" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r3" data-t="3.947">0:04 error</button>
+            <button class="jump-btn" data-replay="r3" data-t="24.555">0:25 plateau</button>
+            <button class="jump-btn active" data-replay="r3" data-t="46.974">0:47 public✓</button>
+            <button class="jump-btn" data-replay="r3" data-t="47.223">0:47 private✗</button>
+            <button class="jump-btn" data-replay="r3" data-t="70.647">1:11 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 19 · Step 4 -->
+  <div class="slide slide-step" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Pangram Check · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 5</span>
+        <h3 class="step-h3">Back to debugging: finding the hidden assumption</h3>
+        <div class="step-body">
+          <p>At <strong>0:57</strong>, the student is in a new loop: public tests are green again, but private tests remain broken. They've recovered the public pass but haven't yet found the edge case that private tests expose.</p>
+          <p>This is the frustrating "private-only failure" mode. From the student's perspective: <em>everything looks fine</em>. All the tests they can see are passing. But something they can't see is failing.</p>
+          <p>This situation calls for a specific debugging technique: <strong>think adversarially</strong>. Ask: "What inputs would I invent if I were trying to break this code?" That's exactly what the private test writers did. Common adversarial inputs: empty string, all-uppercase, single character, non-alphabetic characters only.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Adversarial thinking as a skill</div>
+          <p>Teach students to ask: <em>"What's the nastiest input I could send to this code?"</em> This is a form of defensive programming that strong engineers use constantly. It's also a great way to discover your own assumptions.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r3</span></div>
+          <div class="player-mount" id="player-r3-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r3" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r3" data-t="3.947">0:04 error</button>
+            <button class="jump-btn" data-replay="r3" data-t="24.555">0:25 plateau</button>
+            <button class="jump-btn" data-replay="r3" data-t="46.974">0:47 public✓</button>
+            <button class="jump-btn active" data-replay="r3" data-t="56.543">0:57 stuck</button>
+            <button class="jump-btn" data-replay="r3" data-t="70.647">1:11 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 20 · Step 5: True Victory -->
+  <div class="slide slide-step" data-section="r3" data-replay-id="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c3-dot"></span>Pangram Check · Step 5</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 5 of 5</span>
+        <h3 class="step-h3">True victory: both suites pass</h3>
+        <div class="step-body">
+          <p>At <strong>1:11</strong>, private tests finally pass. Both public and private are green. This is the real finish line — and the student found it through persistence, not luck.</p>
+          <p>The fix likely involved normalizing the input to lowercase before checking, using something like <code>sentence.lower()</code>. A one-word change that makes the solution robust to any capitalization.</p>
+          <p>The immediate final submission scores 100%. This student had the right instincts — they just needed one more layer of defensive thinking about what their code assumed about the inputs.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The power of normalization</div>
+          <p>A common beginner oversight: forgetting that <strong>case matters in Python string comparisons</strong>. <code>'A' in 'aeiou'</code> is False. A single <code>.lower()</code> call eliminates an entire class of hidden-test failures. Teaching normalization as a reflex saves hours of debugging.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r3</span></div>
+          <div class="player-mount" id="player-r3-5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r3" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r3" data-t="24.555">0:25 plateau</button>
+            <button class="jump-btn" data-replay="r3" data-t="46.974">0:47 public✓</button>
+            <button class="jump-btn" data-replay="r3" data-t="47.223">0:47 private✗</button>
+            <button class="jump-btn" data-replay="r3" data-t="56.543">0:57 stuck</button>
+            <button class="jump-btn active" data-replay="r3" data-t="70.647">1:11 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 21 · Summary R3 -->
+  <div class="slide slide-summary" data-section="r3" data-section-label="Replay 3" data-section-color="3">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c3-dot"></span>Replay 3 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Pangram Check</span>
+      <h2 class="summary-h2">Public tests pass. <em>Private tests fail.</em> Now what?</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">⛰️</span>
+          <span class="ic-title">The false summit is a real psychological trap</span>
+          <p class="ic-body">When all visible tests pass, it feels done. Students need to be trained to treat this moment as a checkpoint, not a finish line — and to actively seek out edge cases.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🔍</span>
+          <span class="ic-title">Hidden tests reveal hidden assumptions</span>
+          <p class="ic-body">Private failures are diagnostic gifts. They tell you what your code assumes about the world. In this case: "all input is lowercase." That assumption was never stated — it was just never challenged.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🛡️</span>
+          <span class="ic-title">Normalization as a first principle</span>
+          <p class="ic-body">Always normalize inputs before processing. Lowercase strings, strip whitespace, handle empty cases. These one-liners prevent a vast number of hidden-test failures.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Show this replay immediately after the "public tests all pass" moment — pause it there and ask students: <em>what could still go wrong?</em> Then let them watch the private failure appear. It's a memorable way to teach defensive programming and the difference between a sample and a specification.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(22)">Next: Replay 4 — Greeting Prefix →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 4 · GREETING PREFIX
+       Slides 22–28 (intro + 5 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 22 · Intro -->
+  <div class="slide slide-intro" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Replay 4 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c4">🟠 Thrasher · Full Pass</span>
+        <h2 class="intro-h2">Check For Greeting Prefix</h2>
+        <p class="intro-desc">Detect whether a string starts with a recognized greeting prefix: "Hello", "Hi", "Hey", "Dear", etc. Case and punctuation can vary.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t2 · Q15 (py22)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">110 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--green)">100% — Full Pass</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Thrasher</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>How long the student stays stuck in <strong>runtime errors</strong> without progress</li>
+            <li>The <strong>fake confidence</strong> moment: public pass followed by private fail</li>
+            <li>A <strong>regression</strong> that breaks public tests after private fails</li>
+            <li>The lucky recovery — and whether it could have happened sooner</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Starts with runtime failures</span></div>
+          <div class="tp-item"><span class="tp-time">0:27</span><span class="tp-kind observation">observe</span><span class="tp-text">Still runtime-heavy after 27 seconds of edits</span></div>
+          <div class="tp-item"><span class="tp-time">1:00</span><span class="tp-kind inflection">inflect</span><span class="tp-text">First all-public pass — feels like progress</span></div>
+          <div class="tp-item"><span class="tp-time">1:00</span><span class="tp-kind inflection">inflect</span><span class="tp-text">Private score: 67%. Hidden inputs reveal string-handling gap</span></div>
+          <div class="tp-item"><span class="tp-time">1:30</span><span class="tp-kind observation">observe</span><span class="tp-text">Regression: public correctness slips again</span></div>
+          <div class="tp-item"><span class="tp-time">1:47</span><span class="tp-kind breakthrough">break</span><span class="tp-text">Private all-pass achieved!</span></div>
+          <div class="tp-item"><span class="tp-time">1:50</span><span class="tp-kind outcome">outcome</span><span class="tp-text">First + second submission: both 100%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 23 · Step 1: The Thrash Zone -->
+  <div class="slide slide-step" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Greeting Prefix · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 5</span>
+        <h3 class="step-h3">The thrash zone: many attempts, little progress</h3>
+        <div class="step-body">
+          <p>From <strong>0:00 to 0:27</strong>, the student is making rapid, frequent edits — but runtime errors keep appearing. This is the defining signature of a Thrasher: high activity without a stable debugging strategy.</p>
+          <p>The student is probably doing something like: "edit, run, error, edit, run, error" — each iteration targeting the most recently visible error without diagnosing the root cause. It's the coding equivalent of squeezing a balloon: fix the error here, a new one pops up there.</p>
+          <p>What's missing is a moment of <em>pause</em>: stop running, read the error carefully, form a hypothesis about the root cause, then test just that hypothesis.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ The thrashing signature</div>
+          <p>Thrashing feels productive — you're constantly moving, constantly changing things. But without a clear hypothesis at each step, you're essentially <strong>random-walking toward a solution</strong>. Sometimes you find it; often you don't.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r4</span></div>
+          <div class="player-mount" id="player-r4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r4" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r4" data-t="27.375">0:27 thrash</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.725">1:00 public✓</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.883">1:00 private✗</button>
+            <button class="jump-btn" data-replay="r4" data-t="89.835">1:30 regress</button>
+            <button class="jump-btn" data-replay="r4" data-t="106.549">1:47 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 24 · Step 2 -->
+  <div class="slide slide-step" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Greeting Prefix · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 5</span>
+        <h3 class="step-h3">A shaky first public pass — but private breaks it</h3>
+        <div class="step-body">
+          <p>At <strong>1:00</strong>, all public tests finally pass. A sigh of relief — the code works! But 0.15 seconds later, the private test score comes back: <strong>67%</strong>.</p>
+          <p>What does a 67% private score mean? With a typical set of 3-6 private tests, it means 1-2 tests are failing. These are probably edge cases like: <strong>different capitalization</strong> ("hello" instead of "Hello"), <strong>multiple spaces</strong>, <strong>punctuation after the greeting</strong> ("Hi, there" vs. "Hi there"), or <strong>greetings not in the student's list</strong>.</p>
+          <p>The student's code worked for the examples they could see. The invisible inputs broke it. This is structurally identical to the Pangram replay — but here the student is a Thrasher, so the response will be noisier.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 67% often means one missing case</div>
+          <p>A 67% private score is specific diagnostic information: roughly one-third of test cases are failing. This narrows the search. What <strong>one assumption</strong> could cause exactly that many failures? Start there.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r4</span></div>
+          <div class="player-mount" id="player-r4-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r4" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r4" data-t="27.375">0:27 thrash</button>
+            <button class="jump-btn active" data-replay="r4" data-t="59.725">1:00 public✓</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.883">1:00 private✗</button>
+            <button class="jump-btn" data-replay="r4" data-t="89.835">1:30 regress</button>
+            <button class="jump-btn" data-replay="r4" data-t="106.549">1:47 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 25 · Step 3: Regression -->
+  <div class="slide slide-step" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Greeting Prefix · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 5</span>
+        <h3 class="step-h3" style="color:#b33a3a">The regression: losing what you had</h3>
+        <div class="step-body">
+          <p>At <strong>1:30</strong>, public test correctness slips again. Not only is private still failing — now the student is back to failing visible tests too. This is a hallmark of Thrasher behavior: volatile code changes that don't respect what was already working.</p>
+          <p>The student is probably making broad, structural changes to try to fix the private failures. Maybe they're rethinking the entire greeting-matching approach. But in doing so, they accidentally break the simpler cases that were passing before.</p>
+          <p>At this point, a wise strategy would be to <strong>revert</strong> — go back to the version that passed all public tests — and then make small, targeted changes to handle the edge cases. But Thrashers rarely revert; they keep pushing forward.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ When "fix" becomes "break"</div>
+          <p>One of the most valuable habits in software is knowing when to <strong>roll back a change</strong>. Version control exists for this reason. Students who lose their last known-good state have to rediscover it from scratch — expensive and demoralizing.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r4</span></div>
+          <div class="player-mount" id="player-r4-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r4" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r4" data-t="27.375">0:27 thrash</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.725">1:00 public✓</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.883">1:00 private✗</button>
+            <button class="jump-btn active" data-replay="r4" data-t="89.835">1:30 regress</button>
+            <button class="jump-btn" data-replay="r4" data-t="106.549">1:47 pass!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 26 · Step 4 -->
+  <div class="slide slide-step" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Greeting Prefix · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 5</span>
+        <h3 class="step-h3">Finally stable: private all-pass</h3>
+        <div class="step-body">
+          <p>At <strong>1:47</strong>, something clicks. Private tests pass at 100%. The fix — whatever it was — correctly handled the hidden edge cases without breaking what was already working.</p>
+          <p>This is what separates this Thrasher from Replay 5 (Reversed Squares). Both students thrash heavily. But this student eventually lands on the right answer through persistent trial and error. The other doesn't.</p>
+          <p>Luck? Persistence? A sudden flash of insight? Probably some combination. The important point is: <em>thrashing can succeed</em> — but at a cost. This student burned roughly 80 extra seconds compared to what an Incremental Debugger would have spent on the same problem.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Thrashing can succeed — at a cost</div>
+          <p>Not all thrashing ends in failure. But it's <strong>expensive</strong>: time, stress, and the risk of getting worse before getting better. The goal is to teach students debugging discipline so they don't need to rely on eventual lucky convergence.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r4</span></div>
+          <div class="player-mount" id="player-r4-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r4" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.725">1:00 public✓</button>
+            <button class="jump-btn" data-replay="r4" data-t="89.835">1:30 regress</button>
+            <button class="jump-btn active" data-replay="r4" data-t="106.549">1:47 pass!</button>
+            <button class="jump-btn" data-replay="r4" data-t="110.073">1:50 done!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 27 · Step 5: Confirmed -->
+  <div class="slide slide-step" data-section="r4" data-replay-id="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c4-dot"></span>Greeting Prefix · Step 5</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 5 of 5</span>
+        <h3 class="step-h3">Two submissions, both 100%</h3>
+        <div class="step-body">
+          <p>At <strong>1:50</strong>, the first submission scores 100%. The student submits again to confirm — and again: 100%. This double-submission suggests the student doesn't quite trust the result, probably because the journey was so chaotic.</p>
+          <p>That lack of trust is understandable. When you reach the right answer through thrashing rather than understanding, you can't always tell <em>why</em> it works. The solution might feel fragile even when it's not.</p>
+          <p>This is a subtle but important teaching point: <strong>confidence in your solution should come from understanding it</strong>, not from seeing a green score. A student who knows why their code works is resilient. A student who doesn't is one edge case away from being lost again.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Understanding vs. guessing your way to correctness</div>
+          <p>The score is the same. The outcome looks identical. But one student could re-solve this problem tomorrow, and one couldn't. <strong>Ask students to explain why their solution works</strong> — not just whether it passes.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r4</span></div>
+          <div class="player-mount" id="player-r4-5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r4" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r4" data-t="59.725">1:00 public✓</button>
+            <button class="jump-btn" data-replay="r4" data-t="89.835">1:30 regress</button>
+            <button class="jump-btn" data-replay="r4" data-t="106.549">1:47 pass!</button>
+            <button class="jump-btn active" data-replay="r4" data-t="110.073">1:50 done!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 28 · Summary R4 -->
+  <div class="slide slide-summary" data-section="r4" data-section-label="Replay 4" data-section-color="4">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c4-dot"></span>Replay 4 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Greeting Prefix</span>
+      <h2 class="summary-h2">High effort, <em>eventual</em> success — and the cost in between</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">🎲</span>
+          <span class="ic-title">Thrashing can succeed — but it's expensive</span>
+          <p class="ic-body">110 seconds of chaotic iteration eventually found the right answer. But the same result could have been achieved in under 30 seconds with a systematic approach. The cost is time, stress, and fragile confidence.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">⏪</span>
+          <span class="ic-title">Know when to revert</span>
+          <p class="ic-body">The public regression at 1:30 cost precious time. If the student had reverted to their last known-good state (all public tests passing) and applied targeted fixes, they'd have avoided the chaotic second half.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🧠</span>
+          <span class="ic-title">Confidence should come from understanding</span>
+          <p class="ic-body">Submitting twice reveals the student doesn't fully trust their solution. They got there — but they can't fully articulate why. That gap in understanding is where the next bug will hide.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Show this replay alongside Replay 1 and ask: <em>same outcome, very different journey</em>. What debugging habits separate them? The Thrasher's greatest unmet need is a structured protocol: read the error, form a hypothesis, test one thing at a time. A one-minute debugging framework could transform this student's trajectory.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(29)">Next: Replay 5 — Reversed Squares →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 5 · REVERSED SQUARES
+       Slides 29–35 (intro + 5 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 29 · Intro -->
+  <div class="slide slide-intro" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Replay 5 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c5">🔴 Thrasher · Submitted Zero</span>
+        <h2 class="intro-h2">Reversed Squares of List Elements</h2>
+        <p class="intro-desc">Given a list of numbers, return a new list where each element is squared, and the whole result is reversed. E.g. <code>[1, 2, 3]</code> → <code>[9, 4, 1]</code>.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t2 · Q17 (py22)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">147 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--red)">0% — Submitted, Zero</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Thrasher</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>How the same runtime error <strong>persists for the entire session</strong></li>
+            <li>The student submitting without a passing state — <strong>hope over evidence</strong></li>
+            <li>Where a <strong>single diagnostic pause</strong> could have changed everything</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Starts with runtime errors</span></div>
+          <div class="tp-item"><span class="tp-time">0:36</span><span class="tp-kind observation">observe</span><span class="tp-text">Dozens of attempts — still runtime errors</span></div>
+          <div class="tp-item"><span class="tp-time">1:10</span><span class="tp-kind observation">observe</span><span class="tp-text">Midpoint: same failure, same pattern</span></div>
+          <div class="tp-item"><span class="tp-time">1:45</span><span class="tp-kind observation">observe</span><span class="tp-text">Late session: broad rewrites, no improvement</span></div>
+          <div class="tp-item"><span class="tp-time">2:20</span><span class="tp-kind observation">observe</span><span class="tp-text">Slight shift to wrong answers — progress, but not enough</span></div>
+          <div class="tp-item"><span class="tp-time">2:26</span><span class="tp-kind outcome">outcome</span><span class="tp-text">First submission: runtime failure — score 0</span></div>
+          <div class="tp-item"><span class="tp-time">2:26</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Second submission: also fails at runtime</span></div>
+          <div class="tp-item"><span class="tp-time">2:27</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Session ends. Zero points.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 30 · Step 1 -->
+  <div class="slide slide-step" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Reversed Squares · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 5</span>
+        <h3 class="step-h3">The runtime trap: stuck in a loop</h3>
+        <div class="step-body">
+          <p>At <strong>0:36</strong>, after dozens of attempts, the student is still seeing runtime errors. Not wrong answers — runtime errors. The code cannot even <em>execute</em>.</p>
+          <p>This is the most critical early warning sign. A sustained runtime-error phase means there's a structural problem with the code that no amount of logic-level changes will fix. Common culprits: trying to iterate over a non-iterable, calling a method that doesn't exist on the type, or a name error (undefined variable).</p>
+          <p>The student keeps editing without pausing to <em>read the error message</em>. This is the loop: run, see red, edit, run, see red, edit. Each iteration burns 3-5 seconds and changes something — but not the right thing.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ The edit-without-reading trap</div>
+          <p>When students don't read error messages carefully, they end up changing the wrong thing. The error message tells you <strong>exactly what went wrong and where</strong>. It's a gift. Teach students to stop, read it fully, and locate the line before touching the code.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r5</span></div>
+          <div class="player-mount" id="player-r5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r5" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r5" data-t="36.137">0:36 still broken</button>
+            <button class="jump-btn" data-replay="r5" data-t="70.311">1:10 midpoint</button>
+            <button class="jump-btn" data-replay="r5" data-t="104.774">1:45 late</button>
+            <button class="jump-btn" data-replay="r5" data-t="145.772">2:26 submit→0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 31 · Step 2 -->
+  <div class="slide slide-step" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Reversed Squares · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 5</span>
+        <h3 class="step-h3">The midpoint check: no improvement at all</h3>
+        <div class="step-body">
+          <p>At <strong>1:10</strong>, we are exactly at the midpoint of the session. The student has spent 70 seconds in continuous activity. And the error type hasn't changed at all — still runtime failures.</p>
+          <p>This is the clearest possible signal of a broken debugging strategy. In a well-functioning debugging session, you'd expect the error type to change over time as underlying issues are resolved. Here, it's static.</p>
+          <p>This is where an automated intervention would be most valuable. After N consecutive runtime failures, the system could prompt: <em>"You've seen this error repeatedly. What does the error message say? Can you explain line by line what your code does?"</em></p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The intervention point</div>
+          <p>After 60 seconds of continuous runtime errors, a student almost certainly needs help they can't give themselves. This is a <strong>clear, measurable trigger</strong> for instructor or automated intervention — not vague frustration, but a specific, quantifiable pattern.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r5</span></div>
+          <div class="player-mount" id="player-r5-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r5" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r5" data-t="36.137">0:36 still broken</button>
+            <button class="jump-btn active" data-replay="r5" data-t="70.311">1:10 midpoint</button>
+            <button class="jump-btn" data-replay="r5" data-t="104.774">1:45 late</button>
+            <button class="jump-btn" data-replay="r5" data-t="145.772">2:26 submit→0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 32 · Step 3 -->
+  <div class="slide slide-step" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Reversed Squares · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 5</span>
+        <h3 class="step-h3">Late-stage rewrites: the wrong response to failure</h3>
+        <div class="step-body">
+          <p>At <strong>1:45</strong>, the student appears to be trying broad rewrites — completely restructuring their approach — instead of isolating the specific error. This is a classic Thrasher response to persistent failure: if targeted fixes don't work, scrap everything and start over.</p>
+          <p>The problem: broad rewrites in a state of frustration rarely work. You're more likely to introduce <em>new</em> bugs than to fix the original one. The original runtime error is still there, just buried under different code.</p>
+          <p>What the student likely needs is to write a <strong>minimal version</strong> of their solution: just 2-3 lines. Square one number. Print it. Does that work? Then scale up. But they're not doing that — they're writing more, not less.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ More code ≠ closer to a solution</div>
+          <p>When stuck, the instinct to write more code is counterproductive. The right move is to <strong>remove code until it works</strong>, then add back one piece at a time. Minimal reproducible examples are the debugger's best friend.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r5</span></div>
+          <div class="player-mount" id="player-r5-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r5" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r5" data-t="36.137">0:36 still broken</button>
+            <button class="jump-btn" data-replay="r5" data-t="70.311">1:10 midpoint</button>
+            <button class="jump-btn active" data-replay="r5" data-t="104.774">1:45 rewrites</button>
+            <button class="jump-btn" data-replay="r5" data-t="145.772">2:26 submit→0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 33 · Step 4 -->
+  <div class="slide slide-step" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Reversed Squares · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 5</span>
+        <h3 class="step-h3">A glimmer of progress — too late to capitalize</h3>
+        <div class="step-body">
+          <p>At <strong>2:20</strong>, something interesting happens: the errors shift from runtime to wrong-answer. The code finally executes! But it produces incorrect output.</p>
+          <p>This is genuine progress — the student has solved the structural problem. In a different session, with more time and calmer focus, they might have found the logic fix in another 15-20 seconds.</p>
+          <p>But the session is almost over. The student has 7 seconds until submission. And critically, <strong>they don't seem to recognize this transition as progress</strong>. From their perspective, "still failing" is "still failing."</p>
+          <p>Teaching students to <em>read error types</em> — and to understand that runtime→wrong-answer is progress — is vital exactly for moments like this.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Progress is invisible without a framework</div>
+          <p>When students don't have a mental model of debugging stages, all failure looks the same. <strong>Naming the stages explicitly</strong> — runtime, wrong output, passing — gives students a map and lets them recognize when they're moving forward, even when it doesn't feel like it.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r5</span></div>
+          <div class="player-mount" id="player-r5-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r5" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r5" data-t="70.311">1:10 midpoint</button>
+            <button class="jump-btn" data-replay="r5" data-t="104.774">1:45 rewrites</button>
+            <button class="jump-btn active" data-replay="r5" data-t="140.393">2:20 shift!</button>
+            <button class="jump-btn" data-replay="r5" data-t="145.772">2:26 submit→0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 34 · Step 5: Submissions fail -->
+  <div class="slide slide-step" data-section="r5" data-replay-id="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c5-dot"></span>Reversed Squares · Step 5</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 5 of 5</span>
+        <h3 class="step-h3" style="color:#b33a3a">Two submissions. Both zero.</h3>
+        <div class="step-body">
+          <p>At <strong>2:26</strong>, the student submits. The grader returns: runtime error, score 0. They submit again — same result. The session ends here.</p>
+          <p>This is the hardest outcome to watch. Not because the student didn't try — they tried harder than almost anyone else in this collection. But effort without direction doesn't produce results in programming.</p>
+          <p>The student never decoded the root cause of their runtime error. They never isolated the simplest failing case. They never read the error message closely enough to understand what Python was actually objecting to.</p>
+          <p>Two submissions of a broken program. Hope over evidence. A painful but important lesson.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ Submitting broken code: a solvable habit</div>
+          <p>Students should be taught a simple rule: <strong>never submit code that produces a runtime error on your own machine</strong>. If it doesn't run for you, it won't run for the grader. This single heuristic would have saved this student both submissions.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r5</span></div>
+          <div class="player-mount" id="player-r5-5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r5" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r5" data-t="36.137">0:36 stuck</button>
+            <button class="jump-btn" data-replay="r5" data-t="70.311">1:10 midpoint</button>
+            <button class="jump-btn" data-replay="r5" data-t="140.393">2:20 shift</button>
+            <button class="jump-btn active" data-replay="r5" data-t="145.772">2:26 submit→0</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 35 · Summary R5 -->
+  <div class="slide slide-summary" data-section="r5" data-section-label="Replay 5" data-section-color="5">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c5-dot"></span>Replay 5 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Reversed Squares</span>
+      <h2 class="summary-h2">Effort without direction <em>ends at zero</em></h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">🚨</span>
+          <span class="ic-title">60+ seconds of runtime errors = intervention needed</span>
+          <p class="ic-body">By the 60-second mark, the pattern was clear: this student was stuck in a loop they couldn't exit alone. Automated detection of this pattern could trigger a targeted nudge before the session becomes unrecoverable.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">📖</span>
+          <span class="ic-title">Read the error message — every word</span>
+          <p class="ic-body">Runtime errors in Python are precise: they give you the file, line number, error type, and a description. Teaching students to parse this information — before touching the code — is among the highest-ROI debugging skills.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🔬</span>
+          <span class="ic-title">Isolate, don't expand</span>
+          <p class="ic-body">When stuck, remove code until the smallest possible version runs. Then build up. The student did the opposite: added more code under pressure, which buried the original bug deeper.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">🚫</span>
+          <span class="ic-title">Don't submit what doesn't run</span>
+          <p class="ic-body">A simple rule that would have saved two wasted submissions. If the code throws a runtime error locally, the grader will too. Submitting is not a debug step.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Use this replay to introduce a concrete debugging protocol: <em>(1) Read the full error message. (2) Locate the line. (3) Form one hypothesis. (4) Test it. Repeat.</em> Then show how any of those steps would have unlocked this session. The student had the persistence — they just lacked the method.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(36)">Next: Replay 6 — Find Repeating Characters →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 6 · FIND REPEATING CHARACTERS
+       Slides 36–42 (intro + 5 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 36 · Intro -->
+  <div class="slide slide-intro" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Replay 6 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c6">🟢 Regression · Partial Pass</span>
+        <h2 class="intro-h2">Find Characters Appearing More Than Once</h2>
+        <p class="intro-desc">Given a string, return the characters that appear more than once — i.e., the duplicate characters. Order and format may matter.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t3 · Q10 (py13)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">60 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--warn)">33% — Partial Pass</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Regression</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>An <strong>early public pass</strong> at 18 seconds — then immediate collapse</li>
+            <li>How <strong>every fix attempt</strong> makes things worse, not better</li>
+            <li>What it looks like when a student loses their <strong>only safe checkpoint</strong></li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Starts with runtime issues — standard first-draft</span></div>
+          <div class="tp-item"><span class="tp-time">0:18</span><span class="tp-kind inflection">inflect</span><span class="tp-text">All public tests pass! Surprisingly fast.</span></div>
+          <div class="tp-item"><span class="tp-time">0:18</span><span class="tp-kind inflection">inflect</span><span class="tp-text">Private fails immediately: 33%. The trap is set.</span></div>
+          <div class="tp-item"><span class="tp-time">0:26</span><span class="tp-kind observation">observe</span><span class="tp-text">Public also degrades. Fixes are breaking what worked.</span></div>
+          <div class="tp-item"><span class="tp-time">0:34</span><span class="tp-kind observation">observe</span><span class="tp-text">Private remains at zero through the middle phase</span></div>
+          <div class="tp-item"><span class="tp-time">0:47</span><span class="tp-kind observation">observe</span><span class="tp-text">Still wrong-answer heavy — effort high, feedback weak</span></div>
+          <div class="tp-item"><span class="tp-time">0:58</span><span class="tp-kind observation">observe</span><span class="tp-text">Late-stage: private still failing</span></div>
+          <div class="tp-item"><span class="tp-time">1:00</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Final submission: 33%. The early private score never improved.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 37 · Step 1: Early Win -->
+  <div class="slide slide-step" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Find Repeating · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 5</span>
+        <h3 class="step-h3">The exciting early win — and its hidden trap</h3>
+        <div class="step-body">
+          <p>At <strong>0:18</strong>, all public tests pass. That's only 18 seconds into a 60-second session. This feels like a dominant performance — almost done already!</p>
+          <p>But half a second later: private tests return 33%. The student's first instinct is probably: <em>"It's almost right — let me fix the edge cases."</em> And that instinct, while reasonable, will lead them into a trap.</p>
+          <p>The early public pass almost certainly came from a solution that was slightly wrong but happened to pass the visible examples. The private tests have inputs that reveal the flaw. And now — critically — the student is going to try to "fix" a solution they don't fully understand.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ Fast public passes can be fragile</div>
+          <p>An 18-second public pass often means the code <strong>works for the specific examples</strong> but hasn't been reasoned through carefully. When that's the case, fixing private failures requires understanding the logic — which the student may not yet have.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r6</span></div>
+          <div class="player-mount" id="player-r6"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r6" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.363">0:18 public✓</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.654">0:18 private✗</button>
+            <button class="jump-btn" data-replay="r6" data-t="25.814">0:26 collapse</button>
+            <button class="jump-btn" data-replay="r6" data-t="58.515">0:58 stuck</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 38 · Step 2: Immediate Collapse -->
+  <div class="slide slide-step" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Find Repeating · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 5</span>
+        <h3 class="step-h3">The collapse: public fails too</h3>
+        <div class="step-body">
+          <p>At <strong>0:26</strong>, just 8 seconds after the exciting public pass, things fall apart. Public test quality degrades — the tests that were passing before now fail. The student's fix attempts have broken what was working.</p>
+          <p>This is the Regression archetype in its clearest form. The student had a fragile solution that passed public tests. When they tried to extend it to handle private failures, they destabilized it.</p>
+          <p>The root problem: they don't have a stable checkpoint to fall back to. They don't have version control. They're editing in a live file, and the version that passed all public tests is gone. Now they're trying to debug code they just broke, without knowing exactly what changed.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Save your working state</div>
+          <p>The single most valuable habit that would have helped here: <strong>copy-paste the working version before modifying it</strong>. Even commenting out the old code preserves a rollback point. Students don't think to do this until they've lost something important.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r6</span></div>
+          <div class="player-mount" id="player-r6-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r6" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.363">0:18 public✓</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.654">0:18 private✗</button>
+            <button class="jump-btn active" data-replay="r6" data-t="25.814">0:26 collapse</button>
+            <button class="jump-btn" data-replay="r6" data-t="58.515">0:58 stuck</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 39 · Step 3 -->
+  <div class="slide slide-step" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Find Repeating · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 5</span>
+        <h3 class="step-h3">Deep in the hole: private at zero, public unstable</h3>
+        <div class="step-body">
+          <p>From <strong>0:34</strong> onward, the private test score stays at zero. The student cycles through edit after edit — but nothing they try improves the private result, and some changes break public tests too.</p>
+          <p>What might the private tests be checking that public tests missed? Likely: <strong>order of output</strong> (does "aab" return "a" or ["a"]?), <strong>duplicate duplicates</strong> (if 'a' appears 3 times, does it appear once or multiple times in the output?), <strong>empty strings</strong>, or <strong>strings with no duplicates</strong>.</p>
+          <p>Without knowing exactly what the private tests expect, the student is debugging blind. They're making changes based on guesses about what might be failing — and the feedback loop is agonizingly slow.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Understand the output spec completely</div>
+          <p>For problems like this, the output format often matters as much as the logic: list vs. string, sorted vs. unsorted, with or without duplicates. <strong>Students who re-read the problem spec carefully at this stage</strong> often unlock the fix immediately.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r6</span></div>
+          <div class="player-mount" id="player-r6-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r6" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.363">0:18 public✓</button>
+            <button class="jump-btn" data-replay="r6" data-t="25.814">0:26 collapse</button>
+            <button class="jump-btn active" data-replay="r6" data-t="33.603">0:34 zero</button>
+            <button class="jump-btn" data-replay="r6" data-t="58.515">0:58 stuck</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 40 · Step 4 -->
+  <div class="slide slide-step" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Find Repeating · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 5</span>
+        <h3 class="step-h3">Late-stage: still stuck, still wrong</h3>
+        <div class="step-body">
+          <p>At <strong>0:58</strong>, two seconds before the session ends, private tests still fail. The score hasn't moved from 33% since the first private check at 0:18.</p>
+          <p>This is the defining characteristic of the Regression archetype: the student <em>started</em> with a working public solution but couldn't improve it without breaking it. By the end, they've done a lot of work and ended up worse than they started.</p>
+          <p>The 33% private score at submission is exactly what they scored on the first private check — 42 seconds and dozens of edits ago. All that activity produced zero net improvement on the thing that mattered most.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ Activity ≠ progress</div>
+          <p>This student was never idle. They edited, ran, edited, ran, for the full 60 seconds. And they ended exactly where they started on private tests. Without a debugging strategy, <strong>iteration is not learning — it's noise</strong>.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r6</span></div>
+          <div class="player-mount" id="player-r6-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r6" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.363">0:18 public✓</button>
+            <button class="jump-btn" data-replay="r6" data-t="25.814">0:26 collapse</button>
+            <button class="jump-btn" data-replay="r6" data-t="33.603">0:34 zero</button>
+            <button class="jump-btn active" data-replay="r6" data-t="58.515">0:58 stuck</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 41 · Step 5: Submission -->
+  <div class="slide slide-step" data-section="r6" data-replay-id="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c6-dot"></span>Find Repeating · Step 5</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 5 of 5</span>
+        <h3 class="step-h3">Final submission: 33%</h3>
+        <div class="step-body">
+          <p>The final submission at <strong>1:00</strong> earns 33% — exactly the same private score from 42 seconds ago. The student locked in their first private result and couldn't escape it.</p>
+          <p>What's painful is that their original solution — the one that passed all public tests at 0:18 — might have been worth more than 33% on private tests too, if they'd submitted it immediately. Sometimes the first version is the best version.</p>
+          <p>The lesson: <strong>celebrate and checkpoint your wins</strong>. When all public tests pass, that's a valid submission. Submit it, even if you plan to keep improving. Lock in the points you've earned before risking them on further changes.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 Submit before you improve</div>
+          <p>This is an underappreciated strategy: <strong>submit your first working version, then try to improve</strong>. This locks in a baseline score. If your "improvements" break things, you still have the baseline. The student here had a baseline — and never used it.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r6</span></div>
+          <div class="player-mount" id="player-r6-5"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r6" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.363">0:18 public✓</button>
+            <button class="jump-btn" data-replay="r6" data-t="18.654">0:18 private✗</button>
+            <button class="jump-btn" data-replay="r6" data-t="25.814">0:26 collapse</button>
+            <button class="jump-btn active" data-replay="r6" data-t="58.515">1:00 submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 42 · Summary R6 -->
+  <div class="slide slide-summary" data-section="r6" data-section-label="Replay 6" data-section-color="6">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c6-dot"></span>Replay 6 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Find Repeating Characters</span>
+      <h2 class="summary-h2">Early success, <em>late collapse</em> — the regression trap</h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">📌</span>
+          <span class="ic-title">Checkpoint your wins</span>
+          <p class="ic-body">When all public tests pass, that's a real milestone. Submit immediately, or at minimum record the exact code. Don't let that moment pass without capturing it — every subsequent change is a risk.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">⏪</span>
+          <span class="ic-title">Regression without revert is a spiral</span>
+          <p class="ic-body">Each fix that broke public tests should have been reversed. Instead, the student kept piling changes on top of broken changes. Without a revert strategy, regressions compound.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">📋</span>
+          <span class="ic-title">Re-read the spec when private tests fail</span>
+          <p class="ic-body">33% private score means the student's output format or logic assumption was wrong for most inputs. The fastest path to understanding that is going back to the problem description, not to the code.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Use this replay to teach <em>checkpoint-based development</em>: submit early, submit often, revert when you break things. Show how the 18-second public pass could have been locked in as a submitted baseline. Everything after that was gambling with earned points — and the gamble lost.</p>
+      </div>
+      <button class="next-link" onclick="goToSlide(43)">Next: Replay 7 — Vowels vs Consonants →</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       REPLAY 7 · VOWELS VS CONSONANTS
+       Slides 43–48 (intro + 4 steps + summary)
+  ════════════════════════════════════════════════════════════ -->
+
+  <!-- Slide 43 · Intro -->
+  <div class="slide slide-intro" data-section="r7" data-replay-id="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c7-dot"></span>Replay 7 of 7</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="intro-content">
+      <div class="intro-left">
+        <span class="replay-label c7">🩷 Thrasher · Never Submitted</span>
+        <h2 class="intro-h2">Count Strings With More Vowels Than Consonants</h2>
+        <p class="intro-desc">Given a list of strings, count how many contain more vowels than consonants. Requires both character classification and list filtering.</p>
+        <div class="meta-grid">
+          <div class="meta-row"><span class="meta-key">Student</span><span class="meta-val">ns_25t3 · Q9 (py24)</span></div>
+          <div class="meta-row"><span class="meta-key">Duration</span><span class="meta-val">76 seconds</span></div>
+          <div class="meta-row"><span class="meta-key">Final score</span><span class="meta-val" style="color:var(--muted)">Never Submitted</span></div>
+          <div class="meta-row"><span class="meta-key">Archetype</span><span class="meta-val">Thrasher</span></div>
+        </div>
+        <div class="watch-for-box">
+          <h4>👀 What to watch for</h4>
+          <ul>
+            <li>A <strong>late breakthrough</strong> at 1:07 — 4/5 public tests pass!</li>
+            <li>The student gets <em>this close</em> to a solution… then the session ends</li>
+            <li>The <strong>missing submit button press</strong> — a workflow gap, not a technical one</li>
+          </ul>
+        </div>
+      </div>
+      <div class="intro-right">
+        <p class="tp-label">Timeline at a glance</p>
+        <div class="timeline-preview">
+          <div class="tp-item"><span class="tp-time">0:00</span><span class="tp-kind intro">intro</span><span class="tp-text">Opens with runtime errors</span></div>
+          <div class="tp-item"><span class="tp-time">0:19</span><span class="tp-kind observation">observe</span><span class="tp-text">Still runtime-heavy after many attempts</span></div>
+          <div class="tp-item"><span class="tp-time">0:38</span><span class="tp-kind observation">observe</span><span class="tp-text">Shifts to wrong answers — the code can now run</span></div>
+          <div class="tp-item"><span class="tp-time">0:47</span><span class="tp-kind observation">observe</span><span class="tp-text">Private tests still failing: logic gap persists</span></div>
+          <div class="tp-item"><span class="tp-time">0:58</span><span class="tp-kind observation">observe</span><span class="tp-text">Runtime relapse under continued edits</span></div>
+          <div class="tp-item"><span class="tp-time">1:07</span><span class="tp-kind inflection">inflect</span><span class="tp-text">Late breakthrough: 4/5 public! So close.</span></div>
+          <div class="tp-item"><span class="tp-time">1:16</span><span class="tp-kind observation">observe</span><span class="tp-text">Private still at zero — one edge case away?</span></div>
+          <div class="tp-item"><span class="tp-time">1:16</span><span class="tp-kind outcome">outcome</span><span class="tp-text">Session ends. No submission was ever made.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 44 · Step 1: Long runtime desert -->
+  <div class="slide slide-step" data-section="r7" data-replay-id="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c7-dot"></span>Vowels vs Consonants · Step 1</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 1 of 4</span>
+        <h3 class="step-h3">The long runtime desert</h3>
+        <div class="step-body">
+          <p>From <strong>0:00</strong> to <strong>0:38</strong>, the student is stuck in a runtime-error loop. Nearly half the session passes before the code can even execute without crashing.</p>
+          <p>This problem has two layers: classify characters (vowel or consonant), then count across a list of strings. The runtime errors likely come from list indexing issues, type errors (treating a string as a list), or variable scope problems.</p>
+          <p>At <strong>0:38</strong>, the mode shifts to wrong answers. This is significant progress — the code runs — but it's happening at the 50% mark of the session, with only 38 seconds left. The clock is ticking.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ Two-layer problems need two-layer debugging</div>
+          <p>When a problem combines multiple concepts, students who try to solve everything at once often get lost. <strong>Isolate each layer</strong>: first make the vowel/consonant classifier work on a single string, then handle the list. Debugging one layer at a time is always faster.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r7</span></div>
+          <div class="player-mount" id="player-r7"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn active" data-replay="r7" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r7" data-t="18.829">0:19 runtime</button>
+            <button class="jump-btn" data-replay="r7" data-t="38.296">0:38 shift!</button>
+            <button class="jump-btn" data-replay="r7" data-t="58.283">0:58 relapse</button>
+            <button class="jump-btn" data-replay="r7" data-t="67.336">1:07 4/5!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 45 · Step 2 -->
+  <div class="slide slide-step" data-section="r7" data-replay-id="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c7-dot"></span>Vowels vs Consonants · Step 2</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 2 of 4</span>
+        <h3 class="step-h3">A relapse, then a late breakthrough</h3>
+        <div class="step-body">
+          <p>At <strong>0:58</strong>, the student experiences a runtime relapse — an edit that seemed promising introduced a structural bug. This is demoralizing but recoverable.</p>
+          <p>Then, remarkably, at <strong>1:07</strong>, something clicks. Public tests jump to 4/5. The student has solved the core problem. The vowel-counting logic works. The list iteration works. Four out of five test cases pass.</p>
+          <p>They're one edge case away from a full public pass. That edge case is probably something like: <strong>equal numbers of vowels and consonants</strong> (the problem says "more vowels than consonants" — equal doesn't count), or <strong>strings with non-alphabetic characters</strong> affecting the count.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 4/5 means you're nearly there</div>
+          <p>A 4/5 score is one of the most actionable states in a session. The student is <em>this close</em>. The right move at this moment: <strong>submit what you have</strong> (4/5 is meaningful credit), then figure out the last case. But instead, the student keeps working — and the session ends.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r7</span></div>
+          <div class="player-mount" id="player-r7-2"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r7" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r7" data-t="38.296">0:38 shift</button>
+            <button class="jump-btn active" data-replay="r7" data-t="58.283">0:58 relapse</button>
+            <button class="jump-btn" data-replay="r7" data-t="67.336">1:07 4/5!</button>
+            <button class="jump-btn" data-replay="r7" data-t="75.577">1:16 end</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 46 · Step 3 -->
+  <div class="slide slide-step" data-section="r7" data-replay-id="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c7-dot"></span>Vowels vs Consonants · Step 3</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 3 of 4</span>
+        <h3 class="step-h3">The missing step: the submit button</h3>
+        <div class="step-body">
+          <p>At <strong>1:16</strong>, the session ends. The student never submitted. Not once. The grader has no record of their work. From the system's perspective: zero points.</p>
+          <p>This is heartbreaking. The student spent 76 seconds working hard on a problem, got to 4/5 on public tests, and earned nothing because they never pressed submit.</p>
+          <p>Why didn't they submit? Probably: they were chasing the 5th test case. They wanted to finish the job before submitting. They may not have realized that submitting an incomplete solution still earns partial credit. Or they simply ran out of time before the thought occurred to them.</p>
+        </div>
+        <div class="warn-box">
+          <div class="ib-label">⚠️ Perfectionism costs points</div>
+          <p>The student may have avoided submitting because they wanted a "finished" solution. But in graded contexts, <strong>partial credit exists for a reason</strong>. A 4/5 submission is infinitely better than a 0/5 non-submission. Submit first, perfect later.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r7</span></div>
+          <div class="player-mount" id="player-r7-3"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r7" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r7" data-t="38.296">0:38 shift</button>
+            <button class="jump-btn" data-replay="r7" data-t="67.336">1:07 4/5!</button>
+            <button class="jump-btn active" data-replay="r7" data-t="75.577">1:16 end</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 47 · Step 4 -->
+  <div class="slide slide-step" data-section="r7" data-replay-id="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label"><span class="section-dot c7-dot"></span>Vowels vs Consonants · Step 4</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="step-content">
+      <div class="step-left">
+        <span class="step-num">Step 4 of 4</span>
+        <h3 class="step-h3">What one sentence from an instructor could have changed</h3>
+        <div class="step-body">
+          <p>Imagine an instructor or automated system saying, at the 1:07 mark when public tests hit 4/5: <em>"Great progress — go ahead and submit that now, it's worth credit. Then come back and figure out the last case."</em></p>
+          <p>That single nudge would have converted a 0-point session into a partial-credit success. The student had done the work. They just needed permission — or a reminder — to submit before perfecting.</p>
+          <p>This is a workflow gap, not a knowledge gap. The student understands the problem. They can write code that nearly solves it. What they're missing is the meta-skill of <strong>managing their submission strategy under time pressure</strong>.</p>
+        </div>
+        <div class="insight-box">
+          <div class="ib-label">💡 The last-mile problem is a teaching moment</div>
+          <p>The "last mile" — between "nearly working" and "submitted" — is where many students lose avoidable points. <strong>Teach submission as a skill</strong>: submit early, submit often, and treat each submission as locking in earned progress, not admitting defeat.</p>
+        </div>
+      </div>
+      <div class="step-right">
+        <div class="player-panel">
+          <div class="player-header"><span class="player-title">▶ asciinema replay · r7</span></div>
+          <div class="player-mount" id="player-r7-4"></div>
+          <div class="jump-buttons">
+            <span class="jump-label">Jump to →</span>
+            <button class="jump-btn" data-replay="r7" data-t="0">0:00 start</button>
+            <button class="jump-btn" data-replay="r7" data-t="38.296">0:38 shift</button>
+            <button class="jump-btn active" data-replay="r7" data-t="67.336">1:07 4/5!</button>
+            <button class="jump-btn" data-replay="r7" data-t="75.577">1:16 end</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 48 · Summary R7 + Final -->
+  <div class="slide slide-summary" data-section="r7" data-section-label="Replay 7" data-section-color="7">
+    <div class="top-bar">
+      <span class="section-label" style="color:rgba(255,255,255,.45)"><span class="section-dot c7-dot"></span>Replay 7 · Summary</span>
+      <span class="slide-counter"></span>
+    </div>
+    <div class="summary-content">
+      <span class="summary-label">Key Insights · Vowels vs Consonants</span>
+      <h2 class="summary-h2">So close — yet <em>nothing submitted</em></h2>
+      <div class="insights-grid">
+        <div class="insight-card">
+          <span class="ic-icon">🎯</span>
+          <span class="ic-title">4/5 is a real result — if you submit it</span>
+          <p class="ic-body">Partial credit exists for a reason. 4/5 with a submission is a meaningfully better outcome than 0 without one. Students need to internalize that incomplete ≠ worthless.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">⏰</span>
+          <span class="ic-title">Time pressure changes strategy</span>
+          <p class="ic-body">When 9 seconds remain and you're at 4/5, the correct decision is to submit — not to keep fixing. Metacognitive awareness of time and submission strategy is a teachable skill.</p>
+        </div>
+        <div class="insight-card">
+          <span class="ic-icon">💬</span>
+          <span class="ic-title">One sentence could have changed everything</span>
+          <p class="ic-body">"Submit that 4/5 — you've earned partial credit" would have converted a zero into a meaningful grade. Timely, specific nudges from instructors or automated systems have outsized impact.</p>
+        </div>
+      </div>
+      <div class="takeaway-box">
+        <span class="tk-icon">🏫</span>
+        <p class="tk-text"><strong>For educators:</strong> Use this replay to introduce an explicit rule: <em>"If you have any public tests passing with 5 minutes left, submit."</em> Then discuss why students don't follow this naturally — it often reveals beliefs about perfectionism, fear of failure, or misunderstanding of how partial credit works. Changing those beliefs is more impactful than teaching any single technical skill.</p>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:auto">
+        <button class="next-link" onclick="goToSlide(0)">↺ Return to start</button>
+        <button class="next-link" onclick="goToSlide(1)">📋 Back to overview</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#deck -->
+
+<!-- ── Navigation bar ───────────────────────────────────────── -->
+<nav class="nav-bar" aria-label="Slideshow navigation">
+  <button class="nav-btn" id="btnPrev" onclick="navigate(-1)" aria-label="Previous slide">&#8592;</button>
+  <div class="progress-dots" id="progressDots" role="tablist" aria-label="Slide progress"></div>
+  <button class="nav-btn" id="btnNext" onclick="navigate(1)" aria-label="Next slide">&#8594;</button>
+</nav>
+<div class="key-hint">← → arrow keys to navigate</div>
+
+<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.9.0/dist/bundle/asciinema-player.min.js"></script>
+<script>
+// ── Replay data ───────────────────────────────────────────────
+const REPLAYS = {
+  r1: { rec: "replay-ns_25t2_py11_1-10-bad2c53a87bb459e9fcdb74f26283a20.rec", cols: 140, rows: 40 },
+  r2: { rec: "replay-ns_25t2_py13_1-5-2662dd2b4ea744ad909a06569aecdc4b.rec", cols: 140, rows: 40 },
+  r3: { rec: "replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28.rec", cols: 140, rows: 40 },
+  r4: { rec: "replay-ns_25t2_py22_1-15-60f6e5f27899406ea16a5470210db8d1.rec", cols: 140, rows: 40 },
+  r5: { rec: "replay-ns_25t2_py22_1-17-a970a89d08064dccb13e8d51ae6a07b5.rec", cols: 140, rows: 40 },
+  r6: { rec: "replay-ns_25t3_py13_1-10-ee012cee3fa5491d8db37141d2a954fe.rec", cols: 140, rows: 40 },
+  r7: { rec: "replay-ns_25t3_py24_1-9-06f6fb4ea76144ef91df6ceec5f264a8.rec", cols: 140, rows: 40 },
+};
+
+// ── Slide engine ──────────────────────────────────────────────
+const slides = Array.from(document.querySelectorAll(".slide"));
+const totalSlides = slides.length;
+let currentIndex = 0;
+
+// Player instances keyed by player mount element ID
+const players = {};
+// Track which replay is loaded in which mount
+const mountReplay = {};
+
+function getSlideSection(slide) {
+  return slide.dataset.replayId || null;
+}
+
+function ensurePlayer(mountId, replayId) {
+  if (!players[mountId]) {
+    const el = document.getElementById(mountId);
+    if (!el || !replayId || !REPLAYS[replayId]) return null;
+    const rp = REPLAYS[replayId];
+    try {
+      players[mountId] = window.AsciinemaPlayer.create(rp.rec, el, {
+        fit: "width", autoPlay: false, preload: true, controls: true,
+        loop: false, speed: 1, idleTimeLimit: 2, cols: rp.cols, rows: rp.rows,
+      });
+    } catch(e) {
+      console.error("Player init failed:", mountId, e);
+      return null;
+    }
+  }
+  return players[mountId];
+}
+
+function initPlayersOnSlide(slide) {
+  const replayId = slide.dataset.replayId;
+  if (!replayId) return;
+  // Init all player mounts on this slide
+  slide.querySelectorAll(".player-mount[id]").forEach(el => {
+    ensurePlayer(el.id, replayId);
+  });
+}
+
+function seekPlayer(replayId, t) {
+  // Find the active slide's player mount
+  const activeSlide = slides[currentIndex];
+  const mounts = activeSlide.querySelectorAll(".player-mount[id]");
+  mounts.forEach(el => {
+    const p = players[el.id];
+    if (p && typeof p.seek === "function") {
+      try { p.seek(parseFloat(t)); } catch(e) {}
+    }
+  });
+}
+
+// Jump buttons
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".jump-btn");
+  if (!btn) return;
+  const replayId = btn.dataset.replay;
+  const t = parseFloat(btn.dataset.t || 0);
+  if (!isNaN(t)) {
+    seekPlayer(replayId, t);
+    // Update active state
+    const container = btn.closest(".jump-buttons");
+    if (container) {
+      container.querySelectorAll(".jump-btn").forEach(b => b.classList.toggle("active", b === btn));
+    }
+  }
+});
+
+// ── Navigation ────────────────────────────────────────────────
+function buildDots() {
+  const container = document.getElementById("progressDots");
+  container.innerHTML = "";
+  slides.forEach((slide, i) => {
+    const dot = document.createElement("button");
+    dot.className = "dot" + (i === 0 ? " active" : "");
+    if (slide.dataset.section !== slides[i - 1]?.dataset.section) {
+      dot.classList.add("section-start");
+    }
+    dot.setAttribute("role", "tab");
+    dot.setAttribute("aria-label", `Slide ${i + 1}`);
+    dot.onclick = () => goToSlide(i);
+    container.appendChild(dot);
+  });
+}
+
+function updateDots() {
+  document.querySelectorAll(".progress-dots .dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === currentIndex);
+  });
+  document.getElementById("btnPrev").disabled = currentIndex === 0;
+  document.getElementById("btnNext").disabled = currentIndex === totalSlides - 1;
+  // Update slide counters
+  slides.forEach((slide, i) => {
+    const counter = slide.querySelector(".slide-counter");
+    if (counter) counter.textContent = `${i + 1} / ${totalSlides}`;
+  });
+}
+
+function goToSlide(index, direction) {
+  if (index < 0 || index >= totalSlides || index === currentIndex) return;
+  const prev = slides[currentIndex];
+  const next = slides[index];
+  const dir = direction !== undefined ? direction : (index > currentIndex ? "forward" : "back");
+
+  prev.classList.remove("active");
+  prev.classList.add(dir === "forward" ? "exit-up" : "exit-down");
+  setTimeout(() => prev.classList.remove("exit-up", "exit-down"), 400);
+
+  next.classList.add("active");
+  currentIndex = index;
+  updateDots();
+  initPlayersOnSlide(next);
+}
+
+function navigate(dir) {
+  goToSlide(currentIndex + dir, dir > 0 ? "forward" : "back");
+}
+
+// Keyboard navigation
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") {
+    e.preventDefault(); navigate(1);
+  } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+    e.preventDefault(); navigate(-1);
+  } else if (e.key === "Home") {
+    e.preventDefault(); goToSlide(0);
+  } else if (e.key === "End") {
+    e.preventDefault(); goToSlide(totalSlides - 1);
+  }
+});
+
+// Touch/swipe
+let touchX = 0;
+document.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+}, { passive: true });
+
+// Init
+buildDots();
+updateDots();
+initPlayersOnSlide(slides[0]);
+</script>
+</body>
+</html>
