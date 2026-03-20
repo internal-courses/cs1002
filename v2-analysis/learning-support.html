@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TA Playbook — Learning Support</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f7f4;--bg2:#efecea;--text:#1a1917;--muted:#6b6560;--rule:#ddd8d0;
+  --red:#b91c1c;--amber:#b45309;--green:#15803d;--blue:#1d4ed8;--purple:#7c3aed;--teal:#0f766e;
+  --orange:#c2410c;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Fira Code',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body.no-scroll{overflow:hidden}
+a{color:inherit;text-decoration:none}
+code,pre{font-family:var(--mono);font-size:12.5px}
+
+/* layout */
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}
+.wide{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* header */
+.site-header{background:#1a1917;color:#f8f7f4;padding:28px 0 24px}
+.site-header .wrap{display:flex;flex-direction:column;gap:6px}
+.site-header h1{font-size:1.45rem;font-weight:700;letter-spacing:-.02em}
+.site-header .sub{font-size:12px;color:#a09890;letter-spacing:.04em;text-transform:uppercase}
+
+/* stats bar */
+.stats-bar{background:#fff;border-bottom:1px solid var(--rule);padding:0}
+.stats-bar .wide{display:grid;grid-template-columns:repeat(6,1fr)}
+.stat{padding:16px 12px;text-align:center;border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:1.55rem;font-weight:700;letter-spacing:-.03em;display:block;line-height:1}
+.stat-l{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:5px;display:block}
+.n-red{color:var(--red)}.n-amber{color:var(--amber)}.n-green{color:var(--green)}
+.n-blue{color:var(--blue)}.n-purple{color:var(--purple)}.n-teal{color:var(--teal)}
+
+/* main */
+main{padding:32px 0 60px}
+.section{margin-bottom:40px}
+.section-title{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--rule)}
+
+/* playbook grid */
+.playbook{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pcard{background:#fff;border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.pcard-top{padding:16px 18px 14px}
+.pcard-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:10px}
+.pcard h3{font-size:1rem;font-weight:700;margin-bottom:6px;line-height:1.3}
+.pcard .evidence{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.pcard .action{font-size:12.5px;line-height:1.5;border-top:1px solid var(--rule);padding:12px 18px;background:var(--bg);flex:1;display:flex;flex-direction:column;gap:8px}
+.pcard .action strong{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.pcard-footer{border-top:1px solid var(--rule);padding:10px 18px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted);background:var(--bg2)}
+.detail-btn{background:none;border:1px solid var(--rule);border-radius:4px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;color:var(--text);letter-spacing:.03em;transition:background .15s}
+.detail-btn:hover{background:var(--rule)}
+
+/* priority badges */
+.p1{background:#fee2e2;color:var(--red)}.p2{background:#fef3c7;color:var(--amber)}
+.p3{background:#dcfce7;color:var(--green)}.p4{background:#dbeafe;color:var(--blue)}
+.p5{background:#ede9fe;color:var(--purple)}.p6{background:#ccfbf1;color:var(--teal)}
+
+/* unit watchlist */
+.unit-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.unit-table th{text-align:left;padding:8px 10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--rule);background:var(--bg2)}
+.unit-table td{padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+.unit-table tr:last-child td{border-bottom:none}
+.unit-table tr:hover td{background:var(--bg)}
+.gap-hi{color:var(--red);font-weight:700}
+.gap-mid{color:var(--amber);font-weight:600}
+.unit-btn{cursor:pointer;color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:2px;background:none;border:none;font-size:12.5px;padding:0}
+
+/* cadence checklist */
+.cadence{counter-reset:step}
+.cadence-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.cadence-item:last-child{border-bottom:none}
+.cadence-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:#1a1917;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.cadence-content{flex:1}
+.cadence-content strong{display:block;font-size:13.5px;font-weight:600;margin-bottom:3px}
+.cadence-content span{font-size:12px;color:var(--muted)}
+
+/* callout */
+.callout{background:var(--bg2);border-left:4px solid var(--amber);padding:14px 18px;font-size:13px;line-height:1.6;border-radius:0 6px 6px 0;margin-bottom:20px}
+.callout strong{color:var(--amber);font-size:10px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+/* modal overlay */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:720px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--rule);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.modal-header h2{font-size:1.15rem;font-weight:700;line-height:1.3}
+.modal-close{flex-shrink:0;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);line-height:1;padding:0 2px;margin-top:-2px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:24px 28px}
+.modal-body p{font-size:13.5px;line-height:1.65;margin-bottom:14px;color:var(--text)}
+.modal-body h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:22px 0 10px}
+.modal-body h3:first-child{margin-top:0}
+
+/* student card in modal */
+.student-card{background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:16px;margin-bottom:14px}
+.student-card .s-id{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.student-card .s-evidence{font-size:12.5px;line-height:1.6;margin-bottom:10px}
+.student-card .s-action{font-size:12.5px;line-height:1.5;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:10px 12px}
+.student-card .s-action strong{color:var(--green);font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+
+/* code block */
+.code-block{background:#1e1e2e;color:#cdd6f4;border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;margin:10px 0}
+.code-block .comment{color:#6c7086}
+.code-block .kw{color:#cba6f7}
+.code-block .fn{color:#89b4fa}
+.code-block .str{color:#a6e3a1}
+.code-block .num{color:#fab387}
+.code-block .err{color:#f38ba8;text-decoration:wavy underline;text-decoration-color:#f38ba8}
+
+/* script box */
+.script-box{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:14px 16px;font-size:12.5px;line-height:1.65;margin:12px 0}
+.script-box strong{color:var(--green);font-size:10px;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+.script-box em{font-style:italic;color:#15803d}
+
+/* tag */
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.06em;padding:2px 6px;border-radius:3px;margin-right:4px}
+.tag-red{background:#fee2e2;color:var(--red)}
+.tag-amber{background:#fef3c7;color:var(--amber)}
+.tag-green{background:#dcfce7;color:var(--green)}
+.tag-blue{background:#dbeafe;color:var(--blue)}
+
+/* responsive */
+@media(max-width:600px){
+  .stats-bar .wide{grid-template-columns:repeat(3,1fr)}
+  .stat:nth-child(3){border-right:none}
+  .stat:nth-child(4){border-top:1px solid var(--rule)}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="wrap">
+    <div class="sub">TA Playbook · ns_26t1_cs1002 · Updated 2026-03-20</div>
+    <h1>Learning Support — Action Playbook</h1>
+    <div style="font-size:12px;color:#a09890;margin-top:4px">Read the cards → open any for detail → schedule clinic</div>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="wide">
+    <div class="stat"><span class="stat-n n-red">36</span><span class="stat-l">Submit now<br>(same day)</span></div>
+    <div class="stat"><span class="stat-n n-amber">2,610</span><span class="stat-l">Edge-case<br>clinic</span></div>
+    <div class="stat"><span class="stat-n n-blue">2,728</span><span class="stat-l">Debugging<br>clinic</span></div>
+    <div class="stat"><span class="stat-n n-purple">1,317</span><span class="stat-l">Reasoning<br>clinic</span></div>
+    <div class="stat"><span class="stat-n n-teal">736</span><span class="stat-l">Mentor<br>outreach</span></div>
+    <div class="stat"><span class="stat-n n-red" style="font-size:1.2rem">145 / 891</span><span class="stat-l">Severe / moderate<br>thrashing</span></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+<div class="wrap">
+
+<!-- CALLOUT -->
+<div class="callout" style="margin-top:28px">
+  <strong>⚠ Before you start</strong>
+  Only Units 144–147 have live submission events in this export. Everywhere else, treat the data as <em>practice-run evidence</em>, not failed submissions. Do not count non-submissions on practice-only units as failures.
+</div>
+
+<!-- SECTION 1: PLAYBOOK -->
+<div class="section">
+  <div class="section-title">Step 1 — Do these today, in order</div>
+  <div class="playbook" id="playbook-grid">
+
+    <!-- CARD 1: Submit Now -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p1">🚀 Priority 1</div>
+        <h3>Submit-Now Nudges</h3>
+        <div class="evidence">36 learner-unit pairs · same-day window<br>Strong evidence they can pass — they just haven't clicked Submit.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          Send a 1-line message: <em>"Your public tests are all passing — run one final self-check on edge cases, then submit."</em> Do NOT reteach. Do NOT schedule a session. Just nudge.
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          Any TA or mentor — takes 2 minutes per learner
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Window: <strong>same day</strong></span>
+        <button class="detail-btn" onclick="openModal('submit-now')">Details →</button>
+      </div>
+    </div>
+
+    <!-- CARD 2: Edge-case clinic -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p2">⚠ Priority 2</div>
+        <h3>False-Confidence / Edge-Case Clinic</h3>
+        <div class="evidence">2,610 learners · 3,709 learner-unit rows<br>Public tests green. Hidden tests fail. They think they're done. They're not.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          15-minute boundary-case review per student. Ask them to write 5 hidden-test candidates before their next attempt. Run the clinic on Units 57, 55, 772, 147, 775 first (highest trap rates).
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          TA edge-case clinic · schedule 1-hour group session
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Window: <strong>within 48h</strong></span>
+        <button class="detail-btn" onclick="openModal('edge-case')">Details →</button>
+      </div>
+    </div>
+
+    <!-- CARD 3: Debugging clinic -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p3">🔵 Priority 3</div>
+        <h3>Runtime-Error / Debugging Clinic</h3>
+        <div class="evidence">2,728 learners · 4,312 learner-unit rows<br>Best public pass-rate: 0%. Every run crashes. These students need a debugger, not more attempts.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          30-minute clinic: indexing errors, uninitialized variables, type conversion, trace-based debugging. Ask each student to run 3 tiny custom test cases before sharing code.
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          TA debugging clinic · schedule this week
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Window: <strong>this week</strong></span>
+        <button class="detail-btn" onclick="openModal('debugging')">Details →</button>
+      </div>
+    </div>
+
+    <!-- CARD 4: Reasoning clinic -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p4">🟣 Priority 4</div>
+        <h3>Wrong-Answer / Reasoning Clinic</h3>
+        <div class="evidence">1,317 learners · 1,679 learner-unit rows<br>Code runs, but answers are wrong. Edge-case misses, spec misreads, off-by-ones.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          Clinic on prompt comprehension, edge-case testing, verifying assumptions. Ask students to trace through 3 test cases by hand before re-running.
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          TA reasoning clinic · schedule this week
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Window: <strong>this week</strong></span>
+        <button class="detail-btn" onclick="openModal('reasoning')">Details →</button>
+      </div>
+    </div>
+
+    <!-- CARD 5: Mentor outreach -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p5">🔕 Priority 5</div>
+        <h3>Quiet Disengagement — Mentor Outreach</h3>
+        <div class="evidence">736 learners · 1,054 learner-unit rows<br>Started. Tried a little. Vanished. Not failing noisily — failing quietly.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          Short personal message: <em>"Hey, noticed you stopped — what got in the way? Happy to help you pick it back up."</em> Do NOT send a clinic invite. Send a human message.
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          Mentor or buddy · within 48h
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Window: <strong>within 48h</strong></span>
+        <button class="detail-btn" onclick="openModal('dropout')">Details →</button>
+      </div>
+    </div>
+
+    <!-- CARD 6: Thrashing -->
+    <div class="pcard">
+      <div class="pcard-top">
+        <div class="pcard-badge p1">🔁 Priority 2b</div>
+        <h3>Severe / Moderate Thrashing</h3>
+        <div class="evidence">145 severe (54+ runs, no progress) · 891 moderate (21+ runs)<br>Over-attempting without learning. More attempts won't help — they need forced reflection.</div>
+      </div>
+      <div class="action">
+        <div>
+          <strong>What to do</strong>
+          <em>Severe:</em> live 1-on-1 within 24h — ask student to explain code line-by-line, run 3 tiny custom cases.<br>
+          <em>Moderate:</em> mandate a "write before you run" rule — no new attempt without writing expected output first.
+        </div>
+        <div>
+          <strong>Who owns it</strong>
+          TA live support (severe) / TA clinic (moderate)
+        </div>
+      </div>
+      <div class="pcard-footer">
+        <span>⏱ Severe: <strong>24h</strong> · Mod: <strong>48h</strong></span>
+        <button class="detail-btn" onclick="openModal('thrashing')">Details →</button>
+      </div>
+    </div>
+
+  </div><!-- /playbook -->
+</div><!-- /section 1 -->
+
+<!-- SECTION 2: HIDDEN-TEST TRAP UNITS -->
+<div class="section">
+  <div class="section-title">Step 2 — Unit watchlist: where public green is misleading</div>
+  <div class="callout" style="border-color:var(--red)">
+    <strong>Faculty action required</strong>
+    These units have unusually high public-pass / hidden-fail rates. Do not blame students for failing hidden tests here — the public test coverage may be insufficient. Brief TAs with this table before their next session.
+  </div>
+  <table class="unit-table">
+    <thead>
+      <tr>
+        <th>Unit</th>
+        <th>Public-green / Hidden-fail rate</th>
+        <th>Public all-pass</th>
+        <th>Private all-pass</th>
+        <th>TA focus</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><button class="unit-btn" onclick="openModal('unit-57')">Unit 57</button></td><td class="gap-hi">21.3%</td><td>63.1%</td><td>41.9%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-red">High trap</span></td></tr>
+      <tr><td><button class="unit-btn" onclick="openModal('unit-55')">Unit 55</button></td><td class="gap-hi">17.5%</td><td>61.8%</td><td>45.4%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-red">High trap</span></td></tr>
+      <tr><td><button class="unit-btn" onclick="openModal('unit-772')">Unit 772</button></td><td class="gap-hi">15.2%</td><td>67.7%</td><td>52.5%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-red">High trap</span></td></tr>
+      <tr><td><button class="unit-btn" onclick="openModal('unit-147')">Unit 147</button></td><td class="gap-hi">15.0%</td><td>54.3%</td><td>39.4%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-amber">Submission-enabled</span></td></tr>
+      <tr><td><button class="unit-btn" onclick="openModal('unit-775')">Unit 775</button></td><td class="gap-mid">12.0%</td><td>49.4%</td><td>37.4%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-amber">Mid trap</span></td></tr>
+      <tr><td>Unit 79</td><td class="gap-mid">11.4%</td><td>38.9%</td><td>28.2%</td><td>Edge-case / boundary coaching</td><td><span class="tag tag-amber">Mid trap</span></td></tr>
+      <tr><td>Unit 189</td><td>7.2%</td><td>70.2%</td><td>63.3%</td><td>Edge-case coaching</td><td></td></tr>
+      <tr><td>Unit 58</td><td>6.0%</td><td>46.7%</td><td>40.8%</td><td>Edge-case coaching</td><td></td></tr>
+      <tr><td>Unit 188</td><td>5.0%</td><td>49.6%</td><td>44.7%</td><td>Loop termination + print discipline</td><td></td></tr>
+      <tr><td>Unit 56</td><td>4.6%</td><td>71.9%</td><td>67.4%</td><td>Loop termination + print discipline</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- SECTION 3: DAILY CADENCE -->
+<div class="section">
+  <div class="section-title">Step 3 — Daily operating cadence</div>
+  <div class="cadence">
+    <div class="cadence-item">
+      <div class="cadence-num">1</div>
+      <div class="cadence-content">
+        <strong>Morning: Run submit-now nudges first</strong>
+        <span>Filter <code>ready_to_finish.csv</code> + <code>ta_priority_queue.csv</code> where <code>recent_cycle = true</code>. Send 2-line messages. Takes 30 min total.</span>
+      </div>
+    </div>
+    <div class="cadence-item">
+      <div class="cadence-num">2</div>
+      <div class="cadence-content">
+        <strong>Mid-morning: Edge-case reviews (48h window)</strong>
+        <span>Pull <code>false_confidence_hidden_gap</code> rows from priority queue. Run 15-min boundary-case reviews with flagged students. Group sessions > 1-on-1 for efficiency.</span>
+      </div>
+    </div>
+    <div class="cadence-item">
+      <div class="cadence-num">3</div>
+      <div class="cadence-content">
+        <strong>Afternoon: Debugging or reasoning clinics (scheduled weekly)</strong>
+        <span>Pull <code>bug_type_roster_members.csv</code> filtered by <code>runtime_dominant</code> or <code>logic_or_edge_case_dominant</code>. Run 30-min group sessions. Refer to the clinic scripts in each card's detail popup.</span>
+      </div>
+    </div>
+    <div class="cadence-item">
+      <div class="cadence-num">4</div>
+      <div class="cadence-content">
+        <strong>Daily: Mentor outreach to silent dropouts</strong>
+        <span>5 names/day from <code>silent_dropout.csv</code>. Personal message only — no clinic invite. Track responses in your own sheet.</span>
+      </div>
+    </div>
+    <div class="cadence-item">
+      <div class="cadence-num">5</div>
+      <div class="cadence-content">
+        <strong>Weekly: Brief faculty on hidden-test trap units</strong>
+        <span>Use the unit table above. If a unit has >10% public-green/hidden-fail, the TA briefing must explicitly cover its edge cases. Faculty may need to review test coverage.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+</main>
+
+<!-- ============================================================ -->
+<!-- MODALS                                                        -->
+<!-- ============================================================ -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <h2 id="modal-title">Detail</h2>
+      <button class="modal-close" onclick="closeModal()" title="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── Modal data ──────────────────────────────────────────────────
+const MODALS = {};
+
+MODALS['submit-now'] = {
+  title: '🚀 Submit-Now Nudges — Segment Detail',
+  html: `
+<p><strong>36 learner-unit rows · 32 learners · submission-enabled units only</strong></p>
+<p>These learners are not blocked. They are operationally stuck. Their public tests all pass — often multiple times — but they have not submitted. A 2-line message converts most of them. Do <em>not</em> schedule a teaching session here.</p>
+
+<h3>What "ready to finish" means</h3>
+<p>A learner qualifies if they are on a submission-enabled unit, have never submitted, have achieved all-public-pass at least once, and have been active recently (within 0–2 days of unit close).</p>
+
+<h3>Student examples</h3>
+
+<div class="student-card">
+  <div class="s-id">Student A · Unit 144 · 56 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-green">All public pass ✓</span><br>
+    56 total runs. Public tests all pass on final run. 55 prior runs were runtime errors (learning curve visible). Last active 0.04 days before unit close — still working right at the deadline.
+    <br><br>
+    <strong>The problem:</strong> never clicked Submit despite achieving all-pass. Likely unsure if it's "good enough."
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "Hi — your public tests are all passing. Do a quick check on input edge cases (empty string? zero? large number?), then submit. You're ready."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student B · Unit 145 · 25 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-green">Public 100% ✓</span><span class="tag tag-green">Hidden 100% ✓</span><br>
+    25 total runs. Achieved both public and private all-pass. 15 wrong-answer runs before that — they genuinely debugged their way through. Last active 0.14 days before close.
+    <br><br>
+    <strong>The problem:</strong> private tests pass too. There is literally no reason not to submit. Student may not know submission is a separate step.
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "You've passed all public AND hidden tests — go submit! The submit button is separate from the test run button."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student C · Unit 146 · 22 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">Public 80%</span><span class="tag tag-amber">1 case failing</span><br>
+    22 total runs. Best public pass-rate 80% — one test case still failing. Active right until unit close. 21 wrong-answer runs, 1 correct run at the end.
+    <br><br>
+    <strong>The problem:</strong> borderline case. Include in the nudge list but add: "one test case is still failing — check your boundary conditions for [input=0 or empty]."
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "You're close — one test case is still failing. Try: what happens if the input is zero? Or empty? Fix that and submit."
+  </div>
+</div>
+
+<h3>Script for the TA</h3>
+<div class="script-box">
+  <strong>Copy-paste message template</strong>
+  <em>"Hi [name] — your public tests are all passing on Unit [X]. Run one final check: what does your code do with an empty input? A zero? A negative number? If those look right, go ahead and submit — you're done."</em>
+</div>
+<p style="font-size:12px;color:var(--muted)">File: <code>learning-support/ready_to_finish.csv</code> · 36 rows</p>
+`};
+
+MODALS['edge-case'] = {
+  title: '⚠ False Confidence / Edge-Case Clinic — Segment Detail',
+  html: `
+<p><strong>3,709 learner-unit pairs · 2,610 learners · within 48h</strong></p>
+<p>These students see green on all public tests and believe they are done. When hidden tests run, they fail. The gap is not lack of effort — the gap is edge-case blindness. They are testing only the examples they were given, not the cases the grader uses.</p>
+
+<h3>Why this happens</h3>
+<p>Public tests cover the "happy path." Hidden tests include: empty strings, zero inputs, single-element lists, max-size inputs, reversed order, case-sensitivity, leading/trailing spaces. Students who only test what's given miss all of this.</p>
+
+<h3>Student examples</h3>
+
+<div class="student-card">
+  <div class="s-id">Student be274… · Unit 187 · 114 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-green">Public 100% ✓</span><span class="tag tag-red">Hidden: fail 4× ✗</span><br>
+    114 total runs. Public all-pass achieved 10 times. Each time hidden tests ran, they failed. Student ran it again. Got public all-pass again. Hidden failed again. Repeated 4 times.
+    <br><br>
+    <strong>Root cause:</strong> 79 wrong-answer runs + 17 runtime errors. Wrong-answer pattern suggests spec misread or untested boundary. Student is optimising for the examples, not for the spec.
+  </div>
+  <div class="s-action">
+    <strong>✅ Action in session</strong>
+    Ask: "Write 5 inputs that are NOT in the examples. What does your code return for each?" Then check if the spec says anything different.
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student c1592… · Unit 775 · 75 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-green">Public 100% ✓</span><span class="tag tag-red">Hidden: fail 13× ✗</span><br>
+    75 runs. Public all-pass 27 times. Hidden tests failed every single time. This is the most extreme false-confidence pattern: 27 times they thought they were done. 27 times they weren't.
+    <br><br>
+    Unit 775 has a 12% trap rate — the hidden tests check something the public tests do not.
+  </div>
+  <div class="s-action">
+    <strong>✅ Action in session</strong>
+    Say: "Your public pass is real — the logic for the given examples is correct. But the hidden tests are checking something else. Let's read the spec again very carefully and find what you're missing."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student a0aa… · Unit 147 · 113 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-green">Public 100% ✓</span><span class="tag tag-amber">Hidden: 90%</span><span class="tag tag-red">13 public-green/hidden-fail pairs</span><br>
+    113 runs. Best hidden pass-rate 90% — one hidden case still failing despite 13 tries. TLE errors suggest a performance issue too.
+    <br><br>
+    Unit 147 is submission-enabled. This student is close but not there. Focus: the one remaining hidden case + TLE fix.
+  </div>
+  <div class="s-action">
+    <strong>✅ Action in session</strong>
+    "You're at 90% on hidden tests. One case is failing. Is there a performance or termination issue? Try running your code on a very large input — does it finish quickly?"
+  </div>
+</div>
+
+<h3>Clinic script (15 minutes per student or group)</h3>
+<div class="script-box">
+  <strong>Step 1 (3 min)</strong>
+  <em>Ask: "List every type of input the problem could possibly receive. Think about: empty, zero, negative, very large, with spaces, mixed case, single character."</em>
+</div>
+<div class="script-box">
+  <strong>Step 2 (5 min)</strong>
+  <em>Ask: "Write 5 test cases that are NOT in the given examples. Predict the output by hand. Now run your code on them."</em>
+</div>
+<div class="script-box">
+  <strong>Step 3 (5 min)</strong>
+  <em>If wrong: "Where exactly does the logic break? Is it a condition you forgot? A case you didn't handle?"</em>
+</div>
+<div class="script-box">
+  <strong>Step 4 (2 min)</strong>
+  <em>Fix + rerun. If hidden tests still fail: re-read the spec word for word together and look for a condition you interpreted differently.</em>
+</div>
+
+<h3>Priority units for this clinic</h3>
+<p>Run edge-case clinics on these units first — they have the highest trap rates:</p>
+<p>
+  <span class="tag tag-red">Unit 57 — 21.3% trap</span>
+  <span class="tag tag-red">Unit 55 — 17.5% trap</span>
+  <span class="tag tag-red">Unit 772 — 15.2% trap</span>
+  <span class="tag tag-red">Unit 147 — 15.0% trap</span>
+  <span class="tag tag-amber">Unit 775 — 12.0% trap</span>
+</p>
+<p style="font-size:12px;color:var(--muted)">File: <code>learning-support/bug_type_roster_members.csv</code> filtered to <code>hidden_test_gap</code></p>
+`};
+
+MODALS['debugging'] = {
+  title: '🔵 Runtime-Error / Debugging Clinic — Segment Detail',
+  html: `
+<p><strong>4,312 learner-unit pairs · 2,728 learners · schedule this week</strong></p>
+<p>These learners have median public pass-rate of 0%. Every run crashes. The problem is not logic — it's that the code never runs at all. Most runtime errors in Python fall into three categories: index out of range, uninitialized variable, and type mismatch.</p>
+
+<h3>What to teach in the debugging clinic</h3>
+<p>This is a <strong>30-minute structured session</strong>. Do not try to fix individual code. Teach the workflow.</p>
+
+<h3>Common error patterns (with examples)</h3>
+
+<div class="student-card">
+  <div class="s-id">Pattern A — IndexError / Off-by-one</div>
+  <div class="s-evidence">Student tries to access <code>lst[n]</code> when list has <code>n</code> elements (valid indices: 0 to n-1).</div>
+  <div class="code-block">
+<span class="comment"># Bug: index n doesn't exist in a list of n elements</span>
+<span class="kw">def</span> <span class="fn">last_char</span>(s):
+    <span class="kw">return</span> s[<span class="num">len</span>(s)]   <span class="err"># IndexError: string index out of range</span>
+
+<span class="comment"># Fix: use s[len(s)-1] or s[-1]</span>
+<span class="kw">def</span> <span class="fn">last_char</span>(s):
+    <span class="kw">return</span> s[-<span class="num">1</span>]      <span class="comment"># ✓</span>
+  </div>
+  <div class="s-action">
+    <strong>✅ Teaching move</strong>
+    "Before accessing any index, ask: what's the maximum valid index? For a list of length n, it's n-1, not n."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Pattern B — NameError / Uninitialized variable</div>
+  <div class="s-evidence">Student uses a variable before assigning it — often inside a conditional branch that wasn't reached.</div>
+  <div class="code-block">
+<span class="comment"># Bug: result is only assigned if condition is true</span>
+<span class="kw">def</span> <span class="fn">classify</span>(n):
+    <span class="kw">if</span> n > <span class="num">0</span>:
+        result = <span class="str">"positive"</span>
+    <span class="kw">return</span> result   <span class="err"># NameError if n <= 0</span>
+
+<span class="comment"># Fix: initialise before the condition</span>
+<span class="kw">def</span> <span class="fn">classify</span>(n):
+    result = <span class="str">"non-positive"</span>
+    <span class="kw">if</span> n > <span class="num">0</span>:
+        result = <span class="str">"positive"</span>
+    <span class="kw">return</span> result   <span class="comment"># ✓</span>
+  </div>
+  <div class="s-action">
+    <strong>✅ Teaching move</strong>
+    "Initialise every variable to a sensible default before any if-else. That way it always exists."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Pattern C — TypeError / Input type mismatch</div>
+  <div class="s-evidence">Student adds a string and an int, or calls a string method on an int, because they forgot to convert input().</div>
+  <div class="code-block">
+<span class="comment"># Bug: input() always returns a string</span>
+n = <span class="fn">input</span>(<span class="str">"Enter number: "</span>)
+<span class="kw">print</span>(n + <span class="num">1</span>)   <span class="err"># TypeError: can only concatenate str to str</span>
+
+<span class="comment"># Fix: convert immediately at the point of input()</span>
+n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="str">"Enter number: "</span>))
+<span class="kw">print</span>(n + <span class="num">1</span>)   <span class="comment"># ✓</span>
+  </div>
+  <div class="s-action">
+    <strong>✅ Teaching move</strong>
+    "Wrap input() in int() or float() at the same line you read it. Don't do the conversion later."
+  </div>
+</div>
+
+<h3>Clinic script (30 minutes group session)</h3>
+<div class="script-box">
+  <strong>0–5 min: Set up the mindset</strong>
+  <em>"A runtime error means Python couldn't execute the line at all — not that your logic is wrong. The fix is almost always one of three things: wrong index, wrong type, variable doesn't exist yet. Let's drill each one."</em>
+</div>
+<div class="script-box">
+  <strong>5–15 min: Live demo (above 3 patterns)</strong>
+  <em>Show each bug + fix. Ask students to predict the error before revealing it.</em>
+</div>
+<div class="script-box">
+  <strong>15–25 min: Student practice</strong>
+  <em>"Take your own code. Find the line that crashes. Before touching the code, say out loud: what type is this variable? What index am I accessing? Does this variable exist yet in every branch?"</em>
+</div>
+<div class="script-box">
+  <strong>25–30 min: The 3-tiny-test rule</strong>
+  <em>"Before submitting any code, run it on: (1) the smallest possible input, (2) an empty input, (3) a negative or zero. If any of these crash, you have a runtime bug."</em>
+</div>
+<p style="font-size:12px;color:var(--muted)">File: <code>learning-support/bug_type_roster_members.csv</code> filtered to <code>runtime_dominant</code></p>
+`};
+
+MODALS['reasoning'] = {
+  title: '🟣 Wrong-Answer / Reasoning Clinic — Segment Detail',
+  html: `
+<p><strong>1,679 learner-unit pairs · 1,317 learners · schedule this week</strong></p>
+<p>Code runs without crashing but returns the wrong answer. Median public pass-rate is 8%. These students are not debugging — they are misreading the problem or missing edge cases in their logic. More attempts won't help; different thinking will.</p>
+
+<h3>What to teach in the reasoning clinic</h3>
+<p>This is a <strong>30-minute structured session</strong>. The goal is not to fix the student's specific code — it is to teach a thinking process that catches spec violations before submission.</p>
+
+<h3>Common wrong-answer patterns (with examples)</h3>
+
+<div class="student-card">
+  <div class="s-id">Pattern A — Spec misread / missed condition</div>
+  <div class="s-evidence">Student reads the "happy path" but misses a qualifier like "only if", "at least", or "excluding".</div>
+  <div class="code-block">
+<span class="comment"># Spec: "return even numbers GREATER THAN 10"</span>
+<span class="comment"># Bug: student returns all even numbers</span>
+<span class="kw">def</span> <span class="fn">filter_evens</span>(lst):
+    <span class="kw">return</span> [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]  <span class="err"># wrong: missing > 10</span>
+
+<span class="comment"># Fix: add the full condition</span>
+<span class="kw">def</span> <span class="fn">filter_evens</span>(lst):
+    <span class="kw">return</span> [x <span class="kw">for</span> x <span class="kw">in</span> lst <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span> <span class="kw">and</span> x > <span class="num">10</span>]  <span class="comment"># ✓</span>
+  </div>
+  <div class="s-action">
+    <strong>✅ Teaching move</strong>
+    "Underline every qualifier in the spec before writing code. Each underlined word is a condition in your logic."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Pattern B — Off-by-one in loops / slices</div>
+  <div class="s-evidence">Fence-post errors: loop runs one too many or one too few iterations.</div>
+  <div class="code-block">
+<span class="comment"># Spec: "reverse the last 3 characters"</span>
+<span class="comment"># Bug: student slices wrong</span>
+s = <span class="str">"hello"</span>
+<span class="kw">print</span>(s[-<span class="num">2</span>:][::-<span class="num">1</span>])   <span class="err"># wrong: only 2 chars</span>
+
+<span class="comment"># Fix:</span>
+<span class="kw">print</span>(s[-<span class="num">3</span>:][::-<span class="num">1</span>])   <span class="comment"># ✓ → "oll"</span>
+  </div>
+  <div class="s-action">
+    <strong>✅ Teaching move</strong>
+    "After writing any slice or range, trace it by hand on a 5-element example. Count the elements. Does it match the spec?"
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student dcee… · Unit 188 · 155 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">Best public 75%</span><span class="tag tag-red">155 runs, no progress</span><br>
+    155 total runs. Best public pass-rate is only 75% despite severe effort (96 wrong-answer runs). Logic errors, not runtime. Student is stuck in local search — trying variations of the same wrong approach.
+    <br><br>
+    <strong>Root cause:</strong> repeated wrong-answer with no improvement suggests the student has a fundamental misunderstanding of the problem, not just a small bug.
+  </div>
+  <div class="s-action">
+    <strong>✅ Action in session</strong>
+    "Stop coding. Read the spec to me out loud. Now tell me in plain English what you think the function should do. Let's check if that matches what it actually says."
+  </div>
+</div>
+
+<h3>Clinic script (30 minutes group session)</h3>
+<div class="script-box">
+  <strong>0–5 min: The wrong-answer mindset</strong>
+  <em>"Wrong answer means your code runs but produces the wrong output. The problem is either: (1) you misread a condition in the spec, (2) your logic has an off-by-one, or (3) you missed a boundary case. Let's tackle each."</em>
+</div>
+<div class="script-box">
+  <strong>5–10 min: Spec-to-condition exercise</strong>
+  <em>"Take any problem. Read it. Underline every qualifier. Each qualifier becomes an if-condition. Did you code all of them?"</em>
+</div>
+<div class="script-box">
+  <strong>10–20 min: Trace-through exercise</strong>
+  <em>"Don't run your code. Trace it by hand on a simple 3-element input. Write the value of every variable at each step. What does line 5 produce? Does it match what you expect?"</em>
+</div>
+<div class="script-box">
+  <strong>20–30 min: Write-before-you-run rule</strong>
+  <em>"Before running, write down: what should this function return for input X? Now run it. If it doesn't match, the bug is in the gap between your expectation and your code."</em>
+</div>
+<p style="font-size:12px;color:var(--muted)">File: <code>learning-support/bug_type_roster_members.csv</code> filtered to <code>logic_or_edge_case_dominant</code></p>
+`};
+
+MODALS['dropout'] = {
+  title: '🔕 Quiet Disengagement — Segment Detail',
+  html: `
+<p><strong>1,054 learner-unit rows · 736 learners · within 48h</strong></p>
+<p>These learners started. They tried 3–8 times. They stopped. They are not failing loudly — they are failing quietly. A debugging or reasoning clinic will not reach them because they are not engaging with the material at all. They need a human message, not more content.</p>
+
+<h3>What this segment looks like</h3>
+<p>Criteria: at most 8 public runs, best public pass-rate below 50%, stopped at least 2 days before unit close. These learners made an attempt and then dropped out — probably due to frustration, confusion, or external pressure.</p>
+
+<h3>Student examples</h3>
+
+<div class="student-card">
+  <div class="s-id">Student 0b6a… · Unit 561 · 16 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">Best public 33%</span><span class="tag tag-red">Stopped 9 days before close</span><br>
+    8 public runs, 8 private test runs. Best public pass-rate 33%. Stopped 9 days before the unit closed. Small payload (1177 bytes) — the code is simple, just wrong. No indication they tried to get help.
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "Hi — I noticed you worked on Unit 561 but stopped. What got in the way? I can help you get unstuck in 10 minutes if you want to pick it back up."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student ddcf… · Unit 667 · 14 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">Best public 40%</span><span class="tag tag-red">Stopped 2.8 days before close</span><br>
+    7 public runs, 7 private test runs. Best 40%. Active for one short session (under an hour), then nothing. Pattern: tried briefly, hit a wall, gave up.
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "Hey — you were making progress on Unit 667 and then stopped. Was it confusing? Ran out of time? Let me know and I'll send you a quick hint."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student 3fd0… · Unit 187 · 10 runs</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">Best public 33%</span><span class="tag tag-blue">All runtime errors</span><br>
+    5 public runs, all runtime errors. Best public pass-rate 33%. Stopped 5.7 days before close. Never got past crashing. Did not seek help. Classic "hit a wall and vanished" profile.
+  </div>
+  <div class="s-action">
+    <strong>✉ Message to send</strong>
+    "I see your Unit 187 code was crashing with runtime errors. That's usually just an index or type issue — very fixable in 5 minutes. Want me to take a quick look?"
+  </div>
+</div>
+
+<h3>Outreach script</h3>
+<div class="script-box">
+  <strong>Rule: DO NOT send a clinic invite</strong>
+  <em>These students disconnected. A generic "join our session on Friday" will not work. They need a personal, low-pressure, specific message that acknowledges their exact situation.</em>
+</div>
+<div class="script-box">
+  <strong>Template message</strong>
+  <em>"Hi [name] — I noticed you haven't been active on Unit [X] recently. That's fine — sometimes things just get in the way. If you want to pick it back up, I can point you to one specific thing to try. No pressure, just wanted to check in."</em>
+</div>
+<div class="script-box">
+  <strong>Follow-up if they respond</strong>
+  <em>If they engage: give them one concrete next step (not a full tutorial). If they don't respond within 3 days: one more message, then flag to their buddy/mentor for direct outreach.</em>
+</div>
+<p style="font-size:12px;color:var(--muted)">File: <code>learning-support/silent_dropout.csv</code> · 1,054 rows</p>
+`};
+
+MODALS['thrashing'] = {
+  title: '🔁 Severe / Moderate Thrashing — Segment Detail',
+  html: `
+<p><strong>145 severe (54+ runs) · 891 moderate (21+ runs)</strong></p>
+<p>These learners are not under-practising. They are over-attempting without learning transfer. More attempts will not help — they are trapped in local search, making small random changes and re-running, without understanding why anything is or isn't working.</p>
+
+<h3>What thrashing looks like</h3>
+<p><strong>Severe:</strong> 54+ rows on a single learner-unit pair, best public pass-rate still below 80%.<br>
+<strong>Moderate:</strong> 21+ rows, same condition.</p>
+<p>The key signal is <em>attempt count without progress</em>. A student who runs 60 times and reaches all-pass is not thrashing — they're grinding through a hard problem. A student who runs 60 times and stays at 30% is thrashing.</p>
+
+<h3>Student examples</h3>
+
+<div class="student-card">
+  <div class="s-id">Student dcee… · Unit 188 · 155 runs (SEVERE)</div>
+  <div class="s-evidence">
+    <span class="tag tag-red">155 runs</span><span class="tag tag-amber">Best public 75%</span><br>
+    155 total runs. 96 wrong-answer runs, 42 runtime errors. Best public pass-rate still only 75% — has never passed all public tests despite enormous effort. Active 7.7 days before unit close.
+    <br><br>
+    <strong>The pattern:</strong> runtime errors decreasing, wrong answers increasing — the code now "runs" but produces wrong output. Student fixed the crashing but has a logic misunderstanding they can't debug alone.
+  </div>
+  <div class="s-action">
+    <strong>✅ 1-on-1 action (20 min)</strong>
+    "Walk me through your code line by line. Tell me what you think each line does. Let's find where your mental model diverges from what Python does."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Student 644… · Unit 187 · 152 runs (SEVERE)</div>
+  <div class="s-evidence">
+    <span class="tag tag-red">152 runs</span><span class="tag tag-amber">Best public 67%</span><br>
+    152 total runs. 126 wrong-answer runs, 11 runtime errors. Best public pass-rate only 67% despite 3+ days of attempts. Last active 3.1 days before close.
+    <br><br>
+    <strong>The pattern:</strong> almost entirely wrong-answer — no runtime errors left, just wrong logic. Student is iterating on a fundamentally flawed approach.
+  </div>
+  <div class="s-action">
+    <strong>✅ 1-on-1 action (20 min)</strong>
+    "Delete your current code. Re-read the spec. Now describe the algorithm you would use in plain English — don't code yet. Let's check the algorithm is right before you type a single line."
+  </div>
+</div>
+
+<div class="student-card">
+  <div class="s-id">Moderate thrashers — group approach</div>
+  <div class="s-evidence">
+    <span class="tag tag-amber">21–54 runs</span><span class="tag tag-amber">Progress stalled</span><br>
+    891 moderate thrashers. Too many for individual sessions. The key intervention is behavioural: they need to break the "run → fail → tweak → run" loop.
+  </div>
+  <div class="s-action">
+    <strong>✅ Group rule to enforce</strong>
+    "Before your next run, write down: what change did you make, and why do you think it will fix the problem? If you can't answer that, don't run it yet."
+  </div>
+</div>
+
+<h3>Intervention scripts</h3>
+<div class="script-box">
+  <strong>For severe thrashers — live 1-on-1</strong>
+  <em>"I notice you've been running this many times. Let's stop running code for a minute. Tell me: what does this function need to do? What does it currently do? Where's the gap?"</em>
+</div>
+<div class="script-box">
+  <strong>For moderate thrashers — written rule</strong>
+  <em>"No more blind attempts. Before every run, write one sentence: 'I changed X because I think it will fix Y.' If you can't write that sentence, you need to think more, not try more."</em>
+</div>
+<div class="script-box">
+  <strong>The 3-tiny-test rule</strong>
+  <em>"Before running your code on the full test suite, run it yourself on 3 tiny made-up inputs. What do you get? What did you expect? Fix the gap before hitting run."</em>
+</div>
+<p style="font-size:12px;color:var(--muted)">Files: <code>learning-support/thrashers.csv</code> (1,303 rows) · <code>learning-support/ta_priority_queue.csv</code></p>
+`};
+
+// Unit modals
+MODALS['unit-57'] = {
+  title: 'Unit 57 — Hidden-Test Trap',
+  html: `
+<p><span class="tag tag-red">21.3% public-green / hidden-fail rate</span> <span class="tag tag-amber">6,441 learners</span></p>
+<p>Unit 57 has the highest public/hidden gap in the dataset. 21 out of every 100 paired runs show a student whose public tests all pass but whose hidden tests fail. This is not a student problem — it is a test-coverage problem combined with edge-case blindness.</p>
+<h3>What this means for TAs</h3>
+<p>When a student on Unit 57 says "all my tests pass," do not assume they are done. 1 in 5 students in this position will fail the hidden tests. The correct response is: <em>"Great — now let's think about what inputs weren't in those examples."</em></p>
+<h3>Likely hidden-test edge cases to discuss</h3>
+<ul style="font-size:13px;line-height:2;padding-left:20px">
+  <li>Empty input / empty string / empty list</li>
+  <li>Single-element inputs</li>
+  <li>Inputs where all elements are the same</li>
+  <li>Mixed-case strings (if string processing)</li>
+  <li>Leading/trailing whitespace</li>
+  <li>Zero, negative numbers, or very large numbers</li>
+</ul>
+<h3>Faculty note</h3>
+<p>Public pass rate is 63.1% but private all-pass is only 41.9%. The gap of ~21 percentage points suggests the public test suite may not cover the same conditions as the hidden tests. Consider adding edge-case examples to the public test suite or adding explicit guidance in the problem statement.</p>
+<p style="font-size:12px;color:var(--muted)">Source: <code>learning-support/unit_support_notes.csv</code> · <code>learning-support/hidden_test_watchlist.csv</code></p>
+`};
+
+MODALS['unit-55'] = {
+  title: 'Unit 55 — Hidden-Test Trap',
+  html: `
+<p><span class="tag tag-red">17.5% public-green / hidden-fail rate</span> <span class="tag tag-amber">6,913 learners</span></p>
+<p>Unit 55 is the highest-volume unit in the dataset and the second-highest trap unit. With 6,913 learners, a 17.5% trap rate translates to ~1,200+ learners experiencing false confidence.</p>
+<h3>What to do in clinic</h3>
+<p>Same playbook as Unit 57. Ask students to generate their own hidden test candidates. Pay special attention to:</p>
+<ul style="font-size:13px;line-height:2;padding-left:20px">
+  <li>Edge cases around the exact boundary of any condition (e.g. "divisible by 5" — test 5, 10, 15, and also 4, 6)</li>
+  <li>Inputs that would cause a different code path to execute</li>
+  <li>TLE risk: 79 TLE events on this unit — check for unbounded loops</li>
+</ul>
+<h3>Faculty note</h3>
+<p>Public all-pass is 61.8%, private all-pass is only 45.4%. The 17.5% gap is partly a coverage issue. Review the public test suite for Unit 55 and add at least 3 edge-case examples.</p>
+`};
+
+MODALS['unit-772'] = {
+  title: 'Unit 772 — Hidden-Test Trap',
+  html: `
+<p><span class="tag tag-red">15.2% public-green / hidden-fail rate</span> <span class="tag tag-blue">2,090 learners</span></p>
+<p>Unit 772 has a notably high trap rate despite being a smaller unit (2,090 learners). The high runtime error count (6,440 runtime errors out of 11,487 public runs) suggests students are also struggling with basic execution, not just edge cases.</p>
+<h3>Dual problem</h3>
+<p>Students on Unit 772 may be both runtime-struggling <em>and</em> edge-case-blind. Address runtime errors first, then move to edge-case review.</p>
+<h3>Notable: one payload was 52,892 characters</h3>
+<p>A very large output (max_data_len = 52,892) suggests at least one student had a runaway print loop or excessive per-test output. Check for debug print statements.</p>
+<p style="font-size:12px;color:var(--muted)">Public all-pass: 67.7% · Private all-pass: 52.5% · Gap: ~15pp</p>
+`};
+
+MODALS['unit-147'] = {
+  title: 'Unit 147 — Hidden-Test Trap (Submission-Enabled)',
+  html: `
+<p><span class="tag tag-red">15.0% public-green / hidden-fail rate</span> <span class="tag tag-amber">5,021 learners</span> <span class="tag tag-green">Submission-enabled ✓</span></p>
+<p>Unit 147 is the most important unit to address: it has 4,893 submission events and is the only submission-enabled unit in the top trap list. Students are being graded here, and 15% of those who think they've passed the public tests are wrong.</p>
+<h3>What this means for grading</h3>
+<p>Of 9,022 paired runs on Unit 147, 1,351 showed public-green / hidden-fail. Many of these students may have submitted with false confidence. The TA's job before submission closes is to catch these students and force an edge-case review.</p>
+<h3>Priority action</h3>
+<p>Run the edge-case clinic on Unit 147 <em>before any other unit</em>. This is where false confidence directly affects grades, not just learning.</p>
+<h3>TLE risk</h3>
+<p>290 TLE events and 53 large-payload events. Unit 147 may have performance requirements. Check students for unbounded loops or excessive print statements.</p>
+<p style="font-size:12px;color:var(--muted)">Public all-pass: 54.3% · Private all-pass: 39.4% · Gap: ~15pp</p>
+`};
+
+MODALS['unit-775'] = {
+  title: 'Unit 775 — Hidden-Test Trap',
+  html: `
+<p><span class="tag tag-amber">12.0% public-green / hidden-fail rate</span> <span class="tag tag-blue">1,703 learners</span></p>
+<p>Unit 775 has a 12% trap rate. The student example in the edge-case clinic segment (75 runs, 27 public all-pass events, all hidden tests failed) came from this unit. It illustrates how deeply entrenched the false-confidence problem can get.</p>
+<h3>Pattern</h3>
+<p>Public all-pass rate is 49.4%, private all-pass is 37.4%. Students are passing public tests nearly half the time but only passing hidden tests 37% of the time. The hidden test suite is likely checking a condition that the public tests skip.</p>
+<h3>TA script for Unit 775</h3>
+<div class="script-box">
+  <strong>After any student achieves public all-pass on Unit 775</strong>
+  <em>"Good — public tests pass. Now: what does your code do if the input is an empty list? A list with one element? A list where all elements are equal? Let's check those three before you move on."</em>
+</div>
+`};
+
+// ── Modal engine ────────────────────────────────────────────────
+function openModal(id) {
+  const data = MODALS[id];
+  if (!data) return;
+  document.getElementById('modal-title').textContent = data.title;
+  document.getElementById('modal-content').innerHTML = data.html;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.classList.add('no-scroll');
+  // Bookmarkable URL (replaceState, no history pollution)
+  const url = new URL(window.location);
+  url.searchParams.set('popup', id);
+  history.replaceState({popup: id}, '', url);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.classList.remove('no-scroll');
+  const url = new URL(window.location);
+  url.searchParams.delete('popup');
+  history.replaceState({}, '', url);
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// Open popup from URL on load
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const popup = params.get('popup');
+  if (popup && MODALS[popup]) openModal(popup);
+});
+</script>
+</body>
+</html>
