@@ -34,18 +34,18 @@ Scores are on a 1–5 scale.
 
 ## Priority List (Impact x Feasibility)
 
-| Priority | Proposed analysis | Impact | Feasibility | Why this should be done now |
-| --- | --- | ---: | ---: | --- |
-| P0 | Submission capture + public→private funnel audit | 5 | 5 | Prevents wrong conclusions from incomplete private-submission logging. |
-| P0 | Hardcoding vulnerability map + sentinel test simulation | 5 | 5 | Fastest way to reduce fake “progress” from sample memorization. |
-| P0 | S2 “stuck loop” early-warning analysis | 5 | 4 | Targets biggest live bottleneck in student debugging behavior. |
-| P0 | Difficulty-mix fairness by namespace/shuffle | 4 | 4 | Checks if students got unfairly hard/easy combinations. |
-| P0 | Teachable-now targeting for Python Buddy capacity planning | 4 | 5 | Converts existing analysis into operational intervention lists. |
-| P1 | Error-pattern-to-hint mapping (feedback redesign) | 4 | 4 | Gives students actionable hints instead of generic fail signals. |
-| P1 | Multi-function scaffold effect analysis (`...` vs `pass`) | 3 | 4 | Small template changes may remove unrelated syntax failures. |
-| P1 | “Trying hard vs random/copy-like” process signature analysis | 4 | 3 | Helps separate genuine strugglers from low-effort attempts. |
-| P1 | Intervention ROI simulation (who to coach first) | 4 | 3 | Helps use limited mentor time where it matters most. |
-| P2 | Weekly-assignment authenticity linkage (when external data arrives) | 5 | 2 | Needed to answer “practice quality vs OPPE outcomes” fully. |
+| Priority | Proposed analysis                                                   | Impact | Feasibility | Why this should be done now                                            |
+| -------- | ------------------------------------------------------------------- | -----: | ----------: | ---------------------------------------------------------------------- |
+| P0       | Submission capture + public→private funnel audit                    |      5 |           5 | Prevents wrong conclusions from incomplete private-submission logging. |
+| P0       | Hardcoding vulnerability map + sentinel test simulation             |      5 |           5 | Fastest way to reduce fake “progress” from sample memorization.        |
+| P0       | S2 “stuck loop” early-warning analysis                              |      5 |           4 | Targets biggest live bottleneck in student debugging behavior.         |
+| P0       | Difficulty-mix fairness by namespace/shuffle                        |      4 |           4 | Checks if students got unfairly hard/easy combinations.                |
+| P0       | Teachable-now targeting for Python Buddy capacity planning          |      4 |           5 | Converts existing analysis into operational intervention lists.        |
+| P1       | Error-pattern-to-hint mapping (feedback redesign)                   |      4 |           4 | Gives students actionable hints instead of generic fail signals.       |
+| P1       | Multi-function scaffold effect analysis (`...` vs `pass`)           |      3 |           4 | Small template changes may remove unrelated syntax failures.           |
+| P1       | “Trying hard vs random/copy-like” process signature analysis        |      4 |           3 | Helps separate genuine strugglers from low-effort attempts.            |
+| P1       | Intervention ROI simulation (who to coach first)                    |      4 |           3 | Helps use limited mentor time where it matters most.                   |
+| P2       | Weekly-assignment authenticity linkage (when external data arrives) |      5 |           2 | Needed to answer “practice quality vs OPPE outcomes” fully.            |
 
 ---
 
@@ -53,7 +53,7 @@ Scores are on a 1–5 scale.
 
 ### P0-1) Submission Capture + Public→Private Funnel Audit
 
-**Rationale (meeting link):** Team flagged “no private submissions” repeatedly; decisions are risky until this is clean.  
+**Rationale (meeting link):** Team flagged “no private submissions” repeatedly; decisions are risky until this is clean.\
 **Data we already have:** `analysis/no-private-submissions.csv`, `analysis/submission_timeline.parquet`, `analysis/final_scores.csv`.
 
 **What to analyze**
@@ -75,7 +75,7 @@ Scores are on a 1–5 scale.
 
 ### P0-2) Hardcoding Vulnerability Map + Sentinel Test Simulation
 
-**Rationale (meeting link):** “Mimic”/hardcoding behavior was highlighted as a major failure mode.  
+**Rationale (meeting link):** “Mimic”/hardcoding behavior was highlighted as a major failure mode.\
 **Data we already have:** `analysis/errors.json`, `analysis/ERRORS-cluster-*.md`, `analysis/quick-fixes.md`, question JSONs under `problems/`.
 
 **What to analyze**
@@ -96,7 +96,7 @@ Scores are on a 1–5 scale.
 
 ### P0-3) S2 Loop Early-Warning Analysis (“Wanderer Detector”)
 
-**Rationale (meeting link):** Team wants to identify students stuck in repeated ineffective tweaks.  
+**Rationale (meeting link):** Team wants to identify students stuck in repeated ineffective tweaks.\
 **Data we already have:** `analysis/process_analysis/*`, `analysis/submission_timeline.parquet`, `analysis/code_snapshots.parquet`.
 
 **What to analyze**
@@ -117,7 +117,7 @@ Scores are on a 1–5 scale.
 
 ### P0-4) Difficulty-Mix Fairness by Namespace and Shuffle Pattern
 
-**Rationale (meeting link):** Team wants one confidence-builder easy question, balanced middle, and some challenge.  
+**Rationale (meeting link):** Team wants one confidence-builder easy question, balanced middle, and some challenge.\
 **Data we already have:** `analysis/final_scores.csv`, `analysis/question_metadata.csv`, `analysis/evaluation_redesign/*`, namespace-level question assignments in raw data.
 
 **What to analyze**
@@ -138,7 +138,7 @@ Scores are on a 1–5 scale.
 
 ### P0-5) Operationalize the “Teachable-Now” Segment for Mentoring
 
-**Rationale (meeting link):** Explicit ask to find the “at-risk but teachable” group by process, not marks.  
+**Rationale (meeting link):** Explicit ask to find the “at-risk but teachable” group by process, not marks.\
 **Data we already have:** `analysis/teachable.csv`, `analysis/teachable.md`, timeline + error-pattern data.
 
 **What to analyze**
@@ -159,7 +159,7 @@ Scores are on a 1–5 scale.
 
 ### P1-1) Error-Pattern-to-Hint Mapping (Feedback Redesign)
 
-**Rationale (meeting link):** Team asked for better feedback than pass/fail vectors.  
+**Rationale (meeting link):** Team asked for better feedback than pass/fail vectors.\
 **Data we already have:** error clusters, test-case pass/fail vectors, common runtime/syntax signatures.
 
 **What to analyze**
@@ -180,7 +180,7 @@ Scores are on a 1–5 scale.
 
 ### P1-2) Multi-Function Scaffold Effect (`...` vs `pass`)
 
-**Rationale (meeting link):** Multi-function placeholders may create unrelated syntax cascades.  
+**Rationale (meeting link):** Multi-function placeholders may create unrelated syntax cascades.\
 **Data we already have:** question templates, cluster analyses for multi-function questions, syntax/runtime error patterns.
 
 **What to analyze**
@@ -201,7 +201,7 @@ Scores are on a 1–5 scale.
 
 ### P1-3) “Trying Hard vs Random/Copy-Like” Process Signature Analysis
 
-**Rationale (meeting link):** Team wants to separate genuine strugglers from likely template/copy behavior.  
+**Rationale (meeting link):** Team wants to separate genuine strugglers from likely template/copy behavior.\
 **Data we already have:** event timelines, code snapshot diffs, run/edit cadence.
 
 **What to analyze**
@@ -222,7 +222,7 @@ Scores are on a 1–5 scale.
 
 ### P1-4) Intervention ROI Simulation (Limited Mentor Capacity)
 
-**Rationale (meeting link):** Mentor programs are capacity-limited; we need high-yield targeting.  
+**Rationale (meeting link):** Mentor programs are capacity-limited; we need high-yield targeting.\
 **Data we already have:** segment sizes and distributions from teachable/process analyses.
 
 **What to analyze**
@@ -243,7 +243,7 @@ Scores are on a 1–5 scale.
 
 ### P2) Weekly-Assignment Authenticity Linkage (Requires Additional Data)
 
-**Rationale (meeting link):** Team asked whether weekly effort is genuine and predictive.  
+**Rationale (meeting link):** Team asked whether weekly effort is genuine and predictive.\
 **Data needed (not currently in this repo):** Weekly/GRPA event logs + assignment metadata.
 
 **What to analyze (once available)**
@@ -292,4 +292,3 @@ In plain terms, we should see:
 2. Fewer avoidable failures from hardcoding/template traps.
 3. Better use of mentor capacity on students most likely to improve.
 4. More trust in conclusions because submission-capture gaps are explicitly handled.
-

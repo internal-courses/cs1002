@@ -37,23 +37,23 @@ It also includes narrative replay artifacts so readers can watch concrete studen
 
 ### Top-level
 
-- `analysis/`  
+- `analysis/`\
   All analysis scripts, canonical datasets, generated CSV/Parquet outputs, and report/story artifacts.
-- `problems/`  
+- `problems/`\
   Question bank snapshots by namespace (`ns_*` directories, one JSON per problem).
-- `submissions/`  
+- `submissions/`\
   Raw newline-delimited JSON event logs (`saved_code`, `test_run`, `submission` events).
-- `private/`  
+- `private/`\
   Private notes/reference docs used during analysis.
-- `AGENTS.md`  
+- `AGENTS.md`\
   Project operating rules (reproducibility, generated-file policy, interpretation caveats).
-- `PLAN.md`  
+- `PLAN.md`\
   Working plan notes for deeper analysis pipelines.
-- `prompts.md`  
+- `prompts.md`\
   Prompt/worklog document for report and analysis iteration.
-- `.gitignore`  
+- `.gitignore`\
   Ignore policy for raw data and most generated outputs.
-- `.nojekyll`  
+- `.nojekyll`\
   GitHub Pages compatibility file.
 
 ### `analysis/` (important files and folders)

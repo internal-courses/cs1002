@@ -171,7 +171,6 @@ Their code usually runs but gives wrong answers in tricky cases. They need bette
 
 `Say: 'Your engine runs. Now we teach it to handle surprise roads.'`
 
-
 ## Real Student Examples by Decision Path
 
 | decision_path_id | term | student_id                       | dominant_error_profile_bucket | top_concept_struggles                                                                     |
@@ -251,6 +250,7 @@ Their code usually runs but gives wrong answers in tricky cases. They need bette
 | 25t1 | 10584803759840c49a135e6464e508b9 | Syntax gated                  | File operations; Input parsing / output formatting; List / tuple operations               | 7.2                         | 8.2                   |
 | 25t1 | 127fcb6bf0344102845dc32f6ce5e41c | Runtime error                 | Arithmetic / conditionals; Data analysis / aggregation; Input parsing / output formatting | 10.2                        | 11.5                  |
 | 25t1 | 13c28f53d16e4f6ba495f26cf95ca07b | Syntax gated                  | Loops and iteration; File operations; Input parsing / output formatting                   | 8.2                         | 8.5                   |
+
 ### T2 — Teachable: Runtime Debugging
 
 | term | student_id                       | dominant_error_profile_bucket | top_concept_struggles                                                                   | avg_public_runs_per_attempt | avg_edits_per_attempt |
@@ -267,6 +267,7 @@ Their code usually runs but gives wrong answers in tricky cases. They need bette
 | 25t1 | 0db11306a0644c9e8b0c3731f869b93c | Wrong output - logic          | Arithmetic / conditionals; Loops and iteration; Input parsing / output formatting       | 8.0                         | 8.7                   |
 | 25t1 | 10123e56ffa54db6a7739f9f1470f7f8 | Runtime error                 | Input parsing / output formatting; Loops and iteration; Data analysis / aggregation     | 13.3                        | 15.2                  |
 | 25t1 | 13db869b549f406b97a9e8666af0967f | Runtime error                 | String manipulation; Arithmetic / conditionals                                          | 14.5                        | 15.8                  |
+
 ### T3 — Teachable: Logic / Edge Cases
 
 | term | student_id                       | dominant_error_profile_bucket | top_concept_struggles                                                              | avg_public_runs_per_attempt | avg_edits_per_attempt |

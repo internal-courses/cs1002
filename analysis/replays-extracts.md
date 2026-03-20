@@ -81,8 +81,8 @@ Public/private test tension to remember:
 - Group `1`
 
 ```py
-is_equal(card_to_value_tuple('AH'), (2, 1))
-is_equal(card_to_value_tuple('7D'), (3, 7))
+is_equal(card_to_value_tuple("AH"), (2, 1))
+is_equal(card_to_value_tuple("7D"), (3, 7))
 ```
 
 - Expected outputs:
@@ -95,8 +95,8 @@ is_equal(card_to_value_tuple('7D'), (3, 7))
 - Group `2`
 
 ```py
-is_equal(card_to_value_tuple('QS'), (1, 12))
-is_equal(card_to_value_tuple('9C'), (4, 9))
+is_equal(card_to_value_tuple("QS"), (1, 12))
+is_equal(card_to_value_tuple("9C"), (4, 9))
 ```
 
 - Expected outputs:
@@ -111,8 +111,8 @@ is_equal(card_to_value_tuple('9C'), (4, 9))
 - Group `1`
 
 ```py
-is_equal(card_to_value_tuple('9S'), (1, 9))
-is_equal(card_to_value_tuple('KD'), (3, 13))
+is_equal(card_to_value_tuple("9S"), (1, 9))
+is_equal(card_to_value_tuple("KD"), (3, 13))
 ```
 
 - Expected outputs:
@@ -125,8 +125,8 @@ is_equal(card_to_value_tuple('KD'), (3, 13))
 - Group `2`
 
 ```py
-is_equal(card_to_value_tuple('10H'), (2, 10))
-is_equal(card_to_value_tuple('AC'), (4, 1))
+is_equal(card_to_value_tuple("10H"), (2, 10))
+is_equal(card_to_value_tuple("AC"), (4, 1))
 ```
 
 - Expected outputs:
@@ -207,7 +207,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -242,12 +242,26 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    suit_map = {'S':1,'H':2,'D':3,'C':4}
-    rank_map = {'A':1,'J':11,'Q':12,'K':13,'2': 2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10}
+    """
+    suit_map = {"S": 1, "H": 2, "D": 3, "C": 4}
+    rank_map = {
+        "A": 1,
+        "J": 11,
+        "Q": 12,
+        "K": 13,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+    }
     rank = card[:-1]
     suit = card[-1]
-    return (suit_map[suit],rank_map[rank])
+    return (suit_map[suit], rank_map[rank])
 ```
 
 #### Event `2`
@@ -265,7 +279,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -300,12 +314,26 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    suit_map = {'S':1,'H':2,'D':3,'C':4}
-    rank_map = {'A':1,'J':11,'Q':12,'K':13,'2': 2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10}
+    """
+    suit_map = {"S": 1, "H": 2, "D": 3, "C": 4}
+    rank_map = {
+        "A": 1,
+        "J": 11,
+        "Q": 12,
+        "K": 13,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+    }
     rank = card[:-1]
     suit = card[-1]
-    return (suit_map[suit],rank_map[rank])
+    return (suit_map[suit], rank_map[rank])
 ```
 
 #### Event `4`
@@ -323,7 +351,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -358,12 +386,26 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    suit_map = {'S':1,'H':2,'D':3,'C':4}
-    rank_map = {'A':1,'J':11,'Q':12,'K':13,'2': 2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10}
+    """
+    suit_map = {"S": 1, "H": 2, "D": 3, "C": 4}
+    rank_map = {
+        "A": 1,
+        "J": 11,
+        "Q": 12,
+        "K": 13,
+        "2": 2,
+        "3": 3,
+        "4": 4,
+        "5": 5,
+        "6": 6,
+        "7": 7,
+        "8": 8,
+        "9": 9,
+        "10": 10,
+    }
     rank = card[:-1]
     suit = card[-1]
-    return (suit_map[suit],rank_map[rank])
+    return (suit_map[suit], rank_map[rank])
 ```
 
 ### Student 2 — The Funny/Productive Struggle
@@ -385,7 +427,7 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-return tuple(a,b)
+return tuple(a, b)
 # then (a, b)
 # then (b, a)
 ```
@@ -433,7 +475,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -468,7 +510,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
+    """
     color = card[-1]
 
     rank = card[:-1]
@@ -476,43 +518,43 @@ def card_to_value_tuple(card: str) -> tuple:
     a = 0
     b = 0
 
-    if rank == 'A':
+    if rank == "A":
         a = 1
-    elif rank == '2':
+    elif rank == "2":
         a = 2
-    elif rank == '3':
+    elif rank == "3":
         a = 3
-    elif rank == '4':
+    elif rank == "4":
         a = 4
-    elif rank == '5':
+    elif rank == "5":
         a = 5
-    elif rank == '6':
+    elif rank == "6":
         a = 6
-    elif rank == '7':
+    elif rank == "7":
         a = 7
-    elif rank == '8':
+    elif rank == "8":
         a = 8
-    elif rank == '9':
+    elif rank == "9":
         a = 9
-    elif rank == '10':
+    elif rank == "10":
         a = 10
-    elif rank == 'J':
+    elif rank == "J":
         a = 11
-    elif rank == 'Q':
+    elif rank == "Q":
         a = 12
-    elif rank == 'K':
+    elif rank == "K":
         a = 13
 
-    if color == 'S':
+    if color == "S":
         b = 1
-    elif color == 'H':
+    elif color == "H":
         b = 2
-    elif color == 'D':
+    elif color == "D":
         b = 3
-    elif color == 'C':
+    elif color == "C":
         b = 4
 
-    return tuple(a,b)
+    return tuple(a, b)
 ```
 
 #### Event `2`
@@ -530,7 +572,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -565,7 +607,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
+    """
     color = card[-1]
 
     rank = card[:-1]
@@ -573,43 +615,43 @@ def card_to_value_tuple(card: str) -> tuple:
     a = 0
     b = 0
 
-    if rank == 'A':
+    if rank == "A":
         a = 1
-    elif rank == '2':
+    elif rank == "2":
         a = 2
-    elif rank == '3':
+    elif rank == "3":
         a = 3
-    elif rank == '4':
+    elif rank == "4":
         a = 4
-    elif rank == '5':
+    elif rank == "5":
         a = 5
-    elif rank == '6':
+    elif rank == "6":
         a = 6
-    elif rank == '7':
+    elif rank == "7":
         a = 7
-    elif rank == '8':
+    elif rank == "8":
         a = 8
-    elif rank == '9':
+    elif rank == "9":
         a = 9
-    elif rank == '10':
+    elif rank == "10":
         a = 10
-    elif rank == 'J':
+    elif rank == "J":
         a = 11
-    elif rank == 'Q':
+    elif rank == "Q":
         a = 12
-    elif rank == 'K':
+    elif rank == "K":
         a = 13
 
-    if color == 'S':
+    if color == "S":
         b = 1
-    elif color == 'H':
+    elif color == "H":
         b = 2
-    elif color == 'D':
+    elif color == "D":
         b = 3
-    elif color == 'C':
+    elif color == "C":
         b = 4
 
-    return (a,b)
+    return (a, b)
 ```
 
 #### Event `3`
@@ -627,7 +669,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -662,7 +704,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
+    """
     color = card[-1]
 
     rank = card[:-1]
@@ -670,43 +712,43 @@ def card_to_value_tuple(card: str) -> tuple:
     a = 0
     b = 0
 
-    if rank == 'A':
+    if rank == "A":
         a = 1
-    elif rank == '2':
+    elif rank == "2":
         a = 2
-    elif rank == '3':
+    elif rank == "3":
         a = 3
-    elif rank == '4':
+    elif rank == "4":
         a = 4
-    elif rank == '5':
+    elif rank == "5":
         a = 5
-    elif rank == '6':
+    elif rank == "6":
         a = 6
-    elif rank == '7':
+    elif rank == "7":
         a = 7
-    elif rank == '8':
+    elif rank == "8":
         a = 8
-    elif rank == '9':
+    elif rank == "9":
         a = 9
-    elif rank == '10':
+    elif rank == "10":
         a = 10
-    elif rank == 'J':
+    elif rank == "J":
         a = 11
-    elif rank == 'Q':
+    elif rank == "Q":
         a = 12
-    elif rank == 'K':
+    elif rank == "K":
         a = 13
 
-    if color == 'S':
+    if color == "S":
         b = 1
-    elif color == 'H':
+    elif color == "H":
         b = 2
-    elif color == 'D':
+    elif color == "D":
         b = 3
-    elif color == 'C':
+    elif color == "C":
         b = 4
 
-    return (b,a)
+    return (b, a)
 ```
 
 #### Event `4`
@@ -724,7 +766,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -759,7 +801,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
+    """
     color = card[-1]
 
     rank = card[:-1]
@@ -767,43 +809,43 @@ def card_to_value_tuple(card: str) -> tuple:
     a = 0
     b = 0
 
-    if rank == 'A':
+    if rank == "A":
         a = 1
-    elif rank == '2':
+    elif rank == "2":
         a = 2
-    elif rank == '3':
+    elif rank == "3":
         a = 3
-    elif rank == '4':
+    elif rank == "4":
         a = 4
-    elif rank == '5':
+    elif rank == "5":
         a = 5
-    elif rank == '6':
+    elif rank == "6":
         a = 6
-    elif rank == '7':
+    elif rank == "7":
         a = 7
-    elif rank == '8':
+    elif rank == "8":
         a = 8
-    elif rank == '9':
+    elif rank == "9":
         a = 9
-    elif rank == '10':
+    elif rank == "10":
         a = 10
-    elif rank == 'J':
+    elif rank == "J":
         a = 11
-    elif rank == 'Q':
+    elif rank == "Q":
         a = 12
-    elif rank == 'K':
+    elif rank == "K":
         a = 13
 
-    if color == 'S':
+    if color == "S":
         b = 1
-    elif color == 'H':
+    elif color == "H":
         b = 2
-    elif color == 'D':
+    elif color == "D":
         b = 3
-    elif color == 'C':
+    elif color == "C":
         b = 4
 
-    return (b,a)
+    return (b, a)
 ```
 
 #### Event `6`
@@ -821,7 +863,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -856,7 +898,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
+    """
     color = card[-1]
 
     rank = card[:-1]
@@ -864,43 +906,43 @@ def card_to_value_tuple(card: str) -> tuple:
     a = 0
     b = 0
 
-    if rank == 'A':
+    if rank == "A":
         a = 1
-    elif rank == '2':
+    elif rank == "2":
         a = 2
-    elif rank == '3':
+    elif rank == "3":
         a = 3
-    elif rank == '4':
+    elif rank == "4":
         a = 4
-    elif rank == '5':
+    elif rank == "5":
         a = 5
-    elif rank == '6':
+    elif rank == "6":
         a = 6
-    elif rank == '7':
+    elif rank == "7":
         a = 7
-    elif rank == '8':
+    elif rank == "8":
         a = 8
-    elif rank == '9':
+    elif rank == "9":
         a = 9
-    elif rank == '10':
+    elif rank == "10":
         a = 10
-    elif rank == 'J':
+    elif rank == "J":
         a = 11
-    elif rank == 'Q':
+    elif rank == "Q":
         a = 12
-    elif rank == 'K':
+    elif rank == "K":
         a = 13
 
-    if color == 'S':
+    if color == "S":
         b = 1
-    elif color == 'H':
+    elif color == "H":
         b = 2
-    elif color == 'D':
+    elif color == "D":
         b = 3
-    elif color == 'C':
+    elif color == "C":
         b = 4
 
-    return (b,a)
+    return (b, a)
 ```
 
 ### Student 3 — The Hidden Boss
@@ -968,7 +1010,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -1003,19 +1045,19 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    value_1=card[0][1]
-    value_2=card[0][0]
+    """
+    value_1 = card[0][1]
+    value_2 = card[0][0]
     try:
-        value_1=suit_values[value_1]
+        value_1 = suit_values[value_1]
     except:
-        value_1=int(value_1)
+        value_1 = int(value_1)
     try:
-        value_2=rank_values[value_2]
+        value_2 = rank_values[value_2]
     except:
-        value_2=int(value_2)
+        value_2 = int(value_2)
 
-    result=(value_1,value_2)
+    result = (value_1, value_2)
     return result
 ```
 
@@ -1035,7 +1077,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -1070,19 +1112,19 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    value_1=card[1]
-    value_2=card[0]
+    """
+    value_1 = card[1]
+    value_2 = card[0]
     try:
-        value_1=suit_values[value_1]
+        value_1 = suit_values[value_1]
     except:
-        value_1=int(value_1)
+        value_1 = int(value_1)
     try:
-        value_2=rank_values[value_2]
+        value_2 = rank_values[value_2]
     except:
-        value_2=int(value_2)
+        value_2 = int(value_2)
 
-    result=(value_1,value_2)
+    result = (value_1, value_2)
     return result
 ```
 
@@ -1101,7 +1143,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -1136,19 +1178,19 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    value_1=card[1]
-    value_2=card[0]
+    """
+    value_1 = card[1]
+    value_2 = card[0]
     try:
-        value_1=suit_values[value_1]
+        value_1 = suit_values[value_1]
     except:
-        value_1=int(value_1)
+        value_1 = int(value_1)
     try:
-        value_2=rank_values[value_2]
+        value_2 = rank_values[value_2]
     except:
-        value_2=int(value_2)
+        value_2 = int(value_2)
 
-    result=(value_1,value_2)
+    result = (value_1, value_2)
     return result
 ```
 
@@ -1167,7 +1209,7 @@ def card_to_value_tuple(card: str) -> tuple:
 
 ```python
 def card_to_value_tuple(card: str) -> tuple:
-    '''Converts the card of format "{rank}{suit}" to value tuple.
+    """Converts the card of format "{rank}{suit}" to value tuple.
 
     The suit values from low to high:
 
@@ -1202,19 +1244,19 @@ def card_to_value_tuple(card: str) -> tuple:
 
     Returns:
         str: The higher-value card
-    '''
-    value_1=card[1]
-    value_2=card[0]
+    """
+    value_1 = card[1]
+    value_2 = card[0]
     try:
-        value_1=suit_values[value_1]
+        value_1 = suit_values[value_1]
     except:
-        value_1=int(value_1)
+        value_1 = int(value_1)
     try:
-        value_2=rank_values[value_2]
+        value_2 = rank_values[value_2]
     except:
-        value_2=int(value_2)
+        value_2 = int(value_2)
 
-    result=(value_1,value_2)
+    result = (value_1, value_2)
     return result
 ```
 
@@ -1383,7 +1425,7 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-return s.startswith('Hello ') or s.startswith('Hi ')
+return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 Clip focus:
@@ -1444,8 +1486,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return (s.startswith("Hello ")or s.startswith("Hi "))
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 #### Event `2`
@@ -1482,8 +1523,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return (s.startswith("Hello ")or s.startswith("Hi "))
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 #### Event `3`
@@ -1520,8 +1560,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return (s.startswith("Hello ")or s.startswith("Hi "))
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 ### Funny Moment 1 — JavaScript Accent
@@ -1613,7 +1652,6 @@ def starts_with_greeting(s):
     if s.startswith('Hello'|| 'Hi'):
         return True
     return False
-
 ```
 
 #### Event `2`
@@ -1651,10 +1689,9 @@ def starts_with_greeting(s):
         False
     """
     ...
-    if s.startswith('Hello'or 'Hi'):
+    if s.startswith("Hello" or "Hi"):
         return True
     return False
-
 ```
 
 #### Event `3`
@@ -1692,10 +1729,9 @@ def starts_with_greeting(s):
         False
     """
     ...
-    if s.startswith('Hello') or s.startswith('Hi'):
+    if s.startswith("Hello") or s.startswith("Hi"):
         return True
     return False
-
 ```
 
 ### Student 2 — The Trailing Space Repair
@@ -1717,9 +1753,9 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-return s.startswith('Hello') or s.startswith('Hi')
+return s.startswith("Hello") or s.startswith("Hi")
 # then
-return s.startswith('Hello ') or s.startswith('Hi ')
+return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 Clip focus:
@@ -1783,8 +1819,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return s.startswith('Hello') or s.startswith('Hi')
-
+    return s.startswith("Hello") or s.startswith("Hi")
 ```
 
 #### Event `2`
@@ -1821,8 +1856,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return s.startswith('Hello') or s.startswith('Hi')
-
+    return s.startswith("Hello") or s.startswith("Hi")
 ```
 
 #### Event `4`
@@ -1859,8 +1893,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return s.startswith('Hello ') or s.startswith('Hi ')
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 #### Event `5`
@@ -1897,8 +1930,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return s.startswith('Hello ') or s.startswith('Hi ')
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 #### Event `7`
@@ -1935,8 +1967,7 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    return s.startswith('Hello ') or s.startswith('Hi ')
-
+    return s.startswith("Hello ") or s.startswith("Hi ")
 ```
 
 ### Funny Moment 2 — Negotiating With the Grader
@@ -1958,7 +1989,7 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-if s == 'Hithere':
+if s == "Hithere":
     return False
 ```
 
@@ -2024,15 +2055,14 @@ def starts_with_greeting(s):
         False
     """
     ...
-    if s=='Hithere':
+    if s == "Hithere":
         return False
-    if s.startswith('Hello'or 'Hi' or'hello' or 'hi'):
+    if s.startswith("Hello" or "Hi" or "hello" or "hi"):
         return True
-    elif s.startswith('Hi'):
+    elif s.startswith("Hi"):
         return True
 
     return False
-
 ```
 
 #### Event `82`
@@ -2070,15 +2100,14 @@ def starts_with_greeting(s):
         False
     """
     ...
-    if s=='Hithere':
+    if s == "Hithere":
         return False
-    if s.startswith('Hello'or 'Hi' or'hello' or 'hi'):
+    if s.startswith("Hello" or "Hi" or "hello" or "hi"):
         return True
-    elif s.startswith('Hi'):
+    elif s.startswith("Hi"):
         return True
 
     return False
-
 ```
 
 #### Event `157`
@@ -2116,17 +2145,16 @@ def starts_with_greeting(s):
         False
     """
     ...
-    t=[]
+    t = []
     t.append(s.split(" "))
 
-    if s.startswith('Hello ') and len(t[0])<=5:
+    if s.startswith("Hello ") and len(t[0]) <= 5:
         return True
 
-    if s.startswith('Hi ') and len(t[0])==2:
+    if s.startswith("Hi ") and len(t[0]) == 2:
         return True
 
     return False
-
 ```
 
 #### Event `166`
@@ -2165,14 +2193,13 @@ def starts_with_greeting(s):
     """
     ...
 
-    if s.startswith('Hello '):
+    if s.startswith("Hello "):
         return True
 
-    if s.startswith('Hi '):
+    if s.startswith("Hi "):
         return True
 
     return False
-
 ```
 
 ### Funny Moment 3 — The Triple-Quoted Graveyard
@@ -2194,7 +2221,7 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-""" better boundary-aware version lives here """
+"""better boundary-aware version lives here"""
 ```
 
 Clip focus:
@@ -2239,7 +2266,6 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def starts_with_greeting(s):
-
     """
     Checks whether a given string starts with 'Hello ' or 'Hi '.
 
@@ -2259,18 +2285,17 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    '''if s[0]=="Hello":
+    """if s[0]=="Hello":
         return True
 
     if s[0]=="Hi":
         return True
     else:
-        return False'''
-    if not isinstance(s,str):
-
+        return False"""
+    if not isinstance(s, str):
         return False
     s = s.strip()
-    return s.startswith('Hello')  or s.startswith('Hi')
+    return s.startswith("Hello") or s.startswith("Hi")
 ```
 
 #### Event `16`
@@ -2288,7 +2313,6 @@ def starts_with_greeting(s):
 
 ```python
 def starts_with_greeting(s):
-
     """
     Checks whether a given string starts with 'Hello ' or 'Hi '.
 
@@ -2308,37 +2332,25 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    '''if s[0]=="Hello":
+    """if s[0]=="Hello":
         return True
 
     if s[0]=="Hi":
         return True
     else:
-        return False'''
-    if not isinstance(s,str):
-
+        return False"""
+    if not isinstance(s, str):
         return False
-    '''s = s.strip()
-    return s.startswith('Hello')  or s.startswith('Hi')  '''
+    """s = s.strip()
+    return s.startswith('Hello')  or s.startswith('Hi')  """
 
-    cleaned_s=s.strip().lower()
+    cleaned_s = s.strip().lower()
 
-    is_hello=cleaned_s.startswith("hello") and (len(cleaned_s)==5 or not cleaned_s[5].isalpha())
+    is_hello = cleaned_s.startswith("hello") and (len(cleaned_s) == 5 or not cleaned_s[5].isalpha())
 
-
-    is_hi=cleaned_s.startswith("hi") and (len(cleaned_s)==2 or not cleaned_s[2].isalpha())
-
+    is_hi = cleaned_s.startswith("hi") and (len(cleaned_s) == 2 or not cleaned_s[2].isalpha())
 
     return is_hello or is_hi
-
-
-
-
-
-
-
-
-
 ```
 
 #### Event `17`
@@ -2356,7 +2368,6 @@ def starts_with_greeting(s):
 
 ```python
 def starts_with_greeting(s):
-
     """
     Checks whether a given string starts with 'Hello ' or 'Hi '.
 
@@ -2376,37 +2387,25 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    '''if s[0]=="Hello":
+    """if s[0]=="Hello":
         return True
 
     if s[0]=="Hi":
         return True
     else:
-        return False'''
-    if not isinstance(s,str):
-
+        return False"""
+    if not isinstance(s, str):
         return False
-    '''s = s.strip()
-    return s.startswith('Hello')  or s.startswith('Hi')  '''
+    """s = s.strip()
+    return s.startswith('Hello')  or s.startswith('Hi')  """
 
-    cleaned_s=s.strip().lower()
+    cleaned_s = s.strip().lower()
 
-    is_hello=cleaned_s.startswith("hello") and (len(cleaned_s)==5 or not cleaned_s[5].isalpha())
+    is_hello = cleaned_s.startswith("hello") and (len(cleaned_s) == 5 or not cleaned_s[5].isalpha())
 
-
-    is_hi=cleaned_s.startswith("hi") and (len(cleaned_s)==2 or not cleaned_s[2].isalpha())
-
+    is_hi = cleaned_s.startswith("hi") and (len(cleaned_s) == 2 or not cleaned_s[2].isalpha())
 
     return is_hello or is_hi
-
-
-
-
-
-
-
-
-
 ```
 
 #### Event `131`
@@ -2424,7 +2423,6 @@ def starts_with_greeting(s):
 
 ```python
 def starts_with_greeting(s):
-
     """
     Checks whether a given string starts with 'Hello ' or 'Hi '.
 
@@ -2444,20 +2442,19 @@ def starts_with_greeting(s):
         >>> starts_with_greeting('HiThere')
         False
     """
-    '''if s[0]=="Hello":
+    """if s[0]=="Hello":
         return True
 
     if s[0]=="Hi":
         return True
     else:
-        return False'''
-    if not isinstance(s,str):
-
+        return False"""
+    if not isinstance(s, str):
         return False
     s = s.strip()
-    return s.startswith('Hello')  or s.startswith('Hi')
+    return s.startswith("Hello") or s.startswith("Hi")
 
-    '''cleaned_s=s.strip().lower()
+    """cleaned_s=s.strip().lower()
 
     is_hello=cleaned_s.startswith("hello") and (len(cleaned_s)==5 or not cleaned_s[5].isalpha())
 
@@ -2465,16 +2462,7 @@ def starts_with_greeting(s):
     is_hi=cleaned_s.startswith("hi") and (len(cleaned_s)==2 or not cleaned_s[2].isalpha())
 
 
-    return is_hello or is_hi'''
-
-
-
-
-
-
-
-
-
+    return is_hello or is_hi"""
 ```
 
 ## Question 3: Shuffle a Three Word Sentence — _"Solving the Examples, Not the Problem"_
@@ -2518,7 +2506,7 @@ Public/private test tension to remember:
 - Group `1`
 
 ```py
-is_equal(shuffle_sentence('apple banana orange', (0, 2, 1)), 'apple orange banana')
+is_equal(shuffle_sentence("apple banana orange", (0, 2, 1)), "apple orange banana")
 ```
 
 - Expected outputs:
@@ -2530,7 +2518,7 @@ is_equal(shuffle_sentence('apple banana orange', (0, 2, 1)), 'apple orange banan
 - Group `2`
 
 ```py
-is_equal(shuffle_sentence('cat dog mouse', (2, 1, 0)), 'mouse dog cat')
+is_equal(shuffle_sentence("cat dog mouse", (2, 1, 0)), "mouse dog cat")
 ```
 
 - Expected outputs:
@@ -2542,7 +2530,7 @@ is_equal(shuffle_sentence('cat dog mouse', (2, 1, 0)), 'mouse dog cat')
 - Group `3`
 
 ```py
-is_equal(shuffle_sentence('red yellow green', (1, 0, 2)), 'yellow red green')
+is_equal(shuffle_sentence("red yellow green", (1, 0, 2)), "yellow red green")
 ```
 
 - Expected outputs:
@@ -2556,9 +2544,9 @@ is_equal(shuffle_sentence('red yellow green', (1, 0, 2)), 'yellow red green')
 - Group `1`
 
 ```py
-is_equal(shuffle_sentence('pink blue purple', (0, 2, 1)), 'pink purple blue')
-is_equal(shuffle_sentence('car bus truck', (2, 1, 0)), 'truck bus car')
-is_equal(shuffle_sentence('water air earth', (1, 0, 2)), 'air water earth')
+is_equal(shuffle_sentence("pink blue purple", (0, 2, 1)), "pink purple blue")
+is_equal(shuffle_sentence("car bus truck", (2, 1, 0)), "truck bus car")
+is_equal(shuffle_sentence("water air earth", (1, 0, 2)), "air water earth")
 ```
 
 - Expected outputs:
@@ -2572,9 +2560,9 @@ is_equal(shuffle_sentence('water air earth', (1, 0, 2)), 'air water earth')
 - Group `2`
 
 ```py
-is_equal(shuffle_sentence('book pen pencil', (2, 0, 1)), 'pencil book pen')
-is_equal(shuffle_sentence('table chair bed', (1, 2, 0)), 'chair bed table')
-is_equal(shuffle_sentence('sun moon star', (0, 2, 1)), 'sun star moon')
+is_equal(shuffle_sentence("book pen pencil", (2, 0, 1)), "pencil book pen")
+is_equal(shuffle_sentence("table chair bed", (1, 2, 0)), "chair bed table")
+is_equal(shuffle_sentence("sun moon star", (0, 2, 1)), "sun star moon")
 ```
 
 - Expected outputs:
@@ -2588,9 +2576,9 @@ is_equal(shuffle_sentence('sun moon star', (0, 2, 1)), 'sun star moon')
 - Group `3`
 
 ```py
-is_equal(shuffle_sentence('flower garden tree', (0, 1, 2)), 'flower garden tree')
-is_equal(shuffle_sentence('door window roof', (2, 0, 1)), 'roof door window')
-is_equal(shuffle_sentence('paper pen pencil', (0, 2, 1)), 'paper pencil pen')
+is_equal(shuffle_sentence("flower garden tree", (0, 1, 2)), "flower garden tree")
+is_equal(shuffle_sentence("door window roof", (2, 0, 1)), "roof door window")
+is_equal(shuffle_sentence("paper pen pencil", (0, 2, 1)), "paper pencil pen")
 ```
 
 - Expected outputs:
@@ -2688,7 +2676,6 @@ def shuffle_sentence(sentence, order):
     """
     s = sentence.split(" ")
     return " ".join([s[i] for i in order])
-
 ```
 
 #### Event `2`
@@ -2724,7 +2711,6 @@ def shuffle_sentence(sentence, order):
     """
     s = sentence.split(" ")
     return " ".join([s[i] for i in order])
-
 ```
 
 #### Event `3`
@@ -2760,7 +2746,6 @@ def shuffle_sentence(sentence, order):
     """
     s = sentence.split(" ")
     return " ".join([s[i] for i in order])
-
 ```
 
 ### Funny Moment 4 — The Entire Function Learns One Fruit Sentence
@@ -2783,7 +2768,7 @@ Response to show:
 
 ```python
 if order == (0, 2, 1):
-    return 'apple orange banana'
+    return "apple orange banana"
 ```
 
 Clip focus:
@@ -2845,9 +2830,8 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    if order==(0, 2, 1):
-        return 'apple orange banana'
-
+    if order == (0, 2, 1):
+        return "apple orange banana"
 ```
 
 #### Event `2`
@@ -2881,11 +2865,10 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    if order==(0, 2, 1):
-        return 'apple orange banana'
-    elif order==(2, 1, 0):
-        return 'mouse dog cat'
-
+    if order == (0, 2, 1):
+        return "apple orange banana"
+    elif order == (2, 1, 0):
+        return "mouse dog cat"
 ```
 
 #### Event `3`
@@ -2919,13 +2902,12 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    if order==(0, 2, 1):
-        return 'apple orange banana'
-    elif order==(2, 1, 0):
-        return 'mouse dog cat'
-    elif order==(1, 0, 2):
-        return 'yellow red green'
-
+    if order == (0, 2, 1):
+        return "apple orange banana"
+    elif order == (2, 1, 0):
+        return "mouse dog cat"
+    elif order == (1, 0, 2):
+        return "yellow red green"
 ```
 
 #### Event `4`
@@ -2959,13 +2941,12 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    if order==(0, 2, 1):
-        return 'apple orange banana'
-    elif order==(2, 1, 0):
-        return 'mouse dog cat'
-    elif order==(1, 0, 2):
-        return 'yellow red green'
-
+    if order == (0, 2, 1):
+        return "apple orange banana"
+    elif order == (2, 1, 0):
+        return "mouse dog cat"
+    elif order == (1, 0, 2):
+        return "yellow red green"
 ```
 
 #### Event `6`
@@ -2999,13 +2980,12 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    if order==(0, 2, 1):
-        return 'apple orange banana'
-    elif order==(2, 1, 0):
-        return 'mouse dog cat'
-    elif order==(1, 0, 2):
-        return 'yellow red green'
-
+    if order == (0, 2, 1):
+        return "apple orange banana"
+    elif order == (2, 1, 0):
+        return "mouse dog cat"
+    elif order == (1, 0, 2):
+        return "yellow red green"
 ```
 
 ### Funny Moment 5 — Why Use a Tuple When You Can List Every Universe
@@ -3027,8 +3007,10 @@ Why this beat is in the talk:
 Response to show:
 
 ```python
-if order == (0, 1, 2): ...
-elif order == (0, 2, 1): ...
+if order == (0, 1, 2):
+    ...
+elif order == (0, 2, 1):
+    ...
 # ... all six permutations
 ```
 
@@ -3090,12 +3072,12 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    s=sentence.split(" ")
-    n1=s[0]
-    n2=s[1]
-    n3=s[2]
-    if order==(0,1,2):
-        return n1+n2+n3
+    s = sentence.split(" ")
+    n1 = s[0]
+    n2 = s[1]
+    n3 = s[2]
+    if order == (0, 1, 2):
+        return n1 + n2 + n3
 ```
 
 #### Event `3`
@@ -3129,14 +3111,14 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    s=sentence.split(" ")
-    n1=s[0]
-    n2=s[1]
-    n3=s[2]
-    if order==(0,1,2):
-        return n1+n2+n3
-    elif order==(1, 0, 2):
-        return n2+" "+n1+" "+n3
+    s = sentence.split(" ")
+    n1 = s[0]
+    n2 = s[1]
+    n3 = s[2]
+    if order == (0, 1, 2):
+        return n1 + n2 + n3
+    elif order == (1, 0, 2):
+        return n2 + " " + n1 + " " + n3
 ```
 
 #### Event `6`
@@ -3170,22 +3152,22 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    s=sentence.split(" ")
-    n0=s[0]
-    n1=s[1]
-    n2=s[2]
-    if order==(0, 1, 2):
-        return n0+" "+n1+" "+n2
-    elif order==(0, 2, 1):
-        return n0+" "+n2+" "+n1
-    elif order==(1, 0, 2):
-        return n1+" "+n0+" "+n2
-    elif order==(1, 2, 0):
-        return n1+" "+n2+" "+n0
-    elif order==(2, 0, 1):
-        return n2+" "+n0+" "+n1
+    s = sentence.split(" ")
+    n0 = s[0]
+    n1 = s[1]
+    n2 = s[2]
+    if order == (0, 1, 2):
+        return n0 + " " + n1 + " " + n2
+    elif order == (0, 2, 1):
+        return n0 + " " + n2 + " " + n1
+    elif order == (1, 0, 2):
+        return n1 + " " + n0 + " " + n2
+    elif order == (1, 2, 0):
+        return n1 + " " + n2 + " " + n0
+    elif order == (2, 0, 1):
+        return n2 + " " + n0 + " " + n1
     else:
-        return n2+" "+n1+" "+n0
+        return n2 + " " + n1 + " " + n0
 ```
 
 #### Event `7`
@@ -3219,22 +3201,22 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    s=sentence.split(" ")
-    n0=s[0]
-    n1=s[1]
-    n2=s[2]
-    if order==(0, 1, 2):
-        return n0+" "+n1+" "+n2
-    elif order==(0, 2, 1):
-        return n0+" "+n2+" "+n1
-    elif order==(1, 0, 2):
-        return n1+" "+n0+" "+n2
-    elif order==(1, 2, 0):
-        return n1+" "+n2+" "+n0
-    elif order==(2, 0, 1):
-        return n2+" "+n0+" "+n1
+    s = sentence.split(" ")
+    n0 = s[0]
+    n1 = s[1]
+    n2 = s[2]
+    if order == (0, 1, 2):
+        return n0 + " " + n1 + " " + n2
+    elif order == (0, 2, 1):
+        return n0 + " " + n2 + " " + n1
+    elif order == (1, 0, 2):
+        return n1 + " " + n0 + " " + n2
+    elif order == (1, 2, 0):
+        return n1 + " " + n2 + " " + n0
+    elif order == (2, 0, 1):
+        return n2 + " " + n0 + " " + n1
     else:
-        return n2+" "+n1+" "+n0
+        return n2 + " " + n1 + " " + n0
 ```
 
 #### Event `9`
@@ -3268,22 +3250,22 @@ def shuffle_sentence(sentence, order):
         >>> shuffle_sentence('cat dog mouse', (2, 1, 0))
         'mouse dog cat'
     """
-    s=sentence.split(" ")
-    n0=s[0]
-    n1=s[1]
-    n2=s[2]
-    if order==(0, 1, 2):
-        return n0+" "+n1+" "+n2
-    elif order==(0, 2, 1):
-        return n0+" "+n2+" "+n1
-    elif order==(1, 0, 2):
-        return n1+" "+n0+" "+n2
-    elif order==(1, 2, 0):
-        return n1+" "+n2+" "+n0
-    elif order==(2, 0, 1):
-        return n2+" "+n0+" "+n1
+    s = sentence.split(" ")
+    n0 = s[0]
+    n1 = s[1]
+    n2 = s[2]
+    if order == (0, 1, 2):
+        return n0 + " " + n1 + " " + n2
+    elif order == (0, 2, 1):
+        return n0 + " " + n2 + " " + n1
+    elif order == (1, 0, 2):
+        return n1 + " " + n0 + " " + n2
+    elif order == (1, 2, 0):
+        return n1 + " " + n2 + " " + n0
+    elif order == (2, 0, 1):
+        return n2 + " " + n0 + " " + n1
     else:
-        return n2+" "+n1+" "+n0
+        return n2 + " " + n1 + " " + n0
 ```
 
 ## Question 4: Pangram Check — _"Heuristics vs. Invariants"_
@@ -3327,10 +3309,7 @@ Public/private test tension to remember:
 - Group `1`
 
 ```py
-is_equal(
-    is_pangram("The QUICK brown fox jumps over the lazy dog"),
-    True
-)
+is_equal(is_pangram("The QUICK brown fox jumps over the lazy dog"), True)
 ```
 
 - Expected outputs:
@@ -3342,10 +3321,7 @@ True
 - Group `2`
 
 ```py
-is_equal(
-    is_pangram("January 1st"),
-    False
-)
+is_equal(is_pangram("January 1st"), False)
 ```
 
 - Expected outputs:
@@ -3357,10 +3333,7 @@ False
 - Group `3`
 
 ```py
-is_equal(
-    is_pangram("abcdefghijklmnopqrstuvWXYZ"),
-    True
-)
+is_equal(is_pangram("abcdefghijklmnopqrstuvWXYZ"), True)
 ```
 
 - Expected outputs:
@@ -3374,18 +3347,9 @@ True
 - Group `1`
 
 ```py
-is_equal(
-    is_pangram("pack my BOX with FIVE Dozen liquor jugs"),
-    True
-)
-is_equal(
-    is_pangram("the five boxing wizards jump quickly"),
-    True
-)
-is_equal(
-    is_pangram("Rain fell steadily as we waited in the empty train station"),
-    False
-)
+is_equal(is_pangram("pack my BOX with FIVE Dozen liquor jugs"), True)
+is_equal(is_pangram("the five boxing wizards jump quickly"), True)
+is_equal(is_pangram("Rain fell steadily as we waited in the empty train station"), False)
 ```
 
 - Expected outputs:
@@ -3399,18 +3363,9 @@ False
 - Group `2`
 
 ```py
-is_equal(
-    is_pangram("Abcdefg hijkl mnopqrstu vwxy alpha1 beta2"),
-    False
-)
-is_equal(
-    is_pangram("Zyxwvut srqpo nmlk jihgfedcba"),
-    True
-)
-is_equal(
-    is_pangram("Zyxwv utsrq ponml kjih gfe dcba zeta 3"),
-    True
-)
+is_equal(is_pangram("Abcdefg hijkl mnopqrstu vwxy alpha1 beta2"), False)
+is_equal(is_pangram("Zyxwvut srqpo nmlk jihgfedcba"), True)
+is_equal(is_pangram("Zyxwv utsrq ponml kjih gfe dcba zeta 3"), True)
 ```
 
 - Expected outputs:
@@ -3424,17 +3379,13 @@ True
 - Group `3`
 
 ```py
+is_equal(is_pangram("hello world"), False)
+is_equal(is_pangram("h"), False)
 is_equal(
-    is_pangram("hello world"),
-    False
-)
-is_equal(
-    is_pangram("h"),
-    False
-)
-is_equal(
-    is_pangram("Just keep examining every low bid quoted for zinc etchings. This is another 2 rupees."),
-    True
+    is_pangram(
+        "Just keep examining every low bid quoted for zinc etchings. This is another 2 rupees."
+    ),
+    True,
 )
 ```
 
@@ -3515,7 +3466,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3533,7 +3484,7 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     alphabet = set("abcdefghijklmnopqrstuvwxyz")
     return alphabet.issubset(set(text.lower()))
 ```
@@ -3553,7 +3504,7 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3571,7 +3522,7 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     alphabet = set("abcdefghijklmnopqrstuvwxyz")
     return alphabet.issubset(set(text.lower()))
 ```
@@ -3591,7 +3542,7 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3609,7 +3560,7 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     alphabet = set("abcdefghijklmnopqrstuvwxyz")
     return alphabet.issubset(set(text.lower()))
 ```
@@ -3678,7 +3629,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3696,18 +3647,17 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     count = 0
 
     for i in range(len(text)):
-        if ('a' <= text[i] <= 'z')or ('A' <= text[i] <= 'Z') :
-            count +=1
+        if ("a" <= text[i] <= "z") or ("A" <= text[i] <= "Z"):
+            count += 1
 
     if count >= 26:
         return True
 
     return False
-
 ```
 
 #### Event `13`
@@ -3725,7 +3675,7 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3743,18 +3693,17 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     count = 0
 
     for i in range(len(text)):
-        if ('a' <= text[i] <= 'z')or ('A' <= text[i] <= 'Z') :
-            count +=1
+        if ("a" <= text[i] <= "z") or ("A" <= text[i] <= "Z"):
+            count += 1
 
     if count >= 26:
         return True
 
     return False
-
 ```
 
 #### Event `30`
@@ -3772,7 +3721,7 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3790,20 +3739,19 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     count = 0
 
     chars = list(set(text.upper()))
 
     for i in range(len(chars)):
-        if (chars[i] in 'abcdefghijklmnopqrstuvwxyz')or (chars[i] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') :
-            count +=1
+        if (chars[i] in "abcdefghijklmnopqrstuvwxyz") or (chars[i] in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"):
+            count += 1
 
     if count == 26:
         return True
 
     return False
-
 ```
 
 #### Event `35`
@@ -3821,7 +3769,7 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3839,20 +3787,19 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
+    """
     count = 0
 
     chars = list(set(text.upper()))
 
     for i in range(len(chars)):
-        if (chars[i] in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') :
-            count +=1
+        if chars[i] in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            count += 1
 
     if count == 26:
         return True
 
     return False
-
 ```
 
 ### Funny Moment 7 + The Regression Arc — 'Lots of Letters'
@@ -3923,7 +3870,7 @@ These are the canonical student-editable code snapshots reconstructed from `anal
 
 ```python
 def is_pangram(text: str) -> bool:
-    '''
+    """
     Given a string, check if it is a pangram (contains all letters of the alphabet at least once).
 
     Examples:
@@ -3941,16 +3888,13 @@ def is_pangram(text: str) -> bool:
 
     Returns:
         bool: True if the string is a pangram, False otherwise
-    '''
-    alphabets=string.ascii_lowercase
-    text1=text.lower()
+    """
+    alphabets = string.ascii_lowercase
+    text1 = text.lower()
     for i in text1:
         if i not in alphabets:
             return False
         return True
-
-
-
 ```
 
 #### Event `61`
@@ -3969,24 +3913,23 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    alphabets=string.ascii_lowercase
-    text1=text.lower().replace(' ','')
+    alphabets = string.ascii_lowercase
+    text1 = text.lower().replace(" ", "")
 
-    '''for i in range(len(text1)):
+    """for i in range(len(text1)):
         if text[i] not in alphabets:
             return False
 
-        return True'''
+        return True"""
 
-    count=0
+    count = 0
     for i in range(len(text1)):
         if text1[i] in alphabets:
-            count+=1
+            count += 1
 
-    if count>=26:
+    if count >= 26:
         return True
     return False
-
 ```
 
 #### Event `62`
@@ -4004,24 +3947,23 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    alphabets=string.ascii_lowercase
-    text1=text.lower().replace(' ','')
+    alphabets = string.ascii_lowercase
+    text1 = text.lower().replace(" ", "")
 
-    '''for i in range(len(text1)):
+    """for i in range(len(text1)):
         if text[i] not in alphabets:
             return False
 
-        return True'''
+        return True"""
 
-    count=0
+    count = 0
     for i in range(len(text1)):
         if text1[i] in alphabets:
-            count+=1
+            count += 1
 
-    if count>=26:
+    if count >= 26:
         return True
     return False
-
 ```
 
 #### Event `81`
@@ -4039,18 +3981,17 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    alphabets=string.ascii_lowercase
-    text1=text.lower().replace(' ','')
+    alphabets = string.ascii_lowercase
+    text1 = text.lower().replace(" ", "")
 
-    count=0
+    count = 0
     for i in range(len(text1)):
         if text1[i] in alphabets:
-            count+=1
+            count += 1
 
-    if count>=26:
+    if count >= 26:
         return True
     return False
-
 ```
 
 #### Event `103`
@@ -4068,28 +4009,27 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    alphabets=string.ascii_lowercase
+    alphabets = string.ascii_lowercase
 
-    text1=text.lower().replace(' ','')
+    text1 = text.lower().replace(" ", "")
 
-
-    '''count=0
+    """count=0
     for i in range(len(text1)):
         if text1[i] in alphabets:
             count+=1
 
     if count>=26:
         return True
-    return False'''
+    return False"""
 
-    uniq=set()
+    uniq = set()
     for i in range(len(text1)):
         if text1[i] in alphabets:
             uniq.add(text1[i])
 
-    length=len(uniq)
+    length = len(uniq)
 
-    if length>=26:
+    if length >= 26:
         return True
     return False
 ```
@@ -4109,18 +4049,18 @@ def is_pangram(text: str) -> bool:
 
 ```python
 def is_pangram(text: str) -> bool:
-    alphabets=string.ascii_lowercase
+    alphabets = string.ascii_lowercase
 
-    text1=text.lower().replace(' ','')
+    text1 = text.lower().replace(" ", "")
 
-    uniq=set()
+    uniq = set()
     for i in range(len(text1)):
         if text1[i] in alphabets:
             uniq.add(text1[i])
 
-    length=len(uniq)
+    length = len(uniq)
 
-    if length>=26:
+    if length >= 26:
         return True
     return False
 ```

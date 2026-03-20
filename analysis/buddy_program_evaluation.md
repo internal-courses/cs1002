@@ -17,12 +17,12 @@ We analyzed `3,314` repeaters. Only about `18.98%` are ready for standard mentor
 ## Simple Examples
 
 1. **Thrashing example**
-Student A runs tests again and again, makes random edits, and still does not improve. Student B makes a hypothesis, tests one change, checks result, then makes the next change. Student B usually succeeds faster.
-In our data, the thrashing group spends about `2.25x` more time and has about `33.81 percentage points` lower success.
+   Student A runs tests again and again, makes random edits, and still does not improve. Student B makes a hypothesis, tests one change, checks result, then makes the next change. Student B usually succeeds faster.
+   In our data, the thrashing group spends about `2.25x` more time and has about `33.81 percentage points` lower success.
 
 2. **Self-loop example**
-Imagine a student is stuck where code runs but no tests pass. They keep trying similar edits and stay stuck.
-In our data, this stuck state (S2) appears in `47.10%` of public runs, and `78.93%` of S2 transitions stay in S2.
+   Imagine a student is stuck where code runs but no tests pass. They keep trying similar edits and stay stuck.
+   In our data, this stuck state (S2) appears in `47.10%` of public runs, and `78.93%` of S2 transitions stay in S2.
 
 ## What Is Good in the Current Program
 
@@ -64,16 +64,16 @@ In our data, this stuck state (S2) appears in `47.10%` of public runs, and `78.9
 
 ## Recommended Actions Table
 
-| priority | recommendation | why | evidence_metric_ids | kpi | target |
-| --- | --- | --- | --- | --- | --- |
-| P0 | Replace one-size buddying with triage tracks (D0/D1/D3/T1/T2/T3). | Repeater profiles are heterogeneous; high-touch vs teachable segments need different intervention intensity. | repeaters_path_d1_profile_pct;repeaters_path_d3_profile_pct;repeaters_teachable_any_pct | % students assigned to correct track within first 2 weeks | >=90% |
-| P0 | Add 30-45 minute diagnostic sprint for D3 before regular sessions. | Mixed/diffuse students need diagnosis first; generic practice wastes mentor time. | program_est_high_touch_students_2233;repeaters_path_d3_profile_pct | D3 -> T1/T2/T3 conversion by week 3 | >=50% |
-| P0 | Teach process protocol explicitly: predict -> run -> trace -> fix. | Thrashing costs 2.25x time with much lower success; process quality is the lever. | thrasher_vs_incremental_time_ratio;thrasher_vs_incremental_success_gap_pp;s2_self_loop_pct | S2 self-loop rate among mentored students | drop by >=15% in 4 weeks |
-| P0 | Create a foundational syntax bootcamp track for persistent all-three cohort. | Persistent cohort is overwhelmingly syntax/no-code; advanced debugging clinics miss the root need. | all_three_starts_syntax_or_no_code_pct;top_all_three_state_trajectory_share_pct | Parseable-fraction uplift in bootcamp students | >=+0.20 in 4 weeks |
-| P1 | Use concept-first weekly plans: arithmetic/IO/loops/data-aggregation first. | These concepts dominate teachable struggler signals; low-acquisition concepts need deliberate practice. | hardest_concept_acquisition_min_pct | Concept acquisition rate for targeted concepts | >=+10 pp term-over-term |
-| P1 | Separate engagement enforcement from learning support. | 30% early attendance vs 75% requirement risks attendance theater and low-trust interactions. | program_week1_attendance_pct;program_attendance_gap_to_requirement_pp | Meaningful participation rate (>=2 runs + >=2 edits/week) | >=70% |
-| P1 | Instrument buddy quality: session checklist + random audit + outcomes dashboard. | At ~38 buddies, mentor quality variance can dominate outcomes. | program_buddies_needed_at_1_to_60 | Buddy fidelity score (protocol adherence) | >=85% |
-| P1 | Do not evaluate students using raw private-submission counts alone. | Submission capture gaps create false negatives in many namespaces. | zero_submission_namespaces;track_b_rows | Dashboards with capture-status flag enabled | 100% |
+| priority | recommendation                                                                   | why                                                                                                          | evidence_metric_ids                                                                        | kpi                                                       | target                   |
+| -------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | --------------------------------------------------------- | ------------------------ |
+| P0       | Replace one-size buddying with triage tracks (D0/D1/D3/T1/T2/T3).                | Repeater profiles are heterogeneous; high-touch vs teachable segments need different intervention intensity. | repeaters_path_d1_profile_pct;repeaters_path_d3_profile_pct;repeaters_teachable_any_pct    | % students assigned to correct track within first 2 weeks | >=90%                    |
+| P0       | Add 30-45 minute diagnostic sprint for D3 before regular sessions.               | Mixed/diffuse students need diagnosis first; generic practice wastes mentor time.                            | program_est_high_touch_students_2233;repeaters_path_d3_profile_pct                         | D3 -> T1/T2/T3 conversion by week 3                       | >=50%                    |
+| P0       | Teach process protocol explicitly: predict -> run -> trace -> fix.               | Thrashing costs 2.25x time with much lower success; process quality is the lever.                            | thrasher_vs_incremental_time_ratio;thrasher_vs_incremental_success_gap_pp;s2_self_loop_pct | S2 self-loop rate among mentored students                 | drop by >=15% in 4 weeks |
+| P0       | Create a foundational syntax bootcamp track for persistent all-three cohort.     | Persistent cohort is overwhelmingly syntax/no-code; advanced debugging clinics miss the root need.           | all_three_starts_syntax_or_no_code_pct;top_all_three_state_trajectory_share_pct            | Parseable-fraction uplift in bootcamp students            | >=+0.20 in 4 weeks       |
+| P1       | Use concept-first weekly plans: arithmetic/IO/loops/data-aggregation first.      | These concepts dominate teachable struggler signals; low-acquisition concepts need deliberate practice.      | hardest_concept_acquisition_min_pct                                                        | Concept acquisition rate for targeted concepts            | >=+10 pp term-over-term  |
+| P1       | Separate engagement enforcement from learning support.                           | 30% early attendance vs 75% requirement risks attendance theater and low-trust interactions.                 | program_week1_attendance_pct;program_attendance_gap_to_requirement_pp                      | Meaningful participation rate (>=2 runs + >=2 edits/week) | >=70%                    |
+| P1       | Instrument buddy quality: session checklist + random audit + outcomes dashboard. | At ~38 buddies, mentor quality variance can dominate outcomes.                                               | program_buddies_needed_at_1_to_60                                                          | Buddy fidelity score (protocol adherence)                 | >=85%                    |
+| P1       | Do not evaluate students using raw private-submission counts alone.              | Submission capture gaps create false negatives in many namespaces.                                           | zero_submission_namespaces;track_b_rows                                                    | Dashboards with capture-status flag enabled               | 100%                     |
 
 ## Evidence Files
 
