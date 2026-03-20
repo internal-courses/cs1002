@@ -1906,3 +1906,571 @@ Document these in new-clusters-2026-03-11/analysis.md with clear explanations an
 ---
 
 Add all files (including prompts.md), commit and push.
+
+## Student replay identification, 13 Mar 2026 (Codex, gpt-5.4, xhigh)
+
+I'm delivering a talk titled "How Students Learn Python".
+I would like to share the most interesting exemplars of replays of how different students solve the same question, for a few different questions.
+The objective is to help the audience understand SPECIFIC learning patterns, error patterns, and approaches to problem-solving that students exhibit when solving Python problems, by showing them actual examples of students solving problems.
+This should also lead them to insights about how to teach better, how to design better questions, etc.
+
+Keeping this in mind, research the contents of this repository and create an analysis/replays.md that lists:
+
+- Questions to use as examples
+- For each question, the most interesting student replays that illustrate different learning patterns, error patterns, and approaches to problem-solving. Include metadata about each replay, e.g. student ID, question, namespace, key moments in the replay, etc.
+- Why each replay is interesting and what it illustrates about student learning and error patterns, and how it can inform teaching and question design.
+
+---
+
+I'd also like to share funny moments. Think about what the audience might find funny (and how specific replays may be presented in a hilarious fashion).
+
+Append to analysis/replays.md a collection of funny moments from the replays, with explanations of why they are funny and what they reveal about student behavior and learning patterns. Include metadata about each moment, e.g. student ID, question, namespace, timestamp in the replay, etc.
+
+---
+
+Review the analysis/replays.md.
+Are these the best patterns to show - or are there others that are more interesting?
+Are these the best examples? Are there shorter versions that illustrate the same point better? Are there
+Where there are clearly better options, update the analysis/replays.md with the improved selections.
+
+---
+
+Find more funny questions - not all of these questions were funny. Append these to analysis/replays.md.
+
+Add a section to analysis/replays.md a list of questions to cover, in order, with the student response to share under each, in order, with reason (1 line)
+
+- [Question summary]
+  - [Student response to share]: [Reason why]
+  - ...
+- ...
+
+### Extract student data
+
+Below is the rough outline of my talk where I'll present the replays. Extract ALL information required and relevant for the replays (questions, question metadata, student responses, response metadata, results of test cases, etc.) and organize it in a structured format in `analysis/replays-extracts.md` so that it's easy to access and use when creating the replays and the narrative commentary.
+
+````markdown
+### The Four Questions
+
+#### Question 1: Card to Value Tuple — _"Parsing by Shape, Not Contract"_
+
+**Why open here:** Shortest replays in the set. The full arc—correct solution, productive struggle, clean overfit—takes under 90 seconds of combined screen time. It warms the audience up before you hit longer replays.
+
+**Student 1 — The Baseline:**
+Show the 10-second replay. `card[:-1]` and `card[-1]`. First run: pass. No edits. Submission.
+Say: "This student modelled the input as a variable-width string before touching the keyboard. Ten seconds, full marks. This is what it looks like when someone reads the contract before they read the examples."
+
+**Student 2 — The Funny/Productive Struggle:**
+The `tuple(a,b)` student. Put the line on screen. Pause.
+
+> _"Everything is right except the punctuation."_
+
+Audience will get it. Then: they fix `tuple(a,b)` to `(a,b)` and still fail—because they got left and right backwards.
+
+> _"Everything is right except left and right."_
+
+This is your first laugh. It's gentle and universal—everyone who learned Python has been in a fight with a constructor at some point. Then 40 seconds later, full pass.
+
+**Student 3 — The Hidden Boss:**
+The `card[0]`/`card[1]` parser. Build suspense. Show the public tests: `2/2`. Triumphant green checkmarks. Student submits. Private: `50`.
+
+> _"The only two-character card in the deck walks on stage like a hidden boss, and `10D` destroys the parser in one step."_
+
+Put `10D` on the slide in large text. This is the conceptual anchor for the whole talk: **the visible examples are not the task.**
+
+**Transition line:** "That gap between public and private tests—let's see it again, on a harder question."
+
+#### Question 2: Check for Greeting Prefix — _"Negotiating With the Tests"_
+
+**Why here:** Three different failure modes on the same tiny problem. Maximum contrast from minimum code. Also has your two biggest standalone funny moments.
+
+**Student 1 — The Baseline:**
+1 second, first checkpoint already passes private 3/3. `s.startswith('Hello ') or s.startswith('Hi ')`.
+
+> _"The student read the sentence 'starts with Hello or Hi followed by a space' and wrote exactly that in Python. Nothing more. One second."_
+
+**Funny moment 1 — JavaScript Accent:**
+Introduce student `60f6e5f27...`. Put the code on screen:
+
+```python
+s.startswith('Hello'|| 'Hi')
+```
+
+Read it out loud. Let the audience catch it first.
+
+> _"Python, but spoken with a JavaScript accent. The intent is perfect. The operator is from another universe."_
+
+Then they try `startswith('Hello' or 'Hi')`. Then finally the real solution.
+
+> _"What this tells you: surface intent can be completely correct while language fluency is still catching up."_
+
+**Student 2 — The Trailing Space Repair:**
+Start with `startswith('Hello')` (no space). Public: 3/4. Private: 67. One hidden test reveals the missing space. They add it. Private: 100.
+
+This is the cleanest illustration of "one hidden case, one missing condition, not a rewrite."
+
+> _"Ask the room: what exact contract did the public tests fail to make you notice?"_
+
+**Funny moment 2 — Negotiating With the Grader:**
+Back to student `60f6e5f27...`, event 81. Public passes. Then:
+
+```python
+if s == 'Hithere': return False
+```
+
+> _"The student has entered treaty negotiations with the grader. One visible test case, one explicit patch. This is not debugging—this is diplomacy."_
+
+This is a great laugh because the audience has definitely seen this behavior in a PR at some point.
+
+**Funny moment 3 — The Triple-Quoted Graveyard:**
+Student `590240758...`. The correct, boundary-aware code is present in the file—inside `"""triple quotes"""`. The wrong code is live.
+
+> _"The fix exists. It's just not allowed to run. I call this the triple-quoted graveyard: the correct solution was buried alive while the wrong one inherited the execution runtime."_
+
+This one gets a laugh and then an "oh god I've done that" nod. It's also a teachable moment: students use triple-quote comments as ad-hoc version control.
+
+**Transition:** "Same pattern—examples memorized, rule ignored—but now in a place where you can see the whole algorithm collapse to one sentence."
+
+#### Question 3: Shuffle a Three Word Sentence — _"Solving the Examples, Not the Problem"_
+
+**Why here:** This is the purest overfitting exhibit. The two funny cases here are among the best in the entire dataset. You want the audience warmed up before you drop these.
+
+**Student 1 — The Baseline:**
+Three events, one second. Split, reindex by `order`, join.
+
+> _"The student treated `order` as data. One line. Full pass. The intended abstraction, visible in working memory."_
+
+**Funny moment 4 — The Entire Function Learns One Fruit Sentence:**
+Student `384851c6...`. Walk through the progression: public `1/3`, then `2/3`, then `3/3`. Each improvement is... adding another hardcoded case. Then show the final state:
+
+```python
+if order == (0, 2, 1): return 'apple orange banana'
+```
+
+Private: `0/3`. Submission stays at 0.
+
+> _"This function is convinced that all sentence shuffling in Python is secretly about one fruit salad."_
+
+Pause. Let the absurdity settle.
+
+> _"This is overfitting in its purest, most innocent form. The student didn't learn the transformation rule. They learned the example."_
+
+Then connect it back to `10D`: **the visible tests are not the task.** This is the second time you've said it. It should start to feel like a refrain.
+
+**Funny moment 5 — Why Use a Tuple When You Can List Every Universe:**
+Student `107337b2...`. Six if/elif branches. All six three-word permutations, explicitly enumerated. Public passes, private also passes—because six branches cover all cases in a three-word universe.
+
+> _"Brute force wins a small, perfectly legal victory over elegance. The code is correct. The student has just decided that abstraction is optional when the universe is small enough to list."_
+
+This is a subtler laugh and a better teaching moment: the student isn't wrong, they're just using a strategy that won't survive scaling.
+
+> _"What mental model does this reveal? Some students reason by cases before they reason by data structure. That's not a bug—it's a stage."_
+
+**Transition:** "Let's move from sentence structure to something even more fundamental: what is a pangram, really?"
+
+#### Question 4: Pangram Check — _"Heuristics vs. Invariants"_
+
+**Why close here:** The regression student (`107 events, 1:51`) is the most emotionally resonant of the hard cases. You want the audience ready to feel it, not just laugh at it. Pangram also gives you the best "false summit" narrative structure.
+
+**Student 1 — The Baseline:**
+Zero seconds. Set subset check. Done.
+
+> _"Build the alphabet as a set. Check if it's a subset of the lowercase input. That's it. The entire invariant in one expression."_
+
+**Funny moment 6 — The Pangram Checker That Forgot C:**
+Put this on screen:
+
+```python
+letters = "absdefghijklmnopqrstuvwxyz"
+```
+
+Say nothing. Let the audience find it. You'll see the moment it lands in their faces.
+
+> _"The function whose entire job is to verify all 26 letters starts by forgetting one. Under cognitive load, even the checking mechanism needs to be checked."_
+
+**Funny moment 7 — A Pangram Is Apparently 'Lots of Letters':**
+Student `2ee6740d...`. Show the progression: early return kills non-letters. Then a length heuristic. At event 61:
+
+```python
+return count >= 26
+```
+
+Public: all pass. Private: immediate fail.
+
+> _"Ask the room: is 'aaaaaaaaaaaaaaaaaaaaaaaaaa' great literature?"_
+
+The laugh is immediate. Then the teaching point: this is a textbook heuristic shortcut. The student found a feature correlated with the answer. That's good instinct, badly applied. Hidden tests exist to expose exactly this gap between correlation and causation.
+
+Then show the repair: switch to `set()` of unique letters. Private: 100.
+
+> _"The false summit is the moment you think you've solved it. The actual solution comes later, when you ask not 'does my code pass?' but 'what family of inputs would break it?'"_
+
+This is the third time you've asked that question in different words. By now it should feel like the talk's central thesis.
+
+**The regression student:**
+Don't narrate every event—just show the shape of 107 events, 1:51 of session time. Green, then red, then partial, then partial, then worse.
+
+> _"This student found the right invariant near the end. But they had overwritten a working partial solution multiple times getting there. The lesson isn't about the code—it's about save points."_
+````
+
+---
+
+Don't point to the asciinema files. Instead, extract the actual full Python code submitted as part of each event mentioned and include that in the analysis/replays-extracts.md. This way, we can use the actual code in the replays instead of having to show the asciinema recordings.
+
+### Generate Marp slides
+
+Create a Marp slideshow in analysis/pyconf-slides.md based on the story above.
+
+Each slide should have a title, the code snippet being discussed, and a concise 1-line commentary.
+
+---
+
+Prepend each section with the actual question.
+For each student's attempt, show ALL relevant events, slide by slide, with commentary.
+
+### Generate a timeline pattern
+
+I'd like to understand the sequence in which students attempt questions. Do they always solve questions one after another? Do they jump around, save / submit a question further down the list, then come back to a question further up? Do they go A - B - A - B or more like A - B - C - D - A - B - C - D? In other words, fingerprint the temporal patterns of how students navigate through the questions. Construct clusters out of it. Identify the 3 best exemplars of each cluster's behavior and share their exact question navigation timeline, along with their performance in the exam. Correlate this with which cluster performs better in the exam and whether it's statistically significant. Save the results in `analysis/question-timelines.md`.
+
+---
+
+Is KMeans the most appropriate clustering algorithm for this?
+Are there better, more intuitive, features that we should cluster around?
+Think about this, re-doing the clustering, correlating with performance, and identifying exemplars accordingly.
+Revise `analysis/question-timelines.md` with the new analysis - writing it as if it were the first time, i.e. without mentioning/implying that it's a revision.
+
+<!-- codex resume 019ce6be-368c-71b3-895c-88b94b707571 -->
+
+## PyConf Hyderabad Talk (Copilot, Claude Sonnet 4.6, high)
+
+<!-- https://claude.ai/chat/35c3520a-4cee-401a-bfa1-6c4eda2411a0 -->
+
+I'm delivering a talk at PyConf Hyderabad titled "How Students Learn Python". Below is the outline for a portion of the talk.
+
+Create this as a single page interactive slideshow at analysis/pyconf.html.
+
+The relevant material (code, metadata, etc. is in analysis/replays-extract.md).
+
+````markdown
+# How Students Learn Python
+
+- Venue: PyConf Hyderabad
+- Date: 14 Mar 2026
+- Speaker: Anand S, LLM Psychologist @ Straive
+- Link: https://sanand0.github.io/talks/2026-03-14-how-students-learn-python/
+
+## A. Inside the Exam
+
+Add a few slides explaining the Python OPPE setup.
+
+Fill out this section with details about the exam, the dataset, and the analysis. This will help set the stage for the talk and provide context for the audience. Include raw numbers: # students, # saves, test runs, pass rates, etc.
+
+Describe the exam mechanics: public tests (students can run anytime), private tests (only on submit), etc.
+
+## B. How Students Answer
+
+The section has a single spine: **every mistake is a mental model made visible.** You're not laughing at students—you're recognizing past versions of yourself and every junior you've ever reviewed. That framing keeps the funny moments warm, not mean.
+
+Four questions, each showing three students: the one who got it instantly (baseline), the one who struggled productively (journey), and the one who got stuck in an interesting way (the teachable fail). The funny moments are not a separate appendix—they're the punctuation inside each question.
+
+### The Four Questions
+
+#### Question 1: Card to Value Tuple — _"Parsing by Shape, Not Contract"_
+
+**Why open here:** Shortest replays in the set. The full arc—correct solution, productive struggle, clean overfit—takes under 90 seconds of combined screen time. It warms the audience up before you hit longer replays.
+
+**Student 1 — The Baseline:**
+Show the 10-second replay. `card[:-1]` and `card[-1]`. First run: pass. No edits. Submission.
+Say: "This student modelled the input as a variable-width string before touching the keyboard. Ten seconds, full marks. This is what it looks like when someone reads the contract before they read the examples."
+
+**Student 2 — The Funny/Productive Struggle:**
+The `tuple(a,b)` student. Put the line on screen. Pause.
+
+> _"Everything is right except the punctuation."_
+
+Audience will get it. Then: they fix `tuple(a,b)` to `(a,b)` and still fail—because they got left and right backwards.
+
+> _"Everything is right except left and right."_
+
+This is your first laugh. It's gentle and universal—everyone who learned Python has been in a fight with a constructor at some point. Then 40 seconds later, full pass.
+
+**Student 3 — The Hidden Boss:**
+The `card[0]`/`card[1]` parser. Build suspense. Show the public tests: `2/2`. Triumphant green checkmarks. Student submits. Private: `50`.
+
+> _"The only two-character card in the deck walks on stage like a hidden boss, and `10D` destroys the parser in one step."_
+
+Put `10D` on the slide in large text. This is the conceptual anchor for the whole talk: **the visible examples are not the task.**
+
+**Transition line:** "That gap between public and private tests—let's see it again, on a harder question."
+
+#### Question 2: Check for Greeting Prefix — _"Negotiating With the Tests"_
+
+**Why here:** Three different failure modes on the same tiny problem. Maximum contrast from minimum code. Also has your two biggest standalone funny moments.
+
+**Student 1 — The Baseline:**
+1 second, first checkpoint already passes private 3/3. `s.startswith('Hello ') or s.startswith('Hi ')`.
+
+> _"The student read the sentence 'starts with Hello or Hi followed by a space' and wrote exactly that in Python. Nothing more. One second."_
+
+**Funny moment 1 — JavaScript Accent:**
+Introduce student `60f6e5f27...`. Put the code on screen:
+
+```python
+s.startswith('Hello'|| 'Hi')
+```
+
+Read it out loud. Let the audience catch it first.
+
+> _"Python, but spoken with a JavaScript accent. The intent is perfect. The operator is from another universe."_
+
+Then they try `startswith('Hello' or 'Hi')`. Then finally the real solution.
+
+> _"What this tells you: surface intent can be completely correct while language fluency is still catching up."_
+
+**Student 2 — The Trailing Space Repair:**
+Start with `startswith('Hello')` (no space). Public: 3/4. Private: 67. One hidden test reveals the missing space. They add it. Private: 100.
+
+This is the cleanest illustration of "one hidden case, one missing condition, not a rewrite."
+
+> _"Ask the room: what exact contract did the public tests fail to make you notice?"_
+
+**Funny moment 2 — Negotiating With the Grader:**
+Back to student `60f6e5f27...`, event 81. Public passes. Then:
+
+```python
+if s == 'Hithere': return False
+```
+
+> _"The student has entered treaty negotiations with the grader. One visible test case, one explicit patch. This is not debugging—this is diplomacy."_
+
+This is a great laugh because the audience has definitely seen this behavior in a PR at some point.
+
+**Funny moment 3 — The Triple-Quoted Graveyard:**
+Student `590240758...`. The correct, boundary-aware code is present in the file—inside `"""triple quotes"""`. The wrong code is live.
+
+> _"The fix exists. It's just not allowed to run. I call this the triple-quoted graveyard: the correct solution was buried alive while the wrong one inherited the execution runtime."_
+
+This one gets a laugh and then an "oh god I've done that" nod. It's also a teachable moment: students use triple-quote comments as ad-hoc version control.
+
+**Transition:** "Same pattern—examples memorized, rule ignored—but now in a place where you can see the whole algorithm collapse to one sentence."
+
+#### Question 3: Shuffle a Three Word Sentence — _"Solving the Examples, Not the Problem"_
+
+**Why here:** This is the purest overfitting exhibit. The two funny cases here are among the best in the entire dataset. You want the audience warmed up before you drop these.
+
+**Student 1 — The Baseline:**
+Three events, one second. Split, reindex by `order`, join.
+
+> _"The student treated `order` as data. One line. Full pass. The intended abstraction, visible in working memory."_
+
+**Funny moment 4 — The Entire Function Learns One Fruit Sentence:**
+Student `384851c6...`. Walk through the progression: public `1/3`, then `2/3`, then `3/3`. Each improvement is... adding another hardcoded case. Then show the final state:
+
+```python
+if order == (0, 2, 1): return 'apple orange banana'
+```
+
+Private: `0/3`. Submission stays at 0.
+
+> _"This function is convinced that all sentence shuffling in Python is secretly about one fruit salad."_
+
+Pause. Let the absurdity settle.
+
+> _"This is overfitting in its purest, most innocent form. The student didn't learn the transformation rule. They learned the example."_
+
+Then connect it back to `10D`: **the visible tests are not the task.** This is the second time you've said it. It should start to feel like a refrain.
+
+**Funny moment 5 — Why Use a Tuple When You Can List Every Universe:**
+Student `107337b2...`. Six if/elif branches. All six three-word permutations, explicitly enumerated. Public passes, private also passes—because six branches cover all cases in a three-word universe.
+
+> _"Brute force wins a small, perfectly legal victory over elegance. The code is correct. The student has just decided that abstraction is optional when the universe is small enough to list."_
+
+This is a subtler laugh and a better teaching moment: the student isn't wrong, they're just using a strategy that won't survive scaling.
+
+> _"What mental model does this reveal? Some students reason by cases before they reason by data structure. That's not a bug—it's a stage."_
+
+**Transition:** "Let's move from sentence structure to something even more fundamental: what is a pangram, really?"
+
+#### Question 4: Pangram Check — _"Heuristics vs. Invariants"_
+
+**Why close here:** The regression student (`107 events, 1:51`) is the most emotionally resonant of the hard cases. You want the audience ready to feel it, not just laugh at it. Pangram also gives you the best "false summit" narrative structure.
+
+**Student 1 — The Baseline:**
+Zero seconds. Set subset check. Done.
+
+> _"Build the alphabet as a set. Check if it's a subset of the lowercase input. That's it. The entire invariant in one expression."_
+
+**Funny moment 6 — The Pangram Checker That Forgot C:**
+Put this on screen:
+
+```python
+letters = "absdefghijklmnopqrstuvwxyz"
+```
+
+Say nothing. Let the audience find it. You'll see the moment it lands in their faces.
+
+> _"The function whose entire job is to verify all 26 letters starts by forgetting one. Under cognitive load, even the checking mechanism needs to be checked."_
+
+**Funny moment 7 — A Pangram Is Apparently 'Lots of Letters':**
+Student `2ee6740d...`. Show the progression: early return kills non-letters. Then a length heuristic. At event 61:
+
+```python
+return count >= 26
+```
+
+Public: all pass. Private: immediate fail.
+
+> _"Ask the room: is 'aaaaaaaaaaaaaaaaaaaaaaaaaa' great literature?"_
+
+The laugh is immediate. Then the teaching point: this is a textbook heuristic shortcut. The student found a feature correlated with the answer. That's good instinct, badly applied. Hidden tests exist to expose exactly this gap between correlation and causation.
+
+Then show the repair: switch to `set()` of unique letters. Private: 100.
+
+> _"The false summit is the moment you think you've solved it. The actual solution comes later, when you ask not 'does my code pass?' but 'what family of inputs would break it?'"_
+
+This is the third time you've asked that question in different words. By now it should feel like the talk's central thesis.
+
+**The regression student:**
+Don't narrate every event—just show the shape of 107 events, 1:51 of session time. Green, then red, then partial, then partial, then worse.
+
+> _"This student found the right invariant near the end. But they had overwritten a working partial solution multiple times getting there. The lesson isn't about the code—it's about save points."_
+
+### The Pattern
+
+Now you name what the audience has been watching.
+
+Pull up a simple 2x2 or list. Don't overthink the visual—this is the synthesis slide, not a chart:
+
+**The four mental models:**
+
+1. **The Example Memorizer** — `if order == (0,2,1): return 'apple orange banana'`. Solves the visible world, not the rule.
+2. **The Heuristic Guesser** — `count >= 26`. Finds a correlated shortcut instead of the invariant.
+3. **The Contract Misreader** — `tuple(a,b)`, reversed order, missing trailing space. Computes the right thing, returns the wrong structure.
+4. **The Regressor** — 218 events, ends worse than they started. Destroys a working partial solution while chasing the hidden test.
+
+> _"These aren't Python bugs. They're epistemological strategies. Each one is rational given what the student knows. Your job—whether you're a teacher or a tech lead—is to recognize which strategy is running and name it."_
+
+Then connect it to the audience's world:
+
+> _"The junior dev who writes an if/elif for every case isn't lazy. They're listing the universe. The pull request that adds `if input == 'test_case_3'` isn't cheating—it's negotiating with the grader. You've seen all of these. Now you have words for them."_
+
+### What This Means
+
+Three short paragraphs, not bullet points:
+
+**For question/test design:** If your public examples only show single-character cards, you've invited the two-character-parser bug. Anti-hardcoding sentinels—unseen words in the shuffle problem, punctuation in the pangram—don't need to be aggressive. They just need to exist.
+
+**For code review:** When you see a cascade of explicit cases, ask what abstraction the author hasn't seen yet before asking them to rewrite it. The fix is often one concept—tuple as index plan, set as membership test, `count()` as frequency check—not a full rewrite.
+
+**For your own debugging:** The triple-quoted graveyard is in every codebase. The heuristic that passes staging and fails production is a `count >= 26` story. The parser that dies on one two-character edge case is a `10D` story. We're all these students.
+
+### Closing Line
+
+> _"The gap between the public tests and the private tests is the gap between the world we can see and the world that actually runs. Learning Python—learning anything—is mostly about learning to ask: what's on the other side of the tests I can't see yet?"_
+
+## C. How Students Attempt Questions
+
+(We'll fill this later.)
+
+## D. How Should We Teach
+
+(We'll fill this later.)
+
+## Summary
+
+(We'll fill this later.)
+````
+
+The relevant material (code, metadata, etc. is in analysis/replays-extract.md).
+Use any other material from this repository to fill in details.
+
+The titles should form the narrative spine of the talk, i.e. just reading the title should communicate the narrative of the story. The content of the slide should support the title and the narrative.
+
+Insert actual code submitted by the students for each of these questions at the relevant portion.
+Syntax highlight the code. Make it look like a real code editor, e.g. VS Code or GitHub preview.
+Highlight the relevant portion of the code that we want the audience to focus on in each slide.
+Show the timestamp of submission, error messages, etc. in a consistent way.
+When transitioning across similar slides ensure smooth transitions, e.g. when showing the progression of a student's code, smoothly animate the code changes rather than jump-cutting.
+
+Optimize for a 1920x1080 screen.
+Keep per-slide content small (e.g. only one Python code sample per slide).
+Use large fonts and high contrast for a presentation setting.
+
+IMPORTANT: Because Claude will almost certainly stall when generating such a large file at one shot, you MUST break this into parts, generating the .html in chunks of slides (keeping each chunk small) and saving it, checking it, then updating it with the next iteration, and so on.
+
+---
+
+MAJOR CHANGE: Rewrite the titles, commentary and text like Matt Levine.
+
+REVISIONS:
+
+Use `.reveal .slides section { padding: 40px 0 }` instead of `{ padding: 40px 60px }` to center the slides horizontally.
+Inside `solution.py` I see stuff like `<mark class="hl-red">tuple(a, b)</mark>`, i.e. instead of being highlighted, I see the actual HTML tags. Fix this.
+
+Keep the same position as the slides change for continuity.
+- Title slide: Leave it vertically centered
+- Code slides: Top-align the section label, title, result-row and code-editor. Keep the quote near the bottom, just above the controls.
+- Non-code slides: Top-align the section label, title, but vertically center the content.
+
+In the problem slides, we have a two column layout. Instead, show the emphasis box below the code box.
+Also, show the problem the same way the student sees it. Don't paraphrase it.
+
+In the code slides:
+- If some public tests pass and some fail, list all tests with status, 1-line each.
+- If all public tests pass but some private tests fail, list all private tests with status, 1-line each.
+- If all tests pass, don't list test cases.
+- Increase the font-size of the code a bit.
+
+Don't quote the text in the commentary.
+
+Slide 38: Instead of "abs⬜def..." use "absdef..." - don't highlight the "s".
+
+---
+
+Name each student uniquely in a way that would evoke a sense of their behavior, e.g. "Clever Carl" for the student who gets the right answer immediately. Add this to the .result-row.
+
+Change the background of the problem slides so that I know a new section is starting.
+
+Ensure that the code is always fully accessible - at least via scrolling. In #/10 line 10 - return (a, b) - is chopped off. Maybe .code-editor does not need an overflow: hidden?
+
+Shouldn't #/20 follow #/18? The order around here seems off. Or the story doesn't flow...
+
+Avoid long text in slides, like #/27 or #/36 -- keep it concise.
+
+---
+
+Add slides showing some of Rewind Rita's solutions -- a partial pass, overwrite, found it, overwrite.
+
+Slide #/37 - Also add how to teach such students, based on education best practices, in a single line.
+Slides #/38 to #/42 - Drop these slide
+
+Next, read `analysis/questions-timelines.md` which documents the sequence in which students attempt questions, and clusters them based on their navigation patterns. Add a section C on "How Students Attempt Questions". Don't focus on the maths. Explain the patterns in simple visual terms (use SVG examples, animated illustrations, etc. to visually communicate the patterns) along with the performance of each pattern. Show the exemplars visually in a way that clearly shows the flow of their navigation through the questions with timing. One way might be a connected scatterplot with X=time, Y=question index, but any other mechanism is fine too. Summarize the performance of each pattern and the implications for teaching and question design using best practices from education science.
+
+---
+
+Rewrite the titles, commentary and text in Section C like Matt Levine. Keep it simple.
+
+For Rewind Rita's solutions, the critical point is that she got it right, THEN lost the right solution. That's not coming through.
+
+Revise the conclusion slide. Either craft a single high-level takeaway or a few summarized takeaways across everything covered so far and use that instead.
+
+---
+
+Ensure all titles fit in a single line at 1920x1080
+
+---
+
+For all .note add an inline style with margin-left: auto and margin-right: auto, or a class with high importance that does this, e.g. adding `.note { margin-left: auto !important; margin-right: auto !important; }` to the CSS.
+
+Reduce the verbosity of the last (summary) slide #/50.
+
+In the following slides, where there is long text, add <strong>...</strong> to the most important part(s) of the text to make it scannable: #/2 #/4
+
+---
+
+- Add this QR code image at the top right of each slide: <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sanand0.github.io/talks/2025-10-16-vibe-analysis/" width="150" height="150">
+- #/3: Title: This is very rich data. Drop 54.5% pass rate and 3 terms. Make this a 2x2 card slide. In .note, replace "The other 45.5%" with "45.5%"
+- #/4: Title: Each
+-
+
+
+<!-- copilot --resume=eeaf63e9-676a-4f18-9e7c-aeab47e3d521 -->

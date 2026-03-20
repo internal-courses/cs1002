@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Students Learn Python — PyConf Hyderabad 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/github-dark.min.css">
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/lib/common.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css">
+<style>
+/* ── reset ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+
+/* ── tokens ─────────────────────────────────────────────── */
+:root {
+  --bg:        #0d1117;
+  --bg2:       #161b22;
+  --bg3:       #1c2333;
+  --ink:       #e6edf3;
+  --ink-soft:  #8b949e;
+  --ink-dim:   #484f58;
+  --accent:    #58a6ff;
+  --accent2:   #3fb950;
+  --accent3:   #f78166;
+  --warn:      #e3b341;
+  --pink:      #d2a8ff;
+  --teal:      #39d353;
+  --line:      rgba(255,255,255,0.08);
+  --r:         10px;
+  --shadow:    0 24px 64px rgba(0,0,0,0.6);
+  --font:      "IBM Plex Sans", system-ui, sans-serif;
+  --mono:      "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ── slideshow shell ─────────────────────────────────────── */
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.55;
+  user-select: none;
+}
+
+#deck {
+  position: fixed; inset: 0;
+  display: grid;
+}
+
+.slide {
+  display: none;
+  grid-area: 1/1;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+.slide.active { display: flex; }
+
+/* ── progress bar ─────────────────────────────────────────── */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width .3s ease;
+  z-index: 100;
+  border-radius: 0 3px 3px 0;
+}
+#counter {
+  position: fixed;
+  bottom: 1rem; right: 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink-dim);
+  z-index: 100;
+}
+#nav-hint {
+  position: fixed;
+  bottom: 1rem; left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+  z-index: 100;
+  display: flex; gap: 1rem;
+  pointer-events: none;
+}
+.nav-btn {
+  position: fixed;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  width: 2.4rem; height: 2.4rem;
+  cursor: pointer;
+  color: var(--ink-dim);
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .18s;
+  z-index: 100;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.10); color: var(--ink); }
+#btn-prev { left: 0.8rem; }
+#btn-next { right: 0.8rem; }
+
+/* ── layout helpers ──────────────────────────────────────── */
+.layout-center {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 3rem 5vw;
+  text-align: center;
+}
+.layout-split {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.layout-main {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  padding: 3.5rem 7vw 3rem;
+  gap: 1.6rem;
+}
+.layout-code {
+  width: 100%; height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 3.5rem 7vw 3rem;
+  gap: 1.4rem;
+}
+
+/* ── slide background variants ───────────────────────────── */
+.bg-title {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 40%, rgba(88,166,255,0.15), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(63,185,80,0.10), transparent 55%),
+    var(--bg);
+}
+.bg-section {
+  background:
+    radial-gradient(ellipse 90% 50% at 5% 50%, rgba(88,166,255,0.08), transparent),
+    var(--bg2);
+}
+.bg-dark { background: var(--bg); }
+.bg-code {
+  background:
+    radial-gradient(ellipse 70% 60% at 90% 10%, rgba(210,168,255,0.08), transparent),
+    var(--bg);
+}
+.bg-green {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 50%, rgba(63,185,80,0.12), transparent),
+    var(--bg);
+}
+.bg-warn {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 50%, rgba(227,179,65,0.12), transparent),
+    var(--bg);
+}
+.bg-red {
+  background:
+    radial-gradient(ellipse 80% 50% at 10% 50%, rgba(247,129,102,0.12), transparent),
+    var(--bg);
+}
+
+/* ── typography ──────────────────────────────────────────── */
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.6rem;
+}
+h1.title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.8rem;
+}
+h2.slide-title {
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+h3.slide-sub {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+.lead { font-size: clamp(1rem, 1.8vw, 1.3rem); color: var(--ink-soft); }
+.big { font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 700; letter-spacing: -0.02em; }
+.accent { color: var(--accent); }
+.accent2 { color: var(--accent2); }
+.accent3 { color: var(--accent3); }
+.warn { color: var(--warn); }
+.pink { color: var(--pink); }
+.dim { color: var(--ink-soft); }
+.italic { font-style: italic; }
+em { font-style: italic; color: var(--ink-soft); }
+
+/* ── stat grid ───────────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.stat-cell {
+  background: var(--bg2);
+  padding: 1.4rem 1.6rem;
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+.stat-number { font-size: clamp(1.6rem, 3vw, 2.8rem); font-weight: 700; font-family: var(--mono); }
+.stat-label { font-size: 0.82rem; color: var(--ink-soft); }
+
+/* ── code block ──────────────────────────────────────────── */
+.code-wrap {
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  flex: 1;
+}
+.code-wrap .code-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 0.78rem; color: var(--ink-soft);
+}
+.code-wrap .code-header .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.code-wrap pre { margin: 0; border-radius: 0; }
+.code-wrap code.hljs { padding: 1.2rem 1.4rem; font-size: clamp(0.78rem, 1.5vw, 1rem); }
+
+/* ── cards / panels ──────────────────────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 1.2rem 1.4rem;
+}
+.card-row {
+  display: grid;
+  gap: 1rem;
+}
+.card-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.card-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ── test result pills ───────────────────────────────────── */
+.tests {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  margin: 0.4rem 0;
+}
+.t-pass, .t-fail, .t-unknown {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 600; font-family: var(--mono);
+}
+.t-pass  { background: rgba(63,185,80,0.20); color: var(--accent2); border: 1px solid rgba(63,185,80,0.3); }
+.t-fail  { background: rgba(247,129,102,0.20); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
+.t-unknown { background: rgba(139,148,158,0.15); color: var(--ink-dim); border: 1px solid var(--line); }
+
+/* ── annotation badge ────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+.badge-blue  { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+.badge-green { background: rgba(63,185,80,0.15); color: var(--accent2); border: 1px solid rgba(63,185,80,0.25); }
+.badge-red   { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.25); }
+.badge-warn  { background: rgba(227,179,65,0.15); color: var(--warn); border: 1px solid rgba(227,179,65,0.25); }
+.badge-pink  { background: rgba(210,168,255,0.15); color: var(--pink); border: 1px solid rgba(210,168,255,0.25); }
+.badge-dim   { background: rgba(255,255,255,0.04); color: var(--ink-soft); border: 1px solid var(--line); }
+
+/* ── quote block ─────────────────────────────────────────── */
+.quoteblock {
+  border-left: 3px solid var(--accent);
+  padding: 0.8rem 1.2rem;
+  background: rgba(88,166,255,0.05);
+  border-radius: 0 var(--r) var(--r) 0;
+  font-style: italic;
+  font-size: clamp(1rem, 1.8vw, 1.3rem);
+  color: var(--ink);
+  line-height: 1.55;
+}
+.quoteblock.warn-quote {
+  border-color: var(--warn);
+  background: rgba(227,179,65,0.05);
+}
+.quoteblock.green-quote {
+  border-color: var(--accent2);
+  background: rgba(63,185,80,0.05);
+}
+
+/* ── timeline ─────────────────────────────────────────────── */
+.timeline {
+  display: flex; flex-direction: column; gap: 0;
+  position: relative;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 12px; top: 12px; bottom: 12px;
+  width: 2px;
+  background: var(--line);
+}
+.tl-item {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 0.5rem 0 0.5rem 0;
+  position: relative;
+}
+.tl-dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+  position: relative; z-index: 1;
+}
+.tl-dot.pass  { background: rgba(63,185,80,0.25); color: var(--accent2); border: 2px solid rgba(63,185,80,0.5); }
+.tl-dot.fail  { background: rgba(247,129,102,0.25); color: var(--accent3); border: 2px solid rgba(247,129,102,0.5); }
+.tl-dot.part  { background: rgba(227,179,65,0.25); color: var(--warn); border: 2px solid rgba(227,179,65,0.5); }
+.tl-dot.edit  { background: rgba(88,166,255,0.15); color: var(--accent); border: 2px solid rgba(88,166,255,0.3); }
+.tl-content { flex: 1; padding-top: 0.1rem; }
+.tl-content code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--pink);
+}
+
+/* ── tooltip trigger ─────────────────────────────────────── */
+[data-tippy] { cursor: help; border-bottom: 1px dashed var(--ink-dim); }
+[data-popup] { cursor: pointer; border-bottom: 1px solid rgba(88,166,255,0.5); color: var(--accent); }
+
+/* ── modal / popup ───────────────────────────────────────── */
+#modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  backdrop-filter: blur(4px);
+}
+#modal-overlay.open { display: flex; }
+#modal-box {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  width: min(720px, 94vw);
+  max-height: 84vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; background: var(--bg2); z-index: 1;
+}
+.modal-header h4 { font-size: 1rem; font-weight: 600; }
+.modal-close {
+  background: none; border: none;
+  color: var(--ink-soft);
+  font-size: 1.3rem; cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem;
+}
+.modal-close:hover { color: var(--ink); }
+.modal-body { padding: 1.4rem; }
+.modal-body h5 { font-size: 0.9rem; color: var(--ink-soft); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.modal-body p { margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.6; }
+.modal-body a { color: var(--accent); text-decoration: none; }
+.modal-body a:hover { text-decoration: underline; }
+.modal-body pre { border-radius: 8px; overflow: hidden; margin-bottom: 0.8rem; }
+.modal-body code.hljs { font-size: 0.84rem; }
+.modal-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-bottom: 0.8rem; }
+.modal-table th, .modal-table td { padding: 0.5rem 0.7rem; text-align: left; border-bottom: 1px solid var(--line); }
+.modal-table th { color: var(--ink-soft); font-weight: 500; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.modal-table td.num { font-family: var(--mono); text-align: right; }
+.modal-tag { display: inline-block; background: rgba(88,166,255,0.12); color: var(--accent); border-radius: 4px; padding: 0.1rem 0.4rem; font-size: 0.78rem; margin: 0.1rem; font-family: var(--mono); }
+
+/* ── waterfall bar ────────────────────────────────────────── */
+.waterfall-row {
+  display: grid;
+  grid-template-columns: 240px 1fr 60px;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+.waterfall-label { font-size: 0.85rem; color: var(--ink-soft); text-align: right; }
+.waterfall-bar-wrap { height: 22px; background: rgba(255,255,255,0.04); border-radius: 4px; overflow: hidden; }
+.waterfall-bar { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.waterfall-pct { font-family: var(--mono); font-size: 0.82rem; color: var(--ink-soft); }
+
+/* ── 2x2 matrix ──────────────────────────────────────────── */
+.matrix-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  background: var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  height: 100%;
+}
+.matrix-cell {
+  background: var(--bg2);
+  padding: 1.4rem;
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.matrix-cell h4 { font-size: 0.95rem; font-weight: 600; }
+.matrix-cell p { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; }
+.matrix-cell code {
+  font-family: var(--mono); font-size: 0.82em;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--pink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── inline code ──────────────────────────────────────────── */
+code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: rgba(255,255,255,0.07);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--pink);
+}
+
+/* ── slide-specific backgrounds ─────────────────────────────── */
+.slide[data-section="A"] { border-top: 3px solid var(--accent); }
+.slide[data-section="B"] { border-top: 3px solid var(--accent2); }
+.slide[data-section="C"] { border-top: 3px solid var(--pink); }
+
+/* ── transition effect ────────────────────────────────────── */
+.slide { opacity: 0; transform: translateX(20px); transition: opacity .25s, transform .25s; }
+.slide.active { opacity: 1; transform: translateX(0); }
+
+/* ── pill annotation ──────────────────────────────────────── */
+.pill-row {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+}
+
+/* ── score bar ───────────────────────────────────────────── */
+.score-bar {
+  display: flex; height: 8px; border-radius: 4px; overflow: hidden;
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  margin: 0.3rem 0;
+}
+.score-fill { height: 100%; border-radius: 4px; transition: width .5s; }
+
+/* ── panel layout helpers ─────────────────────────────────── */
+.pane {
+  padding: 3.5rem 5vw 3rem;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  gap: 1.2rem;
+}
+.pane.pane-dark { background: var(--bg3); }
+.pane.pane-light { background: var(--bg2); }
+.pane.pane-code {
+  background: var(--bg3);
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* ── footnote ─────────────────────────────────────────────── */
+.footnote {
+  font-size: 0.76rem;
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--line);
+}
+
+/* ── large highlight text ─────────────────────────────────── */
+.highlight-box {
+  background: rgba(88,166,255,0.06);
+  border: 1px solid rgba(88,166,255,0.15);
+  border-radius: var(--r);
+  padding: 1.2rem 1.4rem;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.55;
+}
+.highlight-box.green { background: rgba(63,185,80,0.06); border-color: rgba(63,185,80,0.15); }
+.highlight-box.warn  { background: rgba(227,179,65,0.06); border-color: rgba(227,179,65,0.15); }
+.highlight-box.red   { background: rgba(247,129,102,0.06); border-color: rgba(247,129,102,0.15); }
+</style>
+</head>
+<body>
+
+<!-- ── progress + nav ── -->
+<div id="progress"></div>
+<div id="counter">1 / 1</div>
+<button class="nav-btn" id="btn-prev">‹</button>
+<button class="nav-btn" id="btn-next">›</button>
+<div id="nav-hint"><span>← →  navigate</span><span>click to advance</span></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     DECK
+═══════════════════════════════════════════════════════════ -->
+<div id="deck">
+
+<!-- ═══════════════════ TITLE SLIDE ═══════════════════════ -->
+<div class="slide active bg-title" data-section="title">
+  <div class="layout-center" style="gap:1.6rem">
+    <div>
+      <div class="section-label" style="margin-bottom:1.2rem">PyConf Hyderabad · 14 March 2026</div>
+      <h1 class="title" style="max-width:16ch;margin:0 auto">How Students Learn Python</h1>
+      <p class="lead" style="margin-top:1rem;max-width:52ch">What 13,623 students, 2 million test runs, and 55,000 submissions reveal about the mental models behind every mistake.</p>
+    </div>
+    <div style="margin-top:0.5rem">
+      <div style="font-size:1rem;font-weight:600">Anand S</div>
+      <div class="dim" style="font-size:0.88rem">LLM Psychologist · Straive</div>
+      <div style="margin-top:0.6rem">
+        <a href="https://sanand0.github.io/talks/2026-03-14-how-students-learn-python/" style="font-family:var(--mono);font-size:0.78rem;color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,166,255,0.4)">sanand0.github.io/talks/2026-03-14-…</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ A1 · THE SETUP ════════════════════ -->
+<div class="slide bg-section" data-section="A">
+  <div class="layout-main" style="justify-content:center">
+    <div class="section-label">A · Inside the Exam</div>
+    <h2 class="slide-title">The Python OPPE</h2>
+    <p class="lead" style="max-width:60ch">
+      OPPE — Online Programming Practice Exam — is the Python programming assessment for
+      <span data-tippy="IIT Madras B.Sc. Data Science programme, running since 2021. Students take two waves of exams per term, at different difficulty levels.">IIT Madras B.Sc. students</span>.
+      Each student sits one paper in Wave 1 (basic) and one in Wave 2 (intermediate).
+    </p>
+    <div class="card-row cols-2" style="max-width:700px">
+      <div class="card">
+        <div class="section-label">Wave 1 (py11–py14)</div>
+        <div style="font-size:1.1rem;font-weight:600">Foundational Python</div>
+        <div class="dim" style="font-size:0.88rem">String ops, lists, tuples, basic functions</div>
+      </div>
+      <div class="card">
+        <div class="section-label">Wave 2 (py21–py24)</div>
+        <div style="font-size:1.1rem;font-weight:600">Applied Python</div>
+        <div class="dim" style="font-size:0.88rem">Data analysis, file I/O, complex logic</div>
+      </div>
+    </div>
+    <div class="highlight-box" style="max-width:700px;font-size:1rem">
+      <strong>3 terms · 35 exam sittings · 162 unique questions</strong>
+      <div class="dim" style="font-size:0.85rem;margin-top:0.3rem">Jan–Dec 2025. Variants (paper 1 / paper 2) prevent copying between adjacent seats.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ A2 · EXAM MECHANICS ═══════════════ -->
+<div class="slide bg-dark" data-section="A">
+  <div class="layout-main" style="justify-content:center;gap:1.4rem">
+    <div class="section-label">A · Inside the Exam</div>
+    <h2 class="slide-title">How the exam works</h2>
+    <div class="card-row" style="grid-template-columns:1fr 1fr 1fr;max-width:860px">
+      <div class="card" style="border-color:rgba(88,166,255,0.25)">
+        <div style="font-size:2rem;margin-bottom:0.4rem">📝</div>
+        <div style="font-weight:600;margin-bottom:0.3rem">Save</div>
+        <div class="dim" style="font-size:0.85rem">Students save code anytime. Every version is recorded — giving us a full edit history.</div>
+      </div>
+      <div class="card" style="border-color:rgba(63,185,80,0.25)">
+        <div style="font-size:2rem;margin-bottom:0.4rem">🧪</div>
+        <div style="font-weight:600;margin-bottom:0.3rem;color:var(--accent2)">Public Tests</div>
+        <div class="dim" style="font-size:0.85rem">Run anytime. 2–4 visible test cases. Students see <em>exactly</em> what passes or fails.</div>
+      </div>
+      <div class="card" style="border-color:rgba(247,129,102,0.25)">
+        <div style="font-size:2rem;margin-bottom:0.4rem">🔒</div>
+        <div style="font-weight:600;margin-bottom:0.3rem;color:var(--accent3)">Private Tests</div>
+        <div class="dim" style="font-size:0.85rem">Run <strong>only on submit</strong>. Hidden from students. 2–4 additional cases that test edge conditions.</div>
+      </div>
+    </div>
+    <div class="highlight-box warn" style="max-width:860px">
+      <strong class="warn">The gap between public and private tests</strong> is the central tension of this talk.
+      A student can pass all public tests and still fail privately — because public examples aren't the full contract.
+    </div>
+    <div class="card" style="max-width:860px;padding:1rem 1.4rem">
+      <div style="font-size:0.85rem;color:var(--ink-soft)">
+        Scoring: each test group is worth equal weight. Final score = (groups passed / total groups) × 100.
+        A score of <span class="badge badge-warn">50</span> means half the private test groups passed.
+        <span class="badge badge-green">100</span> = full pass on all public + private tests.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ A3 · THE DATASET ══════════════════ -->
+<div class="slide bg-section" data-section="A">
+  <div class="layout-main" style="justify-content:center">
+    <div class="section-label">A · Inside the Exam</div>
+    <h2 class="slide-title">The dataset</h2>
+    <div class="stat-grid" style="max-width:900px">
+      <div class="stat-cell" data-tippy="13,623 unique students across 3 terms (Jan–Dec 2025). Some students appear in multiple terms as repeaters.">
+        <div class="stat-number accent">13,623</div>
+        <div class="stat-label">unique students</div>
+      </div>
+      <div class="stat-cell" data-popup="popup-pairs" data-tippy="Each (student, exam, question) triple is one attempt row.">
+        <div class="stat-number" style="color:var(--pink)">151,778</div>
+        <div class="stat-label">student–question attempts</div>
+      </div>
+      <div class="stat-cell" data-tippy="Every time a student clicked 'Run Tests' — with or without submitting. Students could run public tests as many times as they liked.">
+        <div class="stat-number accent2">2,002,516</div>
+        <div class="stat-label">test runs</div>
+      </div>
+      <div class="stat-cell" data-tippy="A submission triggers the private tests. Students typically submit once they believe their code is correct. Average: ~4 submissions per student across all questions.">
+        <div class="stat-number warn">55,142</div>
+        <div class="stat-label">submissions (private test runs)</div>
+      </div>
+    </div>
+    <div class="card-row" style="max-width:900px">
+      <div class="card" style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--accent);font-family:var(--mono)">~147</div>
+        <div class="dim" style="font-size:0.85rem">avg test runs per student</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--accent2);font-family:var(--mono)">35</div>
+        <div class="dim" style="font-size:0.85rem">exam sittings (namespaces)</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:1.8rem;font-weight:700;color:var(--pink);font-family:var(--mono)">162</div>
+        <div class="dim" style="font-size:0.85rem">unique questions</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ A4 · WHAT THE DATA SHOWS ══════════ -->
+<div class="slide bg-dark" data-section="A">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">A · Inside the Exam</div>
+    <h2 class="slide-title">Where attempts stop</h2>
+    <p class="dim" style="font-size:0.9rem;max-width:700px">Across all 151,778 student–question attempts, the biggest failure is <strong class="accent">not syntax</strong>.</p>
+    <div style="max-width:760px">
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Student wrote correct Python logic and all tests passed.">Full pass</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:46.83%;background:var(--accent2)"></div></div>
+        <div class="waterfall-pct accent2">46.8%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Code runs without errors but produces wrong answers. The largest single failure mode.">Genuine logic failure</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:26.72%;background:var(--accent3)"></div></div>
+        <div class="waterfall-pct accent3">26.7%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Core logic correct but fails on boundary cases like empty strings, '10D' cards, or leading spaces.">Edge-case gated</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:7.35%;background:var(--warn)"></div></div>
+        <div class="waterfall-pct warn">7.4%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Valid Python structure is visible but won't run due to syntax errors.">Syntax gated (mechanical)</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:7.14%;background:rgba(210,168,255,0.7)"></div></div>
+        <div class="waterfall-pct pink">7.1%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Student did not modify the skeleton template. Either skipped the question or ran out of time.">Unmodified skeleton</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:6.14%;background:var(--ink-dim)"></div></div>
+        <div class="waterfall-pct dim">6.1%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="Passed some but not all test groups. Usually a partial implementation.">Partial pass</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:3.21%;background:rgba(88,166,255,0.6)"></div></div>
+        <div class="waterfall-pct accent">3.2%</div>
+      </div>
+      <div class="waterfall-row">
+        <div class="waterfall-label" data-tippy="No valid Python structure at all — typically early-stage attempts.">Syntax gated (fundamental)</div>
+        <div class="waterfall-bar-wrap"><div class="waterfall-bar" style="width:2.36%;background:rgba(210,168,255,0.4)"></div></div>
+        <div class="waterfall-pct dim">2.4%</div>
+      </div>
+    </div>
+    <div class="highlight-box warn" style="max-width:760px;font-size:0.95rem">
+      Logic failure is <strong>2.8× larger</strong> than all syntax errors combined.
+      The teaching problem is <em>not</em> "teach them to write Python." It's "teach them to think."
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ B · TRANSITION ═══════════════════════ -->
+<div class="slide bg-title" data-section="B">
+  <div class="layout-center" style="gap:1.4rem">
+    <div class="section-label">B · How Students Answer</div>
+    <h2 class="slide-title" style="font-size:clamp(1.8rem,4vw,3rem);max-width:20ch">Every mistake is a mental model made visible.</h2>
+    <p class="lead" style="max-width:52ch">
+      Four questions. Three students each. The one who got it instantly. The one who struggled productively. The one who got stuck in an interesting way.
+    </p>
+    <p class="dim" style="font-size:0.9rem;max-width:48ch">You're not laughing at students. You're recognising past versions of yourself and every junior you've ever reviewed.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q1 INTRO ══════════════════════════ -->
+<div class="slide bg-green" data-section="B">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">B · Question 1 of 4</div>
+    <h2 class="slide-title">Card to Value Tuple</h2>
+    <h3 class="slide-sub italic">"Parsing by Shape, Not Contract"</h3>
+    <div class="card" style="max-width:720px;font-size:0.9rem">
+      <strong>The task:</strong> Given a card string like <code>'AH'</code> (Ace of Hearts), return a tuple
+      <code>(suit_value, rank_value)</code> — e.g. <code>(2, 1)</code>.
+      Suits: S=1, H=2, D=3, C=4. Ranks: A=1, 2–10=numeric, J=11, Q=12, K=13.
+    </div>
+    <div class="card-row cols-3" style="max-width:720px">
+      <div class="card" style="text-align:center">
+        <div style="font-family:var(--mono);font-size:1.3rem;color:var(--accent2)">'AH' → (2,1)</div>
+        <div class="dim" style="font-size:0.78rem;margin-top:0.3rem">Ace of Hearts</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div style="font-family:var(--mono);font-size:1.3rem;color:var(--accent2)">'QS' → (1,12)</div>
+        <div class="dim" style="font-size:0.78rem;margin-top:0.3rem">Queen of Spades</div>
+      </div>
+      <div class="card" style="border-color:rgba(247,129,102,0.4);text-align:center">
+        <div style="font-family:var(--mono);font-size:1.3rem;color:var(--accent3)">'10D' → (3,10)</div>
+        <div class="dim" style="font-size:0.78rem;margin-top:0.3rem">Ten of Diamonds ← the trap</div>
+      </div>
+    </div>
+    <div class="pill-row" style="max-width:720px">
+      <span class="badge badge-dim" data-tippy="Only 276 of 497 students made a scored submission. 17.8% full pass rate — the hardest of the four questions.">497 students · 17.8% full pass</span>
+      <span class="badge badge-blue">~12 test runs each</span>
+      <span class="badge badge-warn">2 public tests · 2 private tests</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q1 S1 · BASELINE ═════════════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.2rem;padding:3rem 4vw">
+      <div class="section-label">Question 1 · Student 1 — The Baseline</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">Ten seconds. Full marks.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot edit">✎</div>
+          <div class="tl-content"><strong>0s</strong> — writes solution immediately</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content"><strong>~10s</strong> — public 2/2 pass</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content"><strong>submit</strong> — private 2/2 pass · score 100</div>
+        </div>
+      </div>
+      <div class="quoteblock green-quote">"This student modelled the input as a variable-width string before touching the keyboard. Ten seconds, full marks. This is what it looks like when someone reads the contract before they read the examples."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">Key insight: <code>card[:-1]</code> = rank (handles 1 or 2 chars), <code>card[-1]</code> = suit.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <div class="dot" style="background:#ff5f56"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#27c93f"></div>
+          <span style="margin-left:0.5rem">card_to_value_tuple.py</span>
+          <span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">def card_to_value_tuple(card: str) -> tuple:
+    suit  = card[-1]      # last char: S, H, D, C
+    rank  = card[:-1]     # everything before: A, 2…K, 10
+
+    suit_val = suit_values[suit]
+    rank_val = (rank_values[rank]
+                if rank in rank_values
+                else int(rank))
+
+    return (suit_val, rank_val)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q1 S2 · PRODUCTIVE STRUGGLE ═══════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.2rem;padding:3rem 4vw">
+      <div class="section-label">Question 1 · Student 2 — The Productive Struggle</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">Everything right except the punctuation.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">writes <code>tuple(suit_val, rank_val)</code> — TypeError immediately</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">fixes to <code>(suit_val, rank_val)</code> — but order is reversed</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">~40s later — fixes order → full pass</div>
+        </div>
+      </div>
+      <div class="quoteblock" style="margin-top:0.5rem">"Everything is right except the punctuation."<br><br>Then: "Everything is right except left and right."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">
+        <code>tuple(a, b)</code> → <code>TypeError: tuple expected at most 1 argument, got 2</code>.<br>
+        Everyone who learned Python has been in a fight with a constructor at some point.
+      </div>
+    </div>
+    <div class="pane pane-code" style="display:flex;flex-direction:column;gap:0.8rem">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>Attempt 1</span><span class="badge badge-red" style="margin-left:auto">✗ TypeError</span>
+        </div>
+        <pre><code class="language-python">return tuple(suit_val, rank_val)
+# TypeError: tuple expected at most 1
+# argument, got 2</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>Attempt 2 — fixed syntax, wrong order</span><span class="badge badge-red" style="margin-left:auto">✗ Wrong Answer</span>
+        </div>
+        <pre><code class="language-python">return (rank_val, suit_val)
+# Returns (1, 2) for 'AH'
+# Expected (2, 1)  — left and right swapped</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>Attempt 3 — correct</span><span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">return (suit_val, rank_val)  # ✓</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q1 S3 · HIDDEN BOSS ═══════════════ -->
+<div class="slide bg-red" data-section="B">
+  <div class="layout-split">
+    <div class="pane" style="gap:1.2rem;padding:3rem 4vw;background:rgba(247,129,102,0.04)">
+      <div class="section-label">Question 1 · Student 3 — The Hidden Boss</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,2rem)">Public: 2/2 ✅<br>Private: 50 💥</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot edit">✎</div>
+          <div class="tl-content">uses <code>card[0]</code> for rank, <code>card[1]</code> for suit</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">public 2/2 — all examples are 2-char cards</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot part">½</div>
+          <div class="tl-content">submit — private score <strong>50</strong>. One group fails.</div>
+        </div>
+      </div>
+      <div style="font-size:3rem;font-weight:700;color:var(--accent3);font-family:var(--mono);margin:0.3rem 0">10D</div>
+      <div class="quoteblock" style="border-color:var(--accent3);background:rgba(247,129,102,0.06)">
+        "The only two-character card in the deck walks on stage like a hidden boss, and <code>10D</code> destroys the parser in one step."
+      </div>
+      <div class="highlight-box red" style="font-size:0.9rem;margin-top:0.3rem">
+        <strong>The visible examples are not the task.</strong><br>
+        Public tests show <code>'AH'</code>, <code>'7D'</code>, <code>'QS'</code>, <code>'9C'</code> — all single-digit ranks. <code>'10D'</code> is only in private tests.
+      </div>
+    </div>
+    <div class="pane pane-code" style="display:flex;flex-direction:column;gap:0.8rem">
+      <div class="code-wrap">
+        <div class="code-header">
+          <span>The shape-parser</span><span class="badge badge-warn" style="margin-left:auto">⚠ 50 on private</span>
+        </div>
+        <pre><code class="language-python">def card_to_value_tuple(card: str) -> tuple:
+    rank = card[0]   # ← assumes rank is always 1 char
+    suit = card[1]   # ← assumes suit is always index 1
+
+    suit_val = suit_values[suit]
+    rank_val = (rank_values[rank]
+                if rank in rank_values
+                else int(rank))
+    return (suit_val, rank_val)</code></pre>
+      </div>
+      <div class="card" style="font-size:0.88rem">
+        <strong>Works for:</strong> <code>'AH'</code> → rank='A', suit='H' ✓<br>
+        <strong>Breaks for:</strong> <code>'10D'</code> → rank='1', suit='0' ✗<br>
+        <div class="dim" style="margin-top:0.4rem">The student read the examples, inferred the shape, and wrote to the shape — not to the contract.</div>
+      </div>
+      <div class="card" style="font-size:0.88rem;border-color:rgba(63,185,80,0.3)">
+        <strong>Correct approach:</strong><br>
+        <code>rank = card[:-1]</code> &nbsp;# last char is always suit<br>
+        <code>suit = card[-1]</code> &nbsp;&nbsp;# everything else is rank
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q2 INTRO ══════════════════════════ -->
+<div class="slide bg-section" data-section="B">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">B · Question 2 of 4</div>
+    <h2 class="slide-title">Check for Greeting Prefix</h2>
+    <h3 class="slide-sub italic">"Negotiating With the Tests"</h3>
+    <div class="card" style="max-width:720px;font-size:0.9rem">
+      <strong>The task:</strong> Return <code>True</code> if a string starts with <code>'Hello '</code> or <code>'Hi '</code>
+      (with a trailing space). <code>'Hello there'</code> → <code>True</code>. <code>'Hello'</code> → <code>False</code>.
+    </div>
+    <div class="card-row cols-2" style="max-width:720px">
+      <div class="card">
+        <div style="font-size:0.78rem;color:var(--accent2);margin-bottom:0.3rem">Private test cases</div>
+        <div class="dim" style="font-size:0.82rem">Case 1: <code>'Hello'</code>/<code>'Hi'</code> without space → False</div>
+        <div class="dim" style="font-size:0.82rem">Case 2: <code>'Hello universe'</code> → True; leading-space → False</div>
+        <div class="dim" style="font-size:0.82rem">Case 3: <code>'Hi '</code> and <code>'Hello '</code> trailing-space edge</div>
+      </div>
+      <div class="card">
+        <div style="font-size:0.78rem;color:var(--accent3);margin-bottom:0.3rem">Most common failure</div>
+        <div style="font-weight:600;font-size:1rem">Missing trailing space</div>
+        <div class="dim" style="font-size:0.82rem">92 of 405 non-full submissions (22.7%)</div>
+        <div style="margin-top:0.4rem"><div class="score-bar"><div class="score-fill" style="width:22.7%;background:var(--accent3)"></div></div></div>
+      </div>
+    </div>
+    <div class="pill-row" style="max-width:720px">
+      <span class="badge badge-dim" data-tippy="982 scored submissions across the canonical variant ns_25t2_py22_1, problem 15.">982 students · 58.8% full pass</span>
+      <span class="badge badge-blue">~16 test runs each</span>
+      <span class="badge badge-warn">4 public tests · 3 private test groups</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q2 S1 · BASELINE ═════════════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.2rem;padding:3rem 4vw">
+      <div class="section-label">Question 2 · Student 1 — The Baseline</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">One second. Done.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot edit">✎</div>
+          <div class="tl-content">writes the solution — ~1 second</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">first checkpoint: private 3/3</div>
+        </div>
+      </div>
+      <div class="quoteblock green-quote">"The student read the sentence 'starts with Hello or Hi followed by a space' and wrote exactly that in Python. Nothing more. One second."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft);margin-top:0.4rem">The trailing space is part of the contract. A natural-language reader includes it. A pattern-matcher on examples might not notice it.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>starts_with_greeting.py</span>
+          <span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">def starts_with_greeting(s: str) -> bool:
+    return (s.startswith('Hello ')
+            or s.startswith('Hi '))
+    #                             ↑
+    #                   trailing space — critical!</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q2 · FUNNY 1 · JS ACCENT ═════════ -->
+<div class="slide bg-warn" data-section="B">
+  <div class="layout-split">
+    <div class="pane" style="gap:1.1rem;padding:3rem 4vw;background:rgba(227,179,65,0.04)">
+      <div class="section-label">Question 2 · Funny Moment 1 — JavaScript Accent</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">Python, spoken with a JavaScript accent.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">writes <code>startswith('Hello'|| 'Hi')</code> — SyntaxError</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">fixes to <code>startswith('Hello' or 'Hi')</code> — evaluates to <code>startswith('Hello')</code></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot part">½</div>
+          <div class="tl-content">still fails — misses <code>'Hi'</code> prefix entirely</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">eventually reaches the correct two-call solution</div>
+        </div>
+      </div>
+      <div class="quoteblock warn-quote">"The intent is perfect. The operator is from another universe."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">
+        <strong data-popup="popup-js-accent" style="cursor:pointer;color:var(--warn)">Student 60f6e5f27…</strong> (168 events, 110s).
+        "What this tells you: surface intent can be completely correct while language fluency is still catching up."
+      </div>
+    </div>
+    <div class="pane pane-code" style="display:flex;flex-direction:column;gap:0.8rem">
+      <div class="code-wrap">
+        <div class="code-header"><span>Stage 1: JS operator</span><span class="badge badge-red" style="margin-left:auto">SyntaxError</span></div>
+        <pre><code class="language-python">return s.startswith('Hello'|| 'Hi')
+#                          ^^
+#     JavaScript OR — not valid Python</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span>Stage 2: Python or</span><span class="badge badge-warn" style="margin-left:auto">⚠ Wrong</span></div>
+        <pre><code class="language-python">return s.startswith('Hello' or 'Hi')
+# 'Hello' or 'Hi' evaluates to 'Hello'
+# so this only checks for 'Hello' prefix!</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span>Final: correct</span><span class="badge badge-green" style="margin-left:auto">✓ 100</span></div>
+        <pre><code class="language-python">return (s.startswith('Hello ')
+        or s.startswith('Hi '))</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q2 · FUNNY 2 · NEGOTIATING ════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.1rem;padding:3rem 4vw">
+      <div class="section-label">Question 2 · Funny Moment 2 — Negotiating With the Grader</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">Treaty negotiations with the grader.</h2>
+      <div class="quoteblock" style="margin:0.3rem 0">"The student has entered treaty negotiations with the grader. One visible test case, one explicit patch. This is not debugging — this is diplomacy."</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">public tests pass with current logic</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot edit">✎</div>
+          <div class="tl-content">spots a failing case → hardcodes an exception</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">private still fails — other cases not covered</div>
+        </div>
+      </div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">The audience has definitely seen this in a pull request. The underlying rule is not understood — but the visible failing case is patched.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>Event 81 — the patch</span>
+          <span class="badge badge-warn" style="margin-left:auto">⚠ Partial</span>
+        </div>
+        <pre><code class="language-python">def starts_with_greeting(s: str) -> bool:
+    if s == 'Hithere':     # ← explicit exception
+        return False       #   for one failing case
+
+    if s.startswith('Hello') or s.startswith('Hi'):
+        return True
+    return False
+    # Missing: the trailing space in 'Hello '/'Hi '
+    # This hardcodes a fix for one symptom,
+    # not the underlying rule.</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q2 · FUNNY 3 · GRAVEYARD ══════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.1rem;padding:3rem 4vw">
+      <div class="section-label">Question 2 · Funny Moment 3 — Triple-Quoted Graveyard</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">The fix exists. It's just not allowed to run.</h2>
+      <div class="quoteblock">"The triple-quoted graveyard: the correct solution was buried alive while the wrong one inherited the execution runtime."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft);margin-top:0.4rem">
+        <strong data-popup="popup-graveyard" style="cursor:pointer;color:var(--accent)">Student 590240758…</strong>
+        uses <code>"""triple quotes"""</code> as ad-hoc version control.
+        The correct, boundary-aware code is present in the file — inside triple quotes. The wrong code runs.
+      </div>
+      <div class="highlight-box warn" style="font-size:0.88rem;margin-top:0.4rem">
+        <strong>Teaching moment:</strong> Students use triple-quoted strings as a comment/version-control mechanism. The "backup" is safe but dead. The "live" code is wrong.
+      </div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>590240758… — the graveyard</span>
+          <span class="badge badge-red" style="margin-left:auto">✗ Wrong Answer</span>
+        </div>
+        <pre><code class="language-python">def starts_with_greeting(s: str) -> bool:
+    # ← this runs and is wrong:
+    if s.startswith('Hello') or s.startswith('Hi'):
+        return True
+    return False
+
+"""
+← this is correct but dead:
+def starts_with_greeting(s: str) -> bool:
+    return (s.startswith('Hello ')
+            or s.startswith('Hi '))
+"""</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q3 INTRO ══════════════════════════ -->
+<div class="slide bg-section" data-section="B">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">B · Question 3 of 4</div>
+    <h2 class="slide-title">Shuffle a Three-Word Sentence</h2>
+    <h3 class="slide-sub italic">"Solving the Examples, Not the Problem"</h3>
+    <div class="card" style="max-width:720px;font-size:0.9rem">
+      <strong>The task:</strong> Given a 3-word sentence and a tuple <code>order</code>,
+      return the words reindexed by that order.<br>
+      <code>shuffle_sentence('apple banana orange', (0, 2, 1))</code> → <code>'apple orange banana'</code>
+    </div>
+    <div class="card-row cols-2" style="max-width:720px">
+      <div class="card">
+        <div style="font-size:0.78rem;color:var(--accent2);margin-bottom:0.3rem">Public examples only show</div>
+        <div class="dim" style="font-size:0.82rem"><code>(0,2,1)</code> · <code>(2,1,0)</code> · <code>(1,0,2)</code></div>
+        <div class="dim" style="font-size:0.82rem">All self-inverse permutations</div>
+      </div>
+      <div class="card" style="border-color:rgba(247,129,102,0.3)">
+        <div style="font-size:0.78rem;color:var(--accent3);margin-bottom:0.3rem">Private tests add</div>
+        <div class="dim" style="font-size:0.82rem"><code>(2,0,1)</code> · <code>(1,2,0)</code> · <code>(0,1,2)</code></div>
+        <div class="dim" style="font-size:0.82rem">Cyclic permutations — break hardcoders</div>
+      </div>
+    </div>
+    <div class="pill-row" style="max-width:720px">
+      <span class="badge badge-dim">518 students · 59.1% full pass</span>
+      <span class="badge badge-warn">3 public cases · 3 private groups</span>
+      <span class="badge badge-red" data-tippy="72 of 212 non-full submissions (34%) hardcoded public sample strings instead of using the order tuple.">34% hardcoded outputs</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q3 S1 · BASELINE ═════════════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.2rem;padding:3rem 4vw">
+      <div class="section-label">Question 3 · Student 1 — The Baseline</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">Three events. One second.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot edit">✎</div>
+          <div class="tl-content">splits sentence, reindexes by <code>order</code>, joins</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">public 3/3</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">submit → private 3/3 · score 100</div>
+        </div>
+      </div>
+      <div class="quoteblock green-quote">"The student treated <code>order</code> as data. One line. Full pass. The intended abstraction, visible in working memory."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft);margin-top:0.4rem">The key: they saw <code>order</code> as an instruction, not the examples as the answer.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>shuffle_sentence.py</span>
+          <span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">def shuffle_sentence(sentence: str,
+                     order: tuple) -> str:
+    words = sentence.split()
+    return ' '.join(words[i] for i in order)
+
+# order is treated as an index plan:
+# shuffle_sentence('apple banana orange', (0,2,1))
+# words = ['apple','banana','orange']
+# words[0]='apple', words[2]='orange', words[1]='banana'
+# → 'apple orange banana'  ✓</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q3 · FUNNY 4 · FRUIT SALAD ═══════ -->
+<div class="slide bg-warn" data-section="B">
+  <div class="layout-split">
+    <div class="pane" style="gap:1.1rem;padding:3rem 4vw;background:rgba(227,179,65,0.04)">
+      <div class="section-label">Question 3 · Funny Moment 4 — The Fruit Salad Function</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">This function is convinced that all sentence shuffling is secretly about one fruit salad.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">public 1/3 → hardcodes first case</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">public 2/3 → hardcodes second case</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">public 3/3 → hardcodes third case 🎉</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">submit → private <strong>0/3</strong> — every hidden case is a new sentence</div>
+        </div>
+      </div>
+      <div class="quoteblock warn-quote">"Overfitting in its purest, most innocent form. The student didn't learn the transformation rule. They learned the example."</div>
+      <div class="highlight-box warn" style="font-size:0.88rem;margin-top:0.2rem">
+        Second time: <strong>the visible tests are not the task.</strong>
+      </div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>Student 384851c6… — final submission</span>
+          <span class="badge badge-red" style="margin-left:auto">✗ 0 private</span>
+        </div>
+        <pre><code class="language-python">def shuffle_sentence(sentence: str,
+                     order: tuple) -> str:
+    if order == (0, 2, 1):
+        return 'apple orange banana'
+    elif order == (2, 1, 0):
+        return 'mouse dog cat'
+    elif order == (1, 0, 2):
+        return 'dog cat mouse'
+    # ← all three public examples, hardcoded
+
+# Private test: shuffle_sentence('quick brown fox', (2,0,1))
+# → expected 'fox quick brown'
+# → returned  None  (no matching branch)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q3 · FUNNY 5 · SIX BRANCHES ══════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.1rem;padding:3rem 4vw">
+      <div class="section-label">Question 3 · Funny Moment 5 — The Complete Universe</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">Brute force wins a small, perfectly legal victory over elegance.</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">public 3/3 — all cases covered</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">private 3/3 — because 6 branches cover all 3! permutations</div>
+        </div>
+      </div>
+      <div class="quoteblock">"The code is correct. The student has just decided that abstraction is optional when the universe is small enough to list."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft);margin-top:0.4rem">
+        <strong>What mental model does this reveal?</strong><br>
+        Some students reason by cases before they reason by data structure. That's not a bug — it's a stage.
+      </div>
+      <div class="highlight-box" style="font-size:0.88rem">Student 107337b2… — passes <em>everything</em>. Not wrong. Just uses a strategy that won't survive a 4th word.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>Student 107337b2… — all 6 permutations</span>
+          <span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">def shuffle_sentence(sentence: str,
+                     order: tuple) -> str:
+    w = sentence.split()
+    if order == (0, 1, 2): return f'{w[0]} {w[1]} {w[2]}'
+    if order == (0, 2, 1): return f'{w[0]} {w[2]} {w[1]}'
+    if order == (1, 0, 2): return f'{w[1]} {w[0]} {w[2]}'
+    if order == (1, 2, 0): return f'{w[1]} {w[2]} {w[0]}'
+    if order == (2, 0, 1): return f'{w[2]} {w[0]} {w[1]}'
+    if order == (2, 1, 0): return f'{w[2]} {w[1]} {w[0]}'
+# All 3! = 6 permutations explicitly enumerated.
+# Correct for n=3. Fails if n=4 (24 cases).
+# The universe is small enough to list here.</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q4 INTRO ══════════════════════════ -->
+<div class="slide bg-section" data-section="B">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">B · Question 4 of 4</div>
+    <h2 class="slide-title">Pangram Check</h2>
+    <h3 class="slide-sub italic">"Heuristics vs. Invariants"</h3>
+    <div class="card" style="max-width:720px;font-size:0.9rem">
+      <strong>The task:</strong> Return <code>True</code> if the input string is a pangram
+      (contains every letter of the alphabet at least once, case-insensitive).<br>
+      <code>'The quick brown fox jumps over the lazy dog'</code> → <code>True</code>
+    </div>
+    <div class="card-row cols-2" style="max-width:720px">
+      <div class="card" style="border-color:rgba(63,185,80,0.25)">
+        <div style="font-size:0.78rem;color:var(--accent2);margin-bottom:0.4rem">The invariant</div>
+        <div style="font-size:0.9rem"><code>set(text.lower())</code> must contain all 26 letters</div>
+        <div class="dim" style="font-size:0.82rem;margin-top:0.3rem">One expression. Checks the actual condition.</div>
+      </div>
+      <div class="card" style="border-color:rgba(247,129,102,0.3)">
+        <div style="font-size:0.78rem;color:var(--accent3);margin-bottom:0.4rem">The heuristic trap</div>
+        <div style="font-size:0.9rem"><code>len(letters) &gt;= 26</code></div>
+        <div class="dim" style="font-size:0.82rem;margin-top:0.3rem">A correlation, not a cause. Fails on <code>'aaa…a'</code> × 26.</div>
+      </div>
+    </div>
+    <div class="pill-row" style="max-width:720px">
+      <span class="badge badge-dim" data-tippy="1,331 students across both canonical variants ns_25t2_py21_1/16 and ns_25t2_py21_2/18. 666/1331 full pass (50.0%).">1,331 students · 50% full pass</span>
+      <span class="badge badge-blue">~19 test runs each</span>
+      <span class="badge badge-red" data-tippy="243 of 665 non-full submissions (36.5%) returned inside the alphabet-check loop — deciding after the first character.">36.5% loop-return bug</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q4 S1 · BASELINE ═════════════════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.2rem;padding:3rem 4vw">
+      <div class="section-label">Question 4 · Student 1 — The Baseline</div>
+      <h2 class="slide-title" style="font-size:clamp(1.2rem,2.5vw,1.8rem)">Zero seconds. Set subset check. Done.</h2>
+      <div class="quoteblock green-quote">"Build the alphabet as a set. Check if it's a subset of the lowercase input. That's it. The entire invariant in one expression."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft);margin-top:0.4rem">
+        The student saw the problem as a <em>membership coverage</em> question.
+        Sets make membership checks O(1). Subsets express "all 26 letters present" directly.
+      </div>
+      <div class="card" style="margin-top:0.3rem;font-size:0.85rem">
+        <div class="dim">Why <code>issubset</code> is the right tool:</div>
+        <div style="margin-top:0.3rem">Does every letter in the alphabet appear in the text?<br>= Is the alphabet set a subset of the text's letter set?</div>
+      </div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>is_pangram.py</span>
+          <span class="badge badge-green" style="margin-left:auto">✓ 100</span>
+        </div>
+        <pre><code class="language-python">def is_pangram(text: str) -> bool:
+    alphabet = set('abcdefghijklmnopqrstuvwxyz')
+    return alphabet.issubset(set(text.lower()))
+
+# Or equivalently:
+def is_pangram(text: str) -> bool:
+    return (set('abcdefghijklmnopqrstuvwxyz')
+            <= set(text.lower()))</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q4 · FUNNY 6 · FORGOT C ══════════ -->
+<div class="slide bg-warn" data-section="B">
+  <div class="layout-split">
+    <div class="pane" style="gap:1.1rem;padding:3rem 4vw;background:rgba(227,179,65,0.04)">
+      <div class="section-label">Question 4 · Funny Moment 6 — The Function That Forgot C</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">The checker that forgot to check itself.</h2>
+      <div style="font-family:var(--mono);font-size:clamp(1rem,2.5vw,1.8rem);color:var(--warn);background:rgba(227,179,65,0.08);padding:0.8rem 1rem;border-radius:8px;margin:0.3rem 0;letter-spacing:0.05em">
+        "abs<span style="color:var(--accent3);font-weight:700">_</span>efghijklmnopqrstuvwxyz"
+      </div>
+      <div class="quoteblock warn-quote">"The function whose entire job is to verify all 26 letters starts by forgetting one. Under cognitive load, even the checking mechanism needs to be checked."</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">The student wrote <code>"absdefghijklmnopqrstuvwxyz"</code> — skipping <strong>'c'</strong>.
+      Every string that contained 'c' would be incorrectly classified.</div>
+    </div>
+    <div class="pane pane-code">
+      <div class="code-wrap" style="height:100%">
+        <div class="code-header">
+          <span>is_pangram.py — spot the bug</span>
+          <span class="badge badge-warn" style="margin-left:auto">⚠ Missing 'c'</span>
+        </div>
+        <pre><code class="language-python">def is_pangram(text: str) -> bool:
+    letters = "absdefghijklmnopqrstuvwxyz"
+    #           ^ 'c' is gone — 'abs' not 'abc'
+
+    for ch in letters:
+        if ch not in text.lower():
+            return False
+    return True
+
+# 'The quick brown fox…' would pass
+# (it has 'c') — but logic is subtly broken:
+# the alphabet string itself has a typo.</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q4 · FUNNY 7 · COUNT >= 26 ═══════ -->
+<div class="slide bg-dark" data-section="B">
+  <div class="layout-split">
+    <div class="pane pane-dark" style="gap:1.1rem;padding:3rem 4vw">
+      <div class="section-label">Question 4 · Funny Moment 7 — A Pangram is 'Lots of Letters'</div>
+      <h2 class="slide-title" style="font-size:clamp(1.1rem,2.3vw,1.7rem)">Is 'aaaaaaaaaaaaaaaaaaaaaaaaaa' great literature?</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">early logic — filters non-letters, counts alpha chars</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot part">½</div>
+          <div class="tl-content">at event 61: <code>return count >= 26</code> — public all pass!</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot fail">✗</div>
+          <div class="tl-content">submit → private immediate fail</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pass">✓</div>
+          <div class="tl-content">switches to <code>set()</code> of unique letters → private 100</div>
+        </div>
+      </div>
+      <div class="quoteblock" style="margin:0.3rem 0">"The false summit is the moment you think you've solved it. The actual solution comes later, when you ask not 'does my code pass?' but 'what family of inputs would break it?'"</div>
+      <div style="font-size:0.85rem;color:var(--ink-soft)">Student <strong data-popup="popup-pangram" style="cursor:pointer;color:var(--accent)">2ee6740d…</strong> (107 events, 1:51 session). The heuristic-to-invariant journey.</div>
+    </div>
+    <div class="pane pane-code" style="display:flex;flex-direction:column;gap:0.8rem">
+      <div class="code-wrap">
+        <div class="code-header"><span>Event 61 — the heuristic</span><span class="badge badge-warn" style="margin-left:auto">⚠ Correlated, not causal</span></div>
+        <pre><code class="language-python">count = len([c for c in text if c.isalpha()])
+return count >= 26
+# 'aaa…a' × 26 → count=26 → True  ← wrong!
+# Correlation found. Causation missed.</code></pre>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><span>The fix — the invariant</span><span class="badge badge-green" style="margin-left:auto">✓ 100</span></div>
+        <pre><code class="language-python">unique_letters = set(c for c in text.lower()
+                     if c.isalpha())
+return len(unique_letters) == 26
+# Counts DISTINCT letters. That's the actual rule.</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ Q4 · THE REGRESSION ══════════════ -->
+<div class="slide bg-red" data-section="B">
+  <div class="layout-main" style="justify-content:center;gap:1.2rem">
+    <div class="section-label">Question 4 · The Regression — 107 Events, 1:51</div>
+    <h2 class="slide-title" style="max-width:20ch">Found the right answer. Then overwrote it.</h2>
+    <div style="max-width:820px;font-size:0.9rem;display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em">Session shape</div>
+        <div style="display:flex;gap:3px;align-items:flex-end;height:80px">
+          <div style="background:var(--accent2);width:12px;height:40px;border-radius:2px 2px 0 0" title="partial pass"></div>
+          <div style="background:var(--accent2);width:12px;height:55px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent2);width:12px;height:65px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--warn);width:12px;height:50px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--warn);width:12px;height:45px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent3);width:12px;height:30px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent3);width:12px;height:20px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent3);width:12px;height:10px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent2);width:12px;height:60px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent2);width:12px;height:75px;border-radius:2px 2px 0 0"></div>
+          <div style="background:var(--accent2);width:12px;height:80px;border-radius:2px 2px 0 0"></div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--ink-dim);margin-top:0.3rem">▲ green=pass / yellow=partial / red=fail</div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;color:var(--ink-soft);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.08em">What happened</div>
+        <div class="timeline" style="margin-top:0">
+          <div class="tl-item">
+            <div class="tl-dot part">½</div>
+            <div class="tl-content" style="font-size:0.85rem">Partial solution — passes some</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot part">½</div>
+            <div class="tl-content" style="font-size:0.85rem">Working partial overwritten chasing private tests</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot fail">✗</div>
+            <div class="tl-content" style="font-size:0.85rem">Worse than start — prior progress destroyed</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pass">✓</div>
+            <div class="tl-content" style="font-size:0.85rem">Found invariant near end — recovers to 100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quoteblock" style="max-width:820px">"This student found the right invariant near the end. But they had overwritten a working partial solution multiple times getting there. The lesson isn't about the code — it's about save points."</div>
+    <div class="highlight-box warn" style="max-width:820px;font-size:0.9rem">
+      45.49% of students who end with non-parseable code had parseable code <em>earlier</em>.
+      Regression is a <strong>process</strong> problem, not a knowledge problem.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PATTERNS · THE FOUR ══════════════ -->
+<div class="slide bg-dark" data-section="C">
+  <div class="layout-main" style="justify-content:center;gap:1.4rem">
+    <div class="section-label">The Pattern</div>
+    <h2 class="slide-title">The four mental models</h2>
+    <div class="matrix-2x2" style="max-width:900px;max-height:420px">
+      <div class="matrix-cell" style="border-bottom:1px solid var(--line);border-right:1px solid var(--line)">
+        <div class="badge badge-warn" style="width:fit-content">1. Example Memorizer</div>
+        <h4>Solves the visible world, not the rule</h4>
+        <p>Learns the training data, not the transformation. Passes public tests by hardcoding.</p>
+        <code>if order == (0,2,1): return 'apple orange banana'</code>
+      </div>
+      <div class="matrix-cell" style="border-bottom:1px solid var(--line)">
+        <div class="badge badge-red" style="width:fit-content">2. Heuristic Guesser</div>
+        <h4>Finds a correlated shortcut instead of the invariant</h4>
+        <p>Spots a feature that <em>correlates</em> with the answer. Public tests agree. Hidden tests don't.</p>
+        <code>return count >= 26</code>
+      </div>
+      <div class="matrix-cell" style="border-right:1px solid var(--line)">
+        <div class="badge badge-blue" style="width:fit-content">3. Contract Misreader</div>
+        <h4>Computes the right thing, returns the wrong structure</h4>
+        <p>Intent is correct. Language fluency, data structure, or spec reading is off.</p>
+        <code>tuple(a, b) · reversed order · no trailing space</code>
+      </div>
+      <div class="matrix-cell">
+        <div class="badge badge-pink" style="width:fit-content">4. Regressor</div>
+        <h4>Ends worse than they started</h4>
+        <p>Overwrites a working partial solution while chasing the hidden test. A process failure, not a knowledge gap.</p>
+        <code>107 events · ends at 0 · had 50 earlier</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ PATTERNS · NAMING ════════════════ -->
+<div class="slide bg-section" data-section="C">
+  <div class="layout-main" style="justify-content:center;gap:1.4rem">
+    <div class="section-label">The Pattern</div>
+    <h2 class="slide-title">These aren't Python bugs.</h2>
+    <h3 class="slide-sub">They're epistemological strategies.</h3>
+    <div class="quoteblock" style="max-width:800px;font-size:clamp(1rem,1.8vw,1.25rem)">"Each one is rational given what the student knows. Your job — whether you're a teacher or a tech lead — is to recognize which strategy is running and name it."</div>
+    <div class="card" style="max-width:800px">
+      <div style="font-size:1rem;line-height:1.7">
+        "The junior dev who writes an if/elif for every case <span class="accent">isn't lazy. They're listing the universe.</span><br>
+        The pull request that adds <code>if input == 'test_case_3'</code> <span class="warn">isn't cheating — it's negotiating with the grader.</span><br>
+        You've seen all of these. Now you have words for them."
+      </div>
+    </div>
+    <div class="card-row cols-3" style="max-width:800px;font-size:0.85rem">
+      <div class="card">
+        <div style="font-weight:600;color:var(--accent2);margin-bottom:0.3rem">For test design</div>
+        <div class="dim">If public examples only show single-character cards, you've invited the two-character-parser bug. Anti-hardcoding sentinels don't need to be aggressive — they just need to exist.</div>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;color:var(--accent);margin-bottom:0.3rem">For code review</div>
+        <div class="dim">When you see a cascade of explicit cases, ask what abstraction the author hasn't seen yet before asking them to rewrite it.</div>
+      </div>
+      <div class="card">
+        <div style="font-weight:600;color:var(--pink);margin-bottom:0.3rem">For debugging</div>
+        <div class="dim">The triple-quoted graveyard is in every codebase. The heuristic that passes staging and fails production is a <code>count >= 26</code> story.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ CLOSING ══════════════════════════ -->
+<div class="slide bg-title" data-section="C">
+  <div class="layout-center" style="gap:1.6rem">
+    <div class="section-label">Closing</div>
+    <div class="quoteblock" style="max-width:680px;font-size:clamp(1.1rem,2.2vw,1.5rem);text-align:left;border-color:var(--accent2)">
+      "The gap between the public tests and the private tests is the gap between the world we can see and the world that actually runs.
+      <br><br>
+      Learning Python — learning anything — is mostly about learning to ask: <em>what's on the other side of the tests I can't see yet?</em>"
+    </div>
+    <div style="margin-top:0.5rem;font-size:0.88rem;color:var(--ink-soft)">
+      <div>Anand S · LLM Psychologist · Straive</div>
+      <div style="margin-top:0.3rem">
+        <a href="https://sanand0.github.io/talks/2026-03-14-how-students-learn-python/" style="color:var(--accent);font-family:var(--mono);font-size:0.82rem;text-decoration:none;border-bottom:1px solid rgba(88,166,255,0.4)">sanand0.github.io/talks/2026-03-14-how-students-learn-python</a>
+      </div>
+      <div style="margin-top:0.5rem;display:flex;gap:0.6rem;justify-content:center">
+        <span class="badge badge-dim">13,623 students</span>
+        <span class="badge badge-dim">2M test runs</span>
+        <span class="badge badge-dim">4 questions</span>
+        <span class="badge badge-dim">∞ mental models</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#deck -->
+
+<!-- ══════════════════════════════════════════════════════════
+     POPUPS
+═══════════════════════════════════════════════════════════ -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <div class="modal-header">
+      <h4 id="modal-title">Details</h4>
+      <button class="modal-close" id="modal-close-btn">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- popup content templates (hidden) -->
+<div id="popup-data" style="display:none">
+
+<div id="popup-pairs">
+  <h5>Student–Question Attempt Breakdown</h5>
+  <table class="modal-table">
+    <tr><th>Namespace group</th><th class="num">Attempts</th><th class="num">Students</th></tr>
+    <tr><td>25t1 (Term 1, 2025)</td><td class="num">~57,000</td><td class="num">~6,600</td></tr>
+    <tr><td>25t2 (Term 2, 2025)</td><td class="num">~52,000</td><td class="num">~5,200</td></tr>
+    <tr><td>25t3 (Term 3, 2025)</td><td class="num">~43,000</td><td class="num">~5,100</td></tr>
+  </table>
+  <p>Each row is a unique (Namespace, ProblemID, StudentID) triple. A student who appears in multiple terms contributes one row per term per question.</p>
+  <p>Source: <span class="modal-tag">analysis/final_scores.csv</span> — 151,778 rows.</p>
+</div>
+
+<div id="popup-js-accent">
+  <h5>Student 60f6e5f27… — Greeting Prefix Thrasher</h5>
+  <p><strong>Archetype:</strong> Thrasher · <strong>Outcome:</strong> Full pass (168 events, 110s)</p>
+  <p>This student began with JavaScript syntax (<code>||</code> operator), then discovered Python's <code>or</code> but applied it incorrectly inside <code>startswith()</code>, then eventually reached the correct two-call pattern. Each transition shows a clear mental model shift.</p>
+  <table class="modal-table">
+    <tr><th>Stage</th><th>Code</th><th>Result</th></tr>
+    <tr><td>1</td><td><code>startswith('Hello'|| 'Hi')</code></td><td>SyntaxError</td></tr>
+    <tr><td>2</td><td><code>startswith('Hello' or 'Hi')</code></td><td>Wrong (only 'Hello')</td></tr>
+    <tr><td>3</td><td>Separate <code>startswith</code> calls</td><td>Partial (no trailing space)</td></tr>
+    <tr><td>4</td><td><code>startswith('Hello ') or startswith('Hi ')</code></td><td>✓ 100</td></tr>
+  </table>
+  <p>Source: <span class="modal-tag">analysis/replay-ns_25t2_py22_1-15-60f6e5f27899406ea16a5470210db8d1.json</span></p>
+</div>
+
+<div id="popup-graveyard">
+  <h5>Student 590240758… — Triple-Quoted Graveyard</h5>
+  <p>This student developed the correct trailing-space solution and placed it inside a triple-quoted string (effectively commenting it out) while leaving the incorrect no-space version as the live code.</p>
+  <p>This pattern — using <code>"""..."""</code> as ad-hoc version control — appears throughout the dataset. Students preserve previous attempts this way rather than deleting them or using the save history.</p>
+  <table class="modal-table">
+    <tr><th>Location</th><th>Code</th><th>Status</th></tr>
+    <tr><td>Live (runs)</td><td><code>startswith('Hello') or startswith('Hi')</code></td><td>❌ wrong</td></tr>
+    <tr><td>Triple-quoted (dead)</td><td><code>startswith('Hello ') or startswith('Hi ')</code></td><td>✓ correct but unreachable</td></tr>
+  </table>
+  <p>Source: <span class="modal-tag">ns_25t2_py22_1/15</span> · student 590240758…</p>
+</div>
+
+<div id="popup-pangram">
+  <h5>Student 2ee6740d… — Pangram Public Pass, Private Miss</h5>
+  <p><strong>Archetype:</strong> Volatile reworker · <strong>Events:</strong> 107 · <strong>Session:</strong> 1:51</p>
+  <p>This student's replay is at <span class="modal-tag">analysis/replay-ns_25t2_py21_2-18-2ee6740d56614ebbb3e68f6fe2992f28.json</span>. The arc follows the classic "public summit, private cliff" structure.</p>
+  <table class="modal-table">
+    <tr><th>Event</th><th>Milestone</th><th>Score</th></tr>
+    <tr><td>1–27</td><td>Long stretch around partial public correctness</td><td>Partial</td></tr>
+    <tr><td>61</td><td><code>return count >= 26</code> — all public pass!</td><td>Public 100</td></tr>
+    <tr><td>62</td><td>Submit — private tests expose heuristic</td><td>Private fail</td></tr>
+    <tr><td>81</td><td>Back to partial public after edits</td><td>Partial</td></tr>
+    <tr><td>103</td><td>Switches to set-unique-letters → private 100</td><td>✓ 100</td></tr>
+  </table>
+  <p>The journey from heuristic (<code>count >= 26</code>) to invariant (<code>set of unique letters == 26</code>) is the clearest illustration of "correlation vs. causation" in the entire dataset.</p>
+</div>
+
+</div><!-- /#popup-data -->
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script>
+// ── slide navigation ───────────────────────────────────────
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0;
+
+function goTo(n) {
+  slides[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(slides.length - 1, n));
+  slides[cur].classList.add('active');
+  document.getElementById('counter').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('progress').style.width = `${(cur + 1) / slides.length * 100}%`;
+  hljs.highlightAll();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(cur + 1);
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(cur - 1);
+  else if (e.key === 'Escape') closeModal();
+});
+
+document.getElementById('deck').addEventListener('click', e => {
+  if (e.target.closest('[data-popup]') || e.target.closest('.modal-close') || e.target.closest('#modal-overlay')) return;
+  goTo(cur + 1);
+});
+
+document.getElementById('btn-prev').addEventListener('click', e => { e.stopPropagation(); goTo(cur - 1); });
+document.getElementById('btn-next').addEventListener('click', e => { e.stopPropagation(); goTo(cur + 1); });
+
+// ── tooltips ───────────────────────────────────────────────
+tippy('[data-tippy]', {
+  content: el => el.dataset.tippy,
+  theme: 'light-border',
+  placement: 'top',
+  arrow: true,
+  delay: [100, 0],
+  maxWidth: 280,
+});
+
+// ── popups ─────────────────────────────────────────────────
+function openModal(title, bodyHtml) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = bodyHtml;
+  document.getElementById('modal-overlay').classList.add('open');
+  hljs.highlightAll();
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-popup]');
+  if (!el) return;
+  e.stopPropagation();
+  const popupId = el.dataset.popup;
+  const popupEl = document.getElementById(popupId);
+  if (popupEl) {
+    openModal(el.textContent.trim(), popupEl.innerHTML);
+  }
+});
+
+// ── init ───────────────────────────────────────────────────
+goTo(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Students Learn Python — PyConf Hyderabad 2026</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/theme/black.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css">
+<style>
+/* ─── Base overrides ──────────────────────────────────────────────────── */
+:root {
+  --bg:      #0d1117;
+  --bg2:     #161b22;
+  --border:  #30363d;
+  --blue:    #58a6ff;
+  --green:   #3fb950;
+  --red:     #f85149;
+  --orange:  #e3b341;
+  --text:    #e6edf3;
+  --muted:   #8b949e;
+  --code-bg: #161b22;
+}
+.reveal-viewport { background: var(--bg); }
+.reveal { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.reveal .slides section { height: 100%; box-sizing: border-box; }
+
+/* Headings */
+.reveal h1 { font-size: 3.8rem; color: var(--blue); font-weight: 700; line-height: 1.1; }
+.reveal h2 { font-size: 2.8rem; color: var(--blue); font-weight: 600; margin-bottom: 0.6em; }
+.reveal h3 { font-size: 2.2rem; color: #cdd9e5; font-weight: 600; }
+.reveal p, .reveal li { font-size: 1.7rem; color: var(--text); line-height: 1.5; }
+
+/* Code */
+.reveal pre { margin: 0.4em auto; border-radius: 0.5em; background: var(--code-bg) !important;
+              border: 1px solid var(--border); box-shadow: none; width: auto; }
+.reveal pre code { font-size: 1.4rem !important; line-height: 1.55 !important;
+                   padding: 1em 1.2em !important; }
+.reveal code:not(pre code) { background: #2d333b; padding: 0.1em 0.4em;
+                              border-radius: 0.3em; color: #79c0ff; font-size: 0.9em; }
+
+/* Score badges */
+.badge { display: inline-block; padding: 0.25em 0.9em; border-radius: 2em;
+         font-weight: 700; font-size: 1.4rem; margin: 0.2em 0.4em; }
+.pass  { background: #1a4a1e; color: #3fb950; border: 2px solid #3fb950; }
+.fail  { background: #4a1a1a; color: #f85149; border: 2px solid #f85149; }
+.partial { background: #4a3a1a; color: #e3b341; border: 2px solid #e3b341; }
+
+/* Section title slides */
+.section-card { display: flex; flex-direction: column; justify-content: center;
+                align-items: center; height: 100%; text-align: center; }
+.section-card .letter { font-size: 8rem; color: var(--blue); opacity: 0.15;
+                         font-weight: 900; line-height: 1; margin-bottom: -0.2em; }
+.section-card h1 { font-size: 4.5rem; }
+.section-card p  { font-size: 2rem; color: var(--muted); margin-top: 0.5em; }
+
+/* Two-column layout */
+.cols { display: grid; gap: 2rem; }
+.cols-2 { grid-template-columns: 1fr 1fr; }
+.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* Stats grid */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 1rem 0; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 0.8rem;
+             padding: 1.2rem; text-align: center; }
+.stat-card .num { font-size: 3rem; font-weight: 700; color: var(--blue); line-height: 1.1; }
+.stat-card .label { font-size: 1.2rem; color: var(--muted); margin-top: 0.3em; }
+
+/* Box panels */
+.panel { background: var(--bg2); border: 2px solid var(--border); border-radius: 0.8rem;
+         padding: 1.2rem 1.5rem; }
+.panel.green { border-color: var(--green); background: #1a4a1e22; }
+.panel.red   { border-color: var(--red);   background: #4a1a1a22; }
+.panel.blue  { border-color: var(--blue);  background: #1a2a4a22; }
+
+/* Highlight changed code lines */
+.reveal pre mark { background: #3d3300; color: inherit; display: block;
+                   margin: 0 -1.2em; padding: 0 1.2em; border-left: 3px solid var(--orange); }
+.reveal pre .del { background: #3d0000; color: #f85149; display: block;
+                   margin: 0 -1.2em; padding: 0 1.2em; opacity: 0.8; }
+.reveal pre .dim { opacity: 0.45; }
+
+/* Quote block */
+blockquote { border-left: 4px solid var(--blue); padding: 0.4em 1.2em;
+             background: #1a2a4a22; border-radius: 0 0.5em 0.5em 0; margin: 0.8em 0; }
+blockquote p { font-size: 1.7rem; color: #cdd9e5; font-style: italic; }
+
+/* Giant card */
+.giant-card { font-size: 8rem; font-weight: 900; color: var(--orange); 
+              font-family: monospace; text-shadow: 0 0 40px #e3b34155; }
+
+/* Mental model grid */
+.model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.model-item { background: var(--bg2); border: 1px solid var(--border); border-radius: 0.8rem;
+              padding: 1rem 1.2rem; }
+.model-item h3 { color: var(--orange); font-size: 1.6rem; margin: 0 0 0.3em; }
+.model-item p  { font-size: 1.3rem; color: var(--muted); margin: 0; }
+.model-item code { font-size: 1.1rem; }
+
+/* Closing slide */
+.closing { display: flex; flex-direction: column; justify-content: center; align-items: center;
+           height: 100%; text-align: center; padding: 2rem; }
+.closing p { font-size: 2.2rem; color: var(--text); max-width: 1400px; line-height: 1.6; }
+.closing em { color: var(--blue); font-style: normal; font-weight: 600; }
+
+/* Meta info */
+.meta { font-size: 1.2rem; color: var(--muted); }
+.timestamp { font-size: 1.1rem; color: var(--muted); font-family: monospace; }
+
+/* Q intro boxes */
+.q-intro { background: var(--bg2); border: 1px solid var(--border); border-radius: 0.8em;
+           padding: 1.2em 1.5em; margin: 0.6em 0; }
+.q-intro .fn-sig { color: #79c0ff; font-family: monospace; font-size: 1.5rem; }
+.q-intro .arrow  { color: var(--green); }
+.q-intro .rule   { color: var(--muted); font-size: 1.2rem; margin-top: 0.5em; }
+
+/* Fragment animation override */
+.reveal .fragment { opacity: 0; transition: opacity 0.3s; }
+.reveal .fragment.visible { opacity: 1; }
+
+/* Prism override */
+.token.comment { color: #8b949e !important; }
+
+/* Full quote slide */
+.full-quote { display: flex; flex-direction: column; justify-content: center;
+              align-items: center; height: 100%; }
+.full-quote p { font-size: 2rem; color: var(--text); text-align: center;
+                max-width: 1500px; line-height: 1.65; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 1 — Title
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;text-align:center;padding:2rem;">
+    <p style="color:var(--muted);font-size:1.4rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5em;">PyConf Hyderabad · 14 March 2026</p>
+    <h1 style="font-size:4.5rem;margin-bottom:0.3em;">How Students Learn Python</h1>
+    <p style="font-size:2rem;color:#cdd9e5;margin-bottom:2rem;">A Data-Driven Look at 13,623 Exam Sessions</p>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:0.8em;padding:1em 2em;">
+      <p style="font-size:1.5rem;margin:0;color:var(--text);">Anand S &nbsp;·&nbsp; LLM Psychologist @ Straive</p>
+    </div>
+    <p style="font-size:1.1rem;color:var(--muted);margin-top:1.5em;">sanand0.github.io/talks/2026-03-14-how-students-learn-python/</p>
+  </div>
+  <aside class="notes">Welcome. This talk is about what 13,000 students taught me when they wrote Python under exam conditions.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 2 — Section A
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="section-card">
+    <div class="letter">A</div>
+    <h1>Inside the Exam</h1>
+    <p>Setting the stage</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 3 — What Is OPPE?
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Online Proctored Programming Exam</h2>
+  <div class="cols cols-3" style="margin-top:1.5rem;">
+    <div class="panel">
+      <h3 style="color:var(--blue);font-size:1.8rem;">📝 Write Code</h3>
+      <p style="font-size:1.4rem;">Students write Python functions in a browser IDE — no IDE plugins, no autocomplete</p>
+    </div>
+    <div class="panel green">
+      <h3 style="color:var(--green);font-size:1.8rem;">🟢 Test Anytime</h3>
+      <p style="font-size:1.4rem;">Click <strong>Run</strong> to check against public test cases — results shown immediately</p>
+    </div>
+    <div class="panel red">
+      <h3 style="color:var(--red);font-size:1.8rem;">🔴 Submit Once</h3>
+      <p style="font-size:1.4rem;">Click <strong>Submit</strong> to run private test cases — hidden until that moment</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:1.5rem;">
+    <p>Every keystroke is saved. Every test run and submission — timestamped.</p>
+  </blockquote>
+  <aside class="notes">The OPPE is a special exam format used at IIT Madras for programming courses. Unlike traditional exams, we can replay the entire session.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 4 — The Dataset
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>What We're Working With</h2>
+  <div class="stat-grid" style="margin-top:1.5rem;">
+    <div class="stat-card">
+      <div class="num">13,623</div>
+      <div class="label">Students</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">2.05M</div>
+      <div class="label">Events captured</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">2.0M</div>
+      <div class="label">Test runs</div>
+    </div>
+    <div class="stat-card">
+      <div class="num">55,142</div>
+      <div class="label">Submissions</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--green);">57.6%</div>
+      <div class="label">Full pass rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" style="color:var(--red);">30.5%</div>
+      <div class="label">Zero score</div>
+    </div>
+  </div>
+  <aside class="notes">Three terms of the IITM BSc Data Science programme. Every save, test run, submission.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 5 — Two Test Tiers
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Two Test Tiers</h2>
+  <div class="cols cols-2" style="margin-top:1.5rem;gap:3rem;">
+    <div class="panel green" style="padding:2rem;">
+      <h3 style="color:var(--green);font-size:2rem;">🟢 Public Tests</h3>
+      <ul style="font-size:1.5rem;line-height:2;">
+        <li>Run anytime during the exam</li>
+        <li>Results shown immediately</li>
+        <li>Derived from problem examples</li>
+        <li>Students can see what failed</li>
+      </ul>
+    </div>
+    <div class="panel red" style="padding:2rem;">
+      <h3 style="color:var(--red);font-size:2rem;">🔴 Private Tests</h3>
+      <ul style="font-size:1.5rem;line-height:2;">
+        <li>Run only on submission</li>
+        <li>Hidden until that moment</li>
+        <li>Edge cases, boundary inputs</li>
+        <li>The actual grade</li>
+      </ul>
+    </div>
+  </div>
+  <blockquote style="margin-top:1.5rem;">
+    <p>The gap between public and private tests is where learning happens.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 6 — Section B
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="section-card">
+    <div class="letter">B</div>
+    <h1>How Students Answer</h1>
+    <p style="font-size:1.8rem;font-style:italic;color:#cdd9e5;">Every mistake is a mental model made visible.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 7 — Q1 Intro
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2 style="font-size:2.4rem;">Question 1: Card to Value Tuple</h2>
+  <p style="font-size:1.4rem;color:var(--muted);margin:0.3em 0 1em;">Parsing by Shape, Not Contract</p>
+  <div class="q-intro">
+    <div class="fn-sig">card_to_value_tuple(<span style="color:#ffa657;">'AH'</span>) <span class="arrow">→</span> <span style="color:#e3b341;">(2, 1)</span> &nbsp; <span style="color:var(--muted);"># suit H=2, rank A=1</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">card_to_value_tuple(<span style="color:#ffa657;">'7D'</span>) <span class="arrow">→</span> <span style="color:#e3b341;">(3, 7)</span> &nbsp; <span style="color:var(--muted);"># suit D=3, rank 7=7</span></div>
+    <div class="rule">Private tests include: <code>10H → (2, 10)</code> &nbsp;·&nbsp; <code>AC → (4, 1)</code></div>
+  </div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:0.5em;padding:0.8em 1.2em;margin-top:1rem;">
+    <p style="font-size:1.35rem;color:var(--muted);margin:0;">
+      <strong style="color:var(--text);">Suits:</strong> S=1, H=2, D=3, C=4 &nbsp;&nbsp;
+      <strong style="color:var(--text);">Ranks:</strong> A=1, 2–10=number, J=11, Q=12, K=13
+    </p>
+  </div>
+  <aside class="notes">This question has one beautiful trap. The public examples are all 2-character cards. But 10D is 3 characters.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 8 — Q1 Baseline
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 1 — The Baseline</h2>
+  <div class="cols cols-2" style="margin-top:1rem;align-items:start;gap:2.5rem;">
+    <div>
+      <pre><code class="language-python">suit = card[-1]
+rank = card[:-1]
+
+suit_val = suit_values[suit]
+if rank in rank_values:
+    rank_val = rank_values[rank]
+else:
+    rank_val = int(rank)
+
+return (suit_val, rank_val)</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge pass">Public 2/2 ✓</span>
+        <span class="badge pass">Private 2/2 ✓</span>
+      </div>
+      <div class="panel" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;color:var(--muted);margin:0;" class="timestamp">t = 6 seconds · No edits</p>
+      </div>
+      <blockquote>
+        <p style="font-size:1.4rem;">This student modelled the input as a variable-width string before touching the keyboard. <code>card[-1]</code> is always the suit. <code>card[:-1]</code> is always the rank.</p>
+      </blockquote>
+    </div>
+  </div>
+  <aside class="notes">Ten seconds, full marks. This is what it looks like when someone reads the contract before they read the examples.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 9 — Q1 Struggle Step 1
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — The Productive Struggle</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2.5rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">rank, suit = card        # unpacking a string
+
+if rank in rank_values:
+    r = rank_values[rank]
+else:
+    r = rank
+if suit in suit_values:
+    s = suit_values[suit]
+else:
+    s = suit
+
+return tuple(s, r)       # ← TypeError!</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge fail">Public 0/2 ✗</span>
+        <span class="timestamp">t = 193s</span>
+      </div>
+      <div class="panel red" style="padding:1em;">
+        <p style="font-size:1.5rem;color:var(--red);margin:0;font-weight:700;">TypeError: tuple expected at most 1 argument, got 2</p>
+      </div>
+      <blockquote>
+        <p style="font-size:1.4rem;">Everything is right except the punctuation.</p>
+      </blockquote>
+    </div>
+  </div>
+  <aside class="notes">The student had the right idea — get both values and return them. But tuple(a, b) isn't how you make a tuple from two values. Everyone has done this.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 10 — Q1 Struggle Step 2 (fixes tuple, passes public)
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — One Fix, One Remaining Bug</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2.5rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">rank, suit = card
+
+if rank in rank_values:
+    r = rank_values[rank]
+else:
+    r = rank
+if suit in suit_values:
+    s = suit_values[suit]
+else:
+    s = suit
+
+return (s, int(r))      # ← fixed!</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge pass">Public 2/2 ✓</span>
+        <span class="timestamp">t = 246s</span>
+      </div>
+      <div class="panel" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;color:var(--muted);margin:0;">53 seconds to fix the tuple bug and pass public tests</p>
+      </div>
+      <div class="panel red" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;color:var(--orange);margin:0;">⚠ But what happens when card = <strong>'10H'</strong>?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 11 — Q1 10D Hidden Boss
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>The Hidden Boss</h2>
+  <div style="text-align:center;margin:0.5rem 0;">
+    <span class="giant-card">10D</span>
+  </div>
+  <div class="cols cols-3" style="margin-top:1rem;gap:1rem;">
+    <div class="panel green" style="text-align:center;padding:0.8em;">
+      <p style="font-size:1.4rem;margin:0;"><code>'AH'</code> → rank=<code>'A'</code>, suit=<code>'H'</code> ✓</p>
+    </div>
+    <div class="panel green" style="text-align:center;padding:0.8em;">
+      <p style="font-size:1.4rem;margin:0;"><code>'7D'</code> → rank=<code>'7'</code>, suit=<code>'D'</code> ✓</p>
+    </div>
+    <div class="panel red" style="text-align:center;padding:0.8em;">
+      <p style="font-size:1.4rem;margin:0;"><code>'10H'</code> → <strong>ValueError: too many values</strong> 💥</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <span class="badge fail">Private 1/2 ✗ — score 50</span>
+  </div>
+  <blockquote style="margin-top:1rem;">
+    <p>The only two-digit rank in the deck walks on stage like a hidden boss, and <code>rank, suit = card</code> dies in one step.</p>
+  </blockquote>
+  <aside class="notes">This is the conceptual anchor for the whole talk: the visible examples are not the task.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 12 — Q1 card[0]/card[1] Student
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 3 — Parsing by Index</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2.5rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">i = 2
+while i <= 10:
+    rank_values[str(i)] = i
+    i += 1
+
+result = (suit_values[card[1]],
+          rank_values[card[0]])
+return result</code></pre>
+      <div style="margin-top:0.8rem;font-size:1.3rem;color:var(--muted);">
+        <code>card[0]</code> = rank &nbsp;·&nbsp; <code>card[1]</code> = suit
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge pass">Public 2/2 ✓</span>
+        <span class="badge fail">Private 1/2 ✗</span>
+      </div>
+      <div class="panel" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;color:var(--muted);margin:0;" class="timestamp">711 seconds of work</p>
+      </div>
+      <div class="panel red" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;margin:0;">For <code>'10D'</code>: <code>card[0]</code>=<code>'1'</code>, <code>card[1]</code>=<code>'0'</code><br>
+        <span style="color:var(--red);">KeyError — neither is in rank_values</span></p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">This student built up the rank_values dict with a while loop — clever! But card[0]/card[1] indexing assumes the card is always exactly 2 characters.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 13 — Q1 Transition
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="full-quote">
+    <p style="font-size:3rem;font-weight:700;color:var(--orange);">The Visible Examples Are Not The Task.</p>
+    <p style="font-size:2rem;margin-top:1.5rem;">Public tests show <code>AH</code> and <code>7D</code>.<br>Neither has a two-digit rank. The hidden test needed just one.</p>
+    <p style="font-size:1.7rem;margin-top:2rem;color:var(--muted);">That gap between public and private tests — let's see it again, on a harder question.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 14 — Q2 Intro
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2 style="font-size:2.4rem;">Question 2: Check for Greeting Prefix</h2>
+  <p style="font-size:1.4rem;color:var(--muted);margin:0.3em 0 1em;">Negotiating With the Tests</p>
+  <div class="q-intro">
+    <div class="fn-sig">starts_with_greeting(<span style="color:#ffa657;">'Hello world'</span>) <span class="arrow">→</span> <span style="color:var(--green);">True</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">starts_with_greeting(<span style="color:#ffa657;">'Hi there'</span>) <span class="arrow">→</span> <span style="color:var(--green);">True</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">starts_with_greeting(<span style="color:#ffa657;">'Goodbye'</span>) <span class="arrow">→</span> <span style="color:var(--red);">False</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">starts_with_greeting(<span style="color:#ffa657;">'Hithere'</span>) <span class="arrow">→</span> <span style="color:var(--red);">False</span> &nbsp;<span style="color:var(--muted);"># no space after Hi</span></div>
+  </div>
+  <div class="panel" style="margin-top:1rem;padding:0.8em 1.2em;">
+    <p style="font-size:1.45rem;margin:0;">Must start with <code>'Hello '</code> or <code>'Hi '</code> — <strong style="color:var(--orange);">trailing space matters.</strong></p>
+  </div>
+  <aside class="notes">This question has three different failure modes on the same tiny problem. Maximum contrast from minimum code.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 15 — Q2 Baseline
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 1 — The Baseline</h2>
+  <div style="margin-top:2rem;">
+    <pre><code class="language-python">return s.startswith('Hello ') or s.startswith('Hi ')</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <span class="badge pass">Public 4/4 ✓</span>
+    <span class="badge pass">Private 3/3 ✓</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">1 second</span>
+  </div>
+  <blockquote style="margin-top:2rem;">
+    <p>The student read the sentence "starts with Hello or Hi followed by a space" and wrote exactly that in Python. Nothing more.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 16 — Q2 JS Accent Step 1
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — A JavaScript Accent</h2>
+  <div style="margin-top:1.5rem;">
+    <pre><code class="language-python">if s.startswith('Hello'|| 'Hi'):
+    return True
+return False</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <span class="badge fail">SyntaxError</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 0s</span>
+  </div>
+  <blockquote style="margin-top:1.5rem;">
+    <p>Python, but spoken with a JavaScript accent. The intent is perfect. The operator is from another universe.</p>
+  </blockquote>
+  <aside class="notes">Read it out loud. Let the audience catch it first. The double-pipe is the JavaScript OR operator.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 17 — Q2 JS Accent Step 2
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — Closer, But...</h2>
+  <div style="margin-top:1.5rem;">
+    <pre><code class="language-python">if s.startswith('Hello' or 'Hi'):
+    return True
+return False</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <span class="badge partial">Public 3/4</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 24s</span>
+  </div>
+  <div class="panel" style="margin-top:1rem;padding:0.8em 1.2em;">
+    <p style="font-size:1.4rem;margin:0;"><code>'Hello' or 'Hi'</code> evaluates to <code>'Hello'</code> — truthy wins.<br>
+    So this is just <code>startswith('Hello')</code>. The <code>'Hi'</code> cases all fail.</p>
+  </div>
+  <blockquote style="margin-top:1rem;">
+    <p style="font-size:1.5rem;">What this tells you: surface intent can be completely correct while language fluency is still catching up.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 18 — Q2 Diplomacy
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Negotiating With the Grader</h2>
+  <div style="margin-top:1rem;">
+    <pre><code class="language-python">if s == 'Hithere':
+    return False
+if s.startswith('Hello' or 'Hi' or 'hello' or 'hi'):
+    return True
+elif s.startswith('Hi'):
+    return True
+return False</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <span class="badge partial">Public 3/4</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 4238s</span>
+  </div>
+  <blockquote style="margin-top:1rem;">
+    <p>The student has entered treaty negotiations with the grader. One visible test case, one explicit patch. This is not debugging — this is diplomacy.</p>
+  </blockquote>
+  <aside class="notes">The audience has definitely seen this behavior in a pull request at some point. An if-statement for every known failing input.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 19 — Q2 Triple-Quoted Graveyard Setup
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 3 — The Triple-Quoted Graveyard</h2>
+  <div style="margin-top:1rem;">
+    <pre><code class="language-python">'''if s[0] == "Hello":
+    return True
+if s[0] == "Hi":
+    return True
+else:
+    return False'''
+if not isinstance(s, str):
+    return False
+return s.startswith('Hello') or s.startswith('Hi')</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:0.8rem;">
+    <span class="badge partial">Public 3/4</span>
+    <span class="timestamp" style="font-size:1.3rem;margin-left:0.8em;">t = 629s</span>
+  </div>
+  <p style="font-size:1.35rem;color:var(--muted);text-align:center;margin-top:0.5em;">Old (wrong) code triple-quoted. New code runs. But missing trailing space — still 3/4.</p>
+  <aside class="notes">Students use triple-quote comments as ad-hoc version control. This is version control by burial.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 20 — Q2 The Graveyard Flip
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>The Graveyard Flip</h2>
+  <div class="cols cols-2" style="margin-top:0.8rem;gap:1.5rem;align-items:start;">
+    <div>
+      <p style="font-size:1.2rem;color:var(--muted);margin:0 0 0.3em;">t = 4826s — correct-ish code restored, running:</p>
+      <pre style="font-size:0.9rem;"><code class="language-python">if not isinstance(s, str):
+    return False
+s = s.strip()
+return s.startswith('Hello') or s.startswith('Hi')</code></pre>
+      <div style="text-align:center;margin-top:0.5rem;">
+        <span class="badge partial">Public 3/4</span>
+        <span style="font-size:1.1rem;color:var(--muted);margin-left:0.5em;">(still no trailing space!)</span>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:1.2rem;color:var(--muted);margin:0 0 0.3em;">Meanwhile, buried in the graveyard:</p>
+      <pre style="font-size:0.9rem;"><code class="language-python">'''cleaned_s = s.strip().lower()
+is_hello = cleaned_s.startswith("hello") and ...
+is_hi = cleaned_s.startswith("hi") and ...
+return is_hello or is_hi'''</code></pre>
+    </div>
+  </div>
+  <blockquote style="margin-top:1rem;">
+    <p>The fix exists. It's just not allowed to run. I call this the triple-quoted graveyard: the correct solution was buried alive while the wrong one inherited the execution runtime.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 21 — Q2 Transition
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="full-quote">
+    <p style="font-size:2rem;color:var(--muted);">Same pattern — examples memorized, rule ignored.</p>
+    <p style="font-size:2.2rem;margin-top:1.5rem;">Now let's see a place where you can watch the entire algorithm collapse to a single sentence about fruit.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 22 — Q3 Intro
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2 style="font-size:2.4rem;">Question 3: Shuffle a Three-Word Sentence</h2>
+  <p style="font-size:1.4rem;color:var(--muted);margin:0.3em 0 1em;">Solving the Examples, Not the Problem</p>
+  <div class="q-intro">
+    <div class="fn-sig">shuffle_sentence(<span style="color:#ffa657;">'apple banana orange'</span>, <span style="color:#e3b341;">(0, 2, 1)</span>) <span class="arrow">→</span> <span style="color:#ffa657;">'apple orange banana'</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">shuffle_sentence(<span style="color:#ffa657;">'cat dog mouse'</span>, <span style="color:#e3b341;">(2, 1, 0)</span>) <span class="arrow">→</span> <span style="color:#ffa657;">'mouse dog cat'</span></div>
+    <div class="rule">Words have indices 0, 1, 2 · <code>order</code> is a permutation tuple · 3 public, 3 private tests</div>
+  </div>
+  <aside class="notes">This is the purest overfitting exhibit. The two funny cases here are among the best in the entire dataset.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 23 — Q3 Baseline
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 1 — The Baseline</h2>
+  <div style="margin-top:2rem;">
+    <pre><code class="language-python">words = sentence.split()
+return ' '.join(words[i] for i in order)</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <span class="badge pass">Public 3/3 ✓</span>
+    <span class="badge pass">Private 3/3 ✓</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">1 second</span>
+  </div>
+  <blockquote style="margin-top:2rem;">
+    <p>The student treated <code>order</code> as data. One line. Full pass. The intended abstraction, visible in working memory.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 24 — Q3 Fruit Salad Step 1
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — Learning One Sentence</h2>
+  <div style="margin-top:2rem;">
+    <pre><code class="language-python">if order == (0, 2, 1):
+    return 'apple orange banana'</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <span class="badge partial">Public 1/3</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 0s</span>
+  </div>
+  <p style="text-align:center;font-size:1.5rem;color:var(--muted);margin-top:1rem;">One test case. One hardcoded answer.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 25 — Q3 Fruit Salad Step 2
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — Learning Two Sentences</h2>
+  <div style="margin-top:1.5rem;">
+    <pre><code class="language-python">if order == (0, 2, 1):
+    return 'apple orange banana'
+elif order == (2, 1, 0):
+    return 'mouse dog cat'</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:1.5rem;">
+    <span class="badge partial">Public 2/3</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 69s</span>
+  </div>
+  <p style="text-align:center;font-size:1.5rem;color:var(--muted);margin-top:1rem;">Added another case. Progress!</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 26 — Q3 Fruit Salad Step 3 (public pass, private fail)
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — All Public Tests Pass! 🎉</h2>
+  <div style="margin-top:1rem;">
+    <pre><code class="language-python">if order == (0, 2, 1):
+    return 'apple orange banana'
+elif order == (2, 1, 0):
+    return 'mouse dog cat'
+elif order == (1, 0, 2):
+    return 'yellow red green'</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:1rem;">
+    <span class="badge pass">Public 3/3 ✓</span>
+    <span class="badge fail">Private 0/3 ✗</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">t = 126s</span>
+  </div>
+  <blockquote style="margin-top:1rem;">
+    <p>This function is convinced that all sentence shuffling in Python is secretly about one fruit salad.<br>
+    <strong>Overfitting in its purest, most innocent form.</strong></p>
+  </blockquote>
+  <aside class="notes">The student didn't learn the transformation rule. They learned the example. Connect back to 10D: the visible tests are not the task.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 27 — Q3 Six Branches
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 3 — Listing the Universe</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">s = sentence.split(" ")
+n0, n1, n2 = s[0], s[1], s[2]
+if order == (0,1,2): return n0+" "+n1+" "+n2
+elif order == (0,2,1): return n0+" "+n2+" "+n1
+elif order == (1,0,2): return n1+" "+n0+" "+n2
+elif order == (1,2,0): return n1+" "+n2+" "+n0
+elif order == (2,0,1): return n2+" "+n0+" "+n1
+else:                  return n2+" "+n1+" "+n0</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge pass">Public 3/3 ✓</span>
+        <span class="badge pass">Private 3/3 ✓</span>
+      </div>
+      <div class="panel" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;color:var(--muted);margin:0;">501 seconds · All 6 permutations listed</p>
+      </div>
+      <blockquote>
+        <p style="font-size:1.4rem;">Brute force wins a small, perfectly legal victory. The universe of 3-word permutations is exactly 6. This student listed all 6.</p>
+      </blockquote>
+    </div>
+  </div>
+  <aside class="notes">The code is correct. The student has just decided that abstraction is optional when the universe is small enough to list. That's not a bug — it's a stage.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 28 — Q3 Transition
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="full-quote">
+    <p style="color:var(--orange);font-size:2.6rem;font-weight:700;">The Visible Tests Are Not The Task.</p>
+    <p style="margin-top:1.5rem;font-size:1.8rem;color:var(--muted);">(Second time. It should be starting to feel like a refrain.)</p>
+    <p style="margin-top:2rem;font-size:2rem;">Let's move to something more fundamental: what is a pangram, <em style="color:var(--blue);">really?</em></p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 29 — Q4 Intro
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2 style="font-size:2.4rem;">Question 4: Is It a Pangram?</h2>
+  <p style="font-size:1.4rem;color:var(--muted);margin:0.3em 0 1em;">Heuristics vs. Invariants</p>
+  <div class="q-intro">
+    <div class="fn-sig">is_pangram(<span style="color:#ffa657;">'The quick brown fox jumps over the lazy dog'</span>) <span class="arrow">→</span> <span style="color:var(--green);">True</span></div>
+    <div class="fn-sig" style="margin-top:0.4em;">is_pangram(<span style="color:#ffa657;">'Hello world'</span>) <span class="arrow">→</span> <span style="color:var(--red);">False</span></div>
+    <div class="rule">A pangram contains every letter of the alphabet at least once</div>
+  </div>
+  <aside class="notes">This question has the most emotionally resonant failure mode. And the funniest.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 30 — Q4 Baseline
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 1 — The Baseline</h2>
+  <div style="margin-top:2rem;">
+    <pre><code class="language-python">return set('abcdefghijklmnopqrstuvwxyz').issubset(
+    set(text.lower())
+)</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <span class="badge pass">Public 3/3 ✓</span>
+    <span class="badge pass">Private 3/3 ✓</span>
+    <span class="timestamp" style="font-size:1.4rem;margin-left:1em;">Instant</span>
+  </div>
+  <blockquote style="margin-top:2rem;">
+    <p>Build the alphabet as a set. Check if it's a subset of the lowercase input. The entire invariant in one expression.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 31 — Q4 Missing C
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>The Pangram Checker That Forgot C</h2>
+  <div style="margin-top:2rem;text-align:center;">
+    <pre style="display:inline-block;text-align:left;"><code class="language-python">letters = "absdefghijklmnopqrstuvwxyz"</code></pre>
+  </div>
+  <div style="text-align:center;margin-top:2rem;">
+    <span style="font-size:2rem;color:var(--orange);">↑ Find the bug.</span>
+  </div>
+  <div class="fragment" style="margin-top:2rem;">
+    <blockquote>
+      <p>The function whose entire job is to verify all 26 letters starts by forgetting one. Under cognitive load, even the checking mechanism needs to be checked.</p>
+    </blockquote>
+    <p style="text-align:center;font-size:1.5rem;color:var(--muted);"><code>a<strong style="color:var(--red);">b</strong>sdefghijk...</code> — the <code>c</code> is silently missing.</p>
+  </div>
+  <aside class="notes">Say nothing. Let the audience find it. You'll see the moment it lands in their faces.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 32 — Q4 count>=26 Setup
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — Early Attempt</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">alphabets = string.ascii_lowercase
+text1 = text.lower()
+for i in text1:
+    if i not in alphabets:
+        return False
+    return True        # ← inside loop!</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge partial">Public 2/3</span>
+        <span class="timestamp" style="font-size:1.3rem;margin-left:0.8em;">t = 0s</span>
+      </div>
+      <div class="panel red" style="padding:0.8em 1em;">
+        <p style="font-size:1.3rem;margin:0;color:var(--orange);">Wrong — <code>return True</code> is inside the loop. Returns after the first character.</p>
+      </div>
+      <p style="font-size:1.3rem;color:var(--muted);">107 total events · 1 hour 51 minutes of session time</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 33 — Q4 count>=26 The Heuristic
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Student 2 — Finding a Shortcut</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2rem;align-items:start;">
+    <div>
+      <pre><code class="language-python">alphabets = string.ascii_lowercase
+text1 = text.lower().replace(' ', '')
+
+count = 0
+for i in range(len(text1)):
+    if text1[i] in alphabets:
+        count += 1
+
+if count >= 26:
+    return True
+return False</code></pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;padding-top:0.5rem;">
+      <div>
+        <span class="badge pass">Public 3/3 ✓</span>
+        <span class="badge fail">Private 0/3 ✗</span>
+      </div>
+      <div class="panel" style="padding:0.8em 1em;">
+        <span class="timestamp">t = 5709s (~95 minutes in)</span>
+      </div>
+      <blockquote>
+        <p style="font-size:1.4rem;">Ask the room: is <code>'aaaaaaaaaaaaaaaaaaaaaaaaaaaa'</code> great literature?</p>
+      </blockquote>
+    </div>
+  </div>
+  <aside class="notes">The student found a feature correlated with the answer. That's good instinct, badly applied. 26 total letters ≠ 26 unique letters.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 34 — Q4 The Fix
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Correlation vs. Invariant</h2>
+  <div class="cols cols-2" style="margin-top:1rem;gap:2rem;">
+    <div class="panel red" style="padding:1em;">
+      <h3 style="color:var(--red);font-size:1.6rem;margin-bottom:0.5em;">❌ Heuristic</h3>
+      <pre style="margin:0;"><code class="language-python">count += 1
+if count >= 26:
+    return True</code></pre>
+      <p style="font-size:1.2rem;color:var(--muted);margin-top:0.5em;">Counts total letters. <code>'aaa...a'</code> = 26 letters but not a pangram.</p>
+    </div>
+    <div class="panel green" style="padding:1em;">
+      <h3 style="color:var(--green);font-size:1.6rem;margin-bottom:0.5em;">✓ Invariant</h3>
+      <pre style="margin:0;"><code class="language-python">uniq.add(text1[i])
+if len(uniq) >= 26:
+    return True</code></pre>
+      <p style="font-size:1.2rem;color:var(--muted);margin-top:0.5em;">Counts unique letters. Correct.</p>
+      <span class="badge pass" style="margin-top:0.5em;">Private 3/3 ✓</span>
+    </div>
+  </div>
+  <blockquote style="margin-top:1.2rem;">
+    <p>The false summit is the moment you think you've solved it. The actual solution comes later, when you ask: <em>what family of inputs would break this?</em></p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 35 — The Pattern
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>Four Mental Models</h2>
+  <div class="model-grid" style="margin-top:1.2rem;">
+    <div class="model-item">
+      <h3>① The Example Memorizer</h3>
+      <p><code>if order == (0,2,1): return 'apple orange banana'</code></p>
+      <p>Solves the visible world, not the rule.</p>
+    </div>
+    <div class="model-item">
+      <h3>② The Heuristic Guesser</h3>
+      <p><code>if count &gt;= 26: return True</code></p>
+      <p>Finds a correlated shortcut instead of the invariant.</p>
+    </div>
+    <div class="model-item">
+      <h3>③ The Contract Misreader</h3>
+      <p><code>tuple(s, r)</code> · <code>card[0]/card[1]</code> · missing trailing space</p>
+      <p>Computes the right thing, returns the wrong structure.</p>
+    </div>
+    <div class="model-item">
+      <h3>④ The Regressor</h3>
+      <p>107 events · ends worse than they started</p>
+      <p>Overwrites a working partial solution while chasing the hidden test.</p>
+    </div>
+  </div>
+  <aside class="notes">These aren't Python bugs. They're epistemological strategies. Each one is rational given what the student knows.</aside>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 36 — What This Means
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <h2>What This Means</h2>
+  <div class="cols cols-3" style="margin-top:1.5rem;gap:1.5rem;">
+    <div class="panel" style="padding:1.2em;">
+      <h3 style="color:var(--blue);font-size:1.6rem;margin-bottom:0.5em;">For test design</h3>
+      <p style="font-size:1.3rem;">If public examples only show 2-char cards, you've invited the index-parser bug. Anti-hardcoding sentinels just need to exist — they don't need to be aggressive.</p>
+    </div>
+    <div class="panel" style="padding:1.2em;">
+      <h3 style="color:var(--blue);font-size:1.6rem;margin-bottom:0.5em;">For code review</h3>
+      <p style="font-size:1.3rem;">When you see a cascade of explicit cases, ask what abstraction the author hasn't seen yet. The fix is often one concept — not a full rewrite.</p>
+    </div>
+    <div class="panel" style="padding:1.2em;">
+      <h3 style="color:var(--blue);font-size:1.6rem;margin-bottom:0.5em;">For debugging</h3>
+      <p style="font-size:1.3rem;">The triple-quoted graveyard is in every codebase. The <code>count &gt;= 26</code> is in every PR that passes staging but fails production. We're all these students.</p>
+    </div>
+  </div>
+  <blockquote style="margin-top:1.2rem;">
+    <p>The junior who writes an if/elif for every case isn't lazy. They're listing the universe. Now you have words for it.</p>
+  </blockquote>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 37 — Closing
+═══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0d1117">
+  <div class="closing">
+    <p>"The gap between the public tests and the private tests<br>is the gap between the world we can see<br>and the world that actually runs.</p>
+    <p style="margin-top:1.5rem;">Learning Python — learning anything —<br>is mostly about learning to ask:</p>
+    <p style="margin-top:1.5rem;font-size:2.6rem;"><em>What's on the other side of the tests I can't see yet?</em></p>
+    <p style="font-size:1.2rem;color:var(--muted);margin-top:3rem;">Anand S &nbsp;·&nbsp; sanand0.github.io/talks/2026-03-14-how-students-learn-python/</p>
+  </div>
+  <aside class="notes">This is the third time we've asked that question in different words. By now it should feel like the talk's central thesis.</aside>
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script>
+Reveal.initialize({
+  width: 1920,
+  height: 1080,
+  margin: 0.04,
+  minScale: 0.1,
+  maxScale: 2.0,
+  transition: 'slide',
+  transitionSpeed: 'fast',
+  hash: true,
+  fragmentInURL: true,
+  slideNumber: 'c/t',
+  showSlideNumber: 'speaker',
+  controls: true,
+  progress: true,
+  center: false,
+  plugins: []
+});
+
+// Run Prism after Reveal initialises each slide
+Reveal.on('slidechanged', () => {
+  if (window.Prism) Prism.highlightAll();
+});
+if (window.Prism) Prism.highlightAll();
+</script>
+</body>
+</html>
