@@ -1,5 +1,15 @@
 # Prompts
 
+<!--
+
+Copy from https://console.cloud.google.com/storage/browser/programming-assignment-prod/analytics_python;tab=objects?authuser=3 into data/
+
+mkdir -p data
+cd data
+gcloud storage cp -R 'gs://programming-assignment-prod/analytics_python/' .
+
+>
+
 ## Understand data (Codex yolo - gpt-5.4 xhigh)
 
 The files in v2-analysis/data/ are parquet files. Analyze them. The structure is similar to the other datasets we have, just organized as parquet files.
@@ -271,3 +281,5 @@ By reading this report, TAs should be able to schedule sessions and know _exactl
 Make this scannable, i.e. it should be possible to read the whole thing in 5 minutes and get the key actions. The popups can have more details for those who want to dig in, but the main report should be concise and actionable.
 
 IMPORTANT: Because Claude will almost certainly stall when generating such a large file at one shot, you MUST break this into parts, generating a SMALL scaffolding, then layering edits (keeping each chunk small) and saving each time and checking it.
+
+<!-- copilot --resume=49e6b6c9-1aea-4760-905d-94cb3300e6ee -->

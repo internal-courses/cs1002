@@ -1,3 +1,18 @@
+# Deploy, 28 Aug 2026
+
+This repo pushes by default to https://github.com/sanand0/pyoppe and I'd like it to push instead only to https://github.com/internal-courses/cs1002
+
+---
+
+Push
+
+---
+
+Add the GitHub pages as well
+
+
+<!-- codex resume 01a0479f-fa43-7590-9455-462c00c5a8ec -->
+
 # EDA
 
 ## Coverage (Codex 5.3 medium)
@@ -2148,7 +2163,7 @@ Revise `analysis/question-timelines.md` with the new analysis - writing it as if
 
 ## PyConf Hyderabad Talk (Copilot, Claude Sonnet 4.6, high)
 
-<!-- https://claude.ai/chat/35c3520a-4cee-401a-bfa1-6c4eda2411a0 -->
+<!-- https://claude.ai/share/f8f345b2-6e64-4bc6-b6d8-f47f78231cd8 | https://claude.ai/chat/35c3520a-4cee-401a-bfa1-6c4eda2411a0 -->
 
 I'm delivering a talk at PyConf Hyderabad titled "How Students Learn Python". Below is the outline for a portion of the talk.
 
